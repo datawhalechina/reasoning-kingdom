@@ -19,7 +19,7 @@
 建议具备基础的线性代数、概率论和编程知识。
 
 ## 在线阅读
-https://lizixi-0x2F.github.io/Reasoning-Kingdom
+https://lizixi-0x2F.github.io/reasoning-kingdom
 
 ## 导读
 
@@ -29,13 +29,13 @@ https://lizixi-0x2F.github.io/Reasoning-Kingdom
 >
 > 让我们进入推理王国。
 
-本书的叙事围绕四个原创研究工作展开（QMCB/OpenXOR、永霖公式、ADS、Collins优化器），它们不是对前人成果的总结，而是笔者为理解推理本质而进行的探索性建构。[→ 阅读完整导读](https://lizixi-0x2F.github.io/Reasoning-Kingdom/preface)
+本书的叙事围绕四个原创研究工作展开（QMCB/OpenXOR、永霖公式、ADS、Collins优化器），它们不是对前人成果的总结，而是笔者为理解推理本质而进行的探索性建构。[→ 阅读完整导读](https://lizixi-0x2F.github.io/reasoning-kingdom/preface)
 
 ## 目录
 
 |  章节名   | 简介 | 状态 |
 |  ----  | ---- | ---- |
-| [导读](https://lizixi-0x2F.github.io/Reasoning-Kingdom/preface) | 这不是一本教你使用AI的书，而是追问推理本质的思想实验 | 🚧 |
+| [导读](https://lizixi-0x2F.github.io/reasoning-kingdom/preface) | 这不是一本教你使用AI的书，而是追问推理本质的思想实验 | 🚧 |
 | 第1章：对抗熵增——推理作为存活策略 | 从热力学第二定律出发，理解推理为何是对抗混沌的必要手段 | 🚧 |
 | 第2章：符号的黎明——因果的第一次建模 | 符号主义AI的起源与If-Then规则的力量与局限 | 🚧 |
 | 第3章：从符号到向量——表示空间的第一次解放 | Word2Vec与表示学习，推理从规则走向几何 | 🚧 |

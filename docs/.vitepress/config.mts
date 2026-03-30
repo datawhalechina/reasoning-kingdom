@@ -2,7 +2,7 @@ import { defineConfig } from 'vitepress'
 // https://vitepress.dev/reference/site-config
 
 const isEdgeOne = process.env.EDGEONE === '1'
-const baseConfig = isEdgeOne ? '/' : '/Reasoning-Kingdom/'
+const baseConfig = isEdgeOne ? '/' : '/reasoning-kingdom/'
 
 export default defineConfig({
   lang: 'zh-CN',
