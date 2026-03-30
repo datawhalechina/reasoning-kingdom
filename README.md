@@ -1,7 +1,7 @@
 <h1 align="center">推理王国（⚠️ Alpha内测版）</h1>
 
 <div align="center">
-  <img src="docs/ReasoningKingdom.png" alt="推理王国" width="400">
+  <img src="docs/public/ReasoningKingdom.png" alt="推理王国" width="400">
 </div>
 
 > [!CAUTION]
