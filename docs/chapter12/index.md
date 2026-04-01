@@ -662,34 +662,6 @@ $$
 
 这与永霖公式的预测一致：**有效推理窗口约为t=26-50（25步宽度），之后进入先验主导区**。
 
----
-
-**算法2：隐层探针训练**
-
-    Train-Layer-Probe(模型, 数据集, 目标层l):
-    输入: 训练好的模型, 标注数据, 目标层编号
-    输出: 探针分类器, 准确率
-
-    1. 提取隐层激活:
-       activations = []
-       labels = []
-       for (x, y_intermediate) in 数据集:
-         h_l = model.layer[l].forward(x)
-         activations.append(h_l)
-         labels.append(y_intermediate)
-
-    2. 训练线性探针:
-       probe = LinearClassifier(input_dim=h_l.shape[-1])
-       for epoch in range(100):
-         loss = CrossEntropy(probe(activations), labels)
-         probe.update(loss)
-
-    3. 评估:
-       accuracy = probe.evaluate(test_activations, test_labels)
-
-    4. 返回 (probe, accuracy)
-
-    # 如果accuracy高，说明隐层已经编码了中间结果
 
 <div class="center">
 

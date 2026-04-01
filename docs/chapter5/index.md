@@ -400,76 +400,113 @@ $$
 
 **算法1:基于梯度的捷径检测**
 
-    输入: 训练好的模型 h, 训练数据 D_train, 候选捷径特征 X_c
-    输出: 捷径依赖分数 S
+```python
+import torch
 
-    伪代码:
-    1. 对于每个样本 (x, y) in D_train:
-       a. 计算模型输出 ŷ = h(x)
-       b. 计算损失 L = ℓ(ŷ, y)
-       c. 计算梯度 g_c = ∂L / ∂X_c  (对捷径特征的梯度)
-       d. 计算梯度 g_s = ∂L / ∂X_s  (对稳定特征的梯度)
-       e. 记录比值 r = ||g_c|| / ||g_s||
+def shortcut_detection(model, dataloader, shortcut_indices, stable_indices, tau=0.5):
+    """
+    基于梯度的捷径检测。
+    shortcut_indices: 捷径特征在输入中的列索引列表
+    stable_indices:   稳定特征在输入中的列索引列表
+    返回: 捷径依赖分数 S（越高说明越依赖捷径）
+    """
+    model.eval()
+    ratios = []
+    criterion = torch.nn.CrossEntropyLoss()
 
-    2. 计算平均比值 S = mean(r over D_train)
+    for x, y in dataloader:
+        x = x.requires_grad_(True)
+        output = model(x)
+        loss = criterion(output, y)
+        loss.backward()
 
-    3. 如果 S > 阈值 τ (比如 0.5):
-       输出: "模型显著依赖捷径特征"
-       否则:
-       输出: "模型主要依赖稳定特征"
+        g = x.grad  # shape: (batch, n_features)
+        g_c = g[:, shortcut_indices].norm(dim=1)   # 捷径特征梯度范数
+        g_s = g[:, stable_indices].norm(dim=1)     # 稳定特征梯度范数
+        ratio = g_c / (g_s + 1e-8)
+        ratios.append(ratio.detach())
+
+    S = torch.cat(ratios).mean().item()
+    if S > tau:
+        print(f"S={S:.3f} > τ={tau}：模型显著依赖捷径特征")
+    else:
+        print(f"S={S:.3f} ≤ τ={tau}：模型主要依赖稳定特征")
+    return S
+```
 
 这个算法的直觉是:如果模型过度依赖捷径,那么损失对捷径特征的梯度会很大——因为改变捷径特征会显著影响预测。
 
 **算法2:分布偏移下的泛化测试**
 
-    输入: 训练好的模型 h, ID测试集 D_test_id, OOD测试集 D_test_ood
-    输出: ID准确率 acc_id, OOD准确率 acc_ood, 泛化差距 gap
+```python
+def generalization_test(model, id_loader, ood_loader, device="cpu"):
+    """
+    在 ID 和 OOD 测试集上评估模型，报告泛化差距。
+    """
+    def evaluate(loader):
+        model.eval()
+        correct, total, high_conf_wrong = 0, 0, 0
+        with torch.no_grad():
+            for x, y in loader:
+                x, y = x.to(device), y.to(device)
+                logits = model(x)
+                probs = torch.softmax(logits, dim=1)
+                pred = probs.argmax(dim=1)
+                conf = probs.max(dim=1).values
+                correct += (pred == y).sum().item()
+                # 高置信但预测错的样本（过度自信检测）
+                high_conf_wrong += ((conf > 0.8) & (pred != y)).sum().item()
+                total += y.size(0)
+        return correct / total, high_conf_wrong / total
 
-    伪代码:
-    1. 在ID测试集上评估:
-       acc_id = accuracy(h, D_test_id)
+    acc_id,  hcw_id  = evaluate(id_loader)
+    acc_ood, hcw_ood = evaluate(ood_loader)
+    gap = acc_id - acc_ood
 
-    2. 在OOD测试集上评估:
-       acc_ood = accuracy(h, D_test_ood)
-
-    3. 计算泛化差距:
-       gap = acc_id - acc_ood
-
-    4. 分析:
-       如果 gap < 5%:
-          输出: "模型泛化良好,可能学到了稳定特征"
-       如果 5% ≤ gap < 20%:
-          输出: "模型部分依赖捷径,泛化能力中等"
-       如果 gap ≥ 20%:
-          输出: "模型严重依赖捷径,泛化能力差"
-
-    5. 可选:计算置信度校准
-       对于每个预测,记录模型的置信度 p
-       如果 OOD 数据上的平均置信度仍然很高(> 0.8),
-       但准确率很低,说明模型过度自信,存在捷径学习
+    print(f"ID  准确率: {acc_id:.1%}")
+    print(f"OOD 准确率: {acc_ood:.1%}")
+    print(f"泛化差距:   {gap:.1%}")
+    if gap < 0.05:
+        print("→ 泛化良好，模型可能学到了稳定特征")
+    elif gap < 0.20:
+        print("→ 泛化中等，部分依赖捷径")
+    else:
+        print("→ 泛化差，模型严重依赖捷径")
+    if hcw_ood > 0.1:
+        print(f"⚠ OOD 高置信错误率 {hcw_ood:.1%}，存在过度自信")
+    return acc_id, acc_ood, gap
+```
 
 **算法3:Tilted ERM训练**
 
-    输入: 训练数据 D_train, 倾斜参数 t, 学习率 η, 迭代次数 T
-    输出: 训练好的模型 h
+```python
+import torch
+import torch.nn as nn
 
-    伪代码:
-    1. 初始化模型参数 θ
+def tilted_erm_train(model, dataloader, t=5.0, lr=1e-3, epochs=50):
+    """
+    Tilted ERM 训练：给困难样本更高权重，减少捷径依赖。
+    t > 0：越大越关注高损失样本；t = 0 退化为标准 ERM。
+    """
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+    criterion = nn.CrossEntropyLoss(reduction="none")
 
-    2. 对于 epoch = 1 to T:
-       a. 对于每个 batch B in D_train:
-          i. 计算每个样本的损失 ℓ_i = ℓ(h_θ(x_i), y_i)
+    for epoch in range(epochs):
+        model.train()
+        for x, y in dataloader:
+            losses = criterion(model(x), y)          # 每样本损失
+            # Tilted 损失：log-sum-exp 软化最大值
+            tilted_loss = (1.0 / t) * torch.log(
+                (1.0 / len(losses)) * torch.sum(torch.exp(t * losses))
+            )
+            optimizer.zero_grad()
+            tilted_loss.backward()
+            optimizer.step()
 
-          ii. 计算 tilted 损失:
-              L_tilted = (1/t) × log( (1/|B|) × Σ exp(t × ℓ_i) )
+    return model
+```
 
-          iii. 计算梯度 g = ∂L_tilted / ∂θ
-
-          iv. 更新参数 θ ← θ - η × g
-
-    3. 返回 h_θ
-
-当 $t > 0$ 时,这个算法会给难样本更高的权重,强迫模型不能只依赖捷径。
+当 $t > 0$ 时，这个算法会给难样本更高的权重，强迫模型不能只依赖捷径。
 
 <div class="center">
 

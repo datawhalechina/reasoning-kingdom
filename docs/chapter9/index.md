@@ -549,65 +549,68 @@ $$
 
 **算法1:Self-Attention层**
 
-    Self-Attention(X, W_Q, W_K, W_V, d_k):
-    输入: X ∈ R^(N×d), 权重矩阵 W_Q, W_K, W_V
-    输出: Y ∈ R^(N×d)
+```python
+import torch
+import torch.nn.functional as F
 
-    1. 计算 Query, Key, Value:
-       Q = X · W_Q  # (N×d_k)
-       K = X · W_K  # (N×d_k)
-       V = X · W_V  # (N×d_v)
-
-    2. 计算注意力分数:
-       scores = (Q · K^T) / √d_k  # (N×N)
-
-    3. 应用 softmax(按行归一化):
-       attention_weights = softmax(scores, dim=-1)
-
-    4. 加权求和:
-       Y = attention_weights · V  # (N×d_v)
-
-    5. 返回 Y
-
-    时间复杂度: O(N²·d)
-    空间复杂度: O(N²) — 注意力矩阵
+def self_attention(X, W_Q, W_K, W_V):
+    # X: (N, d_model), W_Q/W_K/W_V: (d_model, d_k)
+    Q = X @ W_Q          # (N, d_k)
+    K = X @ W_K          # (N, d_k)
+    V = X @ W_V          # (N, d_v)
+    d_k = Q.shape[-1]
+    scores = Q @ K.T / d_k ** 0.5              # (N, N)
+    attn   = F.softmax(scores, dim=-1)         # 按行归一化
+    return attn @ V                            # (N, d_v)
+# 时间复杂度 O(N²·d)，空间复杂度 O(N²)
+```
 
 **算法2:多头注意力**
 
-    MultiHeadAttention(X, h, d_model):
-    输入: X ∈ R^(N×d_model), 头数 h
-    输出: output ∈ R^(N×d_model)
+```python
+import torch
+import torch.nn as nn
 
-    1. 设置每头维度 d_k = d_model / h
+class MultiHeadAttention(nn.Module):
+    def __init__(self, d_model, num_heads):
+        super().__init__()
+        assert d_model % num_heads == 0
+        self.h  = num_heads
+        self.dk = d_model // num_heads
+        self.W_Q = nn.Linear(d_model, d_model, bias=False)
+        self.W_K = nn.Linear(d_model, d_model, bias=False)
+        self.W_V = nn.Linear(d_model, d_model, bias=False)
+        self.W_O = nn.Linear(d_model, d_model, bias=False)
 
-    2. 对每个头 i = 1..h:
-       head_i = Self-Attention(X, W_Q^i, W_K^i, W_V^i, d_k)
-
-    3. 拼接所有头:
-       concat = [head_1; head_2; ...; head_h]  # (N×d_model)
-
-    4. 线性投影:
-       output = concat · W_O
-
-    5. 返回 output
+    def forward(self, X):
+        B, N, D = X.shape
+        # 投影并拆分为多头 (B, h, N, dk)
+        Q = self.W_Q(X).view(B, N, self.h, self.dk).transpose(1, 2)
+        K = self.W_K(X).view(B, N, self.h, self.dk).transpose(1, 2)
+        V = self.W_V(X).view(B, N, self.h, self.dk).transpose(1, 2)
+        attn = F.softmax(Q @ K.transpose(-2, -1) / self.dk**0.5, dim=-1)
+        out  = (attn @ V).transpose(1, 2).reshape(B, N, D)  # 拼接各头
+        return self.W_O(out)
+```
 
 **算法3:完整Transformer块**
 
-    TransformerBlock(X):
-    输入: X ∈ R^(N×d_model)
-    输出: output ∈ R^(N×d_model)
+```python
+class TransformerBlock(nn.Module):
+    def __init__(self, d_model, num_heads, d_ff):
+        super().__init__()
+        self.attn  = MultiHeadAttention(d_model, num_heads)
+        self.ff1   = nn.Linear(d_model, d_ff)
+        self.ff2   = nn.Linear(d_ff, d_model)
+        self.norm1 = nn.LayerNorm(d_model)
+        self.norm2 = nn.LayerNorm(d_model)
 
-    1. 多头注意力 + 残差连接 + LayerNorm:
-       attn_out = MultiHeadAttention(X)
-       X = LayerNorm(X + attn_out)
-
-    2. 前馈网络 + 残差连接 + LayerNorm:
-       ffn_out = FFN(X)  # FFN(x) = ReLU(xW_1 + b_1)W_2 + b_2
-       X = LayerNorm(X + ffn_out)
-
-    3. 返回 X
-
-    # 完整Transformer = 堆叠多个TransformerBlock
+    def forward(self, X):
+        X = self.norm1(X + self.attn(X))                         # 注意力 + 残差 + LN
+        X = self.norm2(X + self.ff2(F.relu(self.ff1(X))))        # FFN + 残差 + LN
+        return X
+# 完整 Transformer = 堆叠多个 TransformerBlock
+```
 
 <div class="center">
 

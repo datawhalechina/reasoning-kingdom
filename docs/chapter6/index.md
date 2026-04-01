@@ -522,18 +522,46 @@ $$
 
 **算法1：后门调整（Backdoor Adjustment）**
 
-    输入: 因果图 G, 观测数据 D, 干预变量 X, 结果变量 Y
-    输出: 因果效应 P(Y | do(X))
+```python
+import itertools
+import numpy as np
 
-    伪代码:
-    1. 找到满足后门准则的调整集 Z:
-       a. Z 阻断所有从 X 到 Y 的后门路径
-       b. Z 不包含 X 的后代
-    2. 如果不存在这样的 Z:
-       返回 "因果效应不可识别（通过后门调整）"
-    3. 否则，计算调整公式:
-       P(Y | do(X)) = Σ_z P(Y | X, Z=z) · P(Z=z)
-       其中求和遍历 Z 的所有可能取值
+def backdoor_adjustment(data, x_col, y_col, z_cols, x_val):
+    """
+    后门调整估计因果效应 P(Y | do(X=x_val))。
+    data:    pandas DataFrame，包含观测数据
+    x_col:   干预变量列名
+    y_col:   结果变量列名
+    z_cols:  调整集列名列表（满足后门准则）
+    x_val:   干预值
+    返回: P(Y=1 | do(X=x_val)) 的估计
+    """
+    if not z_cols:
+        raise ValueError("调整集为空，因果效应不可识别（通过后门调整）")
+
+    # 枚举 Z 的所有取值组合
+    z_values = [data[z].unique() for z in z_cols]
+    result = 0.0
+
+    for z_combo in itertools.product(*z_values):
+        # 条件概率 P(Y | X=x_val, Z=z_combo)
+        mask_xz = (data[x_col] == x_val)
+        for z_col, z_val in zip(z_cols, z_combo):
+            mask_xz &= (data[z_col] == z_val)
+        if mask_xz.sum() == 0:
+            continue
+        p_y_given_xz = data.loc[mask_xz, y_col].mean()
+
+        # 边际概率 P(Z=z_combo)
+        mask_z = np.ones(len(data), dtype=bool)
+        for z_col, z_val in zip(z_cols, z_combo):
+            mask_z &= (data[z_col] == z_val)
+        p_z = mask_z.mean()
+
+        result += p_y_given_xz * p_z
+
+    return result
+```
 
 ## 十二、一个小小的停顿
 

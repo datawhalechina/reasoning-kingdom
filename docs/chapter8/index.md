@@ -409,13 +409,25 @@ $$
 
 但有一个极其简单的2-近似算法:
 
-    贪心顶点覆盖(图G):
-    1. C = 空集
-    2. 当G中还有边时:
-       a. 随机选一条边(u, v)
-       b. 将u和v都加入C
-       c. 删除所有与u或v相连的边
-    3. 返回C
+```python
+import random
+
+def greedy_vertex_cover(edges):
+    """
+    贪心顶点覆盖：2-近似算法，时间复杂度 O(|E|)。
+    edges: [(u, v), ...] 边列表
+    返回: 顶点覆盖集合 C，保证 |C| ≤ 2|C*|
+    """
+    remaining = list(edges)
+    C = set()
+    while remaining:
+        u, v = random.choice(remaining)   # 随机选一条边
+        C.add(u)
+        C.add(v)
+        # 删除所有与 u 或 v 相连的边
+        remaining = [(a, b) for a, b in remaining if a not in (u, v) and b not in (u, v)]
+    return C
+```
 
 这个算法的运行时间是$O(|E|)$(E是边数),而且保证:
 
@@ -459,105 +471,77 @@ PTAS是一族算法,对于任意$\epsilon > 0$,它能在多项式时间内找到
 
 让我把前面讨论的核心算法形式化。
 
-\*\*算法1:标准A\*搜索\*\*
+**算法1:标准A\*搜索**
 
-    A*(起点S, 终点G, 启发函数h):
-    输入: 图G, 起点S, 终点G, 启发函数h(n)
-    输出: 从S到G的最短路径,或"无解"
+```python
+import heapq
 
-    1. 初始化:
-       open = 优先队列,按f(n)排序
-       closed = 空集
-       g(S) = 0
-       f(S) = h(S)
-       将S加入open
+def astar(graph, start, goal, h):
+    # graph: dict {node: [(neighbor, cost), ...]}
+    # h: 启发函数 h(node) -> 估计到终点的代价
+    # 返回: 最短路径列表，或 None（无解）
+    open_heap = [(h(start), 0, start, [start])]  # (f, g, node, path)
+    closed = set()
 
-    2. 当open非空时:
-       a. 从open中取出f(n)最小的节点n
-       b. 如果n == G:
-          返回路径(通过回溯parent指针)
+    while open_heap:
+        f, g, node, path = heapq.heappop(open_heap)
+        if node == goal:
+            return path
+        if node in closed:
+            continue
+        closed.add(node)
+        for neighbor, cost in graph.get(node, []):
+            if neighbor in closed:
+                continue
+            g_new = g + cost
+            heapq.heappush(open_heap, (g_new + h(neighbor), g_new, neighbor, path + [neighbor]))
 
-       c. 将n加入closed
+    return None  # 无解
+```
 
-       d. 对于n的每个邻居m:
-          i. 如果m在closed中:
-             跳过
-
-          ii. 计算tentative_g = g(n) + cost(n, m)
-
-          iii. 如果m不在open中,或tentative_g < g(m):
-               g(m) = tentative_g
-               f(m) = g(m) + h(m)
-               parent(m) = n
-               将m加入open(如果不在的话)
-
-    3. 返回"无解"
-
-**时间复杂度**:$O(b^d)$,其中b是分支因子,d是解的深度。启发函数越好,实际扩展的节点越少。
+**时间复杂度**：$O(b^d)$，其中 $b$ 是分支因子，$d$ 是解的深度。启发函数越好，实际扩展的节点越少。
 
 **算法2:ADS自适应启发权重**
 
-    ADS-Search(起点S, 终点G, 神经网络policy):
-    输入: 状态空间, 起点S, 终点G, 训练好的策略网络
-    输出: 从S到G的路径
+```python
+import math
 
-    1. 初始化:
-       当前状态s = S
-       路径 = [S]
+def ads_search(start, goal, cost_fn, h_fn, policy_fn, k=3.0):
+    # policy_fn(s) -> 动作概率分布 dict {action: prob}
+    # h_fn(s)      -> 启发式估计值（到终点的代价）
+    # cost_fn(s,a) -> 执行动作 a 的代价
+    def entropy(probs):
+        return -sum(p * math.log(p + 1e-10) for p in probs if p > 0)
 
-    2. 当s != G时:
-       a. 计算当前状态的不确定性U(s):
-          U(s) = -Σ p(a|s) log p(a|s)  (动作分布的熵)
+    s, path, g = start, [start], 0.0
 
-       b. 计算信息增益IG(s → G):
-          IG(s → G) = U(s) - E[U(s')|a]  (期望未来不确定性)
+    while s != goal:
+        action_probs = policy_fn(s)
+        actions = list(action_probs.keys())
+        probs   = list(action_probs.values())
 
-       c. 计算信息论势垒:
-          B(s) = IG(s → G) / U(s)
+        U_s   = entropy(probs)
+        H_max = math.log(len(actions) + 1e-10)
 
-       d. 计算自适应启发权重:
-          α(s) = sigmoid(k × B(s))
-          其中k是超参数(通常k ≈ 2-5)
+        # 信息论势垒：熵越接近最大值，不确定性越高，降低对启发式的信任
+        B_s   = U_s / (H_max + 1e-10)
+        alpha = 1.0 / (1.0 + math.exp(-k * B_s))   # sigmoid
 
-       e. 计算每个动作的评估值:
-          对于每个可能动作a:
-             f(a) = g(s) + cost(s, a) + α(s) × h(s')
-             其中s'是执行a后的状态
+        best_action, best_f = None, float("inf")
+        for action in actions:
+            f_val = g + cost_fn(s, action) + alpha * h_fn(action)
+            if f_val < best_f:
+                best_f, best_action = f_val, action
 
-       f. 选择f(a)最小的动作
+        g += cost_fn(s, best_action)
+        s = best_action
+        path.append(s)
 
-       g. 执行动作,更新状态s和路径
+    return path
+```
 
-    3. 返回路径
+**关键创新**：α 不是固定的，而是根据当前状态的信息论特性动态调整。熵高（不确定性大）时降低对启发式的依赖；熵低时信任启发式快速前进。
 
-**关键创新**:α(s)不是固定的,而是根据当前状态的信息论特性动态调整。在高不确定性区域,降低对启发式的依赖;在低不确定性区域,信任启发式快速前进。
-
-**算法3:知识蒸馏——从搜索到神经网络**
-
-    知识蒸馏(MCTS教师, 神经网络学生, 训练数据D):
-    输入: 训练好的MCTS, 待训练的神经网络, 状态-动作对数据集
-    输出: 训练好的神经网络
-
-    1. 对于每个训练epoch:
-       a. 对于数据集D中的每个状态s:
-
-          i. 教师输出:运行MCTS(s, 模拟次数N)
-             得到动作概率分布π_MCTS(a|s)
-             得到状态价值V_MCTS(s)
-
-          ii. 学生输出:神经网络前向传播
-              π_NN(a|s), V_NN(s) = Network(s)
-
-          iii. 计算蒸馏损失:
-               L_policy = KL(π_MCTS || π_NN)  (策略分布的KL散度)
-               L_value = (V_MCTS - V_NN)²     (价值函数的MSE)
-               L_total = L_policy + λ × L_value
-
-          iv. 反向传播,更新神经网络参数
-
-    2. 返回训练好的神经网络
-
-**效果**:MCTS需要每步模拟N次(N ~ 1000-10000),时间复杂度$O(N \times d)$。蒸馏后的神经网络只需一次前向传播,时间复杂度$O(1)$,速度提升1000-10000倍,同时保持接近的性能。
 
 <div class="center">
 
