@@ -19,8 +19,6 @@
 
 ## Star History
 
-## Star History
-
 <a href="https://www.star-history.com/?repos=datawhalechina%2Freasoning-kingdom&type=timeline&legend=top-left">
  <picture>
    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=datawhalechina/reasoning-kingdom&type=timeline&theme=dark&legend=top-left" />
