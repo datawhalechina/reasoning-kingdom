@@ -13,87 +13,27 @@ export default defineConfig({
   markdown: {
     math: true,
     config: (md) => {
-      // 添加自定义容器支持
-      md.use(container, 'detail', {
-        validate: function(params) {
-          return params.trim().match(/^detail/)
-        },
-        render: function (tokens, idx) {
-          const m = tokens[idx].info.trim().match(/^detail\s*(.*)$/)
-          if (tokens[idx].nesting === 1) {
-            // opening tag
-            const title = m[1] ? md.utils.escapeHtml(m[1]) : '详情'
-            return '<details><summary>' + title + '</summary>\n'
-          } else {
-            // closing tag
-            return '</details>\n'
-          }
-        }
-      })
-      
-      // 添加info容器支持
+      // 复制前传的容器配置
       md.use(container, 'info', {
         validate: function(params) {
-          return params.trim().match(/^info\s*(.*)$/)
+          return params.trim() === 'info'
         },
         render: function (tokens, idx) {
-          const m = tokens[idx].info.trim().match(/^info\s*(.*)$/)
           if (tokens[idx].nesting === 1) {
-            // opening tag
-            return '<div class="custom-container info">\n'
+            return '<div class="info custom-block">\n'
           } else {
-            // closing tag
             return '</div>\n'
           }
         }
       })
-      
-      // 添加tip容器支持
-      md.use(container, 'tip', {
+      md.use(container, 'detail', {
         validate: function(params) {
-          return params.trim().match(/^tip\s*(.*)$/)
+          return params.trim() === 'detail'
         },
         render: function (tokens, idx) {
-          const m = tokens[idx].info.trim().match(/^tip\s*(.*)$/)
           if (tokens[idx].nesting === 1) {
-            // opening tag
-            return '<div class="custom-container tip">\n'
+            return '<div class="detail custom-block">\n'
           } else {
-            // closing tag
-            return '</div>\n'
-          }
-        }
-      })
-      
-      // 添加warning容器支持
-      md.use(container, 'warning', {
-        validate: function(params) {
-          return params.trim().match(/^warning\s*(.*)$/)
-        },
-        render: function (tokens, idx) {
-          const m = tokens[idx].info.trim().match(/^warning\s*(.*)$/)
-          if (tokens[idx].nesting === 1) {
-            // opening tag
-            return '<div class="custom-container warning">\n'
-          } else {
-            // closing tag
-            return '</div>\n'
-          }
-        }
-      })
-      
-      // 添加danger容器支持
-      md.use(container, 'danger', {
-        validate: function(params) {
-          return params.trim().match(/^danger\s*(.*)$/)
-        },
-        render: function (tokens, idx) {
-          const m = tokens[idx].info.trim().match(/^danger\s*(.*)$/)
-          if (tokens[idx].nesting === 1) {
-            // opening tag
-            return '<div class="custom-container danger">\n'
-          } else {
-            // closing tag
             return '</div>\n'
           }
         }
