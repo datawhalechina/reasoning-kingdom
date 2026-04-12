@@ -18,6 +18,7 @@ export default defineConfig({
       { text: '推理地图', link: '/map' },
       { text: '上卷：科普叙事', link: '/preface' },
       { text: '下卷：形式演绎', link: '/volume2/preface/' },
+      { text: '兔狲教授小词典', link: '/dictionary' },
     ],
     search: {
       provider: 'local',
@@ -41,7 +42,7 @@ export default defineConfig({
       }
     },
     sidebar: {
-      '/volume1/': [
+       '/volume1/': [
         {
           text: '上卷：推理的历史叙事',
           items: [
@@ -62,10 +63,11 @@ export default defineConfig({
             { text: '第13章：推理的边界——以及我们为什么必须接受它', link: '/volume1/chapter13/' },
             { text: '↳ 番外篇：暗线', link: '/volume1/chapter13/bonus' },
             { text: '因果推理番外篇：CocDo 神经因果算子', link: '/volume1/chapterbonous/' },
+            { text: '兔狲教授小词典', link: '/dictionary' },
           ]
         }
       ],
-      '/volume2/': [
+       '/volume2/': [
         {
           text: '下卷：推理的形式演绎',
           items: [
@@ -80,15 +82,17 @@ export default defineConfig({
             { text: '第21章：学习作为逆推断——泛化是压缩的另一种说法', link: '/volume2/chapter21/' },
             { text: '第22章：自指与涌现——当推理系统开始推理关于自身', link: '/volume2/chapter22/' },
             { text: '第23章：永霖-李雅普诺夫联立——推理系统的稳定性与收敛边界', link: '/volume2/chapter23/' },
+            { text: '兔狲教授小词典', link: '/dictionary' },
             { text: '附录：下卷思考题参考提示', link: '/appendix-thinking-questions' },
           ]
         }
       ],
-       '/': [
+        '/': [
         {
           items: [
             { text: '推理王国地图', link: '/map' },
             { text: '导读', link: '/preface' },
+            { text: '兔狲教授小词典', link: '/dictionary' },
             { text: '上卷：推理的历史叙事 →', link: '/volume1/chapter1/' },
             { text: '下卷：推理的形式演绎 →', link: '/volume2/chapter14/' },
           ]
