@@ -140,7 +140,7 @@ $$v^* = \arg\min_v \sum_j \left(\|E_{\text{next}}[j]\| - y^*_j\right)^2$$
 
 CausalSearch 把推理王国自身的章节作为因果知识图谱，用 Pearl 三步法（溯因→行动→预测）做检索，持续发现向量 RAG 遗漏的跨章因果链。
 
-`→ [github.com/lizixi-0x2F/CocDo](https://github.com/lizixi-0x2F/CocDo)` &nbsp; `→ [第23章：因果推断的实现](/volume2/chapter23/)`
+`→ [github.com/lizixi-0x2F/CocDo](https://github.com/lizixi-0x2F/CocDo)` &nbsp; `→ [因果推断番外篇](/volume2/chapterbonous/)`
 
 ---
 
@@ -199,7 +199,8 @@ CausalSearch 把推理王国自身的章节作为因果知识图谱，用 Pearl 
 
 第22章是终点，也是开口：当推理系统足够强大，它开始推理关于自身的命题。Curry-Howard 对应、不动点定理——这是目前没有答案的地方，也是值得继续走下去的地方。
 
-第23章是一次落地：把第18章的 do-calculus 实现为可运行的神经 SCM。COC 类型论让循环成为类型错误，$\mathsf{do}$ 算子实现为 λ 演算的项替换，NOTEARS 把 DAG 约束变成连续优化，梯度规划把"找最优干预"变成 Adam 下降。这是李籽溪（兔狲教授）的原创工作 [CocDo](https://github.com/lizixi-0x2F/CocDo)。
+
+因果推理番外篇是一次落地：把第18章的 do-calculus 实现为可运行的神经 SCM。COC 类型论让循环成为类型错误，$\mathsf{do}$ 算子实现为 λ 演算的项替换，NOTEARS 把 DAG 约束变成连续优化，梯度规划把"找最优干预"变成 Adam 下降。这是李籽溪（兔狲教授）的原创工作 [CocDo](https://github.com/lizixi-0x2F/CocDo)。
 
 ---
 
