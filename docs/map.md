@@ -210,7 +210,7 @@
 ---
 
 <div align="center">
-  <a href="/dear-reasoner/" style="margin-right: 20px;">▶ 从前传开始</a>
+  <a href="/reasoning-kingdom/dear-reasoner/" style="margin-right: 20px;">▶ 从前传开始</a>
   <a href="/reasoning-kingdom/volume1/chapter1/" style="margin-right: 20px;">▶ 开始上卷探险</a>
   <a href="/reasoning-kingdom/volume2/chapter14/">▶ 开始下卷重建</a>
 </div>
