@@ -16,13 +16,14 @@ export default defineConfig({
       // 添加自定义容器支持
       md.use(container, 'detail', {
         validate: function(params) {
-          return params.trim().match(/^detail\s+(.*)$/)
+          return params.trim().match(/^detail/)
         },
         render: function (tokens, idx) {
-          const m = tokens[idx].info.trim().match(/^detail\s+(.*)$/)
+          const m = tokens[idx].info.trim().match(/^detail\s*(.*)$/)
           if (tokens[idx].nesting === 1) {
-            //  opening tag
-            return '<details><summary>' + md.utils.escapeHtml(m[1]) + '</summary>\n'
+            // opening tag
+            const title = m[1] ? md.utils.escapeHtml(m[1]) : '详情'
+            return '<details><summary>' + title + '</summary>\n'
           } else {
             // closing tag
             return '</details>\n'
