@@ -47,26 +47,23 @@ export default defineConfig({
       { text: '前传：推理科学入门', link: '/dear-reasoner/' },
       { text: '上卷：科普叙事', link: '/preface' },
       { text: '下卷：形式演绎', link: '/volume2/preface/' },
+      { text: '兔狲学院', link: '/dear-reasoner/academy/' },
       { text: '兔狲教授小词典', link: '/dictionary' },
     ],
+    // 搜索配置 - 使用更简单的配置
     search: {
       provider: 'local',
-      options: {
-        translations: {
-          button: {
-            buttonText: '搜索文档',
-            buttonAriaLabel: '搜索文档'
-          },
-          modal: {
-            displayDetails: '显示详情',
-            noResultsText: '无法找到相关结果',
-            resetButtonTitle: '清除查询条件',
-            footer: {
-              selectText: '选择',
-              navigateText: '切换',
-              closeText: '关闭'
-            }
-          }
+      // 快捷键配置
+      shortcut: {
+        search: {
+          macos: 'Cmd+K',
+          windows: 'Ctrl+K',
+          linux: 'Ctrl+K'
+        },
+        open: {
+          macos: 'Cmd+K',
+          windows: 'Ctrl+K',
+          linux: 'Ctrl+K'
         }
       }
     },
@@ -118,6 +115,7 @@ export default defineConfig({
             {
               text: '兔狲学院',
               items: [
+                { text: '开学导论课：给还没有上大学的小伙伴', link: '/dear-reasoner/academy/' },
                 { text: '微积分：从函数到微分方程', link: '/dear-reasoner/academy/calculus/' },
                 { text: '线性代数：从向量到雅可比矩阵', link: '/dear-reasoner/academy/linear-algebra/' },
                 { text: '哲学：从古希腊到1840年', link: '/dear-reasoner/academy/philosophy/' },
