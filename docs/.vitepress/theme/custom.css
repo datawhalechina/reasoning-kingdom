@@ -36,11 +36,7 @@
   font-size: 16px;
 }
 
-/* 暗色模式下的公告栏样式 */
-.dark .announcement-banner {
-  background: linear-gradient(90deg, rgba(62, 175, 124, 0.2) 0%, rgba(45, 140, 240, 0.2) 100%);
-  color: var(--notion-text-primary);
-}
+
 
 /* 全局图片样式设置 */
 .vp-doc img {
@@ -450,10 +446,7 @@ td {
   border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
-.dark .custom-block.info {
-  background-color: rgba(16, 185, 129, 0.15);
-  border-color: rgba(16, 185, 129, 0.3);
-}
+
 
 .custom-block.detail {
   padding: 16px 20px;
@@ -464,10 +457,7 @@ td {
   border: 1px solid rgba(59, 130, 246, 0.2);
 }
 
-.dark .custom-block.detail {
-  background-color: rgba(59, 130, 246, 0.15);
-  border-color: rgba(59, 130, 246, 0.3);
-}
+
 
 .custom-block.info p,
 .custom-block.detail p {

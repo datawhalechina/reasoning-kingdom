@@ -53,45 +53,7 @@
   --notion-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
-/* 暗色模式 */
-.dark {
-  /* 背景色 - 深灰背景 */
-  --notion-bg: #1f2937;
-  --notion-bg-alt: #111827;
-  --notion-bg-elevated: #374151;
-  
-  /* 文本色 - 浅灰色 */
-  --notion-text-primary: #f9fafb;
-  --notion-text-secondary: #d1d5db;
-  --notion-text-tertiary: #9ca3af;
-  --notion-text-disabled: #6b7280;
-  
-  /* 边框和分隔线 */
-  --notion-border: #4b5563;
-  --notion-border-hover: #6b7280;
-  --notion-divider: #374151;
-  
-  /* 功能色 */
-  --notion-success: #34d399;
-  --notion-warning: #fbbf24;
-  --notion-error: #f87171;
-  --notion-info: #60a5fa;
-  
-  /* 代码块颜色 */
-  --notion-code-bg: #111827;
-  --notion-code-text: #f9fafb;
-  --notion-code-border: #374151;
-  
-  /* 链接颜色 */
-  --notion-link: #60a5fa;
-  --notion-link-hover: #93c5fd;
-  
-  /* 阴影 */
-  --notion-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --notion-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
-  --notion-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
-  --notion-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
-}
+
 
 /* ----------------------------------------------------------------------------
    2. 排版系统 - Notion风格字体
@@ -619,20 +581,7 @@ li {
   --vp-radius-large: 12px;
 }
 
-/* 暗色模式覆盖 */
-.dark {
-  --vp-c-bg: var(--notion-bg);
-  --vp-c-bg-alt: var(--notion-bg-alt);
-  --vp-c-bg-elv: var(--notion-bg-elevated);
-  
-  --vp-c-text: var(--notion-text-primary);
-  --vp-c-text-1: var(--notion-text-primary);
-  --vp-c-text-2: var(--notion-text-secondary);
-  --vp-c-text-3: var(--notion-text-tertiary);
-  
-  --vp-c-divider: var(--notion-divider);
-  --vp-c-border: var(--notion-border);
-}
+
 
 /* ----------------------------------------------------------------------------
    8. 工具类

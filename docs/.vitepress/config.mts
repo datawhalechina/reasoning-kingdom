@@ -10,6 +10,7 @@ export default defineConfig({
   title: "推理王国",
   description: "一本关于AI推理机制的开源教程",
   base: baseConfig,
+  appearance: false, // 禁用深色模式
   markdown: {
     math: true,
     config: (md) => {

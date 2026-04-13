@@ -70,9 +70,7 @@ html {
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
-.dark .hover-card::before {
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-}
+
 
 /* 按钮悬停效果 */
 .hover-button {
