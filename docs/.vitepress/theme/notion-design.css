@@ -65,16 +65,16 @@
   --notion-font-serif: 'Source Serif Pro', Georgia, 'Times New Roman', Times, serif;
   --notion-font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
   
-  /* 字体大小 - 基于Notion的排版比例 */
+  /* 字体大小 - 调整为平常字体大小 */
   --notion-text-xs: 0.75rem;    /* 12px */
   --notion-text-sm: 0.875rem;   /* 14px */
   --notion-text-base: 1rem;     /* 16px */
   --notion-text-lg: 1.125rem;   /* 18px */
   --notion-text-xl: 1.25rem;    /* 20px */
-  --notion-text-2xl: 1.5rem;    /* 24px */
-  --notion-text-3xl: 1.875rem;  /* 30px */
-  --notion-text-4xl: 2.25rem;   /* 36px */
-  --notion-text-5xl: 3rem;      /* 48px */
+  --notion-text-2xl: 1.375rem;  /* 22px */
+  --notion-text-3xl: 1.5rem;    /* 24px */
+  --notion-text-4xl: 1.75rem;   /* 28px */
+  --notion-text-5xl: 2rem;      /* 32px */
   
   /* 行高 */
   --notion-leading-tight: 1.25;
@@ -261,7 +261,8 @@ pre code {
 
 .VPSidebarItem:hover {
   color: var(--notion-text-primary);
-  background-color: var(--notion-divider);
+  /* 移除背景色变化，保持与正常状态一致 */
+  background-color: transparent;
 }
 
 .VPSidebarItem.active {
@@ -297,6 +298,7 @@ pre code {
   font-family: var(--notion-font-serif);
   font-weight: var(--notion-font-semibold);
   color: var(--notion-text-primary) !important;
+  font-size: var(--notion-text-xl); /* 20px */
 }
 
 .VPFeature .details {
@@ -309,6 +311,7 @@ pre code {
   font-family: var(--notion-font-serif) !important;
   font-weight: var(--notion-font-bold) !important;
   color: var(--notion-text-primary) !important;
+  font-size: var(--notion-text-5xl) !important; /* 32px */
 }
 
 .VPHero .text {

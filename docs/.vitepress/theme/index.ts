@@ -3,6 +3,7 @@ import './custom.css'
 import './notion-design.css'
 import './components.css'
 import './interactions.css'
+import './medium-enhancements.css'
 import type { Theme } from 'vitepress'
 import 'viewerjs/dist/viewer.min.css';
 import imageViewer from 'vitepress-plugin-image-viewer';
