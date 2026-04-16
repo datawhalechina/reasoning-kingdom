@@ -142,26 +142,26 @@ export default defineConfig({
                 { text: '学院主页：推理科学家的思维实验室', link: '/dear-reasoner/academy/' },
                 {
                   text: '数学基础综合：从自然数到不动点理论',
-                  link: '/dear-reasoner/academy/mathematics/',
+                  link: '/dear-reasoner/academy/math-core/',
                   items: [
-                    { text: '自然数与公理系统', link: '/dear-reasoner/academy/mathematics/foundations/natural-numbers.md' },
-                    { text: '集合论基础', link: '/dear-reasoner/academy/mathematics/foundations/set-theory.md' },
-                    { text: '逻辑与证明方法', link: '/dear-reasoner/academy/mathematics/foundations/logic.md' },
-                    { text: '函数与关系', link: '/dear-reasoner/academy/mathematics/foundations/functions.md' },
-                    { text: '数列与极限', link: '/dear-reasoner/academy/mathematics/foundations/sequences.md' },
-                    { text: 'ZFC集合论', link: '/dear-reasoner/academy/mathematics/foundations/zfc.md' },
-                    { text: '不动点理论', link: '/dear-reasoner/academy/mathematics/foundations/fixed-points.md' },
+                    { text: '自然数与公理系统', link: '/dear-reasoner/academy/math-core/sections/natural-numbers.md' },
+                    { text: '集合论基础', link: '/dear-reasoner/academy/math-core/sections/set-theory.md' },
+                    { text: '逻辑与证明方法', link: '/dear-reasoner/academy/math-core/sections/logic.md' },
+                    { text: '函数与关系', link: '/dear-reasoner/academy/math-core/sections/functions.md' },
+                    { text: '数列与极限', link: '/dear-reasoner/academy/math-core/sections/sequences.md' },
+                    { text: 'ZFC集合论', link: '/dear-reasoner/academy/math-core/sections/zfc.md' },
+                    { text: '不动点理论', link: '/dear-reasoner/academy/math-core/sections/fixed-points.md' },
                   ]
                 },
                 {
                   text: 'AI数学基础：概率统计到线性模型',
-                  link: '/dear-reasoner/academy/mathematics/ai-mathematics/',
+                  link: '/dear-reasoner/academy/ai-mathematics/',
                   items: [
-                    { text: '概率论基础', link: '/dear-reasoner/academy/mathematics/ai-mathematics/probability.md' },
-                    { text: '统计学基础', link: '/dear-reasoner/academy/mathematics/ai-mathematics/statistics.md' },
-                    { text: '优化理论', link: '/dear-reasoner/academy/mathematics/ai-mathematics/optimization.md' },
-                    { text: '信息论', link: '/dear-reasoner/academy/mathematics/ai-mathematics/information-theory.md' },
-                    { text: '线性模型', link: '/dear-reasoner/academy/mathematics/ai-mathematics/linear-models.md' },
+                    { text: '概率论基础', link: '/dear-reasoner/academy/ai-mathematics/probability.md' },
+                    { text: '统计学基础', link: '/dear-reasoner/academy/ai-mathematics/statistics.md' },
+                    { text: '优化理论', link: '/dear-reasoner/academy/ai-mathematics/optimization.md' },
+                    { text: '信息论', link: '/dear-reasoner/academy/ai-mathematics/information-theory.md' },
+                    { text: '线性模型', link: '/dear-reasoner/academy/ai-mathematics/linear-models.md' },
                   ]
                 },
                 {
