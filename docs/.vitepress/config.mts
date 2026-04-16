@@ -11,6 +11,7 @@ export default defineConfig({
   description: "一本关于AI推理机制的开源教程",
   base: baseConfig,
   appearance: false, // 禁用深色模式
+  
   markdown: {
     math: true,
     // 彻底禁用Vue语法解析
@@ -19,6 +20,24 @@ export default defineConfig({
       enabled: false
     },
     config: (md) => {
+      // 在解析之前，转义所有可能被误解为Vue语法的内容
+      const defaultRender = md.renderer.rules.html_inline || function(tokens, idx, options, env, self) {
+        return self.renderToken(tokens, idx, options)
+      }
+      
+      md.renderer.rules.html_inline = function(tokens, idx, options, env, self) {
+        const token = tokens[idx]
+        // 转义所有HTML标签，防止Vue解析
+        if (token.content.startsWith('<') && token.content.endsWith('>')) {
+          // 将 < 和 > 转义为 HTML实体
+          const escaped = token.content
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+          return escaped
+        }
+        return defaultRender(tokens, idx, options, env, self)
+      }
+      
       // 复制前传的容器配置
       md.use(container, 'info', {
         validate: function(params) {
