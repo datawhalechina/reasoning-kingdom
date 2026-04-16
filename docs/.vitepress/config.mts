@@ -157,11 +157,11 @@ export default defineConfig({
                   text: 'AI数学基础：概率统计到线性模型',
                   link: '/dear-reasoner/academy/ai-mathematics/',
                   items: [
-                    { text: '概率论基础', link: '/dear-reasoner/academy/ai-mathematics/probability.md' },
-                    { text: '统计学基础', link: '/dear-reasoner/academy/ai-mathematics/statistics.md' },
-                    { text: '优化理论', link: '/dear-reasoner/academy/ai-mathematics/optimization.md' },
-                    { text: '信息论', link: '/dear-reasoner/academy/ai-mathematics/information-theory.md' },
-                    { text: '线性模型', link: '/dear-reasoner/academy/ai-mathematics/linear-models.md' },
+                    { text: '概率论基础', link: '/dear-reasoner/academy/ai-mathematics/sections/probability' },
+                    { text: '统计学基础', link: '/dear-reasoner/academy/ai-mathematics/sections/statistics' },
+                    { text: '优化理论', link: '/dear-reasoner/academy/ai-mathematics/sections/optimization' },
+                    { text: '信息论', link: '/dear-reasoner/academy/ai-mathematics/sections/information-theory' },
+                    { text: '线性模型', link: '/dear-reasoner/academy/ai-mathematics/sections/linear-models' },
                   ]
                 },
                 {

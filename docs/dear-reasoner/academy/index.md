@@ -28,13 +28,13 @@
 **课程目标**：掌握现代数学的基础语言和思维工具
 
 **包含章节**：
-1. [自然数与公理系统](./mathematics/) - 数学的起点
-2. [集合论基础](./mathematics/foundations/set-theory.md) - 数学的统一语言
-3. [逻辑与证明方法](./mathematics/foundations/logic.md) - 数学推理的规则
-4. [函数与关系](./mathematics/foundations/functions.md) - 数学结构的桥梁
-5. [数列与极限](./mathematics/foundations/sequences.md) - 从离散到连续
-6. [ZFC集合论](./mathematics/foundations/zfc.md) - 数学的基础公理系统
-7. [不动点理论](./mathematics/foundations/fixed-points.md) - 自我指涉的数学
+1. [自然数与公理系统](./math-core/) - 数学的起点
+2. [集合论基础](./math-core/sections/set-theory.md) - 数学的统一语言
+3. [逻辑与证明方法](./math-core/sections/logic.md) - 数学推理的规则
+4. [函数与关系](./math-core/sections/functions.md) - 数学结构的桥梁
+5. [数列与极限](./math-core/sections/sequences.md) - 从离散到连续
+6. [ZFC集合论](./math-core/sections/zfc.md) - 数学的基础公理系统
+7. [不动点理论](./math-core/sections/fixed-points.md) - 自我指涉的数学
 
 **适合人群**：数学初学者，或想系统建立数学基础的学习者
 
@@ -58,11 +58,11 @@
 **课程目标**：掌握机器学习和人工智能必需的数学基础
 
 **包含章节**：
-1. [概率论基础](./mathematics/ai-mathematics/probability.md) - 处理不确定性的语言
-2. [统计学基础](./mathematics/ai-mathematics/statistics.md) - 从数据中学习
-3. [优化理论](./mathematics/ai-mathematics/optimization.md) - 寻找最优解
-4. [信息论](./mathematics/ai-mathematics/information-theory.md) - 度量信息的数学
-5. [线性模型](./mathematics/ai-mathematics/linear-models.md) - 从简单到强大
+1. [概率论基础](./ai-mathematics/sections/probability.md) - 处理不确定性的语言
+2. [统计学基础](./ai-mathematics/sections/statistics.md) - 从数据中学习
+3. [优化理论](./ai-mathematics/sections/optimization.md) - 寻找最优解
+4. [信息论](./ai-mathematics/sections/information-theory.md) - 度量信息的数学
+5. [线性模型](./ai-mathematics/sections/linear-models.md) - 从简单到强大
 
 **适合人群**：想学习机器学习、数据科学、人工智能的学习者
 
@@ -240,12 +240,12 @@ Python基础 → 线性模型 → 统计学基础 → 实践项目
 ## 课程导航
 
 ### 基础层
-1. [数学基础综合](./mathematics/) - 7章，从自然数到不动点理论
+1. [数学基础综合](./math-core/) - 7章，从自然数到不动点理论
 2. [微积分入门](./calculus/) - 变化与极限的语言
 3. [线性代数入门](./linear-algebra/) - 多维空间的思维工具
 
 ### AI专项
-4. [AI数学基础](./mathematics/ai-mathematics/) - 5章，概率统计到线性模型
+4. [AI数学基础](./ai-mathematics/) - 5章，概率统计到线性模型
 5. [Python编程](./python/) - 4章，从基础到数据科学应用
 
 ### 思维层
@@ -324,4 +324,4 @@ Python基础 → 线性模型 → 统计学基础 → 实践项目
 
 ---
 
-**开始学习** → [数学基础综合](./mathematics/) | [AI数学基础](./mathematics/ai-mathematics/) | [哲学入门](./philosophy/) | [Python编程](./python/)
+**开始学习** → [数学基础综合](./math-core/) | [AI数学基础](./ai-mathematics/) | [哲学入门](./philosophy/) | [Python编程](./python/)
