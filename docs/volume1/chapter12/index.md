@@ -1244,8 +1244,8 @@ class ADSOptimizer(Optimizer):
     """
 
     def __init__(self, params, lr=1e-2, n_classes=2,
-                 momentum=0.0, weight_decay=0.0, eps=1e-10):
-        defaults = dict(lr=lr, momentum=momentum,
+                weight_decay=0.0, eps=1e-10):
+        defaults = dict(lr=lr,
                         weight_decay=weight_decay, eps=eps)
         self.n_classes = n_classes
         self.H_max = torch.log(torch.tensor(float(n_classes)))
@@ -1303,16 +1303,7 @@ class ADSOptimizer(Optimizer):
                 if weight_decay != 0:
                     grad = grad.add(p, alpha=weight_decay)
 
-                # 动量（可选）
-                if momentum != 0:
-                    state = self.state[p]
-                    if 'momentum_buffer' not in state:
-                        state['momentum_buffer'] = torch.clone(grad).detach()
-                    else:
-                        buf = state['momentum_buffer']
-                        buf.mul_(momentum).add_(grad)
-                        grad = buf
-
+                
                 # 参数更新：步长由势垒直接控制
                 p.add_(grad, alpha=-eta_eff)
 
