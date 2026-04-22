@@ -1206,6 +1206,153 @@ class EntropyAwareLR(LRScheduler):
 ```
 :::
 
+:::details PyTorch 实现：ADSOptimizer（完整优化器）
+
+EntropyAwareLR 是调度器——它只缩放全局学习率，不碰梯度方向。但 ADS 的完整物理结构不只是调步长：对数势垒应该直接参与梯度修正，让高熵参数组的更新被势垒衰减，低熵参数组全速下山。
+
+这就是 ADSOptimizer 做的事：把熵感知从"外挂调度"内化为"优化器原生行为"。
+
+```python
+import torch
+from torch.optim import Optimizer
+
+class ADSOptimizer(Optimizer):
+    """
+    ADS 自适应优化器。
+
+    与 EntropyAwareLR 的区别：
+      - EntropyAwareLR 是调度器，只缩放全局 lr，不碰梯度
+      - ADSOptimizer 是优化器，对数势垒直接修正每步的参数更新
+
+    更新规则：
+      theta_{t+1} = theta_t - eta_eff * grad
+      eta_eff = eta_0 / (1 + alpha(B_t))
+      alpha(B_t) = -log(1 - B_t)
+      B_t = H(p_t) / H_max
+
+    可选动量（类似 SGD with momentum），
+    但步长由信息论量驱动，不依赖梯度二阶矩（这是与 Adam 的根本区别）。
+
+    用法：
+        optimizer = ADSOptimizer(model.parameters(), lr=0.01, n_classes=vocab_size)
+        # 训练循环：
+        logits = model(x)
+        loss = criterion(logits, y)
+        loss.backward()
+        optimizer.step(logits=logits)   # 传入 logits 计算熵
+        optimizer.zero_grad()
+    """
+
+    def __init__(self, params, lr=1e-2, n_classes=2,
+                 momentum=0.0, weight_decay=0.0, eps=1e-10):
+        defaults = dict(lr=lr, momentum=momentum,
+                        weight_decay=weight_decay, eps=eps)
+        self.n_classes = n_classes
+        self.H_max = torch.log(torch.tensor(float(n_classes)))
+        self._alpha = 0.0          # 当前势垒值，供外部监控
+        self._eta_eff = lr         # 当前有效步长
+        self._B = 0.0              # 当前归一化熵
+        super().__init__(params, defaults)
+
+    def _compute_alpha(self, logits):
+        """从 logits 计算对数势垒 alpha。"""
+        with torch.no_grad():
+            p = torch.softmax(logits.float(), dim=-1).mean(0)
+            H = -(p * torch.log(p + 1e-10)).sum()
+            B = (H / self.H_max).clamp(0.0, 1.0 - 1e-6)
+            alpha = float(-torch.log(1 - B))
+            self._B = float(B)
+            self._alpha = alpha
+        return alpha
+
+    @torch.no_grad()
+    def step(self, logits=None, closure=None):
+        """
+        执行一步参数更新。
+
+        Args:
+            logits: 当前前向传播的输出 logits (batch, n_classes)。
+                    如果不提供，使用上一次的 alpha 值。
+            closure: 重新计算 loss 的闭包（兼容 LBFGS 接口）。
+        """
+        loss = None
+        if closure is not None:
+            with torch.enable_grad():
+                loss = closure()
+
+        # 计算势垒
+        if logits is not None:
+            alpha = self._compute_alpha(logits)
+        else:
+            alpha = self._alpha
+
+        for group in self.param_groups:
+            lr = group['lr']
+            momentum = group['momentum']
+            weight_decay = group['weight_decay']
+
+            # 核心：熵感知有效步长
+            eta_eff = lr / (1.0 + alpha)
+            self._eta_eff = eta_eff
+
+            for p in group['params']:
+                if p.grad is None:
+                    continue
+
+                grad = p.grad
+                if weight_decay != 0:
+                    grad = grad.add(p, alpha=weight_decay)
+
+                # 动量（可选）
+                if momentum != 0:
+                    state = self.state[p]
+                    if 'momentum_buffer' not in state:
+                        state['momentum_buffer'] = torch.clone(grad).detach()
+                    else:
+                        buf = state['momentum_buffer']
+                        buf.mul_(momentum).add_(grad)
+                        grad = buf
+
+                # 参数更新：步长由势垒直接控制
+                p.add_(grad, alpha=-eta_eff)
+
+        return loss
+
+    # ── 监控接口 ──────────────────────────────────
+    @property
+    def current_alpha(self):
+        """当前对数势垒值。"""
+        return self._alpha
+
+    @property
+    def current_eta(self):
+        """当前有效学习率。"""
+        return self._eta_eff
+
+    @property
+    def current_entropy_ratio(self):
+        """当前归一化熵 B = H/H_max。"""
+        return self._B
+```
+
+**与 Adam 的关键区别**：
+
+| | Adam | ADSOptimizer |
+|--|------|-------------|
+| **步长依据** | 梯度一阶矩 + 二阶矩 | 输出分布的信息熵 |
+| **自适应粒度** | 逐参数 | 全局（信念空间） |
+| **响应延迟** | 有（指数滑动平均） | 无（即时读取当前熵） |
+| **理论保证** | 近似收敛 | 局部可采纳步长条件 |
+| **额外状态** | 每参数两个缓冲区（m, v） | 仅一个标量（alpha） |
+| **内存开销** | 3× 参数量 | 1× 参数量（无动量时） |
+
+**什么时候用 ADSOptimizer 而非 EntropyAwareLR + SGD/Adam？**
+
+- 如果你的任务输出是分类分布（有明确的熵信号），直接用 ADSOptimizer——它更干净、更少超参数
+- 如果你需要逐参数自适应（如稀疏梯度、embedding 层），用 Adam + EntropyAwareLR 组合
+- 两者**可以叠加**：Adam 处理参数级自适应，EntropyAwareLR 叠加全局熵感知缩放
+:::
+
 :::details 完整实验代码
 ```python
 import numpy as np
