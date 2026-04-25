@@ -107,143 +107,37 @@ $$
 
 </div>
 
-## 三、自己动手：用探针窥探隐层
+## 三、隐层里到底发生了什么
 
-让我们做一个实验，看看隐层到底学到了什么。
+到这里，我们已经可以把问题说得更准确一点了。
 
-**任务**：判断三个数字的大小关系。输入"3 7 5"，输出"False"（因为不是递增）。
+CoT 之所以有效，不一定是因为模型突然学会了新的逻辑规则；更可能是因为它把原本压缩在一次前向传播里的内部计算，摊开成了一串可写出的中间状态。换句话说，**显式推理链只是表面，真正先发生的是隐层里的状态演化。**
 
-**步骤1：训练一个简单的3层神经网络**
+这才是本章要追问的核心：在答案被说出口之前，隐层已经做了多少工作？
 
-```python
-import torch
-import torch.nn as nn
-import torch.optim as optim
-from torch.utils.data import DataLoader, TensorDataset
-import numpy as np
+一个最自然的直觉是：神经网络的前向传播，本来就是一种逐层展开的内部独白。输入不是一下子变成答案的，而是先被变成某种中间表示，再被重新组织、压缩、放大，最后才投影到输出空间。写成公式，就是：
 
-# 设置随机种子以保证可复现
-torch.manual_seed(42)
-np.random.seed(42)
+$$
+h_0 = x \quad \to \quad h_1 = f_1(h_0) \quad \to \quad h_2 = f_2(h_1) \quad \to \quad \cdots \quad \to \quad y = f_L(h_{L-1})
+$$
 
-# 生成数据集：随机三元组 (a, b, c)，标签为 a < b < c
-def make_dataset(n=2000):
-    X = np.random.uniform(0, 10, (n, 3)).astype(np.float32)
-    # 标签：三个数是否严格递增
-    y = ((X[:, 0] < X[:, 1]) & (X[:, 1] < X[:, 2])).astype(np.float32)
-    return X, y
+这里的每一层 $h_l$ 都不是答案本身，而是答案生成前的一个内部状态。它既不是原始输入，也不是最终输出，而是介于两者之间的某种“正在形成中的判断”。
 
-X, y = make_dataset()
-split = int(0.8 * len(X))
-X_train, y_train = torch.tensor(X[:split]), torch.tensor(y[:split])
-X_test,  y_test  = torch.tensor(X[split:]),  torch.tensor(y[split:])
+在感知任务里，我们常说浅层识别边缘，深层识别物体。但在推理任务里，这种分层更像是另一回事：浅层先把问题改写成模型更容易处理的坐标系，深层再在这个坐标系里做关系整合。
 
-train_loader = DataLoader(TensorDataset(X_train, y_train), batch_size=64, shuffle=True)
+这也是为什么 2022 年 Olsson 等人对 GPT 的研究会那么重要。他们发现某些注意力头会专门执行一种近似“工作记忆”的操作：看到一个模式后，继续追踪这个模式的延续。例如输入序列是 “A B C A B ?”，模型中的归纳头会把前面的 “A B” 和后面的 “A B” 对齐，于是预测下一个 token 是 “C”。
 
-# 定义三层神经网络，保存每层激活供探针使用
-class ThreeLayerNet(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.fc1 = nn.Linear(3, 64)   # 输入层 → 隐层1（64维）
-        self.fc2 = nn.Linear(64, 32)  # 隐层1 → 隐层2（32维）
-        self.fc3 = nn.Linear(32, 1)   # 隐层2 → 输出层（1维，True/False）
-        self.relu = nn.ReLU()
-        # 用于存储每层激活值
-        self.h1 = None
-        self.h2 = None
+这件事的意义不在于“模型会补全序列”——那太浅了。真正重要的是：**隐层并不是静态特征仓库，而是在维持某种可操作的内部状态。** 它会保留局部关系、对齐远处片段、把先前见过的结构搬到当前时刻来继续计算。这已经很接近我们通常所说的“中间推理”。
 
-    def forward(self, x):
-        self.h1 = self.relu(self.fc1(x))   # 隐层1激活
-        self.h2 = self.relu(self.fc2(self.h1))  # 隐层2激活
-        out = torch.sigmoid(self.fc3(self.h2))   # 输出概率
-        return out
+所以这里真正该问的，不是“模型有没有想法”，而是：**这种内部状态演化到底能走多远？**
 
-model = ThreeLayerNet()
-optimizer = optim.Adam(model.parameters(), lr=1e-3)
-criterion = nn.BCELoss()
+它能不能支撑真正的多步推理？能不能在链条足够长时维持一致性？能不能不靠显式输出步骤，也在内部完成某种稳定的逻辑传播？
 
-# 训练直到测试准确率达到 95%
-for epoch in range(200):
-    model.train()
-    for xb, yb in train_loader:
-        pred = model(xb).squeeze()
-        loss = criterion(pred, yb)
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+后面的永霖公式，会给出一个不那么乐观的答案：它能走一段，但走不无限远；它能在对象层推进，但不能在元层自证；它能形成短暂的推理窗口，但最终仍会被先验锚点拉回去。
 
-    # 每20轮检查一次测试准确率
-    if (epoch + 1) % 20 == 0:
-        model.eval()
-        with torch.no_grad():
-            test_pred = (model(X_test).squeeze() > 0.5).float()
-            acc = (test_pred == y_test).float().mean().item()
-        print(f"Epoch {epoch+1}: 测试准确率 = {acc:.1%}")
-        if acc >= 0.95:
-            print("已达到95%准确率，停止训练。")
-            break
-```
+所以，把 CoT 理解为“模型学会了把思维说出来”还不够。更精确的说法是：**CoT 暂时延长了隐层内部独白的有效长度。**
 
-**步骤2：在每层插入线性探针**
-
-探针是一个简单的线性分类器，试图从隐层激活中预测中间结果：
-- 探针1：预测"a < b？"
-- 探针2：预测"b < c？"
-- 探针3：预测"a < c？"
-
-```python
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
-
-# 收集各层激活值和中间标签
-model.eval()
-with torch.no_grad():
-    # 前向传播，触发激活值存储
-    _ = model(X_test)
-    act_input = X_test.numpy()          # 原始输入（3维）
-    act_h1    = model.h1.numpy()         # 隐层1激活（64维）
-    act_h2    = model.h2.numpy()         # 隐层2激活（32维）
-
-# 三个中间标签：a<b, b<c, a<c
-labels = {
-    "a<b": (X_test[:, 0] < X_test[:, 1]).numpy().astype(int),
-    "b<c": (X_test[:, 1] < X_test[:, 2]).numpy().astype(int),
-    "a<c": (X_test[:, 0] < X_test[:, 2]).numpy().astype(int),
-}
-
-# 对每层激活训练线性探针并评估准确率
-def probe_accuracy(activations, label_arr):
-    """用逻辑回归探针评估激活是否编码了目标关系"""
-    clf = LogisticRegression(max_iter=500, random_state=0)
-    # 用一半数据训练探针，另一半测试
-    n = len(activations)
-    clf.fit(activations[:n//2], label_arr[:n//2])
-    preds = clf.predict(activations[n//2:])
-    return accuracy_score(label_arr[n//2:], preds)
-
-print(f"\n{'层':^8} {'探针1(a<b)':^12} {'探针2(b<c)':^12} {'探针3(a<c)':^12}")
-print("-" * 50)
-for layer_name, acts in [("输入", act_input), ("隐层1", act_h1), ("隐层2", act_h2)]:
-    accs = [probe_accuracy(acts, labels[k]) for k in ["a<b", "b<c", "a<c"]]
-    print(f"{layer_name:^8} {accs[0]:^12.1%} {accs[1]:^12.1%} {accs[2]:^12.1%}")
-```
-
-**步骤3：测试探针准确率**
-
-| 层    | 探针1（a\<b） | 探针2（b\<c） | 探针3（a\<c） |
-|:------|:------------|:------------|:------------|
-| 输入  | 52%         | 51%         | 50%         |
-| 隐层1 | 78%         | 76%         | 65%         |
-| 隐层2 | 94%         | 93%         | 91%         |
-| 输出  | 98%         | 98%         | 97%         |
-
-**观察**：
-- 输入层：探针准确率接近随机（50%），因为原始数字没有明确编码大小关系
-- 隐层1：开始出现结构，模型学会了比较相邻数字
-- 隐层2：几乎完美，模型已经"知道"了所有中间结果
-- 输出层：只是把隐层2的信息整合成最终答案
-
-**结论**：推理过程在隐层中逐步展开。模型不是"突然"得到答案，而是在每一层都在精炼表示，直到答案变得显而易见。
+这就把我们带向下一步：如果隐层确实在展开一种内部独白，那么当推理链继续拉长时，这段独白会在哪里开始失真？
 
 <div class="center">
 
@@ -1613,7 +1507,7 @@ $$
 > 山高人为峰，路长脚丈量。  
 > 虽不能至顶，心已识山形。
 
-- **隐式推理能否被完全解释？** 探针能告诉我们隐层"知道"什么，但不能告诉我们隐层"如何"推理。这个"如何"能被形式化吗？
+- **隐式推理能否被完全解释？** 我们知道隐层里存在状态演化，也知道 CoT 能把一部分内部独白外化出来，但“状态如何变成推理”这件事，仍然没有被完全形式化。这个“如何”还能走多远？
 
 - **CoT的极限在哪里？** 有效推理窗口能否被延长？是否存在某种架构，能打破永霖公式的收敛？
 
