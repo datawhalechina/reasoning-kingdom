@@ -196,21 +196,10 @@
   background: linear-gradient(135deg, #f8fafc, #f1f5f9) !important;
   border: 1px solid rgba(62, 175, 124, 0.2) !important;
   border-radius: 12px !important;
-  padding: 1.75rem !important;
-  margin: 2rem 0 !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  position: relative;
+  padding: 0.5rem 1rem !important;
+  margin: 4px 0 !important;
+  box-shadow: none !important;
   overflow: hidden;
-}
-
-.vp-doc pre::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--notion-primary), var(--notion-info));
 }
 
 .vp-doc pre code {
@@ -224,20 +213,20 @@
   border: 1px solid var(--notion-border);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  margin: 2rem 0;
+  box-shadow: none;
+  margin: 1rem 0;
 }
 
 .vp-doc th {
   background: linear-gradient(135deg, var(--notion-bg-alt), #f8fafc);
   font-weight: 600;
   color: var(--notion-text-primary);
-  padding: 1rem 1.25rem;
+  padding: 4px 8px;
   border-bottom: 2px solid var(--notion-primary);
 }
 
 .vp-doc td {
-  padding: 0.875rem 1.25rem;
+  padding: 4px 8px;
   border-bottom: 1px solid var(--notion-border);
   color: var(--notion-text-secondary);
   transition: background-color 0.2s ease;
@@ -508,7 +497,28 @@
   .custom-block.info,
   .custom-block.detail {
     break-inside: avoid;
-    border: 1px solid #ccc !important;
-    background: none !important;
+    background-color: rgba(16, 185, 129, 0.1) !important;
+    border: 1px solid rgba(16, 185, 129, 0.2) !important;
+  }
+
+  .custom-block.detail {
+    background-color: rgba(59, 130, 246, 0.1) !important;
+    border-color: rgba(59, 130, 246, 0.2) !important;
+  }
+
+  /* 容器内代码块带上色调 */
+  .custom-block.info div[class*='language-'],
+  .custom-block.info pre {
+    background-color: rgba(16, 185, 129, 0.06) !important;
+  }
+
+  .custom-block.detail div[class*='language-'],
+  .custom-block.detail pre {
+    background-color: rgba(59, 130, 246, 0.06) !important;
+  }
+
+  /* 代码块去阴影 */
+  .vp-doc pre {
+    box-shadow: none !important;
   }
 }

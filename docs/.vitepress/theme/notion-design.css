@@ -46,11 +46,6 @@
   --notion-link: #2563eb;
   --notion-link-hover: #1d4ed8;
   
-  /* 阴影 */
-  --notion-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --notion-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --notion-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --notion-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 
@@ -172,14 +167,20 @@ pre {
   background-color: var(--notion-code-bg) !important;
   border: 1px solid var(--notion-code-border) !important;
   border-radius: 8px !important;
-  padding: 1.5rem !important;
+  padding: 0.5rem 1rem !important;
   overflow-x: auto;
+  box-shadow: none !important;
 }
 
 pre code {
   background-color: transparent;
   border: none;
   padding: 0;
+}
+
+/* 代码块容器 - 去阴影 */
+div[class*='language-'] {
+  box-shadow: none !important;
 }
 
 /* ----------------------------------------------------------------------------
@@ -337,12 +338,12 @@ th {
   background-color: var(--notion-bg-alt);
   font-weight: var(--notion-font-semibold);
   color: var(--notion-text-primary);
-  padding: 0.75rem 1rem;
+  padding: 4px 8px;
   border-bottom: 1px solid var(--notion-border);
 }
 
 td {
-  padding: 0.75rem 1rem;
+  padding: 4px 8px;
   border-bottom: 1px solid var(--notion-border);
   color: var(--notion-text-secondary);
 }
@@ -573,10 +574,10 @@ li {
   --vp-font-family-base: var(--notion-font-sans);
   --vp-font-family-mono: var(--notion-font-mono);
   
-  /* 覆盖阴影 */
-  --vp-shadow-1: var(--notion-shadow-sm);
-  --vp-shadow-2: var(--notion-shadow-md);
-  --vp-shadow-3: var(--notion-shadow-lg);
+  /* 覆盖阴影 - 全部禁用 */
+  --vp-shadow-1: none;
+  --vp-shadow-2: none;
+  --vp-shadow-3: none;
   
   /* 覆盖圆角 */
   --vp-radius-small: 6px;
@@ -622,4 +623,48 @@ li {
 .hover-lift:hover {
   transform: translateY(-2px);
   box-shadow: var(--notion-shadow-lg);
+}
+
+/* ============================================================================
+   9. 打印样式 - 强制保留背景色
+   ============================================================================ */
+
+@media print {
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* 强制保留自定义容器背景色 */
+  .custom-block.info {
+    background-color: rgba(16, 185, 129, 0.1) !important;
+    border-left-color: rgba(16, 185, 129, 1) !important;
+  }
+
+  .custom-block.detail {
+    background-color: rgba(59, 130, 246, 0.1) !important;
+    border-left-color: rgba(59, 130, 246, 1) !important;
+  }
+
+  .custom-block.details {
+    background-color: rgba(231, 161, 59, 0.08) !important;
+    border-left-color: #e7a13b !important;
+  }
+
+  /* 容器内的代码块带上容器色调 */
+  .custom-block.info div[class*='language-'],
+  .custom-block.info pre {
+    background-color: rgba(16, 185, 129, 0.06) !important;
+  }
+
+  .custom-block.detail div[class*='language-'],
+  .custom-block.detail pre {
+    background-color: rgba(59, 130, 246, 0.06) !important;
+  }
+
+  /* 代码块去阴影 */
+  div[class*='language-'],
+  pre {
+    box-shadow: none !important;
+  }
 }

@@ -31,7 +31,7 @@
 }
 
 .announcement-banner::before {
-  content: '⚠️';
+  content: '\26A0\FE0F';
   margin-right: 8px;
   font-size: 16px;
 }
@@ -427,13 +427,17 @@
    5. 确认 max-width 值已经被成功覆盖
    ============================================================================ */
 
-/* 表格样式 */
+/* 表格样式 - 去掉填充 */
 th,
 td {
-  /* white-space: nowrap !important; */
-  /* 不让th，td内容换行显示 */
-  width: 10%;
-  /* 强制均匀分配宽度 */
+  padding: 4px 8px !important;
+  width: 5%;
+}
+
+/* 代码块 - 去掉上下填充 */
+.vp-doc div[class*='language-'] {
+  margin: 4px 0 !important;
+  padding: 0 !important;
 }
 
 /* 自定义容器样式 - Notion风格优化 */
@@ -523,12 +527,12 @@ td {
 }
 
 .custom-block.info::before {
-  content: '信息';
+  content: '\4FE1\606F';
   color: var(--notion-success);
 }
 
 .custom-block.detail::before {
-  content: '详情';
+  content: '\8BE6\60C5';
   color: var(--notion-info);
 }
 
@@ -640,27 +644,48 @@ td {
     overflow-x: visible !important;
   }
 
-	  /* --- 禁用所有动画与过渡 + 强制完全可见 --- */
-	  /* 动画/过渡会干扰透明度：禁掉动画后元素可能卡在 opacity:0 的起始帧 */
-	  *,
-	  *::before,
-	  *::after {
-	    animation: none !important;
-	    transition: none !important;
-	    opacity: 1 !important;
-	  }
+  /* --- 禁用所有动画与过渡 + 强制完全可见 --- */
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+  }
 
-	  /* --- 自定义块：不断开 + 内容确保可见 --- */
-	  .custom-block,
-	  .custom-block.detail,
-	  .custom-block.details,
-	  .custom-block.info {
-	  }
+  /* --- 自定义块：不断开 + 强制保留背景色 --- */
+  .custom-block,
+  .custom-block.detail,
+  .custom-block.details,
+  .custom-block.info {
+    break-inside: avoid;
+  }
 
-	  /* details-summary 保持视觉层级 */
-	  .details-summary {
-	    font-weight: 700;
-	    margin-bottom: 8px;
-	  }
+  .custom-block.info {
+    background-color: rgba(16, 185, 129, 0.1) !important;
+    border-left-color: rgba(16, 185, 129, 1) !important;
+  }
 
+  .custom-block.detail {
+    background-color: rgba(59, 130, 246, 0.1) !important;
+    border-left-color: rgba(59, 130, 246, 1) !important;
+  }
+
+  .custom-block.details {
+    background-color: rgba(231, 161, 59, 0.08) !important;
+    border-left-color: #e7a13b !important;
+  }
+
+  /* 打印时自定义容器内的代码块也带上容器色调 */
+  .custom-block.info div[class*='language-'] {
+    background-color: rgba(16, 185, 129, 0.06) !important;
+  }
+
+  .custom-block.detail div[class*='language-'] {
+    background-color: rgba(59, 130, 246, 0.06) !important;
+  }
+
+  /* details-summary 保持视觉层级 */
+  .details-summary {
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
 }
