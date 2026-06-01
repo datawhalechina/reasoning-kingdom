@@ -1,7 +1,11 @@
 node_modules/
 docs/.vitepress/dist
 docs/.vitepress/cache
-.DS_Store
+docs/.vitepress/.temp/
+docs_en/.vitepress/dist
+docs_en/.vitepress/cache
+docs_en/.vitepress/.temp/
+**/.DS_Store
 scripts/
 .claude/
 package-lock.json

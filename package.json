@@ -8,11 +8,17 @@
   },
   "scripts": {
     "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
+    "docs:build": "NODE_OPTIONS=--max-old-space-size=4096 vitepress build docs",
     "docs:preview": "vitepress preview docs",
-    "export-pdf": "press-export-pdf export docs"
+    "export-pdf": "press-export-pdf export docs",
+    "export-pdf-en": "press-export-pdf export docs_en --config vitepress-pdf-en.config.ts",
+    "export-pdf-dear-reasoner": "press-export-pdf export docs_en --config vitepress-pdf-dear-reasoner.config.ts",
+    "export-pdf-vol1": "press-export-pdf export docs_en --config vitepress-pdf-vol1.config.ts",
+    "export-pdf-vol2": "press-export-pdf export docs_en --config vitepress-pdf-vol2.config.ts",
+    "build:en": "vitepress build docs_en"
   },
   "dependencies": {
+    "@ampernic/vitepress-plugin-export": "^0.1.39",
     "vitepress-plugin-image-viewer": "^1.1.6"
   }
 }
