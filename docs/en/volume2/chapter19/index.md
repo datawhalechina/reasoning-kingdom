@@ -64,6 +64,24 @@ To give "fast" a precise meaning, a measuring stick is needed.
 
 The gulf between polynomial and exponential is the core dividing line of complexity theory. When $n = 100$, $n^{10} = 10^{20}$, already enormous; $2^{100} \approx 10^{30}$, more than the number of atoms in the universe. As $n$ grows further, this gap only becomes more absurd.
 
+### 19.1.5 Facing the Numbers: What Polynomial vs. Exponential Actually Means
+
+Putting the numbers on the table is more powerful than any abstract talk of "exponential explosion." Assume each operation takes 1 nanosecond ($10^{-9}$ seconds).
+
+| Input Size $n$ | $n^2$ (Polynomial) | $2^n$ (Exponential) |
+|:------------|:---------------|:------------|
+| 10 | 100 ns | 1 μs |
+| 20 | 400 ns | 1 ms |
+| 50 | 2.5 μs | 13 days |
+| 100 | 10 μs | $4 \times 10^{13}$ years |
+| 200 | 40 μs | ... |
+
+When $n=100$, the time required for $2^{100}$ steps is about 3000 times longer than the age of the universe. This is not "a bit slow" — it is **physically impossible**.
+
+But wait — $n^{10}$ is also a polynomial, and when $n=100$, $10^{20}$ ns ≈ 3171 years. Polynomial is not necessarily fast, but the key difference is: polynomial growth is bounded by a fixed exponent $k$ ($n^k$), while the exponent of an exponential function is itself growing ($k^n$). As $n$ increases, the polynomial will always be left behind by the exponential — this is an asymptotic dividing line, not an absolute speed comparison.
+
+More importantly, most "natural" polynomial-time algorithms have small exponents ($n, n^2, n^3, n\log n$), not $n^{100}$. In the theoretical framework, the boundary between "polynomial" and "exponential" captures the practical divide between "solvable" and "unsolvable" — even though theory admits $n^{100}$ as polynomial, no one would use it in practice.
+
 ---
 
 ## 19.2 P and NP: Two Capabilities
@@ -122,6 +140,44 @@ That SAT is NP-complete means: if you can quickly determine whether a Boolean fo
 The Boolean satisfiability problem, in the context of formal logic, is: given a set of propositional formulas, does there exist a truth assignment making them all true? This is precisely the problem of finding a model — the core operation of logical semantics. Chapter 14 said "verifying a proof can be done in polynomial time," corresponding to: given a candidate assignment, checking whether it satisfies the formula merely requires term-by-term substitution, doable in polynomial time. And "discovering" an assignment that makes the formula true is SAT — NP-complete. The asymmetry of reasoning here acquires a precise computational characterization.
 :::
 
+### 19.3.5 Hands-On: Build a Reduction Yourself (3-SAT -> Vertex Cover)
+
+Reduction is not an abstract concept — it is a translation you can perform with your own hands. Below we translate an instance of 3-SAT into an instance of Vertex Cover — every step is concrete and traceable.
+
+**Source problem**: 3-SAT instance:
+$$(x_1 \lor \neg x_2 \lor x_3) \land (\neg x_1 \lor x_2 \lor \neg x_3) \land (x_2 \lor x_3 \lor \neg x_3)$$
+
+Three clauses, three variables.
+
+**Translation rules**:
+1. For each variable $x_i$, create a "variable edge" connecting $x_i$ and $\neg x_i$ (two vertices).
+2. For each clause, create a triangular "clause gadget" — three vertices corresponding to the three literals of the clause.
+
+**Target value** $k = |\text{variables}| + 2 \times |\text{clauses}| = 3 + 2 \times 3 = 9$.
+
+**Constructed graph** (vertex list):
+- Variable gadgets: $(x_1, \neg x_1)$, $(x_2, \neg x_2)$, $(x_3, \neg x_3)$, each connected by an edge
+- Clause 1 gadget: three vertices connected as a triangle, labeled $\{x_1, \neg x_2, x_3\}$ (corresponding to the three literals of clause 1)
+- Clause 2 gadget: a triangle of three vertices, labeled $\{\neg x_1, x_2, \neg x_3\}$
+- Clause 3 gadget: a triangle of three vertices, labeled $\{x_2, x_3, \neg x_3\}$
+
+**Connecting edges**: The literal labels inside each clause gadget are connected to the corresponding vertex in the variable gadgets. For example, the $x_1$ node in clause 1 is connected to the $x_1$ vertex in the variable gadget by an edge; the $\neg x_2$ node in clause 1 is connected to the $\neg x_2$ vertex in the variable gadget.
+
+**Why does this reduction work?** (Intuitive version):
+- To cover all edges: for each variable gadget's single edge, at least one of $\{x_i, \neg x_i\}$ must be selected — this corresponds to the variable being assigned true or false.
+- Each clause gadget's triangle has 3 internal edges, requiring at least 2 vertices to cover — but the variable vertices you selected may have already "incidentally" covered one edge of the clause gadget (via the connecting edges). If a literal in the clause is true, its corresponding variable vertex has already covered that connecting edge, so the clause triangle only needs the other 2 vertices.
+- A vertex cover of size $k=9$ exists if and only if the 3-SAT formula is satisfiable.
+
+**Concrete assignment-to-cover correspondence**: Take the assignment $x_1=1, x_2=1, x_3=1$. The variable gadgets select $\{x_1, x_2, x_3\}$ (3 vertices). Clause 1: $x_1=1$ already covers the edge corresponding to $x_1$, leaving 2 vertices $\{\neg x_2, x_3\}$ in the triangle — select them (2 vertices). The same reasoning applies to the other clauses. Total vertices = $3 + 3 \times 2 = 9$. ✓
+
+The approximate polynomial-time construction of this reduction: draw a triangle for each clause, add two vertices for each variable edge, connect the literal nodes of each clause to the corresponding variable nodes. The entire operation can be completed in $O(n+m)$ time ($n$ = number of variables, $m$ = number of clauses).
+
+**What have you just done?** You translated a logic problem ("does there exist an assignment making all these clauses simultaneously true") into a graph problem ("does this graph have a vertex cover of at most 9 vertices"). If you have a black-box solver for Vertex Cover, you can use it to solve 3-SAT — because you can translate any 3-SAT instance into an equivalent Vertex Cover instance. This is the power of reduction: not proving that a problem is hard, but proving that if this problem is easy, then another problem is easy too.
+
+::: info Professor Manul's Commentary
+Doing a reduction by hand is a completely different experience from reading a definition of reduction. Once you've done it, you realize: reduction is not an abstract "if A then B," but a concrete, programmable translation function. Every reduction is a compiler — translating the language of one problem into the language of another. The "equivalence" of NP-complete problems is not a philosophical resemblance, but a computation that can be run.
+:::
+
 ---
 
 ## 19.4 The Halting Problem: A Boundary Deeper Than NP
@@ -162,6 +218,25 @@ That the halting problem is undecidable means there exists a boundary deeper tha
 $$\mathsf{P} \subseteq \mathsf{NP} \subseteq \mathsf{PSPACE} \subseteq \cdots \subseteq \text{decidable} \subseteq \text{enumerable} \subsetneq \text{all problems}$$
 
 The halting problem lives at the "enumerable but not decidable" level — you can verify in finitely many steps that a halting program indeed halts (just run it and wait for it to stop), but you cannot confirm in finitely many steps that a non-halting program will never halt (you've waited a hundred million steps and it still hasn't halted; this does not mean it will never halt).
+
+### 19.4.5 Space and Alternation: NP Is Not the Whole Story
+
+Beyond time, there is another constraint: **space (memory)**.
+
+**PSPACE**: the set of all problems solvable in polynomial space. It can be shown that $\mathsf{NP} \subseteq \mathsf{PSPACE}$ (because you can enumerate all possible certificates in polynomial space — reclaiming space after each use, without storing all certificates at once). But it is not known whether NP equals PSPACE.
+
+PSPACE contains problems that are harder than those in NP. For example: **Quantified Boolean Formula (QBF)** is PSPACE-complete. QBF extends SAT: it does not merely ask "does there exist an assignment making the formula true," but asks about layers of alternating quantifiers, such as "$\forall x_1 \exists x_2 \forall x_3 \ldots$ making the formula true." This structure of "alternating quantifiers," at the intersection of complexity and logic, corresponds to the **Polynomial Hierarchy** — stacking the existential quantifiers of NP and the universal quantifiers of coNP layer upon layer, each layer (conjectured to be) harder than the last.
+
+**The Polynomial Hierarchy** (abbreviated):
+- $\Sigma_1^p = \mathsf{NP}$: problems for which $\exists$ a certificate that can be verified
+- $\Pi_1^p = \mathsf{coNP}$: problems for which $\forall$ certificates satisfy some condition
+- $\Sigma_2^p$: $\exists$ a certificate, such that $\forall$ another certificate, some condition holds
+- $\Pi_2^p$: $\forall$ a certificate, $\exists$ another certificate...
+- ...and so on
+
+Each level of the hierarchy is (conjectured to be) strictly contained in the next. If one level collapses (equals the next), the entire hierarchy collapses to that level. For example, if NP = coNP, then $\Sigma_1^p = \Pi_1^p$, and it can be shown that the entire Polynomial Hierarchy collapses to the first level.
+
+**What does this have to do with Chapter 15?** The alternating quantifier structure of the Polynomial Hierarchy directly corresponds to theorem length in logic: how many alternations of "for all" and "there exists" a proposition contains determines which level of the hierarchy the complexity of its proof lies in. Godelian incompleteness and complexity theory are precisely linked through this correspondence — a system being "sufficiently strong," in the language of complexity, is equivalent to "being able to express enough layers of quantifier alternation."
 
 ---
 

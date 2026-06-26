@@ -284,8 +284,8 @@ $$ \text{Attention}(Q,K,V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
 它是在比较“位置A的隐藏表示”和“位置B的隐藏表示”。
 
 用更技术的话说：  
-- **嵌入空间**：词形 → 静态向量  
-- **隐藏空间**：上下文理解 → 动态向量  
+- **嵌入空间**：词形 -> 静态向量  
+- **隐藏空间**：上下文理解 -> 动态向量  
 
 注意力机制是在隐藏空间中进行的**表征检索**。  
 $q_i$ 是一个查询：”在当前的上下文理解下，我需要什么信息？”  
@@ -690,8 +690,8 @@ $$
 
 Mamba 通过选择性 $\Delta_t$ 解决了这个问题：
 
-- 看到重要信息 →  $\Delta_t$ 大 → 状态剧烈更新，旧噪声被清除
-- 看到噪声 →  $\Delta_t$ 小 → 状态几乎不变，噪声被忽视
+- 看到重要信息 ->  $\Delta_t$ 大 -> 状态剧烈更新，旧噪声被清除
+- 看到噪声 ->  $\Delta_t$ 小 -> 状态几乎不变，噪声被忽视
 
 **这就是 softmax 的”尖锐性”在循环架构中的对应物**：不是在空间维度上集中注意力，而是在时间维度上选择性记忆。
 
@@ -941,17 +941,17 @@ Transformer也能正确地让”it”的注意力集中在”trophy”上。但�
 
 ## 延伸阅读
 
-- Vaswani et al. (2017). *Attention Is All You Need* — Transformer原始论文，开启了NLP的新纪元 `→ [arXiv:1706.03762]`
+- Vaswani et al. (2017). *Attention Is All You Need* — Transformer原始论文，开启了NLP的新纪元 `-> [arXiv:1706.03762]`
 
-- Katharopoulos et al. (2020). *Transformers are RNNs: Fast Autoregressive Transformers with Linear Attention* — 线性注意力的核函数推导，加法结合律换来 $O(N)$ 复杂度及其圆滑性代价 `→ [arXiv:2006.16236]`
+- Katharopoulos et al. (2020). *Transformers are RNNs: Fast Autoregressive Transformers with Linear Attention* — 线性注意力的核函数推导，加法结合律换来 $O(N)$ 复杂度及其圆滑性代价 `-> [arXiv:2006.16236]`
 
-- Gu, A. et al. (2020). *HiPPO: Recurrent Memory with Optimal Polynomial Projections* — 勒让德多项式最优历史压缩，SSM 的理论基础 `→ [arXiv:2008.07669]`
+- Gu, A. et al. (2020). *HiPPO: Recurrent Memory with Optimal Polynomial Projections* — 勒让德多项式最优历史压缩，SSM 的理论基础 `-> [arXiv:2008.07669]`
 
-- Gu, A. & Dao, T. (2023). *Mamba: Linear-Time Sequence Modeling with Selective State Spaces* — 选择性 SSM，用内容驱动的 $\Delta_t$ 在时间维度上实现 softmax 的尖锐性 `→ [arXiv:2312.00752]`
+- Gu, A. & Dao, T. (2023). *Mamba: Linear-Time Sequence Modeling with Selective State Spaces* — 选择性 SSM，用内容驱动的 $\Delta_t$ 在时间维度上实现 softmax 的尖锐性 `-> [arXiv:2312.00752]`
 
-- Devlin et al. (2018). *BERT: Pre-training of Deep Bidirectional Transformers* — 双向Transformer预训练，展示了注意力机制的强大 `→ [arXiv:1810.04805]`
+- Devlin et al. (2018). *BERT: Pre-training of Deep Bidirectional Transformers* — 双向Transformer预训练，展示了注意力机制的强大 `-> [arXiv:1810.04805]`
 
-- Su et al. (2021). *RoFormer: Enhanced Transformer with Rotary Position Embedding* — RoPE旋转位置编码，改进长序列外推 `→ [arXiv:2104.09864]`
+- Su et al. (2021). *RoFormer: Enhanced Transformer with Rotary Position Embedding* — RoPE旋转位置编码，改进长序列外推 `-> [arXiv:2104.09864]`
 
 - Press et al. (2021). *Train Short, Test Long: Attention with Linear Biases Enables Input Length Extrapolation* — ALiBi位置偏置方法
 

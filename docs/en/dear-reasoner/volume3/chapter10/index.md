@@ -30,7 +30,7 @@ Mr. Pallas's Cat nodded: "Yes, this is the core of what we explore today: **how 
 He walked to the whiteboard and drew a simplified diagram:
 
 ```
-Input signals → Weighted sum → Activation function → Output signal
+Input signals -> Weighted sum -> Activation function -> Output signal
 ```
 
 "Biological neurons involve complex chemical and electrophysiological processes," Mr. Pallas's Cat explained. "But we extract only the most critical parts: **weighted summation** and **threshold activation**."
@@ -437,7 +437,7 @@ print("\nTesting the perceptron:")
 for inputs in X_train:
     prediction = perceptron.predict(inputs)
     expected = 1 if inputs == [1, 1] else 0
-    print(f"  Input {inputs} → Prediction {prediction} (expected {expected})")
+    print(f"  Input {inputs} -> Prediction {prediction} (expected {expected})")
 
 # Visualize the training process
 plt.figure(figsize=(8, 4))

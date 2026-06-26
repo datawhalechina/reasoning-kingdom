@@ -627,7 +627,7 @@ def sliding_puzzle_example():
     print("\n2. Informedness (which is more accurate?):")
     print("   - Misplaced tiles: underestimates actual moves")
     print("   - Manhattan distance: closer to actual moves")
-    print("   → Manhattan distance is typically more efficient")
+    print("   -> Manhattan distance is typically more efficient")
     
     print("\n3. Consistency check:")
     print("   - Manhattan distance satisfies consistency")

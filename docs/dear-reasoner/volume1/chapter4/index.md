@@ -231,13 +231,13 @@ def findInsertionPoint(arr, target):
 
 ```
 是否需要多次搜索？
-    ├── 否：数据规模小 → 线性搜索（简单直接）
-    │    └── 数据规模大 → 考虑排序成本
+    ├── 否：数据规模小 -> 线性搜索（简单直接）
+    │    └── 数据规模大 -> 考虑排序成本
     │
     └── 是：需要建立索引结构
-         ├── 静态数据 → 排序后二分搜索
-         ├── 动态数据 → 平衡二叉搜索树
-         └── 近似搜索 → 哈希表（下章讨论）
+         ├── 静态数据 -> 排序后二分搜索
+         ├── 动态数据 -> 平衡二叉搜索树
+         └── 近似搜索 -> 哈希表（下章讨论）
 ```
 
 "这个选择框架告诉我们，"兔狲教授说，"**没有最好的算法，只有最适合的算法**。选择取决于：
@@ -572,17 +572,17 @@ def search_strategy_selection(data_size, query_count, is_sorted, memory_constrai
     print("\n策略推荐:")
     
     if query_count == 1:
-        print("  - 单次查询 → 线性搜索通常更简单")
+        print("  - 单次查询 -> 线性搜索通常更简单")
         if not is_sorted:
             print("  - 注意：对于单次查询，排序的成本可能超过收益")
     
     elif query_count > 1 and is_sorted:
-        print("  - 多次查询 + 已排序 → 二分搜索是最佳选择")
+        print("  - 多次查询 + 已排序 -> 二分搜索是最佳选择")
         expected_speedup = linear_time / binary_time if binary_time > 0 else float('inf')
         print(f"  - 预期加速比: {expected_speedup:.1f}倍")
     
     elif query_count > 1 and not is_sorted:
-        print("  - 多次查询 + 未排序 → 考虑先排序再二分")
+        print("  - 多次查询 + 未排序 -> 考虑先排序再二分")
         # 比较两种策略
         if total_sorted_time < linear_time:
             speedup = linear_time / total_sorted_time

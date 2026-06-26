@@ -46,8 +46,30 @@ What this game cuts into is not "some problems are too hard." Hard problems may 
 
 A formal system fails not because it is weak, but because it is strong enough to see itself — and thus cracks open.
 
-::: info Professor Pallas's Cat comments
+::: info Professor Manul comments
 The cruelty of the mirror proposition game lies in this: the mirror is not an external enemy. It is part of the system's expressive power. You want the system to be strong enough to talk about arithmetic; it conveniently learns to talk about itself. Then, the crack appears. It is not that someone attacked the castle; the castle grew its own reflection.
+:::
+
+### 15.0.5 A Mini Godel Numbering: How Encoding Makes the System Grow a Mirror
+
+Godel numbering is not an abstract "map symbols to numbers" — it is a mechanical encoding that can be demonstrated by hand. Let us perform it on a tiny system.
+
+Consider the symbol set: $P$ (propositional variable), $\to$ (implication), $\neg$ (negation). Encode them as:
+$$P \mapsto 1,\quad \to \ \mapsto 2,\quad \neg \mapsto 3$$
+
+A formula (string of symbols) is encoded as the product of corresponding prime powers. The symbol sequence of the formula $\neg P \to \neg\neg P$ is $(\neg, P, \to, \neg, \neg, P)$:
+$$\text{encoding} = 2^3 \cdot 3^1 \cdot 5^2 \cdot 7^3 \cdot 11^3 \cdot 13^1$$
+
+**Key property**: prime factorization is unique — given this number, you can recover the original symbol string with 100% certainty. Each formula corresponds to a unique number, and each number corresponds to at most one formula.
+
+A proof sequence (a list of formulas) is encoded one level further: $(F_1, F_2, \ldots, F_k)$ maps to $2^{\#F_1} \cdot 3^{\#F_2} \cdot \cdots \cdot p_k^{\#F_k}$.
+
+Now the system can internally express $\mathsf{Prov}(n)$ — "there exists a proof sequence whose last formula has the number $n$." But $\mathsf{Prov}(n)$ is not some mysterious new predicate — it is just an arithmetic proposition about natural numbers, saying "there exists some natural number satisfying certain prime factorization conditions." It is entirely within the system's language — talking about multiplication, addition, primes — only through encoding, these arithmetic relations happen to correspond to the meta-mathematical concept of "a certain formula is provable."
+
+**The power of this mirror**: the system originally could only talk about numeric propositions like $1+1=2$. With Godel numbering, the system "conveniently" acquires the ability to talk about itself — because "proof" has been encoded as relations between numbers. It is not that the system was designed with this mirror; rather, when numbers become large enough to encode the system itself, the mirror emerges inevitably.
+
+::: info Professor Manul comments
+Godel numbering is not a "coding trick" — it demonstrates how self-reference arises as an inevitable byproduct of expressive power. Any system capable of talking about addition and multiplication automatically becomes capable of talking about certain facts about itself. Not because self-reference was "designed," but because the system's expressive power exceeds a certain threshold, and self-reference becomes an unavoidable mathematical fact.
 :::
 
 ## 15.1 Consistency: The System Does Not Lie
@@ -58,7 +80,7 @@ If a formal system can simultaneously prove some proposition $A$ and its negatio
 
 Thus consistency is the bottom line for a formal system; a system below this line is useless.
 
-::: info Professor Pallas's Cat comments
+::: info Professor Manul comments
 "Useless" is not an adjective; it is a diagnostic conclusion. Once inconsistent, the system can prove all propositions, including "1=2." This is not the system being "a little off"; it means the system has lost all meaning of proof — being able to prove everything is equivalent to having proved nothing. This is total failure, not a local fault.
 :::
 
@@ -86,7 +108,7 @@ What this theorem says is: the inference rules we wrote down — modus ponens, u
 
 This was the last piece of good news Gödel brought.
 
-::: info Professor Pallas's Cat comments
+::: info Professor Manul comments
 "The last piece of good news" — this sentence is worth pausing on. The completeness theorem of 1930 and the incompleteness theorems of 1931 were brought by the same person in adjacent years, in completely opposite directions. First-order logic is complete; sufficiently strong arithmetic systems are incomplete. The boundary is right here, very precise, not some vague pessimism.
 :::
 
@@ -226,7 +248,7 @@ Therefore, the system **cannot** prove its own consistency.
 
 This is not modesty, nor a lack of ability. It is a structural fact of logic: **you cannot use a ruler to measure whether the ruler itself is accurate**. Any proof of a system's consistency must come from a stronger external system, and the consistency of that stronger system is again an open question — this hierarchy has no top.
 
-::: info Professor Pallas's Cat comments
+::: info Professor Manul comments
 What is truly shocking is that the second theorem says not "very hard" but "in principle impossible" — not an engineering problem, but a logical structural problem. A system's proof of its own consistency forever requires a stronger external system to provide the guarantee. There is no top. This is the point, not the ruler metaphor.
 :::
 
@@ -337,3 +359,13 @@ Try to write out, using the language of this chapter: what does this "external a
 This question has no endpoint, but try to write clearly the structure of infinite regress — expressed using a chain of symbols $\mathcal{F}$, $\mathcal{F}_1$, $\mathcal{F}_2$… What does the existence of this chain imply for the question "does mathematics have an ultimate foundation"?
 
 No need to solve these questions — only need to think clearly about why each question is harder than it looks.
+
+---
+
+**References**
+
+- Gödel, K. (1931) — On Formally Undecidable Propositions of Principia Mathematica and Related Systems
+- Chapter 14 — Formal Systems (axiom stamp game and inference rules)
+- Chapter 16 — Linear Logic and Resources (structural rules and their limits)
+- Chapter 19 — Complexity as the Geometry of Reasoning (decidability and the halting problem)
+- Chapter 25 — The Unification of Boundaries (the book's conclusion and Impossible Triangle)

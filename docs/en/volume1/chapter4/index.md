@@ -302,7 +302,7 @@ The optimal solution of this trade-off is a "sufficient statistic" — retaining
 
 Tishby's claim is: the training process occurs in two phases — first the "fitting" phase, where mutual information $I(Z; Y)$ increases rapidly, and the network learns to capture label-relevant information; then the "compression" phase, where $I(X; Z)$ begins to decrease, and the network starts discarding label-irrelevant information.
 
-This theory is beautiful. But it is also controversial — subsequent work (Saxe et al., 2018) found that the compression phase does not appear in many situations, depending on the choice of activation function. The Information Bottleneck is a valuable analytical framework, but not a complete theory `→ [Tishby & Schwartz-Ziv, 2017, arXiv:1703.00810]` `→ [Saxe et al., 2018, arXiv:1812.09881]`.
+This theory is beautiful. But it is also controversial — subsequent work (Saxe et al., 2018) found that the compression phase does not appear in many situations, depending on the choice of activation function. The Information Bottleneck is a valuable analytical framework, but not a complete theory `-> [Tishby & Schwartz-Ziv, 2017, arXiv:1703.00810]` `-> [Saxe et al., 2018, arXiv:1812.09881]`.
 
 **The Final Bill**
 
@@ -530,13 +530,13 @@ from torch.utils.data import DataLoader, TensorDataset
 class Autoencoder(nn.Module):
     def __init__(self, bottleneck_dim):
         super().__init__()
-        # Encoder: 3 → 16 → d (bottleneck dimension)
+        # Encoder: 3 -> 16 -> d (bottleneck dimension)
         self.encoder = nn.Sequential(
             nn.Linear(3, 16),      # Input is 3-dimensional (embedded data points)
             nn.ReLU(),             # Nonlinear activation
             nn.Linear(16, bottleneck_dim)  # Output d-dimensional latent code z
         )
-        # Decoder: d → 16 → 3 (reconstruct original coordinates)
+        # Decoder: d -> 16 -> 3 (reconstruct original coordinates)
         self.decoder = nn.Sequential(
             nn.Linear(bottleneck_dim, 16),
             nn.ReLU(),
@@ -700,7 +700,7 @@ model.eval()
 ood_data = torch.randn(100, 3)  # Standard normal, mean 0, variance 1
 
 with torch.no_grad():
-    # Pass through autoencoder reconstruction (encode → decode)
+    # Pass through autoencoder reconstruction (encode -> decode)
     ood_reconstructed, ood_z = model(ood_data)
 
 # Compute reconstruction error for each category of data
@@ -908,13 +908,13 @@ Each level has its own **boundaries**:
 
 ## Further Reading
 
-- Tishby, N. & Schwartz-Ziv, M. (2017). *Opening the Black Box of Deep Neural Networks via Information* — The deep learning version of Information Bottleneck theory, proposing the two-phase training hypothesis `→ [arXiv:1703.00810]`
+- Tishby, N. & Schwartz-Ziv, M. (2017). *Opening the Black Box of Deep Neural Networks via Information* — The deep learning version of Information Bottleneck theory, proposing the two-phase training hypothesis `-> [arXiv:1703.00810]`
 
-- Saxe, A. et al. (2018). *On the Information Bottleneck Theory of Deep Learning* — Criticism and revision of Tishby's Information Bottleneck theory, showing the compression phase depends on activation function choice `→ [arXiv:1812.09881]`
+- Saxe, A. et al. (2018). *On the Information Bottleneck Theory of Deep Learning* — Criticism and revision of Tishby's Information Bottleneck theory, showing the compression phase depends on activation function choice `-> [arXiv:1812.09881]`
 
-- Fefferman, C., Mitter, S. & Narayanan, H. (2016). *Testing the Manifold Hypothesis* — Mathematical testing of the Manifold Hypothesis: when does it hold, when does it not `→ [arXiv:1204.1423]`
+- Fefferman, C., Mitter, S. & Narayanan, H. (2016). *Testing the Manifold Hypothesis* — Mathematical testing of the Manifold Hypothesis: when does it hold, when does it not `-> [arXiv:1204.1423]`
 
-- Bengio, Y., Courville, A. & Vincent, P. (2013). *Representation Learning: A Review and New Perspectives* — A review of representation learning, including the relationship between manifold learning and deep representations `→ [arXiv:1206.5538]`
+- Bengio, Y., Courville, A. & Vincent, P. (2013). *Representation Learning: A Review and New Perspectives* — A review of representation learning, including the relationship between manifold learning and deep representations `-> [arXiv:1206.5538]`
 
 - Bellman, R. (1957). *Dynamic Programming* — The original source of the Curse of Dimensionality; Bellman named this phenomenon in the context of optimization
 

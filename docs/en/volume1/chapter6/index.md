@@ -50,12 +50,12 @@ Expressed as a causal diagram:
 
 **Hypothesis 1 (Causal):**
 
-    Smoking → Lung Cancer
+    Smoking -> Lung Cancer
 
 **Hypothesis 2 (Confounded):**
 
-    Genotype → Smoking
-    Genotype → Lung Cancer
+    Genotype -> Smoking
+    Genotype -> Lung Cancer
 
 In Hypothesis 2, the correlation between smoking and lung cancer is **spurious** — they are statistically correlated but have no direct causal link.
 
@@ -86,11 +86,11 @@ Before discussing Pearl's theory of causality, we need to understand Bayesian ne
 A **Bayesian Network** is a Directed Acyclic Graph (DAG) where nodes are random variables and edges represent conditional dependence relationships.
 
 :::details Bayesian Networks and DAGs: what does probability on a graph mean?
-**Directed Acyclic Graph (DAG)**: A graph is a set of nodes and the edges connecting them. "Directed" means each edge has a direction (A→B is different from B→A). "Acyclic" means following the edges, you can never return to the starting point.
+**Directed Acyclic Graph (DAG)**: A graph is a set of nodes and the edges connecting them. "Directed" means each edge has a direction (A->B is different from B->A). "Acyclic" means following the edges, you can never return to the starting point.
 
 **Bayesian Networks** are structures annotated with probabilities on a DAG:
 - Each node is a random variable (e.g., "whether it rains," "whether to bring an umbrella")
-- A directed edge A→B means "A has a conditional influence on B" — knowing the value of A changes our probability estimate for B
+- A directed edge A->B means "A has a conditional influence on B" — knowing the value of A changes our probability estimate for B
 
 Key concept — **Conditional Dependence**: If, given the value of A, B and C become independent (no longer affect each other), then A is a "separating point" for B and C. Bayesian networks exploit these conditional independencies to decompose complex joint probabilities into products of smaller local probabilities, greatly reducing computation.
 
@@ -113,13 +113,13 @@ Consider an example. Three variables: $A$ (alarm sounds), $B$ (burglary), $E$ (e
 
 The true causal structure is:
 
-    B → A ← E
+    B -> A ← E
 
 A burglary or an earthquake can both trigger the alarm.
 
 But from a purely probabilistic perspective, the following structure can also encode the same conditional independencies:
 
-    A → B, A → E
+    A -> B, A -> E
 
 The alarm sounds, increasing the probability of both burglary and earthquake.
 
@@ -268,8 +268,8 @@ Structural equations:
 
 Causal diagram:
 
-    G → S → C
-    G → C
+    G -> S -> C
+    G -> C
 
 This model encodes an assumption about the world: genotype $G$ simultaneously affects smoking tendency and lung cancer risk, while smoking $S$ also directly affects lung cancer $C$.
 
@@ -373,8 +373,8 @@ Returning to the smoking and lung cancer example:
 
 Causal diagram:
 
-    G → S → C
-    G → C
+    G -> S -> C
+    G -> C
 
 $G$ is a confounding variable on the backdoor path $S \leftarrow G \to C$. If we can observe $G$, then:
 
@@ -406,8 +406,8 @@ This formula does not require observing the confounding variable — it bypasses
 
 **Example: Smoking, Tar, Lung Cancer**
 
-    U → S → T → C
-    U → C
+    U -> S -> T -> C
+    U -> C
 
 $U$ is an unobservable confounder (e.g., genotype), $T$ is tar deposits (observable mediator).
 
@@ -425,7 +425,7 @@ These diagrams are called **Markov Equivalence Classes**.
 Equivalent diagrams have the same **skeleton** (the undirected graph obtained by ignoring edge directions) and the same **v-structures** (structures of the form $A \to C \leftarrow B$, where $A$ and $B$ are not adjacent).  
 **Example: Equivalence Class of Three Variables**  
 Consider three variables $X, Y, Z$. The following three diagrams are Markov equivalent:  
-`X → Y → Z  X ← Y → Z  X ← Y ← Z`  
+`X -> Y -> Z  X ← Y -> Z  X ← Y ← Z`  
 They all encode the same conditional independence: $X \perp\!\!\!\perp Z \mid Y$.  
 From observational data, you cannot distinguish these three diagrams — because they correspond to the same joint distribution.  
 But their causal meanings are completely different:  
@@ -442,7 +442,7 @@ But if you only have observational data, with no additional assumptions, the cau
 
 ![Markov Equivalence Class: three causal diagrams, one observational distribution](/figures/ch06_fig3_markov_equivalence.png)
 
-*Figure 3: Markov Equivalence Class example. Three different causal diagrams (X→Y→Z, X←Y→Z, X←Y←Z) encode the same conditional independence X⊥⊥Y Z, and are therefore completely equivalent on observational data. But their causal meanings differ: in the first diagram, do(X) affects Z; in the second, it does not. Observational data alone cannot distinguish them.*
+*Figure 3: Markov Equivalence Class example. Three different causal diagrams (X->Y->Z, X←Y->Z, X←Y←Z) encode the same conditional independence X⊥⊥Y Z, and are therefore completely equivalent on observational data. But their causal meanings differ: in the first diagram, do(X) affects Z; in the second, it does not. Observational data alone cannot distinguish them.*
 
 ## 9. The Faithfulness Assumption: A Fragile Bridge
 
@@ -466,8 +466,8 @@ This assumption seems harmless, but it is actually quite strong.
 
 Consider the following causal diagram and structural equations:
 
-    X → Y → Z
-    X → Z
+    X -> Y -> Z
+    X -> Z
 
     Y = a·X + U_Y
     Z = b·Y + c·X + U_Z
@@ -674,8 +674,8 @@ The core thesis of this chapter: observational data can lie, because it contains
 Construct the following causal structure:
 
     Causal Diagram:
-    G → T → Y
-    G → Y
+    G -> T -> Y
+    G -> Y
 
     Where:
     G = Gender (0 = Female, 1 = Male)
@@ -713,7 +713,7 @@ print(df.describe().round(2))
 print(f"\nTrue causal effect (treatment parameter) = +15 points")
 ```
 
-**Your first question (answer before generating the data):** Under this setup, what is the true causal effect of the treatment? If we randomly assign treatment (cutting G → T), by how many points would the treatment group's recovery score exceed the control group's?
+**Your first question (answer before generating the data):** Under this setup, what is the true causal effect of the treatment? If we randomly assign treatment (cutting G -> T), by how many points would the treatment group's recovery score exceed the control group's?
 
 <div class="center">
 
@@ -866,15 +866,15 @@ If the overall line slopes downward (negative slope), but both internal lines sl
 Now suppose you mistakenly believe the causal diagram is:
 
     Wrong causal diagram:
-    T → G → Y
+    T -> G -> Y
     (Treatment affects gender? Obviously absurd, but we pretend not to know)
 
 Under this wrong diagram, the backdoor criterion would tell you: no variables need to be adjusted, because there are no backdoor paths.
 
 ```python
-# According to the wrong causal diagram T → G → Y:
+# According to the wrong causal diagram T -> G -> Y:
 # The causal diagram thinks T causes G, so G is not a confounder of T,
-# The backdoor path T←G→Y does not exist (because the arrow direction is wrong),
+# The backdoor path T←G->Y does not exist (because the arrow direction is wrong),
 # Therefore directly use the observational correlation as the "causal effect"
 
 # "Causal effect" under the wrong diagram = direct observed effect (no adjustment whatsoever)
@@ -885,7 +885,7 @@ print(f"Correctly adjusted causal effect:         {adjusted_effect:.2f}")
 print(f"True causal effect (generation setup):    +15.00")
 print(f"Deviation of wrong inference from true value:       {abs(wrong_causal_effect - 15):.2f} points")
 print()
-print("Conclusion: Structural assumption of causal diagram is wrong → inference completely deviates from true effect")
+print("Conclusion: Structural assumption of causal diagram is wrong -> inference completely deviates from true effect")
 print("Observational data itself cannot tell you which diagram is correct.")
 ```
 
@@ -926,7 +926,7 @@ In the Simpson's Paradox exercise, you saw **why** observational data lies. This
 **Causal Diagram**:
 
 ```
-Work Stress (S) ──→ Drinks Coffee (C) ──→ Code Output (Y)
+Work Stress (S) ──-> Drinks Coffee (C) ──-> Code Output (Y)
      │                              ↑
      └──────────────────────────────┘
 ```
@@ -1094,9 +1094,9 @@ This is the practical value of the do-operation: **estimating intervention effec
 If you want to go deeper, try modifying the causal diagram by adding a collider node:
 
 ```
-S ──→ C ──→ Y
+S ──-> C ──-> Y
           ↗
-     Overtime (O)──→ Y
+     Overtime (O)──-> Y
          ↑
          S
 ```
@@ -1117,16 +1117,16 @@ Overtime (O) is also affected by work stress, and also affects output. Now the b
 
 - Spirtes, P., Glymour, C. & Scheines, R. (2000). *Causation, Prediction, and Search* — The classic textbook on causal discovery algorithms, the original source of the PC algorithm and FCI algorithm
 
-- Peters, J., Janzing, D. & Schölkopf, B. (2017). *Elements of Causal Inference* — Causal inference from a machine learning perspective, including independent causal mechanisms and additive noise models `→ [MIT Press]`
+- Peters, J., Janzing, D. & Schölkopf, B. (2017). *Elements of Causal Inference* — Causal inference from a machine learning perspective, including independent causal mechanisms and additive noise models `-> [MIT Press]`
 
 - Hume, D. (1748). *An Enquiry Concerning Human Understanding* — The philosophical starting point of the problem of induction, "the past cannot prove the future"
 
-- Hernán, M. A. & Robins, J. M. (2020). *Causal Inference: What If* — Causal inference in epidemiology and medicine, emphasizing the distinction between intervention and observation `→ [Free online]`
+- Hernán, M. A. & Robins, J. M. (2020). *Causal Inference: What If* — Causal inference in epidemiology and medicine, emphasizing the distinction between intervention and observation `-> [Free online]`
 
-- Schölkopf, B. et al. (2021). *Toward Causal Representation Learning* — The intersection of causal inference and deep learning, how to learn causal structure from data `→ [arXiv:2102.11107]`
+- Schölkopf, B. et al. (2021). *Toward Causal Representation Learning* — The intersection of causal inference and deep learning, how to learn causal structure from data `-> [arXiv:2102.11107]`
 
-- Bareinboim, E. & Pearl, J. (2016). *Causal inference and the data-fusion problem* — How to identify causal effects from multiple heterogeneous data sources `→ [PNAS]`
+- Bareinboim, E. & Pearl, J. (2016). *Causal inference and the data-fusion problem* — How to identify causal effects from multiple heterogeneous data sources `-> [PNAS]`
 
-- Zhang, K. & Hyvärinen, A. (2009). *On the Identifiability of the Post-Nonlinear Causal Model* — Identifiability of nonlinear causal models, methods for breaking Markov equivalence classes `→ [UAI 2009]`
+- Zhang, K. & Hyvärinen, A. (2009). *On the Identifiability of the Post-Nonlinear Causal Model* — Identifiability of nonlinear causal models, methods for breaking Markov equivalence classes `-> [UAI 2009]`
 
-- Uhler, C., Raskutti, G., Bühlmann, P. & Yu, B. (2013). *Geometry of the faithfulness assumption in causal inference* — Geometric analysis of the faithfulness assumption, when it fails `→ [arXiv:1207.0547]`
+- Uhler, C., Raskutti, G., Bühlmann, P. & Yu, B. (2013). *Geometry of the faithfulness assumption in causal inference* — Geometric analysis of the faithfulness assumption, when it fails `-> [arXiv:1207.0547]`

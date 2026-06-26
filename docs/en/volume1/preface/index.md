@@ -46,7 +46,7 @@ where the critical constraint density $d_c(L) = -0.0809 \ln(L) + 0.501$.
 
 This formula reveals: **computability is not binary, but probabilistic**. NP is not a wall, but a gradient of fog. At the edge of the fog (μ≈0.5), the problem exists in a quantum superposition of solvable and unsolvable.
 
-`→ [DOI: 10.13140/RG.2.2.22376.64006]`
+`-> [DOI: 10.13140/RG.2.2.22376.64006]`
 
 ---
 
@@ -68,7 +68,7 @@ The model can operate self-consistently at the object level (generating reasonin
 
 The value of CoT lies not in "longer is better," but in extending the **effective reasoning window** — those few steps before convergence are where true reasoning occurs.
 
-`→ [Derived and explained in Chapter 12 of this book, original]`
+`-> [Derived and explained in Chapter 12 of this book, original]`
 
 ---
 
@@ -84,7 +84,7 @@ $$
 
 where $H_t$ is the entropy of the current output distribution and $H_{\max}$ is the maximum entropy of the uniform distribution. When entropy is high (high uncertainty), $\alpha_t$ increases, forming an information-theoretic barrier that repels high-entropy states, forcing the search to collapse onto a low-entropy manifold; when entropy is low, $\alpha_t$ approaches zero, trusting the heuristic to advance rapidly. This realizes Yao's Minimax Theorem in the context of adaptive search — finding the optimal exploration-exploitation mixed strategy in uncertain environments.
 
-`→ [Chapter 8, §VI ADS: The Information-Theoretic Turn of Heuristics]` &nbsp; `→ [DOI: 10.13140/RG.2.2.17091.16164]`
+`-> [Chapter 8, §VI ADS: The Information-Theoretic Turn of Heuristics]` &nbsp; `-> [DOI: 10.13140/RG.2.2.17091.16164]`
 
 ---
 
@@ -102,7 +102,7 @@ where d is the parameter dimension and δ is the error tolerance. This limit ari
 
 Experimental validation: on Yi-34B-Chat, performance loss after 34× compression was <2%, but collapsed after 64× compression. This is not an engineering issue, but a mathematical boundary.
 
-`→ [DOI: 10.13140/RG.2.2.23802.04809]`
+`-> [DOI: 10.13140/RG.2.2.23802.04809]`
 
 ---
 
@@ -128,7 +128,7 @@ Experimental validation: extracting attention from GPT-2 on the causal sentence 
 
 This thought experiment currently remains open: can the attention matrix constitute a rigorous Structural Causal Model (SCM)? What is the causal division of labor across multi-head attention? Transformers are locked on Pearl's first and second rungs of the causal ladder — the third rung (counterfactuals) is forever closed to them. What does this mean?
 
-`→ [Chapter 9 thought experiment, original]` &nbsp; `→ [Chapter 9 Bonus: Attention Is Causality](/chapter9/bonus)`
+`-> [Chapter 9 thought experiment, original]` &nbsp; `-> [Chapter 9 Bonus: Attention Is Causality](/chapter9/bonus)`
 
 ---
 
@@ -138,9 +138,9 @@ Chapter 18 defines $\mathsf{do}(X = v)$ as "delete incoming edges, propagate eff
 
 $$v^* = \arg\min_v \sum_j \left(\|E_{\text{next}}[j]\| - y^*_j\right)^2$$
 
-CausalSearch uses the Reasoning Kingdom's own chapters as a causal knowledge graph, employing Pearl's three-step method (abduction → action → prediction) for retrieval, continuously discovering cross-chapter causal chains that vector RAG misses.
+CausalSearch uses the Reasoning Kingdom's own chapters as a causal knowledge graph, employing Pearl's three-step method (abduction -> action -> prediction) for retrieval, continuously discovering cross-chapter causal chains that vector RAG misses.
 
-`→ [github.com/lizixi-0x2F/CocDo](https://github.com/lizixi-0x2F/CocDo)` &nbsp; `→ [Causal Inference Bonus Chapter](/volume1/chapterbonous/)`
+`-> [github.com/lizixi-0x2F/CocDo](https://github.com/lizixi-0x2F/CocDo)` &nbsp; `-> [Causal Inference Bonus Chapter](/volume1/chapterbonous/)`
 
 ---
 

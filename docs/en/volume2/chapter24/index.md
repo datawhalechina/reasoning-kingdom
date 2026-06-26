@@ -186,9 +186,9 @@ In category theory, a **category** consists of two parts:
 - **Morphisms**: "arrows" between objects, representing transformation relations
 
 **Key correspondence**:
-- Each bookshelf in the library → an object in the category
-- The "next instruction" in the guidebook → a **morphism** pointing from one object to another
-- The path of following instructions $\text{Bookshelf A} \to \text{Bookshelf B} \to \text{Bookshelf C} \dots$ → composition of morphisms
+- Each bookshelf in the library -> an object in the category
+- The "next instruction" in the guidebook -> a **morphism** pointing from one object to another
+- The path of following instructions $\text{Bookshelf A} \to \text{Bookshelf B} \to \text{Bookshelf C} \dots$ -> composition of morphisms
 
 Expressed in symbols: let the category $\mathcal{P}$ denote the belief space; each belief state $x_t$ is an object of $\mathcal{P}$. The reasoning step $F$ is an **endofunctor** $F: \mathcal{P} \to \mathcal{P}$, which maps the current belief to the next-step belief:
 
@@ -434,3 +434,4 @@ But every intervention has a cost, and may introduce new structural limitations.
 - Chapter 15 — Consistency and Completeness (Gödelian incompleteness)
 - Chapter 23 — Stability and Convergence Boundaries of Reasoning Systems (Lyapunov functions)
 - Chapter 22 — Self-Reference and Emergence
+- Chapter 25 — The Unification of Boundaries (the book's conclusion and Impossible Triangle)

@@ -8,7 +8,7 @@ The final paragraph of Chapter 21 brought us here: a sufficiently strong inferen
 
 But Chapter 22 is not a repetition of Chapter 15. Gödel spoke of **boundaries** — those true propositions you cannot reach. Chapter 22 speaks of **openings** — near this boundary, new things are emerging.
 
-Having walked this far through the second volume, nine chapters of logical deduction, the vantage point is high enough for a panoramic view. This is the final chapter, and also the most honest one: some questions we can only state, not resolve.
+Having walked this far through the second volume, nine chapters of logical deduction, the vantage point is high enough for a panoramic view. This is also one of the most honest chapters: some questions we can only state, not resolve.
 
 ---
 
@@ -35,7 +35,7 @@ Precisely stated, it establishes the following correspondence:
 
 This is not a metaphor but an isomorphism: every step of logical deduction corresponds to every step of program computation; the normalization of a proof (simplifying to its simplest form) corresponds to the evaluation of a program (running to termination).
 
-::: info Professor Pallas's Cat's Commentary
+::: info Professor Manul's Commentary
 Many people nod here and then continue treating "logic" and "program" as two separate things. Isomorphism means: every step you prove in logic is a computational step in a programming language; every function you write "proves" some proposition. If you don't find this staggering, you haven't yet truly understood what this correspondence is saying.
 :::
 
@@ -80,6 +80,59 @@ Gödel's diagonalization lemma, in this language, is the fixed point of the "pro
 
 **Self-reference, fixed points, diagonalization — these are the same mathematical structure under different names in different contexts.**
 
+
+### 22.2.3 Hands-On: Manually Unfolding the Y Combinator in Three Steps
+
+The definition of the Y combinator: $Y = \lambda f.\, (\lambda x.\, f\,(x\,x))\,(\lambda x.\, f\,(x\,x))$.
+
+Let us trace the expansion using the recursive definition of the factorial function. Let $f_{\text{fact}}$ be a "factorial template" — it knows the logic of factorial, but does not know how to recursively call itself:
+
+$$f_{\text{fact}} = \lambda \text{self}.\, \lambda n.\, \text{if } n = 0 \text{ then } 1 \text{ else } n \times \text{self}(n-1)$$
+
+Note that $f_{\text{fact}}$'s parameter `self` is a function — give $f_{\text{fact}}$ a function that can compute factorial, and $f_{\text{fact}}$ will return a new factorial function.
+
+Now compute the behavior of $Y\,f_{\text{fact}}$ at $n=3$.
+
+**Step 0 (Definition)**:
+$$Y\,f_{\text{fact}} = (\lambda x.\, f_{\text{fact}}\,(x\,x))\,(\lambda x.\, f_{\text{fact}}\,(x\,x))$$
+
+Let $w = \lambda x.\, f_{\text{fact}}\,(x\,x)$, then $Y\,f_{\text{fact}} = w\,w$.
+
+**Step 1 (Unfold one level)**:
+$$w\,w = f_{\text{fact}}\,(w\,w)$$
+
+Pass $w\,w$ to $f_{\text{fact}}$'s `self` parameter. Unfolding $f_{\text{fact}}$'s definition:
+$$f_{\text{fact}}\,(w\,w) = \lambda n.\, \text{if } n = 0 \text{ then } 1 \text{ else } n \times (w\,w)(n-1)$$
+
+Now $Y\,f_{\text{fact}}$ is a function that accepts $n$, and when $n>0$, it calls $(w\,w)(n-1)$.
+
+**Step 2 (Evaluate at $n=3$)**:
+$$(Y\,f_{\text{fact}})(3) = \text{if } 3=0 \text{ then } 1 \text{ else } 3 \times (w\,w)(2)$$
+
+Compute $(w\,w)(2)$ — this is exactly the same as computing $(Y\,f_{\text{fact}})(2)$! Because $w\,w = Y\,f_{\text{fact}}$. So:
+$$(w\,w)(2) = f_{\text{fact}}\,(w\,w)(2) = \text{if } 2=0 \text{ then } 1 \text{ else } 2 \times (w\,w)(1)$$
+
+**Step 3 (Continue unfolding)**:
+$$(w\,w)(1) = f_{\text{fact}}\,(w\,w)(1) = \text{if } 1=0 \text{ then } 1 \text{ else } 1 \times (w\,w)(0)$$
+$$(w\,w)(0) = f_{\text{fact}}\,(w\,w)(0) = \text{if } 0=0 \text{ then } 1 \text{ else } \ldots = 1$$
+
+**Collapse**:
+$$(w\,w)(1) = 1 \times 1 = 1$$
+$$(w\,w)(2) = 2 \times 1 = 2$$
+$$(Y\,f_{\text{fact}})(3) = 3 \times 2 = 6 \checkmark$$
+
+**Key Observation**: At each step, $(w\,w)$ "feeds" itself to $f_{\text{fact}}$ whenever recursion is needed. $f_{\text{fact}}$ does not know it is calling itself — it merely receives a function parameter `self` and calls it. But the construction of $w\,w$ guarantees that `self` is precisely $w\,w$ itself. The Y combinator has no magic — it simply encodes "calling itself" as "applying a function to itself."
+
+**Compare this with the Godel sentence $G$**:
+- $Y$: $Y\,f = f\,(Y\,f)$ — $Y\,f$ is the fixed point of $f$; each unfolding of $Y\,f$ passes itself back to $f$
+- $G$: $G \leftrightarrow \neg\mathsf{Prov}(\ulcorner G \urcorner)$ — $G$ is the fixed point of the predicate "negation of provability"; $G$ asserts a proposition about its own provability
+
+Both are the same mathematical structure: find an object such that applying some transformation to it yields, under some equivalence, the object itself. The Y combinator uses function application as the transformation; the diagonalization lemma uses the provability predicate as the transformation — same mathematical structure, different instances.
+
+::: info Professor Manul's Commentary
+Manually unfolding the Y combinator for three steps gives you a feeling that cannot be obtained from definitions alone: self-reference is not black magic, but a mechanism that can be traced step by step. $Y$ does not "see through" itself — it merely mechanically applies a function to itself. But that single mechanical action manufactures recursion, the formal model of self-awareness, and the computational version of Godel's theorem. Complexity arises from the iteration of simple rules under self-reference — this is one of the deepest motifs of the entire book.
+:::
+
 ---
 
 ## 22.2.5 The MP Game: Proof Sequences as Dynamical Systems
@@ -120,7 +173,7 @@ This is not merely a metaphor. The diagonalization lemma says: for any formula $
 
 The MP game unifies three things in a single framework: **the structure of proof, the orbits of dynamical systems, and the fixed points of recursive types**. They are the same mathematical object read in three different languages: logic, analysis, and type theory.
 
-::: info Professor Pallas's Cat's Commentary
+::: info Professor Manul's Commentary
 The true danger of this game lies in the third fate: the infinitely extending orbit. You cannot determine from outside whether an orbit will halt — this is not a matter of insufficient computational power, but undecidability in principle. Every time you write down a proof, you are in effect claiming: this orbit will halt, and it will halt precisely where you want it to. This claim, in a sufficiently strong system, cannot be verified by the system itself.
 :::
 
@@ -170,7 +223,7 @@ A reasoning system — whether a formal logical system, a learning algorithm, or
 
 **At the learning system level**: The conclusion of Chapter 21 is that the inductive bias of learning cannot be determined from within the data — it is an external input. A learning system cannot infer from its own training data whether its inductive bias is appropriate, just as a formal system cannot prove its own consistency from its own axioms.
 
-::: info Professor Pallas's Cat's Commentary
+::: info Professor Manul's Commentary
 Read this sentence twice. This is not saying that inductive bias is hard to choose, but that in principle, data cannot tell you whether your inductive bias is appropriate — just as a formal system cannot prove its own consistency from within. The true connection between Chapter 21 and Chapter 15 is here: the blind spot of learning and the incompleteness of logic are two languages for the same structural limitation.
 :::
 
@@ -190,7 +243,23 @@ Emergence says: when there are enough components and sufficiently rich interacti
 
 In the training practice of large language models, emergent phenomena have already been observed: when model scale exceeds a certain threshold, certain capabilities (such as arithmetic reasoning, multi-step inference) suddenly appear, while being completely absent in smaller models. Such "suddenly appearing" capabilities are called emergent capabilities.
 
+### Three Levels of Emergence
+
+Emergence is not a single phenomenon, but occurs on at least three levels, each corresponding to different theoretical tools.
+
+**Level 1: Combinatorial emergence.** Simple atoms combine to produce new behavioral capabilities, even though no single atom possesses that capability individually. Water molecules are composed of hydrogen and oxygen — hydrogen and oxygen individually are not "wet," but when combined they acquire the macroscopic property of "wetness." This is the most basic form of emergence, which can be roughly described by phase transition theory — near a critical point, the system's behavior undergoes a dramatic change.
+
+**Level 2: Computational emergence.** A single rule of a Turing machine (the $\delta$ function) is extremely simple — given the current state and the symbol read, determine the next state, the symbol to write, and the direction of head movement. You cannot tell from a single rule that it can do calculus, play chess, or write poetry. Yet a universal Turing machine is just a simple $\delta$ plus a long tape. Computational capability is emergent — not possessed by any single rule in isolation, but produced by the combination of rules + infinite tape + sufficient time.
+
+**Level 3: Representational emergence.** In large language models, the capabilities produced by billions of parameters after training (such as analogical reasoning, emotion recognition, code generation) are not functions of any single parameter, nor were they planned by the designer. The training objective (next token prediction) contains no explicit instructions to "understand emotions" or "write code" — yet these capabilities manifest at sufficient scale.
+
+### The Problem: Does Emergence Have a Theory?
+
 But emergence is extremely difficult to handle in formal theory. It is not a mathematical concept that can be precisely defined — at least, current mathematical tools are insufficient. We have descriptions, not explanations; observations, not predictions.
+
+Information theory provides some clues. Emergence can be understood as: **the system exhibits a shorter total description length than its components.** A gas is composed of $10^{23}$ molecules, yet its state is fully described by just a few macroscopic variables (temperature, pressure, volume). The description length drops from $10^{23}$ to 3 — this is the "information compression" face of emergence. But how to derive this compressed description from the interactions of parts currently has no general theory.
+
+Dynamical systems theory provides another perspective: emergence corresponds to phase transitions — when a system parameter crosses some critical value, behavior undergoes a sharp qualitative change. This perspective has explanatory power for physical systems, but for emergent phenomena in neural networks (capabilities suddenly appearing as scale increases), there is no precise predictive framework.
 
 ::: info Is Emergence a Real Phenomenon or a Measurement Illusion?
 Some researchers have pointed out: so-called "emergence" may partly be a product of how we measure. If measured with continuous (rather than discrete) performance metrics, some capabilities thought to emerge suddenly actually grow smoothly — it is only that at some threshold, smooth growth crosses the minimum capability threshold required by the task and is noticed by the observer. This does not deny the existence of emergent phenomena, but demands more precise characterization: does the performance curve truly have a discontinuity, or do our measurement tools introduce a spurious discontinuity? This question currently has no settled answer.
@@ -247,7 +316,7 @@ The traditional approach is to manually guess an energy function and verify that
 
 These three questions are the entrance to Chapter 23.
 
-::: info Professor Pallas's Cat's Commentary
+::: info Professor Manul's Commentary
 The MP game is the ferry crossing between logic and dynamics. On the logic shore, we ask "does a proof exist"; on the dynamics shore, we ask "where does the system go." The fixed point is a landmark shared by both shores — in logic, it is the endpoint of proof; in dynamics, it is the attractor. Cross over, and you will discover that the attractor has a name: the Yonglin Limit.
 :::
 
@@ -300,4 +369,4 @@ Consider the proposition: "For all natural numbers $n$, the successor of $n$ is 
 
 The third question touches upon the practical limitation of dependent type systems: the more powerful the functionality, the higher the cost of type-checking; the type-checking of some dependent type systems is even undecidable — this is yet another recurrence of the law that runs throughout this book: "the more powerful, the higher the cost."
 
-The third question has no standard answer. It is the final open question posed by this book, and also the kind of question the second volume wishes to leave for the reader to ponder: precise formal tools, at the boundary, begin to touch problems that lie beyond the range of formalization. At that boundary, logic and intuition, proof and conjecture, form and meaning, intertwine in a way we have not yet fully understood.
+The third question has no standard answer. It is the last open question posed by the second volume at the technical level — formal tools at the boundary begin to touch problems that lie beyond the range of formalization. At that boundary, logic and intuition, proof and conjecture, form and meaning, intertwine in a way we have not yet fully understood. The book's final answer is in Chapter 25.

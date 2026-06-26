@@ -80,7 +80,7 @@ He drew a simple flowchart:
 ```
 Open the middle book
     ↓
-Is it the target? → Yes → Success!
+Is it the target? -> Yes -> Success!
     ↓ No
 Is the target on the left or right?
     ↓

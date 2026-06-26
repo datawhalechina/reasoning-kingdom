@@ -85,7 +85,7 @@ A chimpanzee watching another chimpanzee's gaze to judge whether it will attack 
 
 The fineness of predictive ability is positively correlated with the cognitive complexity of organisms. This is not accidental. **Organisms that can better predict the world survive better, reproduce more, and pass their predictive mechanisms to offspring.** Evolution, in a certain sense, is a screening process about predictive ability.
 
-Karl Friston's **Free Energy Principle** formalizes this intuition. His core argument is: any system capable of maintaining its own existence must, mathematically, be performing some form of inference — minimizing "surprise" about sensory input. High surprise means the world deviates greatly from the model's predictions, means the system failed to accurately predict what was about to happen, means danger. Thus, surviving is inferring `→ [Friston et al., 2020, arXiv:2002.04501]`.
+Karl Friston's **Free Energy Principle** formalizes this intuition. His core argument is: any system capable of maintaining its own existence must, mathematically, be performing some form of inference — minimizing "surprise" about sensory input. High surprise means the world deviates greatly from the model's predictions, means the system failed to accurately predict what was about to happen, means danger. Thus, surviving is inferring `-> [Friston et al., 2020, arXiv:2002.04501]`.
 
 :::details What is the Free Energy Principle? (Prior Work: Friston, 2020)
 The **Free Energy Principle** is a theoretical framework proposed by neuroscientist Karl Friston, attempting to use a unified mathematical principle to explain the behavior of all living systems.
@@ -172,7 +172,7 @@ Now let me unfold this analogy.
 
 **Level 3: Generative Models**. This is a fundamental transformation. The system no longer passively waits for input and then reacts, but actively maintains an internal representation of the world, continuously generating predictions about upcoming input.
 
-The **predictive coding** framework proposed by neuroscientists describes precisely this level. The basic working mode of the brain is not processing sensory input bottom-up, but continuously generating predictions top-down, and then only processing the **error** between predictions and actual sensations. You walk into a dark room, your brain is not waiting for photons in a blank state — it is already predicting what might be in this room, predicting where the chair is, predicting the texture of the walls. Prediction error is the information that is truly processed in large quantities `→ [Sennesh et al., 2022, arXiv:2208.10601]`.
+The **predictive coding** framework proposed by neuroscientists describes precisely this level. The basic working mode of the brain is not processing sensory input bottom-up, but continuously generating predictions top-down, and then only processing the **error** between predictions and actual sensations. You walk into a dark room, your brain is not waiting for photons in a blank state — it is already predicting what might be in this room, predicting where the chair is, predicting the texture of the walls. Prediction error is the information that is truly processed in large quantities `-> [Sennesh et al., 2022, arXiv:2208.10601]`.
 
 :::details Predictive Coding: The Brain Is Not a Camera (Prior Work: Rao & Ballard, 1999 et al.)
 Traditional intuition believes the brain is like a camera: light comes in, the visual cortex processes it, you see an image. **Predictive coding** overturns this picture.
@@ -205,7 +205,7 @@ Before continuing, I want to insert a physicist's interlude here.
 
 In 1961, IBM physicist Rolf Landauer published a paper demonstrating something that sounded very strange at the time: **erasing one bit of information necessarily releases at least $k_B T \ln 2$ of heat into the environment**. Here $k_B$ is the Boltzmann constant, $T$ is the environmental temperature.
 
-This conclusion is called Landauer's Principle. Its implication is: **information is not free**. Processing information, especially erasing information, has an unavoidable physical cost. There is a deep connection between information and thermodynamics `→ [Chattopadhyay et al., 2025, arXiv:2506.10876]`.
+This conclusion is called Landauer's Principle. Its implication is: **information is not free**. Processing information, especially erasing information, has an unavoidable physical cost. There is a deep connection between information and thermodynamics `-> [Chattopadhyay et al., 2025, arXiv:2506.10876]`.
 
 :::details Landauer's Principle: How Much Energy Does It Cost to Delete a Bit? (Prior Work: Landauer, 1961)
 **Landauer's Principle** says: physically, erasing one bit of information requires releasing at least $k_B T \ln 2$ joules of heat into the environment (at room temperature, about $3 \times 10^{-21}$ joules, very small but not zero).
@@ -561,7 +561,7 @@ Record: - Under the three priors, how many observations are needed for the poste
 
 You don't need to achieve perfection. You need to achieve:
 
-- Can run through a complete "prior → observation → posterior update" loop
+- Can run through a complete "prior -> observation -> posterior update" loop
 
 - Can clearly explain what your prior is and why you set it that way
 

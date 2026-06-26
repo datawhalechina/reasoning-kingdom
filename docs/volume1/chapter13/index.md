@@ -204,23 +204,23 @@ def approximate_halt(func, timeout=0.05):
     def runner():
         try:
             func()
-            result[0] = True   # 函数正常返回 → 停机
+            result[0] = True   # 函数正常返回 -> 停机
         except Exception:
             result[0] = True   # 抛出异常也算停机
 
     t = threading.Thread(target=runner, daemon=True)
     t.start()
     t.join(timeout)
-    # 超时仍未结束 → 判定为"不停机"
+    # 超时仍未结束 -> 判定为"不停机"
     return result[0] is True
 
 # ------------------------------------------------------------------
 # 步骤2：构造对角化程序 DIAG
 #   DIAG 的逻辑：
 #     如果 HALT(DIAG) 返回 True（判定 DIAG 会停机）
-#         → DIAG 进入无限循环（实际上不停机）
+#         -> DIAG 进入无限循环（实际上不停机）
 #     否则（判定 DIAG 不停机）
-#         → DIAG 立即返回（实际上停机）
+#         -> DIAG 立即返回（实际上停机）
 # ------------------------------------------------------------------
 def make_diag(halt_checker):
     """工厂函数：用给定的 halt_checker 构造对角化程序"""
@@ -228,11 +228,11 @@ def make_diag(halt_checker):
         # 先询问"判定器"：我（diag）自己会停机吗？
         will_halt = halt_checker(diag)
         if will_halt:
-            # 判定器说我会停机 → 我偏偏无限循环
+            # 判定器说我会停机 -> 我偏偏无限循环
             while True:
                 pass
         else:
-            # 判定器说我不停机 → 我偏偏立即返回
+            # 判定器说我不停机 -> 我偏偏立即返回
             return
 
     return diag
@@ -256,16 +256,16 @@ print(f"实际观察：DIAG {'停机了' if actual_halted else '没有停机（�
 
 # 判断是否出现矛盾
 if prediction != actual_halted:
-    print("\n→ 矛盾！判定器的预测与 DIAG 的实际行为相反。")
+    print("\n-> 矛盾！判定器的预测与 DIAG 的实际行为相反。")
 else:
     # 注意：由于超时近似，两次观察结果可能"凑巧"一致，
     # 但这只是近似判定器的误差，不影响严格的数学证明。
-    print("\n→ 注意：超时近似掩盖了矛盾，但严格的数学证明")
+    print("\n-> 注意：超时近似掩盖了矛盾，但严格的数学证明")
     print("   保证精确的 HALT 必然导致矛盾（见下方分析）。")
 
 print("\n--- 严格逻辑分析 ---")
-print("情况A：HALT(DIAG, DIAG) = True  → DIAG 无限循环 → 实际不停机 → 矛盾！")
-print("情况B：HALT(DIAG, DIAG) = False → DIAG 立即返回 → 实际停机   → 矛盾！")
+print("情况A：HALT(DIAG, DIAG) = True  -> DIAG 无限循环 -> 实际不停机 -> 矛盾！")
+print("情况B：HALT(DIAG, DIAG) = False -> DIAG 立即返回 -> 实际停机   -> 矛盾！")
 print("\n结论：精确的停机判定器 HALT 在逻辑上不可能存在。")
 print("      这不是算法不够聪明，而是逻辑的必然。")
 ```
@@ -368,14 +368,14 @@ OpenXOR 的 $\alpha \approx 4.26$ 是一片典型雾带：实例从“几乎总�
     询问: HALT(DIAG, DIAG) = ?
 
     情况1: HALT(DIAG, DIAG) = True
-      → DIAG(DIAG)会停机
-      → 但DIAG定义:如果HALT返回True,则无限循环
-      → 矛盾!
+      -> DIAG(DIAG)会停机
+      -> 但DIAG定义:如果HALT返回True,则无限循环
+      -> 矛盾!
 
     情况2: HALT(DIAG, DIAG) = False
-      → DIAG(DIAG)不停机
-      → 但DIAG定义:如果HALT返回False,则停机
-      → 矛盾!
+      -> DIAG(DIAG)不停机
+      -> 但DIAG定义:如果HALT返回False,则停机
+      -> 矛盾!
 
     结论: HALT不存在
 
@@ -591,7 +591,7 @@ OpenXOR 的 $\alpha \approx 4.26$ 是一片典型雾带：实例从“几乎总�
 
 - Penrose, R. (1989). *The Emperor’s New Mind* — 哥德尔定理与人工智能的哲学讨论
 
-- \[Hamkins & Nenu, 2024\] — 停机问题的历史澄清 `→ [arXiv:2310.07927]`
+- \[Hamkins & Nenu, 2024\] — 停机问题的历史澄清 `-> [arXiv:2310.07927]`
 
 - Hofstadter, D. (1979). *Gödel, Escher, Bach: An Eternal Golden Braid* — 自指、递归与意识的经典著作
 

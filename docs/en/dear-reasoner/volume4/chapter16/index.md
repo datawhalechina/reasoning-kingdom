@@ -67,7 +67,7 @@ Perhaps true wisdom lies in knowing when to be humble and when to be rigorous.
 
 Piglet, the example you gave last time was excellent: "If all birds can fly, and penguins are birds, can penguins fly?"
 
-Some AIs would answer "can fly," because they matched the high-frequency pattern "bird → fly." Even if they answer "cannot fly," it may only be because they matched the fact "penguins cannot fly," not because they truly performed logical reasoning.
+Some AIs would answer "can fly," because they matched the high-frequency pattern "bird -> fly." Even if they answer "cannot fly," it may only be because they matched the fact "penguins cannot fly," not because they truly performed logical reasoning.
 
 True reasoning should go like this:
 1. From "all birds can fly" and "penguins are birds," deduce "penguins can fly"

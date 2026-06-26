@@ -31,10 +31,10 @@ He drew the Transformer's overall architecture on the whiteboard:
 
 ```
 Encoder Stack (N×):
-  Input → Positional Encoding → [Multi-Head Attention → Add & Norm → FFN → Add & Norm] × N → Output
+  Input -> Positional Encoding -> [Multi-Head Attention -> Add & Norm -> FFN -> Add & Norm] × N -> Output
 
 Decoder Stack (N×):
-  Input → Positional Encoding → [Masked Multi-Head Attention → Add & Norm → Encoder-Decoder Attention → Add & Norm → FFN → Add & Norm] × N → Output
+  Input -> Positional Encoding -> [Masked Multi-Head Attention -> Add & Norm -> Encoder-Decoder Attention -> Add & Norm -> FFN -> Add & Norm] × N -> Output
 ```
 
 "Look at this architecture," Mr. Pallas's Cat said, pointing at the whiteboard. "The Transformer is not a single algorithm, but an **organized stacking of components**. Each component has a clear function, connected in specific ways."
@@ -96,7 +96,7 @@ Piglet understood: "So each layer's output gets normalized, ensuring the data di
 Mr. Pallas's Cat drew the feedforward network structure:
 
 ```
-Input → Linear Transform → ReLU Activation → Linear Transform → Output
+Input -> Linear Transform -> ReLU Activation -> Linear Transform -> Output
 ```
 
 "The feedforward network operates independently on each position," he explained. "It provides **nonlinear transformation capability**, increasing the model's expressiveness. You can think of it as each position having its own 'mini-processor.'"
@@ -609,7 +609,7 @@ for layer_idx, layer in enumerate(encoder.layers):
 print(f"\nInter-layer change pattern:")
 for i in range(num_layers-1):
     layer_diff = np.linalg.norm(layer_outputs[i+1] - layer_outputs[i])
-    print(f"  Layer {i+1} → Layer {i+2}: change = {layer_diff:.4f}")
+    print(f"  Layer {i+1} -> Layer {i+2}: change = {layer_diff:.4f}")
 ```
 
 ### Complete Transformer Implementation (Simplified)

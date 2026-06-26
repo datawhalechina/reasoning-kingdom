@@ -2,6 +2,9 @@
     公告栏样式 - Notion风格
     ============================================================================ */
 
+/* Fira Code: 带连字(ligatures)的代码字体 */
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap');
+
 /* 关键：告诉 VitePress 公告栏的高度，让导航栏正确下移 */
 :root {
   --vp-layout-top-height: 40px;
@@ -438,6 +441,32 @@ td {
 .vp-doc div[class*='language-'] {
   margin: 4px 0 !important;
   padding: 0 !important;
+}
+
+/* Fira Code 代码字体 + 连字(ligatures) */
+:root {
+  --vp-font-family-mono: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', 'Fira Mono', 'Consolas', 'Monaco', monospace;
+}
+
+code, pre, kbd, samp,
+.vp-doc code,
+.vp-doc pre,
+.vp-doc kbd,
+.vp-doc samp,
+div[class*='language-'] code,
+div[class*='language-'] pre {
+  font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', 'Fira Mono', 'Consolas', 'Monaco', monospace !important;
+  font-variant-ligatures: contextual;
+  font-feature-settings: "calt" 1, "liga" 1, "dlig" 0;
+}
+
+/* Shiki 代码高亮块内部也要用 Fira Code */
+.shiki, .shiki *,
+[class*='shiki'],
+[class*='language-'] span {
+  font-family: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', 'Fira Mono', 'Consolas', 'Monaco', monospace !important;
+  font-variant-ligatures: contextual;
+  font-feature-settings: "calt" 1, "liga" 1;
 }
 
 /* 自定义容器样式 - Notion风格优化 */

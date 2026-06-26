@@ -59,11 +59,11 @@ Little Seal took a geometry book from the shelf. "Professor, I'm reminded of a h
 He drew two coordinate systems on the whiteboard:
 
 ```
-1D: ──────────── → x
+1D: ──────────── -> x
 2D:    y
          ↑
          │
-─────────┼──────── → x
+─────────┼──────── -> x
 ```
 
 "In one-dimensional space, we can only represent one attribute — say, temperature. In two-dimensional space, we can simultaneously represent temperature and humidity. In three-dimensional space, add atmospheric pressure..."
@@ -91,7 +91,7 @@ He drew a point on the whiteboard, then two arrows:
 ```
         ↑ y
         │
-        ● ── → x
+        ● ── -> x
 ```
 
 "This point represents your position. The arrow to the right means 'walk one meter east.' The arrow upward means 'walk one meter north.' These two arrows are **basis vectors**."

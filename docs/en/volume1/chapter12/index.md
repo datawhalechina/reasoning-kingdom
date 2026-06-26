@@ -370,7 +370,7 @@ W = sum(np.outer(p, p) for p in patterns)
 np.fill_diagonal(W, 0)
 
 # ── 2. Modern version: softmax soft associative retrieval (one step, equivalent to self-attention) ──────────────
-beta = 2.0   # Inverse temperature: larger = "harder", →∞ degenerates to nearest-neighbor retrieval
+beta = 2.0   # Inverse temperature: larger = "harder", ->∞ degenerates to nearest-neighbor retrieval
 
 def hopfield_retrieve(query, patterns, beta):
     """
@@ -390,24 +390,24 @@ def hopfield_retrieve(query, patterns, beta):
 query_partial = np.array([1, 1, -1, 0, 0], dtype=float)  # First three bits of Pattern A
 retrieved, w = hopfield_retrieve(query_partial, patterns, beta)
 
-print("=== Experiment A: Partial query → Associative retrieval ===")
+print("=== Experiment A: Partial query -> Associative retrieval ===")
 print(f"Query (partial): {query_partial}")
 print(f"Pattern A:       {patterns[0]}")
 print(f"Retrieved:       {np.round(retrieved, 3)}")
 print(f"Pattern weights: A={w[0]:.3f}  B={w[1]:.3f}  C={w[2]:.3f}")
-print(f"→ Max-weight pattern is {'ABC'[w.argmax()]}, retrieval successful\n")
+print(f"-> Max-weight pattern is {'ABC'[w.argmax()]}, retrieval successful\n")
 
-# ── 4. Experiment B: Query equidistant from all patterns → converges to prior anchor ─────────────────────────
+# ── 4. Experiment B: Query equidistant from all patterns -> converges to prior anchor ─────────────────────────
 query_neutral = np.zeros(N)   # All-zero query: no preference toward any pattern
 
 retrieved_neutral, w_neutral = hopfield_retrieve(query_neutral, patterns, beta)
 
-print("=== Experiment B: Neutral query → Prior anchor ===")
+print("=== Experiment B: Neutral query -> Prior anchor ===")
 print(f"Query (all-zero): {query_neutral}")
 print(f"Pattern weights:  A={w_neutral[0]:.3f}  B={w_neutral[1]:.3f}  C={w_neutral[2]:.3f}")
 print(f"Retrieved:        {np.round(retrieved_neutral, 3)}")
 print(f"Mean of patterns: {np.round(patterns.mean(axis=0), 3)}")
-print(f"→ Retrieved ≈ mean of all patterns, i.e., prior anchor A\n")
+print(f"-> Retrieved ≈ mean of all patterns, i.e., prior anchor A\n")
 
 # ── 5. Experiment C: As the reasoning chain lengthens (equivalent to multi-step retrieval), how does the output evolve? ──────────────
 print("=== Experiment C: Convergence trajectory of multi-step retrieval ===")
@@ -657,7 +657,7 @@ After the window ends, the model is "stuck" — it is still generating tokens, b
 
     4. Return (A, t_conv)
 
-    # Yonglin Formula: lim_{t→∞} p_t = A
+    # Yonglin Formula: lim_{t->∞} p_t = A
     # Effective reasoning window: [1, t_conv]
 
 ---
@@ -1404,7 +1404,7 @@ Forward pass and backpropagation **are not "the same set of equations in differe
 | **Iteration formula** | $h_k = h_{k-1} + v_k(h_{k-1})$ | $\theta_{t+1} = \theta_t - \hat{\eta} \nabla_\theta \mathcal{L}$ |
 | **Velocity source** | Layer transformations $F_k$ (Attention, FFN, etc.) | Loss function gradient $\nabla_\theta \mathcal{L}$ |
 | **Number of steps** | Fixed ($L$ layers) | Variable (training steps) |
-| **Endpoint** | softmax → $\mathcal{P}$ | $\theta^*$ (determined by training data) |
+| **Endpoint** | softmax -> $\mathcal{P}$ | $\theta^*$ (determined by training data) |
 | **Optimizing what?** | Optimizes nothing — executes a fixed trajectory | Minimizes the loss function |
 
 **The forward pass is not "optimizing" anything.** The velocity function $v_k$ of each layer is determined by the trained weights. The forward pass merely executes this already-paved trajectory — $L$ Euler steps completed, softmax projection, output the answer.
@@ -1510,12 +1510,12 @@ The four key parameters $(μ, L, η, k)$ in the formal derivation have intuitive
 ### 2. Strong Convexity Coefficient $μ$ (Steepness of the Bowl)
 - **Shallow bowl (small $μ$)**: gentle slope, slow convergence
 - **Deep bowl (large $μ$)**: steep slope, fast convergence
-- **Physical meaning**: training data diversity → large $μ$ → model easily learns clear patterns
+- **Physical meaning**: training data diversity -> large $μ$ -> model easily learns clear patterns
 
 ### 3. Smoothness Constant $L$ (Maximum Rate of Change of the Slope)
 - **Smooth terrain (small $L$)**: slope changes little, can take large steps
 - **Rugged terrain (large $L$)**: slope changes drastically, must take small steps
-- **Physical meaning**: model architecture smoothness → small $L$ → stable reasoning
+- **Physical meaning**: model architecture smoothness -> small $L$ -> stable reasoning
 
 ### 4. Step Size $η$ (Span of One Reasoning Step)
 - **Too large**: may skip past the correct path
@@ -1523,9 +1523,9 @@ The four key parameters $(μ, L, η, k)$ in the formal derivation have intuitive
 - **Just right**: $η < \frac{2μ}{L^2}$ (the downhill safety formula)
 
 ### 5. Contraction Coefficient $k = 1 - \frac{η(2μ-ηL^2)}{C}$
-- $μ$ large (steep bowl) → $k$ small → fast convergence
-- $L$ large (rugged) → $k$ large → slow convergence
-- $η$ just right → $k$ minimal → optimal convergence
+- $μ$ large (steep bowl) -> $k$ small -> fast convergence
+- $L$ large (rugged) -> $k$ large -> slow convergence
+- $η$ just right -> $k$ minimal -> optimal convergence
 
 ### Analogy: Learning to Ride a Bicycle
 - **Convexity**: destination is clear (going home)
@@ -1535,13 +1535,13 @@ The four key parameters $(μ, L, η, k)$ in the formal derivation have intuitive
 - **$k$**: arrival speed
 
 ### Concrete Manifestation in AI Reasoning
-1. **Data quality** → $μ$: diverse data creates a "deep bowl"
-2. **Model architecture** → $L$: smooth design creates "gentle terrain"
-3. **Reasoning design** → $η$: appropriate step size balances exploration and exploitation
-4. **Synergy of the three** → $k$: determines the length of the effective reasoning window
+1. **Data quality** -> $μ$: diverse data creates a "deep bowl"
+2. **Model architecture** -> $L$: smooth design creates "gentle terrain"
+3. **Reasoning design** -> $η$: appropriate step size balances exploration and exploitation
+4. **Synergy of the three** -> $k$: determines the length of the effective reasoning window
 
-**Good system**: large $μ$ + small $L$ → allows large $η$ → small $k$ → fast convergence  
-**Poor system**: small $μ$ + large $L$ → must use small $η$ → large $k$ → slow convergence
+**Good system**: large $μ$ + small $L$ -> allows large $η$ -> small $k$ -> fast convergence  
+**Poor system**: small $μ$ + large $L$ -> must use small $η$ -> large $k$ -> slow convergence
 
 This is why different models and different tasks have different "effective reasoning windows" — their combinations of $(μ, L, η)$ differ, leading to different convergence speeds.
 
@@ -1620,8 +1620,8 @@ Between the object level and the meta level, there is a chasm.
 
 ### The Moral of the Story
 
-1. **Terrain is built by data** ($μ$): diverse data → deep bowl → good reasoning
-2. **Road is paved by architecture** ($L$): smooth design → easy to walk → stable reasoning  
+1. **Terrain is built by data** ($μ$): diverse data -> deep bowl -> good reasoning
+2. **Road is paved by architecture** ($L$): smooth design -> easy to walk -> stable reasoning  
 3. **Stride must be moderate** ($η$): too large you stumble, too small you dawdle
 4. **Gravity always exists** ($A$): training bias is the inevitable destination
 5. **Window has a limit** ($t_{\text{eff}}$): explore as much as possible before gravity pulls you back
@@ -1683,13 +1683,13 @@ Reasoning democratization is about handing this **map of the mountain** to every
 
 - \[Zixi Li, 2025b\] — The Yonglin Formula, theoretical proof of reasoning incompleteness, rupture between object level and meta level
 
-- Wei et al. (2022). *Chain-of-Thought Prompting Elicits Reasoning in Large Language Models* — Foundational work on CoT `→ [arXiv:2201.11903]`
+- Wei et al. (2022). *Chain-of-Thought Prompting Elicits Reasoning in Large Language Models* — Foundational work on CoT `-> [arXiv:2201.11903]`
 
 - Olsson et al. (2022). *In-context Learning and Induction Heads* — Discovery of induction heads, the working memory mechanism of hidden layers
 
-- \[Hu et al., 2024\] — Understanding CoT reasoning from a Hopfield perspective `→ [arXiv:2410.03595]`
+- \[Hu et al., 2024\] — Understanding CoT reasoning from a Hopfield perspective `-> [arXiv:2410.03595]`
 
-- \[Chen et al., 2025\] — Survey of long chain-of-thought reasoning, deep reasoning and inference-time scaling `→ [arXiv:2503.09567]`
+- \[Chen et al., 2025\] — Survey of long chain-of-thought reasoning, deep reasoning and inference-time scaling `-> [arXiv:2503.09567]`
 
 - Elhage et al. (2021). *A Mathematical Framework for Transformer Circuits* — Mathematical analysis of Transformer internal mechanisms
 

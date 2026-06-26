@@ -204,23 +204,23 @@ def approximate_halt(func, timeout=0.05):
     def runner():
         try:
             func()
-            result[0] = True   # Function returned normally → halts
+            result[0] = True   # Function returned normally -> halts
         except Exception:
             result[0] = True   # Throwing an exception also counts as halting
 
     t = threading.Thread(target=runner, daemon=True)
     t.start()
     t.join(timeout)
-    # Timed out without finishing → judged as "does not halt"
+    # Timed out without finishing -> judged as "does not halt"
     return result[0] is True
 
 # ------------------------------------------------------------------
 # Step 2: Construct the diagonalization program DIAG
 #   DIAG's logic:
 #     If HALT(DIAG) returns True (judged that DIAG will halt)
-#       → DIAG enters an infinite loop (actually does not halt)
+#       -> DIAG enters an infinite loop (actually does not halt)
 #     Otherwise (judged that DIAG does not halt)
-#       → DIAG immediately returns (actually halts)
+#       -> DIAG immediately returns (actually halts)
 # ------------------------------------------------------------------
 def make_diag(halt_checker):
     """Factory function: construct a diagonalization program using the given halt_checker"""
@@ -228,11 +228,11 @@ def make_diag(halt_checker):
         # First ask the "decider": will I (diag) myself halt?
         will_halt = halt_checker(diag)
         if will_halt:
-            # Decider says I will halt → I'll just loop forever
+            # Decider says I will halt -> I'll just loop forever
             while True:
                 pass
         else:
-            # Decider says I won't halt → I'll just return immediately
+            # Decider says I won't halt -> I'll just return immediately
             return
 
     return diag
@@ -256,16 +256,16 @@ print(f"Actual observation: DIAG {'halted' if actual_halted else 'did not halt (
 
 # Determine whether a contradiction occurred
 if prediction != actual_halted:
-    print("\n→ Contradiction! The decider's prediction is opposite to DIAG's actual behavior.")
+    print("\n-> Contradiction! The decider's prediction is opposite to DIAG's actual behavior.")
 else:
     # Note: Due to timeout approximation, two observations may "coincidentally" agree,
     # but this is only an error of the approximate decider, not affecting the rigorous mathematical proof.
-    print("\n→ Note: timeout approximation obscures the contradiction, but the rigorous mathematical proof")
+    print("\n-> Note: timeout approximation obscures the contradiction, but the rigorous mathematical proof")
     print("   guarantees that a precise HALT necessarily leads to contradiction (see analysis below).")
 
 print("\n--- Rigorous Logical Analysis ---")
-print("Case A: HALT(DIAG, DIAG) = True  → DIAG loops forever → Actually does not halt → Contradiction!")
-print("Case B: HALT(DIAG, DIAG) = False → DIAG returns immediately → Actually halts   → Contradiction!")
+print("Case A: HALT(DIAG, DIAG) = True  -> DIAG loops forever -> Actually does not halt -> Contradiction!")
+print("Case B: HALT(DIAG, DIAG) = False -> DIAG returns immediately -> Actually halts   -> Contradiction!")
 print("\nConclusion: A precise halting decider HALT is logically impossible.")
 print("      This is not because the algorithm is not smart enough, but a logical necessity.")
 ```
@@ -368,14 +368,14 @@ This is what Volume I truly wants to say: reasoning is not an infinitely ascendi
     Ask: HALT(DIAG, DIAG) = ?
 
     Case 1: HALT(DIAG, DIAG) = True
-      → DIAG(DIAG) will halt
-      → But DIAG's definition: if HALT returns True, then loop forever
-      → Contradiction!
+      -> DIAG(DIAG) will halt
+      -> But DIAG's definition: if HALT returns True, then loop forever
+      -> Contradiction!
 
     Case 2: HALT(DIAG, DIAG) = False
-      → DIAG(DIAG) does not halt
-      → But DIAG's definition: if HALT returns False, then halt
-      → Contradiction!
+      -> DIAG(DIAG) does not halt
+      -> But DIAG's definition: if HALT returns False, then halt
+      -> Contradiction!
 
     Conclusion: HALT does not exist
 
@@ -591,7 +591,7 @@ This book began with unresolved questions and ends with unresolved questions.
 
 - Penrose, R. (1989). *The Emperor's New Mind* — Gödel's theorem and philosophical discussion of artificial intelligence
 
-- [Hamkins & Nenu, 2024] — Historical Clarification of the Halting Problem `→ [arXiv:2310.07927]`
+- [Hamkins & Nenu, 2024] — Historical Clarification of the Halting Problem `-> [arXiv:2310.07927]`
 
 - Hofstadter, D. (1979). *Gödel, Escher, Bach: An Eternal Golden Braid* — Classic work on self-reference, recursion, and consciousness
 

@@ -111,7 +111,46 @@ The extra connectives in linear logic are clearest when analogized to ordering f
 :::
 
 
-These four connectives form two sets of symmetric pairings; behind them lies a deep duality structure: multiplicative connectives concern the **concurrent existence** of resources, additive connectives concern the **selectability** of resources.
+### 16.2.5 Hands On: Writing a Proof in Linear Logic
+
+Let us write a proof in linear logic using the format of **sequent calculus**. A sequent takes the form $\Gamma \vdash \Delta$, read as: the resource collection $\Gamma$ can be transformed into the resource collection $\Delta$.
+
+In linear logic's sequent calculus, there is only **one identity axiom**:
+
+$$\frac{}{A \vdash A}\ (\text{id})$$
+
+But the key difference lies in **context management**: every inference rule states precisely what it consumes and what it produces. There is no weakening (you cannot discard an assumption out of thin air), and no contraction (you cannot copy an assumption).
+
+Here is a complete proof example — proving $A \otimes B \multimap B \otimes A$ ("simultaneously possessing A and B" can be transformed into "simultaneously possessing B and A" — commutativity is not an axiom in linear logic, but a theorem that can be proved):
+
+```
+Proof tree:
+
+                ————— (id)             ————— (id)
+                A ⊢ A                 B ⊢ B
+               ——————————— (⊗R)     ——————————— (⊗R)  
+               A, B ⊢ A ⊗ B          B, A ⊢ B ⊗ A
+               ————————————— (⊗L, packaging A,B)  
+               A ⊗ B ⊢ A ⊗ B         ——————————————— (exchange? not allowed!)
+               
+Wait — this reveals a problem. In the standard linear sequent calculus, is the exchange rule (reordering the context) an implicit structural rule or an explicit one?
+
+The answer: **it depends on which variant of linear logic you are using**. In Classical Linear Logic (CLL), exchange is preserved as a structural rule — you can freely reorder resources in the context. In Non-Commutative Linear Logic (NLL), exchange is removed, and the left-right order of resources carries physical meaning (such as temporal order).
+
+In the version that preserves exchange, this proof is straightforward:
+1. Start from $A \vdash A$ and $B \vdash B$
+2. Use $\otimes R$ to obtain $A, B \vdash A \otimes B$ and $B, A \vdash B \otimes A$  
+3. Use exchange to reorder the second: $A, B \vdash B \otimes A$
+4. Use $\multimap R$ from $A \otimes B \vdash A \otimes B$ and $A, B \vdash B \otimes A$... Actually, the more direct approach is to use $\otimes L$:
+5. To prove $A \otimes B \vdash B \otimes A$, assume you have $A \otimes B$ (i.e., $A$ and $B$ are bound together), use $\otimes L$ to decompose them, then recombine. Finally, use $\multimap R$.
+
+In the version without exchange, $A \otimes B \vdash B \otimes A$ is **unprovable**! Because the positional information of resources has been incorporated into the logic — you cannot "for free" reorder $A$ and $B$.
+
+The significance of this exercise is not in the axiom numbering, but in the first-hand experience: **removing one structural rule changes the entire theorem set of the logic**. This is not fine-tuning; it is a fundamental change.
+
+::: info Professor Manul comments
+This proof takes only two steps in the version that preserves exchange; remove exchange, and it becomes unprovable. Most logic courses never let you see this contrast — they treat exchange as air, and you breathe without knowing air exists. One of the jobs of linear logic is to make the air visible.
+:::
 
 ::: info Why so many connectives?
 
@@ -163,6 +202,80 @@ Linear logic is not a pure thought experiment of logicians. It precisely corresp
 **Quantum computing.** Quantum mechanics has a famous prohibition: the **no-cloning theorem**. An unknown quantum state cannot be perfectly copied. In the language of logic, this is precisely "contraction is not allowed" — quantum bits are linear resources; you cannot produce two copies of $\psi$ from one $\psi$. The computational model of quantum computing naturally lives inside linear logic; quantum circuits are linear inference sequences.
 
 **Concurrent protocols.** Communication protocols between two processes can be precisely encoded as linear logic propositions. The protocol's "one side sends, the other side receives" is exactly linear implication: resources transfer from one side to the other, uncopyable, undiscardable. Session Types are precisely the engineering realization of this correspondence; they allow compilers to verify protocol correctness at the type-checking stage — logic guarantees that the protocol will not deadlock and will not miss messages.
+
+### 16.5.5 Hands On: How Rust's Ownership System Is Dual to Linear Logic
+
+This is not a metaphor. The rules that Rust's type checker enforces at compile time all have precise duals in linear logic. We illustrate this with a concrete Rust program.
+
+**Example 1: Move semantics = linear implication**
+
+```rust
+let x = String::from("hello");  // x owns the string
+let y = x;                      // ownership moves from x to y
+// println!("{}", x);           // compile error! x has been "consumed"
+// error[E0382]: use of moved value: `x`
+```
+
+Corresponding linear logic proposition:
+$$\text{String("hello")} \multimap \text{String@y}$$
+
+The resource is implicitly moved from x to y; x is no longer available. In linear logic, this is: consume one resource, produce one resource, the original disappears.
+
+**Example 2: Immutable borrow = a temporary view of $!A$**
+
+```rust
+let x = String::from("hello");
+let r1 = &x;  // immutable borrow — can read, cannot modify
+let r2 = &x;  // multiple immutable borrows can coexist
+println!("{} {}", r1, r2);  // ✓
+println!("{}", x);          // ✓ x is still valid
+```
+
+Corresponding linear logic proposition:
+$$!A \vdash A \otimes A \otimes \cdots$$
+
+$!A$ (infinitely available resource) allows multiple read-only views to be taken from it. When the borrow ends, x's ownership is unaffected.
+
+**Example 3: Mutable borrow = exclusive access to a linear resource**
+
+```rust
+let mut x = String::from("hello");
+let r = &mut x;  // mutable borrow — exclusive access
+r.push_str(", world");
+// let r2 = &x;  // compile error! cannot have a mutable borrow and an immutable borrow simultaneously
+// error[E0502]: cannot borrow `x` as immutable because it is also borrowed as mutable
+```
+
+Corresponding linear logic: a mutable borrow temporarily "takes away" the exclusive right to modify the resource — unlike a move, the borrowed resource is returned once the borrow ends; unlike an immutable borrow, a mutable borrow is exclusive and cannot have two copies coexisting. This is the border zone between linear logic and affine types (types where resources must be used at least once).
+
+**Example 4: Function call = parameter consumption**
+
+```rust
+fn consume(s: String) {  // consumes the input String
+    println!("{}", s);
+    // s is dropped here
+}
+
+let x = String::from("hello");
+consume(x);               // x is moved into the function parameter
+// println!("{}", x);     // compile error! x has been consumed
+```
+
+Corresponding linear logic proposition:
+$$\frac{\Gamma \vdash \text{String("hello")} \multimap \mathbf{1}}{\Gamma, \text{String("hello")} \vdash \mathbf{1}}$$
+
+The function body consumes the resource and produces nothing ($\mathbf{1}$, corresponding to Rust's `()` type); the resource is transferred in the function call; the caller no longer owns it.
+
+**Summary of the four examples**:
+
+| Rust operation | Linear logic | Explanation |
+|-----------|---------|------|
+| Move `let y = x` | $A \multimap B$ | Resource moves from one place to another |
+| Immutable borrow `&x` | $!A \vdash A$ | Take a read-only view from infinite resources |
+| Mutable borrow `&mut x` | Exclusive linear access | Temporarily transfer exclusive modification rights; returned when borrow ends |
+| Function consumption `f(x)` | $\multimap$ elimination | Resource consumed by the function body |
+
+This correspondence is not a coincidence. Rust's core type system (ownership, borrowing, lifetimes) is built on top of linear types — the logic that the type checker executes at compile time is precisely the inference rules of linear logic. The Rust compiler did not just "reference" linear logic; it **implements** linear logic.
 
 ::: info An extension of the Curry-Howard correspondence
 

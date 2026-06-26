@@ -30,7 +30,7 @@
 他走到白板前，画了一个简化的示意图：
 
 ```
-输入信号 → 加权求和 → 激活函数 → 输出信号
+输入信号 -> 加权求和 -> 激活函数 -> 输出信号
 ```
 
 “生物神经元有复杂的化学和电生理过程，”兔狲教授解释，“但我们只取最关键的部分：**加权求和**与**阈值激活**。”
@@ -436,7 +436,7 @@ print(f"训练后的偏置: {perceptron.bias}")
 print("\n测试感知器:")
 for inputs in X_train:
     prediction = perceptron.predict(inputs)
-    print(f"  输入 {inputs} → 预测 {prediction} (应该是 {1 if inputs==[1,1] else 0})")
+    print(f"  输入 {inputs} -> 预测 {prediction} (应该是 {1 if inputs==[1,1] else 0})")
 
 # 可视化训练过程
 plt.figure(figsize=(8, 4))

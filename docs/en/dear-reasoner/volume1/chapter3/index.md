@@ -477,8 +477,8 @@ def paradox_program(input_str):
     print("2. If halts returns True (saying P will halt), then P enters an infinite loop")
     print("3. If halts returns False (saying P won't halt), then P halts immediately")
     print("\nA contradiction emerges:")
-    print("- If halts correctly judges that P will halt → P actually does NOT halt (enters infinite loop)")
-    print("- If halts correctly judges that P won't halt → P actually DOES halt (returns immediately)")
+    print("- If halts correctly judges that P will halt -> P actually does NOT halt (enters infinite loop)")
+    print("- If halts correctly judges that P won't halt -> P actually DOES halt (returns immediately)")
     print("\nConclusion: no algorithm exists that can correctly determine, for all programs, whether they halt.")
 
 # Run the halting problem simulation
@@ -502,16 +502,16 @@ def self_reference_paradox():
     liar_statement = "This statement is false."
     print(f"  Statement: '{liar_statement}'")
     print("  Analysis:")
-    print("  - If this statement is true → then what it says, that it is false, must hold → contradiction")
-    print("  - If this statement is false → then what it says, that it is false, is itself false → it is true → contradiction")
+    print("  - If this statement is true -> then what it says, that it is false, must hold -> contradiction")
+    print("  - If this statement is false -> then what it says, that it is false, is itself false -> it is true -> contradiction")
     
     # The Barber Paradox
     print("\n2. The Barber Paradox:")
     print("  Rule: 'The barber shaves all those, and only those, who do not shave themselves'")
     print("  Question: does the barber shave himself?")
     print("  Analysis:")
-    print("  - If the barber shaves himself → he belongs to 'those who shave themselves' → he should not shave himself")
-    print("  - If the barber does not shave himself → he belongs to 'those who do not shave themselves' → he should shave himself")
+    print("  - If the barber shaves himself -> he belongs to 'those who shave themselves' -> he should not shave himself")
+    print("  - If the barber does not shave himself -> he belongs to 'those who do not shave themselves' -> he should shave himself")
     
     # Self-reference in computing
     print("\n3. Self-Reference in Computing:")
@@ -539,8 +539,8 @@ def self_modifying():
     print("  - Input: mathematical statement + proof")
     print("  - Output: 'valid' or 'invalid'")
     print("  Gödel constructed a statement G: 'This statement has no proof'")
-    print("  If G has a proof → G is false (because it says it has no proof)")
-    print("  If G has no proof → G is true (because it says it has no proof)")
+    print("  If G has a proof -> G is false (because it says it has no proof)")
+    print("  If G has no proof -> G is true (because it says it has no proof)")
     print("  Conclusion: there exist statements that can be neither proved nor disproved")
     
     print("\nMr. Pallas's Cat's reflections:")

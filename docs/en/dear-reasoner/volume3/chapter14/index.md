@@ -101,7 +101,7 @@ Piglet carefully examined the layered structure in the diagram: "The input $X$ p
 3. **Attention allocation layer**: softmax converts relevance into a probability distribution
 4. **Information integration layer**: attention weights combine the value vectors $V$ through weighted summation
 
-Little Seal reflected: "This computational flow is strikingly similar to the cognitive process of human attention: extract features → compute relevance → allocate attention → integrate information."
+Little Seal reflected: "This computational flow is strikingly similar to the cognitive process of human attention: extract features -> compute relevance -> allocate attention -> integrate information."
 
 "That is precisely the charm of attention," said Mr. Pallas's Cat. "A simple mathematical formula captures a complex cognitive process."
 
@@ -732,13 +732,13 @@ no_mask_pattern = head_patterns_no_mask[head_idx]
 causal_pattern = head_patterns_causal[head_idx]
 
 print(f"Head {head_idx} pattern changes:")
-print(f"  Pattern: {no_mask_pattern['pattern_type']} → {causal_pattern['pattern_type']}")
-print(f"  Entropy: {no_mask_pattern['entropy']:.3f} → {causal_pattern['entropy']:.3f} "
+print(f"  Pattern: {no_mask_pattern['pattern_type']} -> {causal_pattern['pattern_type']}")
+print(f"  Entropy: {no_mask_pattern['entropy']:.3f} -> {causal_pattern['entropy']:.3f} "
       f"(change: {causal_pattern['entropy'] - no_mask_pattern['entropy']:+.3f})")
-print(f"  Concentration: {no_mask_pattern['concentration']:.3f} → {causal_pattern['concentration']:.3f} "
+print(f"  Concentration: {no_mask_pattern['concentration']:.3f} -> {causal_pattern['concentration']:.3f} "
       f"(change: {causal_pattern['concentration'] - no_mask_pattern['concentration']:+.3f})")
-print(f"  Diagonal strength: {no_mask_pattern['diagonal_strength']:.3f} → {causal_pattern['diagonal_strength']:.3f}")
-print(f"  Local focus: {no_mask_pattern['local_focus']:.3f} → {causal_pattern['local_focus']:.3f}")
+print(f"  Diagonal strength: {no_mask_pattern['diagonal_strength']:.3f} -> {causal_pattern['diagonal_strength']:.3f}")
+print(f"  Local focus: {no_mask_pattern['local_focus']:.3f} -> {causal_pattern['local_focus']:.3f}")
 
 print(f"\nExpected effects of causal masking:")
 print(f"  1. Reduced entropy (attention more focused, since future positions are masked)")

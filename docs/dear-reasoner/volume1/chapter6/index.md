@@ -679,7 +679,7 @@ def sliding_puzzle_example():
     print("\n2. 启发能力 (哪个更准确?):")
     print("   - 错位棋子数: 低估实际步数")
     print("   - 曼哈顿距离: 更接近实际步数")
-    print("   → 曼哈顿距离通常更高效")
+    print("   -> 曼哈顿距离通常更高效")
     
     print("\n3. 一致性检查:")
     print("   - 曼哈顿距离满足一致性")

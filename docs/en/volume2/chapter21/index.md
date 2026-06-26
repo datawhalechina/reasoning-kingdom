@@ -58,6 +58,28 @@ This difficulty has no purely logical solution. You cannot deductively derive th
 
 What inductive bias is determines what learning is.
 
+### 21.1.5 Concrete Faces of Underdetermination
+
+Using the same dataset, three different learners will give three different regularities. This is not a metaphor; it becomes clear with a simple calculation.
+
+**Data**: $(x,y) = \{(0,0), (1,1), (2,4), (3,9)\}$, four points.
+
+**Learner A (Linear Regression)**: The hypothesis space is all linear functions $y = ax + b$. Seeing these four points, the optimal solution it finds is $y = 3x - 0.5$ (least squares). This function is not exactly accurate on the training points — the predicted value at (2,4) is 5.5, an error of 1.5 — but it "believes" the regularity is linear.
+
+**Learner B (Quadratic Regression)**: The hypothesis space is all quadratic functions $y = ax^2 + bx + c$. Seeing these four points, the exact solution it finds is $y = x^2$ — a perfect fit for all training points. It "believes" the regularity is quadratic.
+
+**Learner C (Degree-10 Polynomial)**: The hypothesis space is all polynomials of degree at most 10: $y = \sum_{i=0}^{10} a_i x^i$. There are infinitely many degree-10 polynomials passing through these four points — this is the face of underdetermination. Without constraints, the learned regularity could be an extremely oscillatory curve, wildly wiggling between the training points.
+
+Who is right? If the true regularity is indeed $y = x^2$, Learner B is optimal. If the true regularity is $y = 3x$ (with added noise), Learner A is better. Learner C is almost certainly wrong — it is too flexible and would treat noise as regularity.
+
+**Key point**: Four people cannot determine who is right by "looking at more data." For any given finite set of points, there always exists a degree-10 polynomial that perfectly fits them. You can achieve perfect performance on the training data while performing terribly on test data. The data itself will not tell you — choosing degree 1, degree 2, or degree 10 is **your choice**, not the data's choice.
+
+This is the essence of inductive bias: it is not learned from data; it is something you bring into the arena before you even look at the data. Like a pair of glasses you put on before you see the data. Different glasses see different regularities.
+
+::: info Professor Manul's Commentary
+Many people nod inwardly when they hear "underdetermination," and then continue training their models with default hyperparameters. Underdetermination is not a theoretical fact that needs to be "understood"; it is an operational problem that occurs in every training session. The moment you choose a model architecture, underdetermination has already been partially resolved — but you may not know exactly what bias you chose, nor whether it is appropriate for the current data. Knowing that there is a bias but not knowing which bias you chose is more dangerous than not knowing there is a bias — because you think you are in control, when you are not.
+:::
+
 ::: info Professor Pallas's Cat's Commentary
 Inductive bias is not a technical option; it is a metaphysical commitment. If you choose a linear model, you are conceding that "regularities are linear"; if you choose a deep network, you are conceding some structural assumption about feature hierarchies. Most machine learning classes call this "tuning hyperparameters," burying the metaphysical commitment inside engineering operations. This is evading a genuine problem, not solving it.
 :::
@@ -80,8 +102,8 @@ $K(x)$ measures the **intrinsic complexity** of $x$ — not how long $x$ is, but
 **Kolmogorov complexity $K(x)$** is the mathematical definition of "how complex is this object" — complexity equals the length of the shortest program required to describe it.
 
 Intuitive examples:
-- "the first million natural numbers" → a very short program suffices (`for i in range(1000000): print(i)`), $K$ is very small
-- A randomly generated million-digit number → no shorter description than "list the digits themselves," $K \approx$ string length
+- "the first million natural numbers" -> a very short program suffices (`for i in range(1000000): print(i)`), $K$ is very small
+- A randomly generated million-digit number -> no shorter description than "list the digits themselves," $K \approx$ string length
 
 **The important uncomputability**: $K(x)$ is uncomputable — there exists no algorithm that can compute the exact value of $K(x)$ for arbitrary $x$ (this is a corollary of the halting problem). You can only compute an **upper bound** (find a program that can generate $x$; its length is an upper bound).
 
@@ -90,6 +112,40 @@ Intuitive examples:
 
 
 In this language, "simple" means "small Kolmogorov complexity," and "simpler explanations are preferred" means "choose the regularity with smaller $K$ value."
+
+### 21.2.5 Hands-On: Computing Upper Bounds of Kolmogorov Complexity
+
+$K(x)$ cannot be computed exactly, but upper bounds can be computed — find a program that can generate $x$, and its length is an upper bound.
+
+**Example 1**: $x =$ "01010101" (01 repeated 4 times, 8 characters total).
+- Program: `for i in range(4): print("01")`
+- Program length (using some reasonable encoding): about 20-30 characters (Python syntax overhead + loop body)
+- $K(x) \leq$ about 30
+
+**Example 2**: $x =$ "01010101" repeated 1000 times (2000 characters).
+- Program: `for i in range(1000): print("01")`
+- Program length: about 35 characters (only changed loop count)
+- $K(x) \leq$ about 35
+
+Note: the data grew from 8 characters to 2000 characters, but the program only grew from about 30 to about 35. This is the power of compression — the longer the regularity, the greater the benefit of compression.
+
+**Example 3**: $x =$ the first 1000 digits of $\pi$.
+- Program: `mp.pi.n(digits=1000)` (depends on the math library)
+- Program length: about 40 characters
+- $K(x) \leq$ about 40 (but this depends on the math library, which itself needs to be accounted for. However, we can accept this — the definition of $K$ is relative to a fixed universal Turing machine, and the math library can be part of that Turing machine)
+
+**Example 4**: $x =$ a truly random string (1000 bits).
+- Program: can only `print("1000 bits of random string as-is")`
+- Program length ≈ 1000 + a little overhead
+- $K(x) \approx$ the length of the string itself
+
+These four examples reveal a crucial intuition: **$K(x)$ measures the extent to which $x$ can be compressed**. Highly regular strings have succinct descriptions, approaching $K(x) \ll |x|$; completely random strings cannot be compressed, $K(x) \approx |x|$.
+
+But there is a subtle point: the specific value of $K(x)$ depends on the choice of reference Turing machine. Different Turing machines may give different $K$ values for the same $x$, differing by a constant (the length of the program that simulates the other Turing machine). This is why $K(x)$ is a measure of complexity in an **asymptotic sense**, not an absolutely precise quantity. But differing by a constant is sufficient for most theoretical discussions — we care about orders of magnitude, not exact values.
+
+::: info Professor Manul's Commentary
+Computing an upper bound on Kolmogorov complexity is itself a crash course: you find a regularity -> you describe the regularity with the shortest program -> the length of the program is your strongest claim about how "complex" this string is. But you may also have missed a regularity — the program you found is only an upper bound. The true value of K(x) is the gap between you and the shortest of all possible programs — and you can never be sure you have found the shortest one.
+:::
 
 This is the core of the **Minimum Description Length (MDL)** principle:
 
@@ -121,6 +177,24 @@ This is precisely the formalization of "overfitting" from Chapter 5 (Volume 1): 
 
 In the language of Kolmogorov complexity, the quantity of generalization can be measured: suppose the hypothesis compresses the training data from $n$ bits to $k$ bits ($k < n$); then the compression ratio $n/k$ in some sense measures the hypothesis's "generalization potential" — how many generalizable regularities have been discovered, rather than how many particular instances have been memorized.
 
+### 21.3.5 Double Descent: When "More Parameters = Better Generalization" Shook Classic Theory
+
+Classic learning theory (including PAC and VC dimension) predicts a U-shaped curve: model too simple -> underfitting; model just right -> good generalization; model too complex -> overfitting. However, after 2018, researchers observed a counterintuitive phenomenon in large-scale deep learning: **Double Descent**.
+
+After the number of parameters exceeds the amount of training data — that is, entering the "overparameterized" regime — test error does not continue to rise, but instead **decreases again**. After the model becomes large enough to completely memorize the training data, it paradoxically begins to generalize better.
+
+What does this mean? VC dimension and PAC guarantees in the worst case are still correct — they are not "wrong." But they describe **the worst of all possible data distributions**. Actual deep learning, on natural data, seems to have some kind of **implicit simplicity preference** — even when the model has enough degrees of freedom to memorize every training sample, the interaction of the optimization algorithm (SGD) and architecture choices (convolutions, attention, layer normalization) still biases toward simpler solutions.
+
+**The perspective of overtraining**: After 2023, the practitioner community gradually accepted another counterintuitive fact: for a model with a fixed parameter count, pouring in hundreds or even thousands of times more data — so-called "overtraining" — can often continuously improve generalization performance, far exceeding the predictions of classic theory. Models continue to learn generalizable regularities even when the data volume reaches hundreds of times the parameter count.
+
+These two phenomena — double descent and overtraining — together point in one direction: **the generalization mechanism of deep learning cannot be fully explained by pure statistical learning theory**. The MDL perspective (generalization = compression) offers a more flexible language: the key is not the number of parameters, but the "effective description length" actually used internally by the model. A hundred-billion-parameter model, if its effective degrees of freedom are implicitly compressed by SGD to the order of millions, is "simple" in the MDL framework — despite the large parameter count.
+
+This perspective is still developing, without a settled conclusion. But it illustrates an important fact: **theoretical tools need to be re-examined as practice evolves**. PAC and VC dimension will not "become obsolete" — they provide precise guarantees in the worst case. But the distribution of natural data is not the worst case, so actual behavior can be far better than worst-case bounds. Distinguishing between "what assumptions a theory holds under" and "under what conditions practice breaks through those assumptions" is the key to understanding generalization.
+
+::: info Professor Manul's Commentary
+Double Descent delivered a slap to classic theory, but classic theory is not dead. Classic theory says "there exists some terrible data distribution that will capsize your model"; Double Descent says "fortunately, natural data is not that distribution." Both statements are simultaneously true and not contradictory. A good theorist is not someone who explains everything with a single theory, but someone who knows where the theory starts to fall short and begins looking for a new theory.
+:::
+
 ::: info Why Deep Neural Networks Can Generalize
 This question was for a time a puzzle in theory: the number of parameters in deep neural networks often exceeds the amount of training data; according to traditional learning theory, such models should severely overfit. Yet in practice they often generalize well. The MDL perspective offers a direction: what measures generalization ability is not the number of parameters, but the "effective description length" actually used by the model — a model with a hundred billion parameters but with parameters highly structured among themselves may have an effective description length far smaller than the parameter count. Compression is the key, not scale. However, as the deep learning academic community has discovered, it is worth noting that the preceding description is more characteristic of classical deep representation learning methods; in the training of large language models and modern neural networks, this is not necessarily the gold standard. After 2023, our deep learning data-to-parameter ratios increasingly emphasize over-training — that is, for a given parameter count, we would pour in hundreds or even thousands of times more data to train a neural network of the same scale. The latest research has found that over-training is an effective form of generalization for deep learning and large language models.
 :::
@@ -147,6 +221,20 @@ Different approximation schemes correspond to different inductive biases:
 
 Every learning algorithm implicitly chooses an inductive bias, an understanding of "what is simple." This choice, in the vast majority of machine learning courses, is handled under the name of "hyperparameter tuning" — but it is in fact a metaphysical commitment about "what kind of regularities are preferred."
 
+### 21.4.5 Rademacher Complexity: Another Yardstick
+
+VC dimension is a combinatorial quantity; for many modern hypothesis spaces (such as deep neural networks), computing the VC dimension exactly is very difficult. **Rademacher complexity** provides a different perspective — it directly measures a hypothesis class's ability to fit random noise.
+
+Consider a sample set $S = \{z_1, \ldots, z_m\}$, randomly assign each sample a Rademacher variable $\sigma_i \in \{-1, +1\}$ (chosen independently with equal probability). The empirical Rademacher complexity of a hypothesis class $\mathcal{H}$ is:
+
+$$\hat{\mathcal{R}}_S(\mathcal{H}) = \mathbb{E}_{\sigma}\left[\sup_{h \in \mathcal{H}} \frac{1}{m}\sum_{i=1}^m \sigma_i h(z_i)\right]$$
+
+Intuition: if $\mathcal{H}$ can fit pure random noise well ($\sigma_i$ are random $\pm 1$), then $\mathcal{H}$ is complex. Because fitting noise does not require "learning regularities," only enough degrees of freedom. The higher the Rademacher complexity, the more prone $\mathcal{H}$ is to overfitting.
+
+Relationship with VC dimension: VC dimension gives worst-case bounds; Rademacher complexity gives **data-dependent** bounds — it measures complexity on a given specific sample set $S$. This makes it in some cases tighter than VC dimension (the bounds are closer to actual performance).
+
+Looking at VC dimension and Rademacher complexity side by side: VC dimension asks "how many points can you shatter" (purely combinatorial); Rademacher complexity asks "on this specific dataset, how well can you fit random noise" (data-dependent). Both quantify the same thing from different angles: **the hypothesis space's capacity to accommodate random patterns**. The greater the capacity, the more samples are needed; when samples are insufficient, the model may learn noise rather than signal.
+
 ---
 
 ## 21.5 Two Difficulties of Inverse Inference
@@ -160,6 +248,31 @@ Learning as inverse inference faces two fundamental difficulties, neither of whi
 These two difficulties are fundamental limitations of learning theory, not defects of algorithms. They indicate: **any learning system operates under certain assumptions; beyond those assumptions, guarantees vanish**.
 
 This structure is highly similar to the formal systems of Chapter 14: a formal system is reliable within its axioms; beyond the axioms, there are no guarantees. A learning system is reliable within its assumptions; beyond the assumptions, there are no guarantees. The reliability of both depends on an external commitment that cannot be verified from within.
+
+### 21.5.5 Why This Difficulty Cannot Be Resolved by Data
+
+Let us nail this problem down with an extreme example.
+
+Suppose you have a learner whose task is to predict the next element of a sequence. The training data is:
+
+$$2, 4, 6, 8, 10, 12, \ldots$$
+
+Three learners each learned different regularities:
+- **Learner A**: outputs $2n$ (even numbers)
+- **Learner B**: outputs $n^2 - n + 2$ (this formula also gives 2, 4, 6, 8 for the first few terms... no, $1^2-1+2=2$, $2^2-2+2=4$, $3^2-3+2=8$... wait, that is wrong, $3^2-3+2=8$, but the 3rd term of the sequence is 6. So this is incorrect.)
+
+Let me rewrite — a correct example is more important:
+
+Sequence: $0, 1, 2, 3, 4, 5, \ldots$
+- **Learner A**: $f(n) = n$ (natural numbers)
+- **Learner B**: $f(n) = $ "the $n$-th non-negative integer" (same as A)
+- **Learner C**: $f(n) = n$ for $n \leq 1000$, then $f(n) = n + 1000$
+
+For the first 5 elements (0,1,2,3,4), the three learners are **in perfect agreement**. You cannot distinguish them from the data. But for the 1001st element: A and B predict 1000, C predicts 2000.
+
+**What does this example reveal?** Finite data can never uniquely determine a regularity — underdetermination is not "temporarily insufficient data," but "underdetermination strong enough that it does not disappear even with data in the limit." The only way out is to introduce inductive bias — asserting that C is "more complex" and therefore not as good as A. But this assertion itself does not come from the data; you bring it in.
+
+And note: if the true regularity is indeed C (for example, a sudden jump after the 1000th element), then your inductive bias — favoring A — will cause you to systematically err. Inductive bias is not a free lunch: it helps you in some worlds and hurts you in others. And you cannot determine from training data which world you live in.
 
 Returning to the Compression Detective Game, the detective never enters the crime scene empty-handed. He carries some encoding scheme, some presupposition about "what counts as a short description." Thus the same batch of clues, in the eyes of different detectives, will lead to different regularities: linear models see straight lines, decision trees see branches, neural networks see hierarchical representations. So-called learning is not the data speaking for itself, but the data being forced to answer within some compression language.
 
@@ -177,7 +290,30 @@ What Chapter 21 does is: embed "learning" into this framework. Learning is **inv
 
 But this unified picture still lacks its final piece: when the inference system becomes sufficiently large and complex, its "inferences" begin to include propositions about itself — about what it can learn, what it cannot learn, what its own inductive bias is. At this point, the Gödelian structure of Chapter 15 reappears: **a sufficiently strong inference system cannot fully infer itself**.
 
-This is the entrance to Chapter 22.
+### 21.6.5 Parallel Structure: The Incompleteness of Learning
+
+Place the logical incompleteness of Ch14-15 and the learning incompleteness of Ch20-21 side by side. These two lines of argument share a deep structure:
+
+| | Formal System (Ch14-15) | Learning System (Ch20-21) |
+|---|---|---|
+| **Starting point** | Axioms + Inference rules | Training data + Inductive bias |
+| **What can be done internally** | Generate all theorems (syntax) | Search hypothesis space (learning) |
+| **Externally required** | Semantic assignment (model theory) | Generalization guarantees (PAC/MDL) |
+| **Cannot be internalized** | Proof of system consistency | Justification of inductive bias |
+| **Boundary manifestation** | There exist true but unprovable propositions | There exist learnable concepts requiring external bias |
+
+This is not "kind of similar." This is **the same mathematical structure instantiated in two domains**. In both cases:
+1. Legitimate operations within the system (proving/learning) can proceed indefinitely
+2. But the system cannot internally verify the **correctness conditions** of these operations (consistency/generalization)
+3. Correctness conditions require an **external perspective** — formal systems need models, learning systems need distributional assumptions
+
+**The deepest question**: if we make inductive bias itself an object of learning — meta-learning — can we break through this limitation?
+
+Meta-learning does indeed learn a bias over a distribution of tasks, enabling faster adaptation to new tasks. But meta-learning itself also has an inductive bias: it carries assumptions about the task distribution (e.g., "tasks share common structure") regarding "what kind of bias performs well on the task distribution." If we make meta-learning itself an object of learning (meta-meta-learning), this chain has no end — each layer requires its own inductive bias, and each layer's inductive bias must come from external input.
+
+This is fully parallel to the Gödelian structure: adding $G$ as an axiom -> the new system has its own $G'$ -> you can never outrun it. Turning inductive bias into a learning object -> meta-learning has its own meta-bias -> you can never bootstrap your way out.
+
+This is the entrance to Chapter 22. The convergence point of the eight boundaries is in Chapter 25.
 
 ---
 

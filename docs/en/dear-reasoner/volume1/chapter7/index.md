@@ -296,8 +296,8 @@ def knapsack_01(values, weights, capacity):
         3. Take the maximum of the two
         
         Boundary conditions:
-        - dp[0][c] = 0 (no items → value 0)
-        - dp[i][0] = 0 (zero capacity → value 0)
+        - dp[0][c] = 0 (no items -> value 0)
+        - dp[i][0] = 0 (zero capacity -> value 0)
         
         Steps:
         1. Create (n+1)×(C+1) DP table

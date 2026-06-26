@@ -75,11 +75,11 @@ What does a cyclic graph mean? It means there exists a path $X \to \cdots \to X$
 from cocdo.kernel.terms import Sort, Pi, Var
 from cocdo.kernel.typing import type_of, Context
 
-# Legal edge: X(level 0) → Y(level 1)
+# Legal edge: X(level 0) -> Y(level 1)
 ctx: Context = {"X": Sort(0), "Y": Sort(1)}
 edge = Pi("X", Sort(0), Sort(1))   # ✓ 0 < 1
 
-# Illegal edge: Y(level 1) → X(level 0), forms a cycle
+# Illegal edge: Y(level 1) -> X(level 0), forms a cycle
 bad_edge = Pi("Y", Sort(1), Sort(0))  # type_of will reject this
 ```
 
@@ -147,7 +147,7 @@ def beta_reduce(term, steps=100):
 The core rule of `_step` is β-reduction: $(\lambda x. M)\, N \to [N/x]M$—simplifying function application to substitution. When both operands of `Add`/`Mul` are `Const` with values, the reducer directly computes:
 
 ```
-App(App(Mul, Const(w=0.9)), Const(v=3.0))  →  Const(2.7)
+App(App(Mul, Const(w=0.9)), Const(v=3.0))  ->  Const(2.7)
 ```
 
 This means the propagation of the structural equation $E_j = \sum_i A_{ij} \cdot E_i + U_j$ **happens inside the term language**, not as a separate matrix multiplication. The semantics of the do operator and the computational semantics are the same thing.
@@ -358,7 +358,7 @@ Query: "The relationship between Transformer attention and Bayesian inference"
   2. ch9·Attention as causality...                cos=0.682
 
 [CausalSearch · Pearl's Three Steps]
-  Abduction anchor → ch9·The success of Transformers...
+  Abduction anchor -> ch9·The success of Transformers...
 
   + Downstream activation:
     ch17·Comparison of Bayesian updating and ch14...  Δ=+2.69e-02

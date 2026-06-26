@@ -162,11 +162,11 @@ for sol in solutions:
 
 Experience exponential growth:
 
-- 5 variables → 32 assignments
+- 5 variables -> 32 assignments
 
-- 10 variables → 1,024 assignments
+- 10 variables -> 1,024 assignments
 
-- 20 variables → 1,048,576 assignments
+- 20 variables -> 1,048,576 assignments
 
 **Step 4: Thought exercise**
 

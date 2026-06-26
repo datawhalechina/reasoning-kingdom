@@ -139,7 +139,7 @@ Mr. Pallas's Cat turned on the projector, and a neat computation graph appeared 
 
 "This is the orthogonal computation graph for the greedy algorithm," Mr. Pallas's Cat said, pointing at the diagram. "The problem instance enters, passes through the selection function, feasibility check, and problem update, looping until the problem is solved."
 
-Piglet stared at the diagram. "This graph is a loop! Select → check → update → select again... like a decision cycle."
+Piglet stared at the diagram. "This graph is a loop! Select -> check -> update -> select again... like a decision cycle."
 
 "Exactly," said Mr. Pallas's Cat. "The core of the greedy algorithm is a **decision cycle**: at each step, based on the current state, select the best candidate, update the state, and proceed to the next round of selection. This cyclic structure reflects the **shortsightedness** of the greedy algorithm — it sees only the current state and never goes back to revise previous choices."
 
@@ -523,7 +523,7 @@ def build_huffman_tree(frequencies):
     """Build a Huffman tree (greedy algorithm)
     
     Parameters:
-        frequencies: dictionary mapping character → frequency
+        frequencies: dictionary mapping character -> frequency
     
     Returns:
         root node of the Huffman tree
@@ -564,7 +564,7 @@ def generate_huffman_codes(root, current_code="", codes={}):
         codes: encoding dictionary
     
     Returns:
-        dictionary mapping character → code
+        dictionary mapping character -> code
     """
     if root is None:
         return codes

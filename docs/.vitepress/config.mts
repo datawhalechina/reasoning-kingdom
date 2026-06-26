@@ -206,6 +206,7 @@ export default defineConfig({
                 { text: '第22章：自指与涌现——当推理系统开始推理关于自身', link: '/volume2/chapter22/' },
                 { text: '第23章：永霖-李雅普诺夫联立——推理系统的稳定性与收敛边界', link: '/volume2/chapter23/' },
                 { text: '第24章：范畴论眼中的推理收敛——链表、指针与伴随函子', link: '/volume2/chapter24/' },
+                { text: '第25章：边界的统一——八条界线与一个不可能三角', link: '/volume2/chapter25/' },
                 { text: '兔狲教授小词典', link: '/dictionary' },
                 { text: '附录：下卷思考题参考提示', link: '/appendix-thinking-questions' },
               ]
@@ -345,6 +346,7 @@ export default defineConfig({
                 { text: 'Ch22: Self-Reference and Emergence', link: '/en/volume2/chapter22/' },
                 { text: 'Ch23: Yonglin-Lyapunov Correspondence', link: '/en/volume2/chapter23/' },
                 { text: 'Ch24: Inference Convergence Through the Lens of Category Theory', link: '/en/volume2/chapter24/' },
+                { text: 'Ch25: The Unification of Boundaries — Eight Lines and an Impossible Triangle', link: '/en/volume2/chapter25/' },
                 { text: 'Dictionary', link: '/en/dictionary' },
               ]
             }

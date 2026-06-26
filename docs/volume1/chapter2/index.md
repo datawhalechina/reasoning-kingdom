@@ -213,10 +213,10 @@ MYCIN 之后，专家系统的思路被推广到几乎每一个能想到的领�
 
 推理过程：
 
-    触发 R1: ['有毛发'] → 是哺乳动物
-    触发 R5: ['是哺乳动物', '吃肉'] → 是食肉动物
-    触发 R6: ['是哺乳动物', '有爪子', '眼睛向前'] → 是食肉动物  [已有]
-    触发 R8: ['是食肉动物', '黄褐色', '有深色斑点'] → 是猎豹
+    触发 R1: ['有毛发'] -> 是哺乳动物
+    触发 R5: ['是哺乳动物', '吃肉'] -> 是食肉动物
+    触发 R6: ['是哺乳动物', '有爪子', '眼睛向前'] -> 是食肉动物  [已有]
+    触发 R8: ['是食肉动物', '黄褐色', '有深色斑点'] -> 是猎豹
 
     最终结论：是猎豹
 
@@ -537,7 +537,7 @@ def forward_chain(rules, initial_facts):
                 known_facts.add(rule["conclusion"])
                 # 记录触发了哪条规则（这是你的推理轨迹）
                 reasoning_trace.append(
-                    f"触发 {rule['name']}: {rule['conditions']} → {rule['conclusion']}"
+                    f"触发 {rule['name']}: {rule['conditions']} -> {rule['conclusion']}"
                 )
                 new_fact_added = True
 

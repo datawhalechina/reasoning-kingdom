@@ -38,7 +38,7 @@ The key of this game is not "probability can guarantee you are correct." Probabi
 
 Formal logic handles legal derivation in a deterministic world; probabilistic logic handles legal updating in an uncertain world. The former asks "can this conclusion be derived"; the latter asks "after seeing this evidence, where should I move my beliefs."
 
-::: info Professor Pallas's Cat comments
+::: info Professor Manul comments
 Probability is not fuzzy logic prepared for cowards. Probability is the posture that rationality can still hold steady when information is insufficient. You don't know the answer, so you allocate chips; evidence arrives, so you move chips. What is truly irrational is not uncertainty, but pretending that you still possess certainty amid uncertainty.
 :::
 
@@ -80,7 +80,7 @@ $$P(A) + P(\neg A) = 1$$
 
 This is not a law discovered through experiment, but an inevitable consequence of rational self-consistency. If you use numbers to express belief, and your beliefs are internally consistent, you are using probability — you just may not have realized it yet.
 
-::: info Professor Pallas's Cat comments
+::: info Professor Manul comments
 The conclusion of Cox's theorem makes many people mistakenly think "Bayesianism is the only rational choice." Slow down — the premise of the theorem is that belief can be represented by a real-number linear order. If you question this premise, the entire theorem does not apply. The power of the theorem comes from its premises; think clearly about the premises first, then discuss the necessity of the conclusion. Don't treat a conditional conclusion as an unconditional truth.
 :::
 
@@ -137,6 +137,42 @@ What this formula says is: **belief after seeing evidence is the result of belie
 
 Returning to the belief chip game, Bayes' formula is not an externally added "statistical trick," but the legality rule for chip movement. You can certainly move chips from one hypothesis to another based on feeling; but as long as you don't move them in proportion to likelihood and prior, you leave arbitrage gaps exploitable by a Dutch book. The coldness of probability theory lies precisely here: it does not guarantee you bet correctly; it only guarantees that you don't contradict yourself within your own betting rules.
 
+### 17.3.5 Hands-On: Doing a Bayesian Update Step by Step
+
+Use the medical test from Thought Exercise 1 to trace a complete update. It's not about plugging into a formula—it's about watching how the chips move.
+
+**Setup**:
+- Disease prevalence (prior): $P(\text{sick}) = 0.01$, $P(\text{healthy}) = 0.99$
+- Test sensitivity (likelihood): $P(\text{positive} \mid \text{sick}) = 0.90$
+- Test specificity: $P(\text{negative} \mid \text{healthy}) = 0.95$, so $P(\text{positive} \mid \text{healthy}) = 0.05$
+
+**Step 1**: Prior chips. Imagine a population of 10,000 people. By the prior, about 100 are sick, 9,900 are healthy.
+
+**Step 2**: A positive test result comes in. Among the 100 sick people, about 90 test positive. Among the 9,900 healthy people, about $9,900 \times 0.05 = 495$ test positive.
+
+**Step 3**: Redistribute belief. The positive-test population is $90 + 495 = 585$ people. Of these, 90 are truly sick. So your updated belief that the person is sick is:
+$$P(\text{sick} \mid \text{positive}) = \frac{90}{585} \approx 0.154 = 15.4\%$$
+
+**Verify with the formula**:
+$$P(\text{sick} \mid \text{positive}) = \frac{0.90 \times 0.01}{0.90 \times 0.01 + 0.05 \times 0.99} = \frac{0.009}{0.009 + 0.0495} \approx 0.154$$
+
+Both methods agree.
+
+**Key observation**: The test came back positive, but the probability of actually having the disease is only 15.4%. Most people's intuition estimates above 80%. Why the huge gap? Because the disease is extremely rare (1%)—even with high test sensitivity, the majority of positive results are still false positives from healthy people. Simply put, the healthy population is so large (99%) that the 5% false positive rate produces far more positive results (495) than the true positives (90).
+
+**Do a second test**: Treat the 15.4% as the new prior; the second test also comes back positive.
+
+$$P(\text{sick} \mid \text{two positives}) = \frac{0.90 \times 0.154}{0.90 \times 0.154 + 0.05 \times 0.846} = \frac{0.1386}{0.1386 + 0.0423} \approx 0.766$$
+
+After two positives, the probability of having the disease jumps to 76.6%. The prior went from 1% -> 15.4% -> 76.6%—two pieces of evidence caused a dramatic shift in belief.
+
+**What if the base prevalence were 10% (high-risk group)?** After one positive:
+$$P(\text{sick} \mid \text{positive}) = \frac{0.90 \times 0.10}{0.90 \times 0.10 + 0.05 \times 0.90} = \frac{0.09}{0.09 + 0.045} = 0.667$$
+
+A high-risk person (10%) after one positive has a 66.7% chance, which is lower than a low-risk person (1%) after two positives (76.6%). Two pieces of cumulative evidence, in the low-risk group, give higher confidence than a single test in the high-risk group. This shows the cumulative power of evidence—enough evidence can overwhelm the prior.
+
+But this example also reveals a default assumption of Bayesian updating: **you observed a *certain* piece of evidence $E$**. You know the test result is "positive," no ambiguity, probability 1. In reality, evidence itself is often uncertain. That is the topic of the next subsection.
+
 ::: info Structural analogy of inference rules
 
 Contrasting Bayesian updating with the inference rules of Chapter 14 reveals surprising similarities:
@@ -166,6 +202,26 @@ Second layer: **the influence of the prior diminishes as evidence accumulates**.
 Illustrate with an extreme example. Suppose two people debate whether a certain coin is fair: one person's prior belief is that the probability of heads is 0.99, the other believes it is 0.01. They simultaneously observe this coin tossed 1000 times, with 503 heads. After Bayesian updating, both people's posteriors will concentrate around 0.5 — vastly divergent priors, drowned by evidence.
 
 This convergence property is the source of the Bayesian method's objectivity: not the objectivity of the prior, but the objectivity of the **inference process**.
+
+### 17.4.5 Jeffrey Conditionalization: When Evidence Itself Is Uncertain
+
+Bayes' theorem assumes you observed a **certain event** $E$—"the test result is positive"—with probability 1. But what you see is not always certain. A shadow flickers past the window—it could be a bird, a plane, or a hallucination. Your observation is not "I saw a bird (probability 1)," but "my belief that 'a bird flew by' rose from 0.1 to 0.7."
+
+How do you handle uncertain evidence?
+
+**Jeffrey conditionalization** (Richard Jeffrey, 1965) generalizes Bayesian updating: the evidence is not a certain event $E$ (whose probability jumps to 1), but a change in belief over an evidence partition $\{E_1, E_2, \ldots, E_k\}$—from the old $P_{\text{old}}(E_i)$ to new $Q_{\text{new}}(E_i)$. Then for any hypothesis $H$:
+
+$$P_{\text{new}}(H) = \sum_{i=1}^k P_{\text{old}}(H \mid E_i) \cdot Q_{\text{new}}(E_i)$$
+
+This formula says: when your beliefs over the evidence partition $\{E_i\}$ change, your belief in $H$ changes accordingly—the amount of change is the old conditional probability of $H$ given each $E_i$, multiplied by the new degree of belief in each $E_i$.
+
+**Example**: You hear a noise outside the window ($S$). Your beliefs: it might be a bird ($B$, belief rises to 0.6), might be wind ($W$, belief rises to 0.3), might be something else ($O$, belief 0.1). You care about the proposition "there is a living thing outside the window" ($L$). Known old conditional probabilities: $P(L \mid B)=1$, $P(L \mid W)=0$, $P(L \mid O)=0.5$. Then:
+
+$$P_{\text{new}}(L) = 1 \times 0.6 + 0 \times 0.3 + 0.5 \times 0.1 = 0.65$$
+
+Jeffrey conditionalization is the generalization of Bayesian updating for "uncertain evidence." Bayesian updating is its limiting case—when the new belief in some $E_i$ jumps to 1 and the others to 0.
+
+**Why does this matter?** Because in reality, almost all evidence is uncertain. What you see, hear, and read can rarely be accepted with probability 1. Jeffrey conditionalization enables probability logic to handle "I saw something uncertain"—which is the norm of everyday reasoning, not the exception.
 
 ---
 
@@ -238,7 +294,7 @@ All three situations can produce exactly the same joint distribution $P(X, Y)$. 
 
 This is not a flaw of the method, but a structural limitation of mathematics: **information about association does not contain information about causal direction**.
 
-::: info Professor Pallas's Cat comments
+::: info Professor Manul comments
 This is the sentence most easily skipped in the entire probability theory curriculum — and the most costly one. Countless papers use conditional probability to answer causal questions. Not because the authors are stupid, but because no one drew this wall clearly at the very beginning. Correlation and causation have different mathematical structures; it is not a difference in degree, but a difference in kind. That's all.
 :::
 

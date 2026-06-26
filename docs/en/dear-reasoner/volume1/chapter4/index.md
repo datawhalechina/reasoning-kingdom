@@ -231,13 +231,13 @@ Mr. Pallas's Cat drew a selection matrix on the whiteboard:
 
 ```
 Will there be multiple queries?
-    ├── No: data scale is small → linear search (simple and direct)
-    │    └── data scale is large → consider sorting cost
+    ├── No: data scale is small -> linear search (simple and direct)
+    │    └── data scale is large -> consider sorting cost
     │
     └── Yes: need to build an index structure
-         ├── Static data → sort then binary search
-         ├── Dynamic data → balanced binary search tree
-         └── Approximate search → hash table (discussed in a later chapter)
+         ├── Static data -> sort then binary search
+         ├── Dynamic data -> balanced binary search tree
+         └── Approximate search -> hash table (discussed in a later chapter)
 ```
 
 "This selection framework tells us," said Mr. Pallas's Cat, "that **there is no best algorithm — only the most suitable algorithm**. The choice depends on:
@@ -570,17 +570,17 @@ def search_strategy_selection(data_size, query_count, is_sorted, memory_constrai
     print("\nStrategy recommendation:")
     
     if query_count == 1:
-        print("  - Single query → linear search is usually simpler")
+        print("  - Single query -> linear search is usually simpler")
         if not is_sorted:
             print("  - Note: for a single query, the cost of sorting may exceed the benefit")
     
     elif query_count > 1 and is_sorted:
-        print("  - Multiple queries + already sorted → binary search is the best choice")
+        print("  - Multiple queries + already sorted -> binary search is the best choice")
         expected_speedup = linear_time / binary_time if binary_time > 0 else float('inf')
         print(f"  - Expected speedup: {expected_speedup:.1f}x")
     
     elif query_count > 1 and not is_sorted:
-        print("  - Multiple queries + unsorted → consider sorting first then binary search")
+        print("  - Multiple queries + unsorted -> consider sorting first then binary search")
         # Compare the two strategies
         if total_sorted_time < linear_time:
             speedup = linear_time / total_sorted_time

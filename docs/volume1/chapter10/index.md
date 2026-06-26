@@ -308,7 +308,7 @@ def ads_entropy_regularization(model, input_ids, tokenizer, max_steps=20, thresh
         next_token = p_t.argmax().item()   # 贪心解码
         generated.append(next_token)
 
-    # α_t → ∞ 当 H_t → H_max：高熵状态被势垒排斥，搜索坍缩到低熵流形
+    # α_t -> ∞ 当 H_t -> H_max：高熵状态被势垒排斥，搜索坍缩到低熵流形
     return generated
 ```
 
@@ -461,7 +461,7 @@ class NeuralSCM:
         return E_next
 ```
 
-**关键洞察**：`do()` 不是矩阵操作，而是 **λ-演算中的 β-归约**。在 COC 类型论里，每条边 `X → Y` 编码为依赖 Π-类型 `Π(X: Typeᵢ). Typeⱼ`，其中 `i < j` 保证无环。`do(X=v)` 是 `subst(mechanism, X, Const(v))` 然后 β-归约。
+**关键洞察**：`do()` 不是矩阵操作，而是 **λ-演算中的 β-归约**。在 COC 类型论里，每条边 `X -> Y` 编码为依赖 Π-类型 `Π(X: Typeᵢ). Typeⱼ`，其中 `i < j` 保证无环。`do(X=v)` 是 `subst(mechanism, X, Const(v))` 然后 β-归约。
 
 ### 8.2 梯度规划 vs 树搜索
 
@@ -711,24 +711,24 @@ ADS的熵正则化提供了第三种视角:**搜索可以通过动态约束实�
 
 ## 延伸阅读
 
-- Kocsis & Szepesvári (2006). *Bandit based Monte-Carlo Planning* — MCTS原始论文,提出UCT算法 `→ [ECML 2006]`
+- Kocsis & Szepesvári (2006). *Bandit based Monte-Carlo Planning* — MCTS原始论文,提出UCT算法 `-> [ECML 2006]`
 
 - Silver et al. (2016). *Mastering the game of Go with deep neural networks and tree search* — AlphaGo论文,MCTS+神经网络的里程碑
 
 - Silver et al. (2017). *Mastering the game of Go without human knowledge* — AlphaGo Zero,完全自我对弈学习
 
-- \[Zixi Li, 2026a\] — ADS自适应双搜索,熵正则化框架,拓扑重塑推理空间 `→ [DOI: 10.13140/RG.2.2.17091.16164]`
+- \[Zixi Li, 2026a\] — ADS自适应双搜索,熵正则化框架,拓扑重塑推理空间 `-> [DOI: 10.13140/RG.2.2.17091.16164]`
 
-- Lightman et al. (2023). *Let's Verify Step by Step* — OpenAI过程奖励模型(PRM)的系统性研究，证明过程监督优于结果监督 `→ [arXiv:2305.20050]`
+- Lightman et al. (2023). *Let's Verify Step by Step* — OpenAI过程奖励模型(PRM)的系统性研究，证明过程监督优于结果监督 `-> [arXiv:2305.20050]`
 
-- DeepSeek-AI (2025). *DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning* — GRPO方法，组内竞争强化学习，无需PRM实现强推理能力 `→ [arXiv:2501.12948]`
+- DeepSeek-AI (2025). *DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning* — GRPO方法，组内竞争强化学习，无需PRM实现强推理能力 `-> [arXiv:2501.12948]`
 
-- Shao et al. (2024). *DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models* — GRPO算法的首次提出，在数学推理任务上的验证 `→ [arXiv:2402.03300]`
+- Shao et al. (2024). *DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models* — GRPO算法的首次提出，在数学推理任务上的验证 `-> [arXiv:2402.03300]`
 
-- Wei et al. (2022). *Chain-of-Thought Prompting Elicits Reasoning in Large Language Models* — 思维链论文，将CoT确立为LLM推理的基础设施 `→ [arXiv:2201.11903]`
+- Wei et al. (2022). *Chain-of-Thought Prompting Elicits Reasoning in Large Language Models* — 思维链论文，将CoT确立为LLM推理的基础设施 `-> [arXiv:2201.11903]`
 
 - Browne et al. (2012). *A Survey of Monte Carlo Tree Search Methods* — MCTS方法综述
 
-- \[Dam et al., 2020\] — MCTS中的凸正则化,指数收敛率证明 `→ [arXiv:2007.00391]`
+- \[Dam et al., 2020\] — MCTS中的凸正则化,指数收敛率证明 `-> [arXiv:2007.00391]`
 
-- \[Dam et al., 2019\] — Power-UCT,幂平均算子改进节点价值估计 `→ [arXiv:1911.00384]`
+- \[Dam et al., 2019\] — Power-UCT,幂平均算子改进节点价值估计 `-> [arXiv:1911.00384]`

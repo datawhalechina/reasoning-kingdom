@@ -125,8 +125,8 @@ $$S(t) = \int_0^t \phi(k(\tau)) v(\tau)^\top d\tau$$
 线性版做的是**增量积累**——不需要全局归一化，用前缀和在线维护状态，代价是失去 softmax 的精确竞争。
 
 这个权衡不是工程取舍——它是**归一化算子和结合律之间的根本张力**：
-- softmax 要全局信息才能归一化 → 无法满足结合律 → $O(T^2)$
-- 线性核用结合律 → 失去全局归一化 → $O(T)$
+- softmax 要全局信息才能归一化 -> 无法满足结合律 -> $O(T^2)$
+- 线性核用结合律 -> 失去全局归一化 -> $O(T)$
 
 你不能同时拥有精确的配分函数归一化和线性复杂度。这是一个**不可调和的计算约束**，不是实现细节。
 
@@ -146,7 +146,7 @@ $$S(t) = \int_0^t \phi(k(\tau)) v(\tau)^\top d\tau$$
 
 **do 算子是主动的**：我切断 $X$ 的所有入边，强制 $X = x$，然后问"$Y$ 的分布是什么？"它需要知道因果图的结构，而不只是统计相关性。
 
-霍普菲尔德→现代注意力这条谱系，发展出了越来越精妙的**联想检索算子**——从离散竞争到连续积分，从 $O(T^2)$ 到 $O(T)$。但无论怎么优化，它始终在做的是**条件期望**：$\mathbb{E}[V \mid Q]$，不是 $P(V \mid \text{do}(Q))$。
+霍普菲尔德->现代注意力这条谱系，发展出了越来越精妙的**联想检索算子**——从离散竞争到连续积分，从 $O(T^2)$ 到 $O(T)$。但无论怎么优化，它始终在做的是**条件期望**：$\mathbb{E}[V \mid Q]$，不是 $P(V \mid \text{do}(Q))$。
 
 **do 算子的缺席，不是实现上的遗漏，是本体论层面的差异。**
 
@@ -309,7 +309,7 @@ GPT 问的是：**过去怎么影响了现在？**
 
 <figure>
 <p><img src="/figures/ch09_causal_fig1_attention_asymmetry.png" alt="Attention Heatmap and Asymmetry Matrix" /></p>
-<figcaption>图1. 左：GPT-2 最后一层平均注意力热图——果位置（行）对因位置（列）的注意力权重更高，符合因果方向。右：不对称矩阵 A − Aᵀ，红色表示正向因果流（行→列）占主导，蓝色表示逆向流。</figcaption>
+<figcaption>图1. 左：GPT-2 最后一层平均注意力热图——果位置（行）对因位置（列）的注意力权重更高，符合因果方向。右：不对称矩阵 A − Aᵀ，红色表示正向因果流（行->列）占主导，蓝色表示逆向流。</figcaption>
 </figure>
 
 <figure>
@@ -330,7 +330,7 @@ Chapter 9 Bonus: Causal Reinterpretation of Self-Attention
 ==========================================================
 Visualizes attention matrices from GPT-2 on causal sentences,
 checking whether attention shows directional asymmetry consistent
-with cause→effect direction.
+with cause->effect direction.
 
 Thought experiment by Zixi Li (2025).
 """
@@ -421,7 +421,7 @@ def outer_product_demo(d_k=8, T=6, seed=0):
 
 def do_intervene(attn_matrix, intervene_row, force_col):
     """
-    硬干预：do(cause=force_col → effect=intervene_row)
+    硬干预：do(cause=force_col -> effect=intervene_row)
     将 intervene_row 行坍缩为 one-hot，指向 force_col。
     等价于 Pearl 的硬 do 操作：切断所有其他入边。
     """
@@ -464,7 +464,7 @@ def plot_all(tokens, attentions):
     fig1.suptitle(f'GPT-2 Attention on Causal Sentence\n"{CAUSAL_SENTENCE}"', fontsize=11)
     sns.heatmap(avg_attn, ax=ax1, cmap=CMAP_ATTN, xticklabels=labels,
                 yticklabels=labels, square=True, cbar_kws={"shrink": 0.8})
-    ax1.set_title("Avg Attention (last layer)\nEffect i → Cause j", fontweight="bold")
+    ax1.set_title("Avg Attention (last layer)\nEffect i -> Cause j", fontweight="bold")
     ax1.set_xlabel("Cause candidate j"); ax1.set_ylabel("Effect position i")
     ax1.tick_params(axis='x', rotation=45, labelsize=8)
     ax1.tick_params(axis='y', rotation=0,  labelsize=8)
@@ -472,7 +472,7 @@ def plot_all(tokens, attentions):
     sns.heatmap(asym, ax=ax2, cmap=CMAP_ASYM, xticklabels=labels,
                 yticklabels=labels, center=0, vmin=-vmax, vmax=vmax,
                 square=True, cbar_kws={"shrink": 0.8})
-    ax2.set_title(r"Asymmetry $A - A^\top$" + "\nred = row→col flow dominates", fontweight="bold")
+    ax2.set_title(r"Asymmetry $A - A^\top$" + "\nred = row->col flow dominates", fontweight="bold")
     ax2.set_xlabel("j"); ax2.set_ylabel("i")
     ax2.tick_params(axis='x', rotation=45, labelsize=8)
     ax2.tick_params(axis='y', rotation=0,  labelsize=8)
@@ -537,15 +537,15 @@ def plot_do_intervention(avg_attn, labels, intervene_row, force_col):
     fig, axes = plt.subplots(1, 3, figsize=(16, 5))
     fig.suptitle(
         f"do-Operator in Attention Space\n"
-        f"Intervening on row i={intervene_row} ({labels[intervene_row]}) → "
+        f"Intervening on row i={intervene_row} ({labels[intervene_row]}) -> "
         f"force cause = col j={force_col} ({labels[force_col]})",
         fontsize=11
     )
     for ax, mat, title in zip(axes,
         [avg_attn, soft_do, hard_do],
         ["Original Attention\n(soft causal posterior)",
-         f"Soft do(j={force_col}→i={intervene_row})\n(boost path, keep others)",
-         f"Hard do(j={force_col}→i={intervene_row})\n(one-hot, Pearl's original)"]):
+         f"Soft do(j={force_col}->i={intervene_row})\n(boost path, keep others)",
+         f"Hard do(j={force_col}->i={intervene_row})\n(one-hot, Pearl's original)"]):
         sns.heatmap(mat, ax=ax, cmap=CMAP_ATTN,
                     xticklabels=labels, yticklabels=labels,
                     square=True, vmin=0, vmax=1, cbar_kws={"shrink": 0.8})
@@ -651,7 +651,7 @@ $$\alpha_{ij}^{\text{soft-do}} = \text{softmax}_j\left(\frac{q_i \cdot k_j}{\sqr
 
 <figure>
 <p><img src="/figures/ch09_causal_fig4_do_intervention.png" alt="do-Operator Intervention on Attention Matrix" /></p>
-<figcaption>图4. 注意力空间中的因果干预对比。左：原始软因果后验（正常注意力）。中：软 do 干预（λ=3.0，增强 storm→sank 路径，保留其余因果路径）。右：硬 do 干预（one-hot 坍缩，所有其他因果路径被切断，对应 Pearl 的精确 do 操作）。蓝色方框标出被干预的行位置。</figcaption>
+<figcaption>图4. 注意力空间中的因果干预对比。左：原始软因果后验（正常注意力）。中：软 do 干预（λ=3.0，增强 storm->sank 路径，保留其余因果路径）。右：硬 do 干预（one-hot 坍缩，所有其他因果路径被切断，对应 Pearl 的精确 do 操作）。蓝色方框标出被干预的行位置。</figcaption>
 </figure>
 
 硬干预的可视化直接对应 Pearl 因果图里"切断入边"的手术：位置"sank"那一行从分散的因果后验，坍缩为一个完全确定的指向——它的唯一原因是"storm"。其他所有可能的因果路径，被清零。
@@ -762,16 +762,16 @@ Pearl 因果阶梯的第三层是反事实：*如果当时不是storm，ship还�
 
 **霍普菲尔德谱系**
 - Hopfield, J.J. (1982). *Neural networks and physical systems with emergent collective computational abilities* — 原始论文，能量函数与联想记忆
-- Ramsauer, H. et al. (2020). *Hopfield Networks is All You Need* `→ [arXiv:2008.02217]` — 现代霍普菲尔德与自注意力的数学等价证明
-- Katharopoulos, A. et al. (2020). *Transformers are RNNs: Fast Autoregressive Transformers with Linear Attention* `→ [arXiv:2006.16236]` — 线性注意力的核函数推导与前缀和规约
+- Ramsauer, H. et al. (2020). *Hopfield Networks is All You Need* `-> [arXiv:2008.02217]` — 现代霍普菲尔德与自注意力的数学等价证明
+- Katharopoulos, A. et al. (2020). *Transformers are RNNs: Fast Autoregressive Transformers with Linear Attention* `-> [arXiv:2006.16236]` — 线性注意力的核函数推导与前缀和规约
 
 **线性注意力与状态空间模型**
-- Gu, A. et al. (2021). *Combining Recurrent, Convolutional, and Continuous-time Models with Linear State Space Layers* `→ [arXiv:2110.13985]` — S4，HiPPO，积分算子的离散化
-- Gu, A. & Dao, T. (2023). *Mamba: Linear-Time Sequence Modeling with Selective State Spaces* `→ [arXiv:2312.00752]` — 选择性扫描机制
+- Gu, A. et al. (2021). *Combining Recurrent, Convolutional, and Continuous-time Models with Linear State Space Layers* `-> [arXiv:2110.13985]` — S4，HiPPO，积分算子的离散化
+- Gu, A. & Dao, T. (2023). *Mamba: Linear-Time Sequence Modeling with Selective State Spaces* `-> [arXiv:2312.00752]` — 选择性扫描机制
 
 **因果推断框架**
 - Pearl, J. & Mackenzie, D. (2018). *The Book of Why* — 因果推断的系统性框架，do 算子与因果阶梯
-- Vaswani, A. et al. (2017). *Attention Is All You Need* `→ [arXiv:1706.03762]`
-- Geiger, A. et al. (2021). *Causal Abstractions of Neural Networks* `→ [arXiv:2106.02997]` — 用因果抽象理解神经网络内部结构
-- Vig, J. et al. (2020). *Causal Mediation Analysis for Interpreting Neural NLP: The Case of Gender Bias* `→ [arXiv:2004.12265]` — 用因果中介分析检测注意力头的语义角色
-- Kadem, M. & Zheng, R. (2026). *Interpreting Transformers Through Attention Head Intervention* `→ [arXiv:2601.04398]` — 从可视化到干预：注意力头因果可解释性方法的演变综述
+- Vaswani, A. et al. (2017). *Attention Is All You Need* `-> [arXiv:1706.03762]`
+- Geiger, A. et al. (2021). *Causal Abstractions of Neural Networks* `-> [arXiv:2106.02997]` — 用因果抽象理解神经网络内部结构
+- Vig, J. et al. (2020). *Causal Mediation Analysis for Interpreting Neural NLP: The Case of Gender Bias* `-> [arXiv:2004.12265]` — 用因果中介分析检测注意力头的语义角色
+- Kadem, M. & Zheng, R. (2026). *Interpreting Transformers Through Attention Head Intervention* `-> [arXiv:2601.04398]` — 从可视化到干预：注意力头因果可解释性方法的演变综述

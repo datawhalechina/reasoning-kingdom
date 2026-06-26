@@ -404,9 +404,9 @@ print(dll)
 - 高度：从节点到最深叶节点的边数
 
 树的遍历方式：
-- 前序遍历：根→左→右
-- 中序遍历：左→根→右（对BST得到有序序列）
-- 后序遍历：左→右→根
+- 前序遍历：根->左->右
+- 中序遍历：左->根->右（对BST得到有序序列）
+- 后序遍历：左->右->根
 - 层序遍历：按层次从上到下、从左到右
 
 ### 思考题9：动手题
@@ -433,7 +433,7 @@ class BinaryTree:
     
     # 遍历方法
     def preorder(self, node=None, result=None):
-        """前序遍历：根→左→右"""
+        """前序遍历：根->左->右"""
         if result is None:
             result = []
         if node is None:
@@ -447,7 +447,7 @@ class BinaryTree:
         return result
     
     def inorder(self, node=None, result=None):
-        """中序遍历：左→根→右"""
+        """中序遍历：左->根->右"""
         if result is None:
             result = []
         if node is None:
@@ -461,7 +461,7 @@ class BinaryTree:
         return result
     
     def postorder(self, node=None, result=None):
-        """后序遍历：左→右→根"""
+        """后序遍历：左->右->根"""
         if result is None:
             result = []
         if node is None:

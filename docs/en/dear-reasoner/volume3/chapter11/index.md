@@ -55,8 +55,8 @@ Outside, the sky grew dark, and warm lamplight filled the Black Stone House.
 Mr. Pallas's Cat walked to the whiteboard and drew a simple two-layer network:
 
 ```
-Input layer → Hidden layer → Output layer
-x → h → y
+Input layer -> Hidden layer -> Output layer
+x -> h -> y
 ```
 
 "This is the key insight of backpropagation," he said. "**Error propagates backward from the output layer to the input layer**, spreading like ripples. The mathematical tool is the **chain rule**."
@@ -361,7 +361,7 @@ test_inputs = np.array([[0, 0], [1, 1], [0.5, 0.5]])
 predictions, _ = network.forward(test_inputs)
 print(f"\nTest predictions:")
 for i, (x, p) in enumerate(zip(test_inputs, predictions)):
-    print(f"  Input {x} → predicted probability {p:.3f} → class {1 if p>0.5 else 0}")
+    print(f"  Input {x} -> predicted probability {p:.3f} -> class {1 if p>0.5 else 0}")
 ```
 
 ### Visualizing the Backpropagation Process

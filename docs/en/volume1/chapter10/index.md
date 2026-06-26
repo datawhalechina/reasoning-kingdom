@@ -308,7 +308,7 @@ def ads_entropy_regularization(model, input_ids, tokenizer, max_steps=20, thresh
         next_token = p_t.argmax().item()   # greedy decoding
         generated.append(next_token)
 
-    # α_t → ∞ when H_t → H_max: high-entropy states are repelled by the barrier, search collapses to low-entropy manifold
+    # α_t -> ∞ when H_t -> H_max: high-entropy states are repelled by the barrier, search collapses to low-entropy manifold
     return generated
 ```
 
@@ -461,7 +461,7 @@ class NeuralSCM:
         return E_next
 ```
 
-**Key insight**: `do()` is not a matrix operation, but a **β-reduction in λ-calculus**. In COC type theory, each edge `X → Y` is encoded as a dependent Π-type `Π(X: Typeᵢ). Typeⱼ`, where `i < j` ensures acyclicity. `do(X=v)` is `subst(mechanism, X, Const(v))` then β-reduction.
+**Key insight**: `do()` is not a matrix operation, but a **β-reduction in λ-calculus**. In COC type theory, each edge `X -> Y` is encoded as a dependent Π-type `Π(X: Typeᵢ). Typeⱼ`, where `i < j` ensures acyclicity. `do(X=v)` is `subst(mechanism, X, Const(v))` then β-reduction.
 
 ### 8.2 Gradient Planning vs. Tree Search
 
@@ -711,24 +711,24 @@ This is analogous to potential fields in physics: rather than pre-computing all 
 
 ## Further Reading
 
-- Kocsis & Szepesvári (2006). *Bandit based Monte-Carlo Planning* — The original MCTS paper, proposing the UCT algorithm `→ [ECML 2006]`
+- Kocsis & Szepesvári (2006). *Bandit based Monte-Carlo Planning* — The original MCTS paper, proposing the UCT algorithm `-> [ECML 2006]`
 
 - Silver et al. (2016). *Mastering the game of Go with deep neural networks and tree search* — The AlphaGo paper, a milestone of MCTS + neural networks
 
 - Silver et al. (2017). *Mastering the game of Go without human knowledge* — AlphaGo Zero, fully self-play learning
 
-- \[Zixi Li, 2026a\] — ADS Adaptive Dual Search, entropy regularization framework, topological reshaping of reasoning space `→ [DOI: 10.13140/RG.2.2.17091.16164]`
+- \[Zixi Li, 2026a\] — ADS Adaptive Dual Search, entropy regularization framework, topological reshaping of reasoning space `-> [DOI: 10.13140/RG.2.2.17091.16164]`
 
-- Lightman et al. (2023). *Let's Verify Step by Step* — OpenAI's systematic study of Process Reward Models (PRM), proving process supervision outperforms outcome supervision `→ [arXiv:2305.20050]`
+- Lightman et al. (2023). *Let's Verify Step by Step* — OpenAI's systematic study of Process Reward Models (PRM), proving process supervision outperforms outcome supervision `-> [arXiv:2305.20050]`
 
-- DeepSeek-AI (2025). *DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning* — GRPO method, within-group competitive reinforcement learning, achieving strong reasoning capability without PRM `→ [arXiv:2501.12948]`
+- DeepSeek-AI (2025). *DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning* — GRPO method, within-group competitive reinforcement learning, achieving strong reasoning capability without PRM `-> [arXiv:2501.12948]`
 
-- Shao et al. (2024). *DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models* — The first proposal of the GRPO algorithm, validated on mathematical reasoning tasks `→ [arXiv:2402.03300]`
+- Shao et al. (2024). *DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models* — The first proposal of the GRPO algorithm, validated on mathematical reasoning tasks `-> [arXiv:2402.03300]`
 
-- Wei et al. (2022). *Chain-of-Thought Prompting Elicits Reasoning in Large Language Models* — The Chain-of-Thought paper, establishing CoT as the infrastructure for LLM reasoning `→ [arXiv:2201.11903]`
+- Wei et al. (2022). *Chain-of-Thought Prompting Elicits Reasoning in Large Language Models* — The Chain-of-Thought paper, establishing CoT as the infrastructure for LLM reasoning `-> [arXiv:2201.11903]`
 
 - Browne et al. (2012). *A Survey of Monte Carlo Tree Search Methods* — A survey of MCTS methods
 
-- \[Dam et al., 2020\] — Convex regularization in MCTS, proof of exponential convergence rate `→ [arXiv:2007.00391]`
+- \[Dam et al., 2020\] — Convex regularization in MCTS, proof of exponential convergence rate `-> [arXiv:2007.00391]`
 
-- \[Dam et al., 2019\] — Power-UCT, power mean operator for improved node value estimation `→ [arXiv:1911.00384]`
+- \[Dam et al., 2019\] — Power-UCT, power mean operator for improved node value estimation `-> [arXiv:1911.00384]`

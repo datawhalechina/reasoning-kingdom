@@ -101,7 +101,7 @@ $$
 3. **注意力分配层**：softmax将相关性转换为概率分布
 4. **信息整合层**：注意力权重加权组合值向量 $V$
 
-小海豹若有所思：“这个计算流程与人类注意力的认知过程惊人相似：提取特征→计算相关性→分配注意力→整合信息。”
+小海豹若有所思：“这个计算流程与人类注意力的认知过程惊人相似：提取特征->计算相关性->分配注意力->整合信息。”
 
 “这正是注意力的魅力所在，”兔狲教授说，“简单的数学公式捕捉了复杂的认知过程。”
 
@@ -732,13 +732,13 @@ no_mask_pattern = head_patterns_no_mask[head_idx]
 causal_pattern = head_patterns_causal[head_idx]
 
 print(f"头 {head_idx} 的模式变化:")
-print(f"  模式: {no_mask_pattern['pattern_type']} → {causal_pattern['pattern_type']}")
-print(f"  熵: {no_mask_pattern['entropy']:.3f} → {causal_pattern['entropy']:.3f} "
+print(f"  模式: {no_mask_pattern['pattern_type']} -> {causal_pattern['pattern_type']}")
+print(f"  熵: {no_mask_pattern['entropy']:.3f} -> {causal_pattern['entropy']:.3f} "
       f"(变化: {causal_pattern['entropy'] - no_mask_pattern['entropy']:+.3f})")
-print(f"  集中度: {no_mask_pattern['concentration']:.3f} → {causal_pattern['concentration']:.3f} "
+print(f"  集中度: {no_mask_pattern['concentration']:.3f} -> {causal_pattern['concentration']:.3f} "
       f"(变化: {causal_pattern['concentration'] - no_mask_pattern['concentration']:+.3f})")
-print(f"  对角线强度: {no_mask_pattern['diagonal_strength']:.3f} → {causal_pattern['diagonal_strength']:.3f}")
-print(f"  局部关注: {no_mask_pattern['local_focus']:.3f} → {causal_pattern['local_focus']:.3f}")
+print(f"  对角线强度: {no_mask_pattern['diagonal_strength']:.3f} -> {causal_pattern['diagonal_strength']:.3f}")
+print(f"  局部关注: {no_mask_pattern['local_focus']:.3f} -> {causal_pattern['local_focus']:.3f}")
 
 print(f"\n因果掩码的预期效果:")
 print(f"  1. 减少熵（注意力更集中，因为未来位置被掩码）")

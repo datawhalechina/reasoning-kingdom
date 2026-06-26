@@ -139,7 +139,7 @@ $$
 
 国王 - 男人 + 女人 ≈ 女王 巴黎 - 法国 + 日本 ≈ 东京 走 - 走 + 游泳 ≈ 游泳 （或者：walk - walked + swam ≈ swim，过去式关系也被编码了）
 
-每一个类比，都对应向量空间里的一次**平移**。“男人→女王”和”国王→女王”之间的差，是一个固定的向量方向，代表”性别维度上的移动”。
+每一个类比，都对应向量空间里的一次**平移**。“男人->女王”和”国王->女王”之间的差，是一个固定的向量方向，代表”性别维度上的移动”。
 
 这是一种非常干净的几何结构。语义关系，变成了方向。
 
@@ -226,15 +226,15 @@ $$
 
 ![image](/figures/ch03_fig2_analogy_arithmetic.png)
 
-*图2：向量类比的几何可视化。四个词在 PCA 二维空间中形成一个近似平行四边形——man→king 和 woman→queen 是两条近似平行的边，而 man→woman 和 king→queen 是另一对近似平行的边。这就是”性别移位向量在皇室词对上保持一致”的意思。King − Man + Woman 的余弦相似度接近 0.995。*
+*图2：向量类比的几何可视化。四个词在 PCA 二维空间中形成一个近似平行四边形——man->king 和 woman->queen 是两条近似平行的边，而 man->woman 和 king->queen 是另一对近似平行的边。这就是”性别移位向量在皇室词对上保持一致”的意思。King − Man + Woman 的余弦相似度接近 0.995。*
 
-在逻辑里，推理需要**规则 + 事实 → 结论**。“所有国王都是男人”加上”伊丽莎白是女王”，推出”伊丽莎白不是国王”——这是推理，因为有传递性，有变量绑定，有量词。
+在逻辑里，推理需要**规则 + 事实 -> 结论**。“所有国王都是男人”加上”伊丽莎白是女王”，推出”伊丽莎白不是国王”——这是推理，因为有传递性，有变量绑定，有量词。
 
 向量算术没有这些。它只是在说：这些词在语义空间里的相对位置，展现出某种平行结构。
 
 更重要的是，这个等式在很多情况下**不成立**。
 
-Fournier et al.（2020）系统性地分析了类比测试的局限性，发现：所谓的”类比等式”大量依赖于一个取巧的评估方式——在答案中排除了输入词本身，而最近邻往往就是输入词之一。改变评估方式之后，大量”类比能力”的统计结果显著下降 `→ [Fournier et al., 2020, arXiv:2010.03446]`。
+Fournier et al.（2020）系统性地分析了类比测试的局限性，发现：所谓的”类比等式”大量依赖于一个取巧的评估方式——在答案中排除了输入词本身，而最近邻往往就是输入词之一。改变评估方式之后，大量”类比能力”的统计结果显著下降 `-> [Fournier et al., 2020, arXiv:2010.03446]`。
 
 还有一个更直接的例子。你试试这个类比：
 
@@ -461,13 +461,13 @@ for rank, (word, score) in enumerate(results, 1):
 
 从以下四类类比中，每类选 3 对，依次测试：
 
-**第一类：性别类比** - man → woman 类比适用于：国王、医生、教授、护士、工程师……
+**第一类：性别类比** - man -> woman 类比适用于：国王、医生、教授、护士、工程师……
 
-**第二类：首都关系** - 法国 → 巴黎，类比适用于：中国、日本、德国、美国……
+**第二类：首都关系** - 法国 -> 巴黎，类比适用于：中国、日本、德国、美国……
 
-**第三类：时态变换** - go → went 类比适用于：run、swim、eat、think……
+**第三类：时态变换** - go -> went 类比适用于：run、swim、eat、think……
 
-**第四类：反义词** - good → bad 类比适用于：big、hot、fast、happy……
+**第四类：反义词** - good -> bad 类比适用于：big、hot、fast、happy……
 
 对每个测试案例，记录： - 预期答案是什么 - 实际输出的前 5 个最近邻是什么 - 余弦相似度是多少
 
@@ -650,11 +650,11 @@ find_counterintuitive_similarities(model, word="physics", topn=20, low_threshold
 
 ## 延伸阅读
 
-- Mikolov et al. (2013). *Efficient Estimation of Word Representations in Vector Space* — word2vec 原始论文，CBOW 与 Skip-gram 架构，`→ [arXiv:1301.3781]`
+- Mikolov et al. (2013). *Efficient Estimation of Word Representations in Vector Space* — word2vec 原始论文，CBOW 与 Skip-gram 架构，`-> [arXiv:1301.3781]`
 
-- Mikolov et al. (2013). *Distributed Representations of Words and Phrases and their Compositionality* — 负采样、短语向量与组合性，`→ [arXiv:1310.4546]`
+- Mikolov et al. (2013). *Distributed Representations of Words and Phrases and their Compositionality* — 负采样、短语向量与组合性，`-> [arXiv:1310.4546]`
 
-- Fournier, Dupoux & Dunbar (2020). *Analogies minus analogy test* — 对类比测试的批判性分析，表明标准评估有缺陷，`→ [arXiv:2010.03446]`
+- Fournier, Dupoux & Dunbar (2020). *Analogies minus analogy test* — 对类比测试的批判性分析，表明标准评估有缺陷，`-> [arXiv:2010.03446]`
 
 - Firth, J.R. (1957). *A synopsis of linguistic theory 1930-55* — 分布假设的哲学起点，“你可以通过交往的朋友来认识一个词”
 

@@ -175,6 +175,7 @@ export default defineConfig({
             { text: 'Ch22: Self-Reference and Emergence — When a Reasoning System Begins to Reason About Itself', link: '/volume2/chapter22/' },
             { text: 'Ch23: Yonglin-Lyapunov Correspondence — Stability and Convergence Boundaries of Reasoning Systems', link: '/volume2/chapter23/' },
             { text: 'Ch24: Inference Convergence Through the Lens of Category Theory — Ghost Pointers, Terminal Objects, and Adjoint Functors', link: '/volume2/chapter24/' },
+            { text: 'Ch25: The Unification of Boundaries — Eight Lines and an Impossible Triangle', link: '/volume2/chapter25/' },
             { text: 'Dictionary', link: '/dictionary' },
           ]
         }

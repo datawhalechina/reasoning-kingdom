@@ -139,7 +139,7 @@ King - Man + Woman ≈ Queen
 Paris - France + Japan ≈ Tokyo
 Walk - Walked + Swam ≈ Swim (past tense relationships are also encoded)
 
-Every analogy corresponds to a **translation** in the vector space. The difference between "man→king" and "woman→queen" is a fixed vector direction, representing "movement along the gender dimension."
+Every analogy corresponds to a **translation** in the vector space. The difference between "man->king" and "woman->queen" is a fixed vector direction, representing "movement along the gender dimension."
 
 This is a very clean geometric structure. Semantic relationships become directions.
 
@@ -226,15 +226,15 @@ What is this? It is a statement about the **consistency of vector offset directi
 
 ![image](/figures/ch03_fig2_analogy_arithmetic.png)
 
-*Figure 2: Geometric visualization of vector analogy. Four words form an approximate parallelogram in PCA 2D space — man→king and woman→queen are two approximately parallel sides, and man→woman and king→queen are another pair of approximately parallel sides. This is what "the gender shift vector remains consistent across royalty word pairs" means. The cosine similarity of King − Man + Woman to Queen approaches 0.995.*
+*Figure 2: Geometric visualization of vector analogy. Four words form an approximate parallelogram in PCA 2D space — man->king and woman->queen are two approximately parallel sides, and man->woman and king->queen are another pair of approximately parallel sides. This is what "the gender shift vector remains consistent across royalty word pairs" means. The cosine similarity of King − Man + Woman to Queen approaches 0.995.*
 
-In logic, reasoning requires **rules + facts → conclusion**. "All kings are men" plus "Elizabeth is a queen" leads to "Elizabeth is not a king" — this is reasoning, because there is transitivity, variable binding, quantifiers.
+In logic, reasoning requires **rules + facts -> conclusion**. "All kings are men" plus "Elizabeth is a queen" leads to "Elizabeth is not a king" — this is reasoning, because there is transitivity, variable binding, quantifiers.
 
 Vector arithmetic has none of these. It is merely saying: the relative positions of these words in the semantic space exhibit some kind of parallel structure.
 
 More importantly, this equation **does not hold** in many cases.
 
-Fournier et al. (2020) systematically analyzed the limitations of analogy tests and found: the so-called "analogy equations" heavily depend on a convenient evaluation trick — excluding the input words themselves from the answers, when the nearest neighbor is often one of the input words. After changing the evaluation method, the statistical results of much "analogy ability" dropped significantly `→ [Fournier et al., 2020, arXiv:2010.03446]`.
+Fournier et al. (2020) systematically analyzed the limitations of analogy tests and found: the so-called "analogy equations" heavily depend on a convenient evaluation trick — excluding the input words themselves from the answers, when the nearest neighbor is often one of the input words. After changing the evaluation method, the statistical results of much "analogy ability" dropped significantly `-> [Fournier et al., 2020, arXiv:2010.03446]`.
 
 There is an even more direct example. Try this analogy:
 
@@ -460,13 +460,13 @@ You should get "queen," with cosine similarity close to 0.7 to 0.9.
 
 From the following four categories of analogy, pick 3 pairs from each and test sequentially:
 
-**Category 1: Gender analogies** - man → woman analogy applied to: king, doctor, professor, nurse, engineer…
+**Category 1: Gender analogies** - man -> woman analogy applied to: king, doctor, professor, nurse, engineer…
 
-**Category 2: Capital relations** - France → Paris, analogy applied to: China, Japan, Germany, United States…
+**Category 2: Capital relations** - France -> Paris, analogy applied to: China, Japan, Germany, United States…
 
-**Category 3: Tense transformations** - go → went analogy applied to: run, swim, eat, think…
+**Category 3: Tense transformations** - go -> went analogy applied to: run, swim, eat, think…
 
-**Category 4: Antonyms** - good → bad analogy applied to: big, hot, fast, happy…
+**Category 4: Antonyms** - good -> bad analogy applied to: big, hot, fast, happy…
 
 For each test case, record: - What the expected answer is - What the actual top 5 nearest neighbors are - What the cosine similarity is
 
@@ -649,11 +649,11 @@ The third item is the most important. This crack is the distance between vector 
 
 ## Further Reading
 
-- Mikolov et al. (2013). *Efficient Estimation of Word Representations in Vector Space* — the original word2vec paper, CBOW and Skip-gram architectures, `→ [arXiv:1301.3781]`
+- Mikolov et al. (2013). *Efficient Estimation of Word Representations in Vector Space* — the original word2vec paper, CBOW and Skip-gram architectures, `-> [arXiv:1301.3781]`
 
-- Mikolov et al. (2013). *Distributed Representations of Words and Phrases and their Compositionality* — negative sampling, phrase vectors and compositionality, `→ [arXiv:1310.4546]`
+- Mikolov et al. (2013). *Distributed Representations of Words and Phrases and their Compositionality* — negative sampling, phrase vectors and compositionality, `-> [arXiv:1310.4546]`
 
-- Fournier, Dupoux & Dunbar (2020). *Analogies minus analogy test* — a critical analysis of analogy testing, demonstrating flaws in standard evaluation, `→ [arXiv:2010.03446]`
+- Fournier, Dupoux & Dunbar (2020). *Analogies minus analogy test* — a critical analysis of analogy testing, demonstrating flaws in standard evaluation, `-> [arXiv:2010.03446]`
 
 - Firth, J.R. (1957). *A synopsis of linguistic theory 1930-55* — the philosophical starting point of the Distributional Hypothesis, "You shall know a word by the company it keeps"
 

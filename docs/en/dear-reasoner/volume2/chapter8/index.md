@@ -92,7 +92,7 @@ Mr. Pallas's Cat picked up the gongfu tea set again and began to brew tea. Steam
 
 He wrote two words on the whiteboard:
 
-**Rules** → **Patterns**
+**Rules** -> **Patterns**
 
 "A rule is: 'if it has whiskers, it's a cat.' A pattern is: 'observe tens of thousands of cat pictures and discover their common features.'"
 
@@ -102,7 +102,7 @@ Piglet's eyes lit up. "That sounds like... learning?"
 
 Little Seal mused: "This is like the evolution of scientific method — from deductive reasoning to inductive reasoning?"
 
-"A fine analogy," Mr. Pallas's Cat nodded. "Deduction derives specific cases from general rules (all cats have whiskers → this animal has whiskers → it is a cat). Induction summarizes general patterns from specific cases (seeing many cats with whiskers → 'whiskers' may be associated with 'cat')."
+"A fine analogy," Mr. Pallas's Cat nodded. "Deduction derives specific cases from general rules (all cats have whiskers -> this animal has whiskers -> it is a cat). Induction summarizes general patterns from specific cases (seeing many cats with whiskers -> 'whiskers' may be associated with 'cat')."
 
 ---
 

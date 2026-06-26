@@ -244,8 +244,8 @@ This is the essence of the art of dynamical systems: not sitting in a chair gues
 :::
 
 **Comparison with the traditional approach**:
-- Traditional: guess $V$ → verify $\dot{V} \leq 0$
-- Here: observe convergence → define $V$ using KL divergence → verify that $V$ decreases (guaranteed by convergence)
+- Traditional: guess $V$ -> verify $\dot{V} \leq 0$
+- Here: observe convergence -> define $V$ using KL divergence -> verify that $V$ decreases (guaranteed by convergence)
 
 **Why does this solve the pain point?** Because we no longer need to manually guess $V$. $V$ is derived from the system's behavior. The cost is: we need the observation of Yonglin convergence as a premise.
 
@@ -285,9 +285,9 @@ This interpretation transforms the stability problem of reasoning systems into a
 
 Now we put both directions together.
 
-**Yonglin → Lyapunov**: Observing convergence to $A$, define $V(x) = D_{\text{KL}}(x \| A)$, verify that $V$ decreases. In this way, the Lyapunov function **is derived from convergence behavior**, no longer requiring manual guessing.
+**Yonglin -> Lyapunov**: Observing convergence to $A$, define $V(x) = D_{\text{KL}}(x \| A)$, verify that $V$ decreases. In this way, the Lyapunov function **is derived from convergence behavior**, no longer requiring manual guessing.
 
-**Lyapunov → Yonglin**: Given $V(x) = D_{\text{KL}}(x \| A)$, the Lyapunov stability theorem yields convergence to $A$. If $A \neq A^*$, then the system's limit is not the true answer.
+**Lyapunov -> Yonglin**: Given $V(x) = D_{\text{KL}}(x \| A)$, the Lyapunov stability theorem yields convergence to $A$. If $A \neq A^*$, then the system's limit is not the true answer.
 
 These two directions form a closed loop: convergence behavior defines the energy function, and the energy function guarantees the convergence behavior. The **core parameter** of this closed loop is the prior anchor point $A$. $A$ is the statistical bias of the training data, the "world model" that the model absorbs from data.
 
@@ -372,3 +372,4 @@ The answer to this question may point toward **incompleteness in dynamical syste
 - Cover, T. M., & Thomas, J. A. (2006) — Elements of Information Theory (KL divergence)
 - Chapter 15 — Consistency and Completeness (Gödelian incompleteness)
 - Chapter 21 — Learning as Inverse Inference (MDL principle)
+- Chapter 25 — The Unification of Boundaries (the book's conclusion and Impossible Triangle)

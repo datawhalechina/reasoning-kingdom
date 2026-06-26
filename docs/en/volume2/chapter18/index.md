@@ -194,7 +194,7 @@ result = beta_reduce(intervened)
 `subst` is capture-avoiding substitution; `beta_reduce` is call-by-value reduction to a fixed point. When both operands of `Add`/`Mul` are `Const` with values, the reducer directly computes tensor operations:
 
 ```
-App(App(Mul, Const(w)), Const(v))  →  Const(w · v)
+App(App(Mul, Const(w)), Const(v))  ->  Const(w · v)
 ```
 
 This means the entire propagation process of the structural equation $E_j = \sum_i A_{ij} \cdot E_i + U_j$ occurs inside the COC term language, not as a separate matrix multiplication.
@@ -212,7 +212,7 @@ This means the entire propagation process of the structural equation $E_j = \sum
 from cocdo import NeuralSCM
 import numpy as np
 
-# Three-node graph: ad_spend → clicks → revenue
+# Three-node graph: ad_spend -> clicks -> revenue
 A = np.array([[0, 0.9, 0.8],
               [0,   0, 0.7],
               [0,   0,   0]])
@@ -252,6 +252,64 @@ In the sprinkler example, $X = W$, $Y = G$, the backdoor path is $W \leftarrow S
 $$P(G \mid \mathsf{do}(W = w)) = \sum_s P(G \mid W = w, S = s)\, P(S = s)$$
 
 This quantity is entirely determined by observational data; no actual manipulation of the sprinkler is needed.
+
+### 18.5.5 Hands-On: Front-Door Adjustment — When the Back Door Is Blocked
+
+The backdoor criterion requires an observable confounding variable $Z$. But what if the confounder is unobservable? For example, suppose you cannot observe the "smoking desire" hidden variable that simultaneously affects both smoking quantity and lung cancer risk.
+
+In such cases, the **front-door criterion** can come to the rescue—provided there exists a **mediator variable** $M$ satisfying:
+1. $M$ blocks all causal paths from $X$ to $Y$
+2. There is no backdoor path from $X$ to $M$ (i.e., no unobservable confounding between $X$ and $M$)
+3. All backdoor paths from $M$ to $Y$ are blocked by $X$ (after adjusting for $X$, there is no confounding on $M \to Y$)
+
+Classic example: **Smoking -> Tar deposits -> Lung cancer** (from Pearl's original papers).
+
+- $X = \text{smoking}$, $M = \text{tar deposits}$, $Y = \text{lung cancer}$
+- Hidden variable $U = \text{smoking desire/genetics}$ affects both $X$ and $Y$ (backdoor path), but does **not** affect $M$ (no hidden confounding between $X$ and $M$—smoking quantity directly determines tar quantity; genetics does not directly alter tar)
+- Backdoor criterion: needs to observe $U$, but $U$ is unobservable -> backdoor criterion fails
+- Front-door criterion: identify the effect through $M$ (tar)
+
+The front-door adjustment formula:
+
+$$P(Y \mid \mathsf{do}(X=x)) = \sum_m P(M=m \mid X=x) \cdot \sum_{x'} P(Y \mid X=x', M=m) \cdot P(X=x')$$
+
+**In plain language**:
+- **First term** $P(M=m \mid X=x)$: if smoking is $x$, how much tar $m$ is produced? This is the causal effect of $X$ on $M$ (no backdoor, directly estimable).
+- **Second term** $\sum_{x'} P(Y \mid X=x', M=m) \cdot P(X=x')$: given tar $m$, the weighted average of lung cancer probability across the smoking population—here we adjust $X$ to block the backdoor from $M$ to $Y$.
+- **Multiply and sum over $m$**: integrate the effect of $X$ on $M$ × the effect of $M$ on $Y$ to obtain the total causal effect of $X$ on $Y$.
+
+**Numerical example** (fictional data, simplified):
+
+| Smoking $X$ | Tar $M$ | Cancer $Y$ | Count |
+|------------|---------|------------|-------|
+| 1 | high | 1 | 300 |
+| 1 | high | 0 | 100 |
+| 1 | low | 1 | 50  |
+| 1 | low | 0 | 150 |
+| 0 | high | 1 | 30  |
+| 0 | high | 0 | 70  |
+| 0 | low | 1 | 20  |
+| 0 | low | 0 | 280 |
+
+Compute $P(Y=1 \mid \mathsf{do}(X=1))$—if everyone were forced to smoke, what is the probability of lung cancer:
+
+1. $P(M=\text{high} \mid X=1) = \frac{400}{600} = 0.667$
+   $P(M=\text{low} \mid X=1) = \frac{200}{600} = 0.333$
+
+2. Given $M=\text{high}$: $\sum_{x'} P(Y=1 \mid X=x', M=\text{high}) \cdot P(X=x')$
+   $= P(Y=1 \mid X=1, M=\text{high}) \cdot P(X=1) + P(Y=1 \mid X=0, M=\text{high}) \cdot P(X=0)$
+   $= \frac{300}{400} \cdot 0.6 + \frac{30}{100} \cdot 0.4 = 0.75 \cdot 0.6 + 0.30 \cdot 0.4 = 0.45 + 0.12 = 0.57$
+
+   Given $M=\text{low}$: $\sum_{x'} P(Y=1 \mid X=x', M=\text{low}) \cdot P(X=x')$
+   $= \frac{50}{200} \cdot 0.6 + \frac{20}{300} \cdot 0.4 = 0.25 \cdot 0.6 + 0.067 \cdot 0.4 = 0.15 + 0.027 = 0.177$
+
+3. $P(Y=1 \mid \mathsf{do}(X=1)) = 0.667 \times 0.57 + 0.333 \times 0.177 = 0.380 + 0.059 = 0.439$
+
+If everyone were forced to smoke, the lung cancer probability is 43.9%. Compare with the naive conditional probability $P(Y=1 \mid X=1) = \frac{350}{600} = 0.583$ (higher! because it includes the confounding effect of $U$). do-calculus correctly separates the causal effect from the confounding effect.
+
+::: info Professor Manul
+Front-door adjustment is an underappreciated gem. Most textbooks only cover the backdoor criterion, because the backdoor criterion is intuitively direct. But the backdoor requires observing the confounding variable—which is often impossible. The front-door criterion does not require observing the confounder; it exploits the **mediator variable that you can observe**. In practice, this is far more feasible than the backdoor criterion, and far more counterintuitive—you bypass an invisible confounder through a mediator. Sometimes, the detour is the true path.
+:::
 
 ---
 

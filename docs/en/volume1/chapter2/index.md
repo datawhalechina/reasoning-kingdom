@@ -210,10 +210,10 @@ The facts you input: `["has hair", "eats meat", "tawny color", "has dark spots",
 
 Reasoning process:
 
-    Triggered R1: ['has hair'] → is mammal
-    Triggered R5: ['is mammal', 'eats meat'] → is carnivore
-    Triggered R6: ['is mammal', 'has claws', 'eyes forward'] → is carnivore  [already known]
-    Triggered R8: ['is carnivore', 'tawny color', 'has dark spots'] → is cheetah
+    Triggered R1: ['has hair'] -> is mammal
+    Triggered R5: ['is mammal', 'eats meat'] -> is carnivore
+    Triggered R6: ['is mammal', 'has claws', 'eyes forward'] -> is carnivore  [already known]
+    Triggered R8: ['is carnivore', 'tawny color', 'has dark spots'] -> is cheetah
 
     Final conclusion: is cheetah
 
@@ -533,7 +533,7 @@ def forward_chain(rules, initial_facts):
                 known_facts.add(rule["conclusion"])
                 # Record which rule was triggered (this is your reasoning trace)
                 reasoning_trace.append(
-                    f"Triggered {rule['name']}: {rule['conditions']} → {rule['conclusion']}"
+                    f"Triggered {rule['name']}: {rule['conditions']} -> {rule['conclusion']}"
                 )
                 new_fact_added = True
 

@@ -166,7 +166,7 @@ $$
 
 实验验证:$c \leq 32$时收敛损失与AdamW无差异,$c > 40$时急剧退化——与理论预测的相变点高度吻合。
 
-**效果**: - 128M参数模型:优化器状态从438 MB → 27.58 MB(**93.7%压缩**,16×) - 1B参数模型:5.12 GB → 320 MB(**16×压缩**) - L2 Cache命中率:128M/350M规模达**100%**(AdamW仅2%) - 训练吞吐量:**2×提升**
+**效果**: - 128M参数模型:优化器状态从438 MB -> 27.58 MB(**93.7%压缩**,16×) - 1B参数模型:5.12 GB -> 320 MB(**16×压缩**) - L2 Cache命中率:128M/350M规模达**100%**(AdamW仅2%) - 训练吞吐量:**2×提升**
 
 这是随机化算法的胜利:**用概率保证换取确定性下界的突破**。
 
@@ -581,7 +581,7 @@ Landauer下界告诉我们物理极限,但我们距离这个极限还有7个数�
 
 ## 延伸阅读
 
-- Kaplan et al. (2020). *Scaling Laws for Neural Language Models* — 规模法则的开创性工作 `→ [arXiv:2001.08361]`
+- Kaplan et al. (2020). *Scaling Laws for Neural Language Models* — 规模法则的开创性工作 `-> [arXiv:2001.08361]`
 
 - \[Zixi Li, 2026b\] — Collins随机化优化器,确定性下界证明,Chernoff界保证
 
@@ -589,12 +589,12 @@ Landauer下界告诉我们物理极限,但我们距离这个极限还有7个数�
 
 - Peng et al. (2023). *RWKV: Reinventing RNNs for the Transformer Era* — 线性复杂度的RNN-Transformer混合
 
-- \[Brill, 2024\] — 神经缩放定律的数据分布根源 `→ [arXiv:2412.07942]`
+- \[Brill, 2024\] — 神经缩放定律的数据分布根源 `-> [arXiv:2412.07942]`
 
-- \[Jeon & Van Roy, 2024\] — 缩放定律的信息论基础 `→ [arXiv:2407.01456]`
+- \[Jeon & Van Roy, 2024\] — 缩放定律的信息论基础 `-> [arXiv:2407.01456]`
 
-- \[Maloney et al., 2022\] — 神经缩放定律的可解模型 `→ [arXiv:2210.16859]`
+- \[Maloney et al., 2022\] — 神经缩放定律的可解模型 `-> [arXiv:2210.16859]`
 
-- \[Isik et al., 2024\] — 下游任务性能的缩放定律 `→ [arXiv:2402.04177]`
+- \[Isik et al., 2024\] — 下游任务性能的缩放定律 `-> [arXiv:2402.04177]`
 
 - Landauer, R. (1961). *Irreversibility and Heat Generation in the Computing Process* — 计算的热力学极限

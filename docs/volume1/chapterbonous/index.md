@@ -75,11 +75,11 @@ $i$ 和 $j$ 是拓扑序中的层级——根节点是 $\text{Type}_0$，它的�
 from cocdo.kernel.terms import Sort, Pi, Var
 from cocdo.kernel.typing import type_of, Context
 
-# 合法的边：X(层级0) → Y(层级1)
+# 合法的边：X(层级0) -> Y(层级1)
 ctx: Context = {"X": Sort(0), "Y": Sort(1)}
 edge = Pi("X", Sort(0), Sort(1))   # ✓ 0 < 1
 
-# 非法的边：Y(层级1) → X(层级0)，构成循环
+# 非法的边：Y(层级1) -> X(层级0)，构成循环
 bad_edge = Pi("Y", Sort(1), Sort(0))  # type_of 会拒绝这个
 ```
 
@@ -147,7 +147,7 @@ def beta_reduce(term, steps=100):
 `_step` 的核心规则是 β-规约：$(\lambda x. M)\, N \to [N/x]M$——把函数应用化简为替换。当 `Add`/`Mul` 的两个操作数都是带值的 `Const` 时，归约器直接计算：
 
 ```
-App(App(Mul, Const(w=0.9)), Const(v=3.0))  →  Const(2.7)
+App(App(Mul, Const(w=0.9)), Const(v=3.0))  ->  Const(2.7)
 ```
 
 这意味着结构方程 $E_j = \sum_i A_{ij} \cdot E_i + U_j$ 的传播，**发生在项语言内部**，不是一次独立的矩阵乘法。do 算子的语义和计算语义是同一件事。
@@ -358,7 +358,7 @@ for _ in range(200):
   2. ch9·注意力作为因果性...          cos=0.682
 
 [CausalSearch · Pearl 三步]
-  溯因锚点 → ch9·Transformer 的成功...
+  溯因锚点 -> ch9·Transformer 的成功...
 
   + 下游激活：
     ch17·贝叶斯更新与 ch14 的比较...  Δ=+2.69e-02

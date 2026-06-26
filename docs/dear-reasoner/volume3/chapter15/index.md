@@ -31,10 +31,10 @@
 
 ```
 编码器堆栈（N×）:
-  输入 → 位置编码 → [多头注意力 → Add & Norm → 前馈网络 → Add & Norm] × N → 输出
+  输入 -> 位置编码 -> [多头注意力 -> Add & Norm -> 前馈网络 -> Add & Norm] × N -> 输出
 
 解码器堆栈（N×）:
-  输入 → 位置编码 → [掩码多头注意力 → Add & Norm → 编码器-解码器注意力 → Add & Norm → 前馈网络 → Add & Norm] × N → 输出
+  输入 -> 位置编码 -> [掩码多头注意力 -> Add & Norm -> 编码器-解码器注意力 -> Add & Norm -> 前馈网络 -> Add & Norm] × N -> 输出
 ```
 
 “看看这个架构，”兔狲教授指着白板说，“Transformer不是一个单一的算法，而是**组件的有组织堆叠**。每个组件都有明确的功能，通过特定的方式连接在一起。”
@@ -96,7 +96,7 @@ $$
 兔狲教授画出了前馈网络的结构：
 
 ```
-输入 → 线性变换 → ReLU激活 → 线性变换 → 输出
+输入 -> 线性变换 -> ReLU激活 -> 线性变换 -> 输出
 ```
 
 “前馈网络对每个位置独立操作，”他解释道，“它提供**非线性变换能力**，增加模型的表达能力。你可以把它想象成每个位置都有自己的‘小处理器’。”
@@ -609,7 +609,7 @@ for layer_idx, layer in enumerate(encoder.layers):
 print(f"\n层间变化模式:")
 for i in range(num_layers-1):
     layer_diff = np.linalg.norm(layer_outputs[i+1] - layer_outputs[i])
-    print(f"  层 {i+1} → 层 {i+2}: 变化 = {layer_diff:.4f}")
+    print(f"  层 {i+1} -> 层 {i+2}: 变化 = {layer_diff:.4f}")
 ```
 
 ### 完整Transformer实现（简化版）

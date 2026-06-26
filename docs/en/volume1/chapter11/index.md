@@ -166,7 +166,7 @@ Measured: $\beta_1 = 0.9$, $\text{SNR}_b \approx 1.8$, theoretical prediction $c
 
 Experimental verification: at $c \leq 32$, convergence loss shows no difference from AdamW; at $c > 40$, sharp degradation — highly consistent with the theoretically predicted phase transition point.
 
-**Effect**: - 128M parameter model: optimizer state from 438 MB → 27.58 MB (**93.7% compression**, 16×) - 1B parameter model: 5.12 GB → 320 MB (**16× compression**) - L2 Cache hit rate: 128M/350M scale reaches **100%** (AdamW only 2%) - Training throughput: **2× improvement**
+**Effect**: - 128M parameter model: optimizer state from 438 MB -> 27.58 MB (**93.7% compression**, 16×) - 1B parameter model: 5.12 GB -> 320 MB (**16× compression**) - L2 Cache hit rate: 128M/350M scale reaches **100%** (AdamW only 2%) - Training throughput: **2× improvement**
 
 This is the victory of randomized algorithms: **trading probabilistic guarantees for breakthroughs against deterministic lower bounds**.
 
@@ -581,7 +581,7 @@ Quantum computing offers a possible direction, but even quantum computing is con
 
 ## Further Reading
 
-- Kaplan et al. (2020). *Scaling Laws for Neural Language Models* — Pioneering work on scaling laws `→ [arXiv:2001.08361]`
+- Kaplan et al. (2020). *Scaling Laws for Neural Language Models* — Pioneering work on scaling laws `-> [arXiv:2001.08361]`
 
 - [Zixi Li, 2026b] — Collins Randomized Optimizer, deterministic lower bound proof, Chernoff bound guarantees
 
@@ -589,12 +589,12 @@ Quantum computing offers a possible direction, but even quantum computing is con
 
 - Peng et al. (2023). *RWKV: Reinventing RNNs for the Transformer Era* — Linear-complexity RNN-Transformer hybrid
 
-- [Brill, 2024] — Data Distribution Origins of Neural Scaling Laws `→ [arXiv:2412.07942]`
+- [Brill, 2024] — Data Distribution Origins of Neural Scaling Laws `-> [arXiv:2412.07942]`
 
-- [Jeon & Van Roy, 2024] — Information-Theoretic Foundations of Scaling Laws `→ [arXiv:2407.01456]`
+- [Jeon & Van Roy, 2024] — Information-Theoretic Foundations of Scaling Laws `-> [arXiv:2407.01456]`
 
-- [Maloney et al., 2022] — Solvable Models of Neural Scaling Laws `→ [arXiv:2210.16859]`
+- [Maloney et al., 2022] — Solvable Models of Neural Scaling Laws `-> [arXiv:2210.16859]`
 
-- [Isik et al., 2024] — Scaling Laws for Downstream Task Performance `→ [arXiv:2402.04177]`
+- [Isik et al., 2024] — Scaling Laws for Downstream Task Performance `-> [arXiv:2402.04177]`
 
 - Landauer, R. (1961). *Irreversibility and Heat Generation in the Computing Process* — The thermodynamic limits of computation

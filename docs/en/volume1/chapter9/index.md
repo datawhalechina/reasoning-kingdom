@@ -284,8 +284,8 @@ It is not comparing "token A" with "token B."
 It is comparing "the hidden representation of position A" with "the hidden representation of position B."
 
 To put it in more technical terms:
-- **Embedding space**: Word form → Static vector
-- **Hidden space**: Contextual understanding → Dynamic vector
+- **Embedding space**: Word form -> Static vector
+- **Hidden space**: Contextual understanding -> Dynamic vector
 
 The attention mechanism performs **representation retrieval** within hidden space.
 $q_i$ is a query: "Given my current contextual understanding, what information do I need?"
@@ -689,8 +689,8 @@ Returning to the "smoothness" problem: linear attention accumulates all informat
 
 Mamba solves this through selective $\Delta_t$:
 
-- Seeing important information → $\Delta_t$ large → state is dramatically updated, old noise is cleared
-- Seeing noise → $\Delta_t$ small → state barely changes, noise is ignored
+- Seeing important information -> $\Delta_t$ large -> state is dramatically updated, old noise is cleared
+- Seeing noise -> $\Delta_t$ small -> state barely changes, noise is ignored
 
 **This is the counterpart of softmax's "sharpness" in a recurrent architecture**: not concentrating attention in the spatial dimension, but selectively remembering in the temporal dimension.
 
@@ -940,17 +940,17 @@ More subtly, attention weights themselves may not be the true cause of the model
 
 ## Further Reading
 
-- Vaswani et al. (2017). *Attention Is All You Need* — The original Transformer paper, ushering in a new era for NLP `→ [arXiv:1706.03762]`
+- Vaswani et al. (2017). *Attention Is All You Need* — The original Transformer paper, ushering in a new era for NLP `-> [arXiv:1706.03762]`
 
-- Katharopoulos et al. (2020). *Transformers are RNNs: Fast Autoregressive Transformers with Linear Attention* — Kernel function derivation of linear attention; the associativity of addition trades for $O(N)$ complexity and its smoothness cost `→ [arXiv:2006.16236]`
+- Katharopoulos et al. (2020). *Transformers are RNNs: Fast Autoregressive Transformers with Linear Attention* — Kernel function derivation of linear attention; the associativity of addition trades for $O(N)$ complexity and its smoothness cost `-> [arXiv:2006.16236]`
 
-- Gu, A. et al. (2020). *HiPPO: Recurrent Memory with Optimal Polynomial Projections* — Optimal historical compression via Legendre polynomials, the theoretical foundation of SSMs `→ [arXiv:2008.07669]`
+- Gu, A. et al. (2020). *HiPPO: Recurrent Memory with Optimal Polynomial Projections* — Optimal historical compression via Legendre polynomials, the theoretical foundation of SSMs `-> [arXiv:2008.07669]`
 
-- Gu, A. & Dao, T. (2023). *Mamba: Linear-Time Sequence Modeling with Selective State Spaces* — Selective SSMs, using content-driven $\Delta_t$ to achieve softmax-like sharpness in the temporal dimension `→ [arXiv:2312.00752]`
+- Gu, A. & Dao, T. (2023). *Mamba: Linear-Time Sequence Modeling with Selective State Spaces* — Selective SSMs, using content-driven $\Delta_t$ to achieve softmax-like sharpness in the temporal dimension `-> [arXiv:2312.00752]`
 
-- Devlin et al. (2018). *BERT: Pre-training of Deep Bidirectional Transformers* — Bidirectional Transformer pre-training, demonstrating the power of attention mechanisms `→ [arXiv:1810.04805]`
+- Devlin et al. (2018). *BERT: Pre-training of Deep Bidirectional Transformers* — Bidirectional Transformer pre-training, demonstrating the power of attention mechanisms `-> [arXiv:1810.04805]`
 
-- Su et al. (2021). *RoFormer: Enhanced Transformer with Rotary Position Embedding* — RoPE rotary position encoding, improving long-sequence extrapolation `→ [arXiv:2104.09864]`
+- Su et al. (2021). *RoFormer: Enhanced Transformer with Rotary Position Embedding* — RoPE rotary position encoding, improving long-sequence extrapolation `-> [arXiv:2104.09864]`
 
 - Press et al. (2021). *Train Short, Test Long: Attention with Linear Biases Enables Input Length Extrapolation* — ALiBi positional bias method
 

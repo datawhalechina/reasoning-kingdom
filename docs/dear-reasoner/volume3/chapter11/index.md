@@ -55,8 +55,8 @@
 兔狲教授走到白板前，画了一个简单的两层网络：
 
 ```
-输入层 → 隐藏层 → 输出层
-x → h → y
+输入层 -> 隐藏层 -> 输出层
+x -> h -> y
 ```
 
 “这就是反向传播的关键洞察，”他说，“**误差从输出层向输入层反向传播**，像涟漪一样扩散。数学工具是**链式法则**。”
@@ -362,7 +362,7 @@ test_inputs = np.array([[0, 0], [1, 1], [0.5, 0.5]])
 predictions, _ = network.forward(test_inputs)
 print(f"\n测试预测:")
 for i, (x, p) in enumerate(zip(test_inputs, predictions)):
-    print(f"  输入 {x} → 预测概率 {p:.3f} → 分类 {1 if p>0.5 else 0}")
+    print(f"  输入 {x} -> 预测概率 {p:.3f} -> 分类 {1 if p>0.5 else 0}")
 ```
 
 ### 可视化反向传播过程

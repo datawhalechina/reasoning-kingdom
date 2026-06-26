@@ -24,7 +24,7 @@
 
 原始任务是这样的:
 
-    输入: abc → abd, kji → ?
+    输入: abc -> abd, kji -> ?
     期望输出: kjj
 
 这是一个简单的”最后一个字母后移一位”的规律。GPT-3在这个任务上表现很好。
@@ -501,11 +501,11 @@ def generalization_test(model, id_loader, ood_loader, device="cpu"):
     print(f"OOD 准确率: {acc_ood:.1%}")
     print(f"泛化差距:   {gap:.1%}")
     if gap < 0.05:
-        print("→ 泛化良好，模型可能学到了稳定特征")
+        print("-> 泛化良好，模型可能学到了稳定特征")
     elif gap < 0.20:
-        print("→ 泛化中等，部分依赖捷径")
+        print("-> 泛化中等，部分依赖捷径")
     else:
-        print("→ 泛化差，模型严重依赖捷径")
+        print("-> 泛化差，模型严重依赖捷径")
     if hcw_ood > 0.1:
         print(f"⚠ OOD 高置信错误率 {hcw_ood:.1%}，存在过度自信")
     return acc_id, acc_ood, gap
@@ -683,11 +683,11 @@ print(f"OOD 测试集准确率：{acc_ood:.3f}")
 gap = acc_id - acc_ood
 print(f"\n泛化差距（ID - OOD）：{gap:.3f}")
 if gap < 0.05:
-    print("→ 泛化良好，模型可能学到了稳定特征")
+    print("-> 泛化良好，模型可能学到了稳定特征")
 elif gap < 0.20:
-    print("→ 部分依赖捷径，泛化能力中等")
+    print("-> 部分依赖捷径，泛化能力中等")
 else:
-    print("→ 严重依赖捷径，模型掉进陷阱了！")
+    print("-> 严重依赖捷径，模型掉进陷阱了！")
 ```
 
 **你的第二个问题:** 泛化差距有多大?如果 gap \> 30%,说明模型严重依赖捷径。你的模型掉进陷阱了吗?
@@ -823,16 +823,16 @@ plt.show()
 
 # 诊断：过度自信判断
 if conf_ood.mean() > 0.8 and correct_ood.mean() < 0.5:
-    print("⚠ 过度自信！OOD 数据：高置信度 + 低准确率 → 模型在自信地犯错（危险！）")
+    print("⚠ 过度自信！OOD 数据：高置信度 + 低准确率 -> 模型在自信地犯错（危险！）")
 elif conf_ood.mean() < 0.6:
     print("✓ 模型知道自己不确定（OOD 置信度较低），相对安全")
 else:
     print("OOD 置信度适中，请结合准确率综合判断")
 
 # 对比小结：
-# - ID 数据：高准确率 + 高置信度 → 正常
-# - OOD 数据：低准确率 + 高置信度 → 过度自信（危险！）
-# - OOD 数据：低准确率 + 低置信度 → 模型知道自己不确定（相对安全）
+# - ID 数据：高准确率 + 高置信度 -> 正常
+# - OOD 数据：低准确率 + 高置信度 -> 过度自信（危险！）
+# - OOD 数据：低准确率 + 低置信度 -> 模型知道自己不确定（相对安全）
 ```
 
 **你的第四个问题(核心问题):** 模型在OOD数据上的平均置信度是多少?如果置信度仍然很高(\> 0.8),但准确率很低(\< 0.5),说明模型在自信地犯错——这是捷径学习最危险的后果。
@@ -883,19 +883,19 @@ else:
 
 - Bender, E. M., et al. (2021). *On the Dangers of Stochastic Parrots: Can Language Models Be Too Big?* — “随机鹦鹉”假说的原始论文,引发了关于大型语言模型本质的广泛讨论
 
-- Hodel, D. & West, J. (2023). *Response: Emergent analogical reasoning in large language models* — 对GPT-3”涌现推理能力”的批判性反驳,展示了分布偏移下的脆弱性 `→ [arXiv:2308.16118]`
+- Hodel, D. & West, J. (2023). *Response: Emergent analogical reasoning in large language models* — 对GPT-3”涌现推理能力”的批判性反驳,展示了分布偏移下的脆弱性 `-> [arXiv:2308.16118]`
 
 - Geirhos, R., et al. (2020). *Shortcut Learning in Deep Neural Networks* — 捷径学习的系统性综述,涵盖视觉、语言、语音等多个领域
 
-- Puli, A., et al. (2023). *Don’t blame Dataset Shift! Shortcut Learning due to Gradients and Cross Entropy* — 揭示梯度下降+交叉熵的归纳偏置如何导致捷径学习 `→ [arXiv:2308.12553]`
+- Puli, A., et al. (2023). *Don’t blame Dataset Shift! Shortcut Learning due to Gradients and Cross Entropy* — 揭示梯度下降+交叉熵的归纳偏置如何导致捷径学习 `-> [arXiv:2308.12553]`
 
-- Zhao, C., et al. (2025). *Is Chain-of-Thought Reasoning of LLMs a Mirage? A Data Distribution Lens* — DataAlchemy实验,证明CoT推理是训练分布的脆弱镜像 `→ [arXiv:2508.01191]`
+- Zhao, C., et al. (2025). *Is Chain-of-Thought Reasoning of LLMs a Mirage? A Data Distribution Lens* — DataAlchemy实验,证明CoT推理是训练分布的脆弱镜像 `-> [arXiv:2508.01191]`
 
-- Li, T., et al. (2020). *Tilted Empirical Risk Minimization* — 通过调整样本权重来平衡鲁棒性和公平性 `→ [arXiv:2007.01162]`
+- Li, T., et al. (2020). *Tilted Empirical Risk Minimization* — 通过调整样本权重来平衡鲁棒性和公平性 `-> [arXiv:2007.01162]`
 
-- Sricharan, K. & Srivastava, A. (2018). *Building robust classifiers through generation of confident out of distribution examples* — 用GAN生成OOD样本进行对抗训练 `→ [arXiv:1812.00239]`
+- Sricharan, K. & Srivastava, A. (2018). *Building robust classifiers through generation of confident out of distribution examples* — 用GAN生成OOD样本进行对抗训练 `-> [arXiv:1812.00239]`
 
-- Woodland, M., et al. (2024). *Dimensionality Reduction and Nearest Neighbors for Improving Out-of-Distribution Detection in Medical Image Segmentation* — 医学图像中的OOD检测与捷径学习 `→ [arXiv:2408.02761]`
+- Woodland, M., et al. (2024). *Dimensionality Reduction and Nearest Neighbors for Improving Out-of-Distribution Detection in Medical Image Segmentation* — 医学图像中的OOD检测与捷径学习 `-> [arXiv:2408.02761]`
 
 - Vapnik, V. & Chervonenkis, A. (1971). *On the Uniform Convergence of Relative Frequencies of Events to Their Probabilities* — 统计学习理论的奠基性工作,ERM的理论基础
 

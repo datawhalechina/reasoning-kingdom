@@ -236,7 +236,7 @@ def astar(h_func, label="A*"):
 # ------------------------------------------------------------------
 # Step 1: Admissible heuristic function — Manhattan distance
 #   h₁(n) = |n_row - G_row| + |n_col - G_col|
-#   Never overestimates remaining cost → satisfies admissibility → guarantees optimal solution
+#   Never overestimates remaining cost -> satisfies admissibility -> guarantees optimal solution
 # ------------------------------------------------------------------
 def h_admissible(r, c):
     """Manhattan distance: admissible, does not overestimate"""
@@ -251,7 +251,7 @@ print(f"Path: {path1}")
 # ------------------------------------------------------------------
 # Step 2: Inadmissible heuristic function — Manhattan distance × 2
 #   h₂(n) = 2 × (|n_row - G_row| + |n_col - G_col|)
-#   Overestimates remaining cost → violates admissibility → may find suboptimal path
+#   Overestimates remaining cost -> violates admissibility -> may find suboptimal path
 # ------------------------------------------------------------------
 def h_inadmissible(r, c):
     """2× Manhattan distance: inadmissible, overestimates"""
@@ -267,8 +267,8 @@ print(f"Path: {path2}")
 # Comparison conclusion
 # ------------------------------------------------------------------
 print("\n=== Comparison Conclusion ===")
-print(f"Admissible heuristic   → {steps1} steps (optimal solution guaranteed)")
-print(f"Inadmissible heuristic → {steps2} steps ({'optimal' if steps1==steps2 else 'suboptimal, non-optimal'})")
+print(f"Admissible heuristic   -> {steps1} steps (optimal solution guaranteed)")
+print(f"Inadmissible heuristic -> {steps2} steps ({'optimal' if steps1==steps2 else 'suboptimal, non-optimal'})")
 if steps1 != steps2:
     print(f"  Gap: {steps2 - steps1} steps (contract was broken, a longer path was found)")
 print(f"\nNote: Admissible version expanded {exp1} nodes, inadmissible version expanded {exp2} nodes.")
@@ -292,7 +292,7 @@ Starting from S, compute $f(n) = g(n) + h_1(n)$ for adjacent nodes:
 | S right  | 1    | 9     | 10   |
 | S down   | 1    | 9     | 10   |
 
-Both tie at $f(n)$ (both 10), so A\* chooses to expand S right. After moving along row 0 to the right to (0,2), two paths diverge: continue right along (0,3)→(0,4)→(0,5)→then south, or go down (1,2)→(2,2)→(2,3) through the gap. $h_1$ gives both paths equal opportunity—ultimately A\* finds the optimal path through the gap, **length = 10 steps**, expanding a total of 33 nodes.
+Both tie at $f(n)$ (both 10), so A\* chooses to expand S right. After moving along row 0 to the right to (0,2), two paths diverge: continue right along (0,3)->(0,4)->(0,5)->then south, or go down (1,2)->(2,2)->(2,3) through the gap. $h_1$ gives both paths equal opportunity—ultimately A\* finds the optimal path through the gap, **length = 10 steps**, expanding a total of 33 nodes.
 
 ### Step 2: Using an Inadmissible Heuristic Function
 
@@ -587,7 +587,7 @@ Imagine a 2D grid world with obstacles and a goal. Different heuristic weights �
 
 The innovation of ADS lies in: **α is not fixed, but adaptively adjusted based on local terrain**.
 
-This adaptivity comes from the computation of the information-theoretic barrier B(s): - In open areas: IG is high (large information gain along the heuristic direction), U is low (subsequent states are deterministic) → B is high → α is high - Near obstacles: IG is low (heuristic direction is blocked), U is high (multiple detour choices) → B is low → α is low
+This adaptivity comes from the computation of the information-theoretic barrier B(s): - In open areas: IG is high (large information gain along the heuristic direction), U is low (subsequent states are deterministic) -> B is high -> α is high - Near obstacles: IG is low (heuristic direction is blocked), U is high (multiple detour choices) -> B is low -> α is low
 
 <div class="center">
 
@@ -926,15 +926,15 @@ To be revealed in Chapter 12.
 
 - Hart, Nilsson, Raphael (1968). *A Formal Basis for the Heuristic Determination of Minimum Cost Paths* — The original A\* algorithm paper, defining admissibility and consistency
 
-- Yao, A. C.-C. (1977). *Probabilistic Computations: Toward a Unified Measure of Complexity* — The original paper on Yao's principle; the MiniMax theorem elevates deterministic lower bounds to randomized lower bounds `→ [FOCS 1977]`
+- Yao, A. C.-C. (1977). *Probabilistic Computations: Toward a Unified Measure of Complexity* — The original paper on Yao's principle; the MiniMax theorem elevates deterministic lower bounds to randomized lower bounds `-> [FOCS 1977]`
 
 - \\[Zixi Li, 2026a\\] — ADS adaptive dual search, the information-theoretic reformulation of heuristics, knowledge distillation framework
 
 - \\[Zixi Li, 2026b\\] — Collins randomized optimizer, deterministic lower bound and Chernoff upper bound, phase transition at $c_{\text{opt}} \approx 34$
 
-- \\[Li & Jin, 2015\\] — PTAS for weighted unit disk cover, the gold standard of approximation algorithms `→ [arXiv:1502.04918]`
+- \\[Li & Jin, 2015\\] — PTAS for weighted unit disk cover, the gold standard of approximation algorithms `-> [arXiv:1502.04918]`
 
-- \\[Esmer et al., 2022\\] — Exponential-time approximation algorithms for approximate monotone local search `→ [arXiv:2206.13481]`
+- \\[Esmer et al., 2022\\] — Exponential-time approximation algorithms for approximate monotone local search `-> [arXiv:2206.13481]`
 
 - Pearl, J. (1984). *Heuristics: Intelligent Search Strategies for Computer Problem Solving* — The classic textbook on heuristic search
 

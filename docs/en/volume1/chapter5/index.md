@@ -24,7 +24,7 @@ In 2023, Hodel and West ran a simple test. They gave GPT-3 letter-string analogi
 
 The original task went like this:
 
-    Input: abc → abd, kji → ?
+    Input: abc -> abd, kji -> ?
     Expected output: kjj
 
 This is a simple rule of "shift the last letter forward by one." GPT-3 performs well on this task.
@@ -501,11 +501,11 @@ def generalization_test(model, id_loader, ood_loader, device="cpu"):
     print(f"OOD accuracy: {acc_ood:.1%}")
     print(f"Generalization gap:   {gap:.1%}")
     if gap < 0.05:
-        print("→ Good generalization; model may have learned stable features")
+        print("-> Good generalization; model may have learned stable features")
     elif gap < 0.20:
-        print("→ Moderate generalization; partial reliance on shortcuts")
+        print("-> Moderate generalization; partial reliance on shortcuts")
     else:
-        print("→ Poor generalization; model severely relies on shortcuts")
+        print("-> Poor generalization; model severely relies on shortcuts")
     if hcw_ood > 0.1:
         print(f"⚠ OOD high-confidence error rate {hcw_ood:.1%}, overconfidence present")
     return acc_id, acc_ood, gap
@@ -683,11 +683,11 @@ print(f"OOD test set accuracy: {acc_ood:.3f}")
 gap = acc_id - acc_ood
 print(f"\nGeneralization gap (ID - OOD): {gap:.3f}")
 if gap < 0.05:
-    print("→ Good generalization; model may have learned stable features")
+    print("-> Good generalization; model may have learned stable features")
 elif gap < 0.20:
-    print("→ Partial reliance on shortcuts; moderate generalization")
+    print("-> Partial reliance on shortcuts; moderate generalization")
 else:
-    print("→ Severe reliance on shortcuts; model fell into the trap!")
+    print("-> Severe reliance on shortcuts; model fell into the trap!")
 ```
 
 **Your second question:** How large is the generalization gap? If gap \> 30%, the model severely relies on shortcuts. Did your model fall into the trap?
@@ -823,16 +823,16 @@ plt.show()
 
 # Diagnosis: overconfidence judgment
 if conf_ood.mean() > 0.8 and correct_ood.mean() < 0.5:
-    print("⚠ Overconfident! OOD data: high confidence + low accuracy → model is confidently wrong (dangerous!)")
+    print("⚠ Overconfident! OOD data: high confidence + low accuracy -> model is confidently wrong (dangerous!)")
 elif conf_ood.mean() < 0.6:
     print("✓ Model knows it is uncertain (OOD confidence is low), relatively safe")
 else:
     print("OOD confidence is moderate; please combine with accuracy for comprehensive judgment")
 
 # Summary comparison:
-# - ID data: high accuracy + high confidence → normal
-# - OOD data: low accuracy + high confidence → overconfident (dangerous!)
-# - OOD data: low accuracy + low confidence → model knows it is uncertain (relatively safe)
+# - ID data: high accuracy + high confidence -> normal
+# - OOD data: low accuracy + high confidence -> overconfident (dangerous!)
+# - OOD data: low accuracy + low confidence -> model knows it is uncertain (relatively safe)
 ```
 
 **Your fourth question (core question):** What is the model's average confidence on OOD data? If confidence is still high (\> 0.8), but accuracy is low (\< 0.5), it means the model is confidently wrong — this is the most dangerous consequence of shortcut learning.
@@ -883,19 +883,19 @@ If you do only one thing, do Step 4. That is the shortest experiment that will m
 
 - Bender, E. M., et al. (2021). *On the Dangers of Stochastic Parrots: Can Language Models Be Too Big?* — The original paper of the "Stochastic Parrot" hypothesis, which sparked broad discussion about the nature of large language models
 
-- Hodel, D. & West, J. (2023). *Response: Emergent analogical reasoning in large language models* — A critical rebuttal of GPT-3's "emergent reasoning ability," demonstrating fragility under distribution shift `→ [arXiv:2308.16118]`
+- Hodel, D. & West, J. (2023). *Response: Emergent analogical reasoning in large language models* — A critical rebuttal of GPT-3's "emergent reasoning ability," demonstrating fragility under distribution shift `-> [arXiv:2308.16118]`
 
 - Geirhos, R., et al. (2020). *Shortcut Learning in Deep Neural Networks* — A systematic review of shortcut learning, covering vision, language, speech, and more
 
-- Puli, A., et al. (2023). *Don't blame Dataset Shift! Shortcut Learning due to Gradients and Cross Entropy* — Reveals how the inductive bias of gradient descent + cross-entropy leads to shortcut learning `→ [arXiv:2308.12553]`
+- Puli, A., et al. (2023). *Don't blame Dataset Shift! Shortcut Learning due to Gradients and Cross Entropy* — Reveals how the inductive bias of gradient descent + cross-entropy leads to shortcut learning `-> [arXiv:2308.12553]`
 
-- Zhao, C., et al. (2025). *Is Chain-of-Thought Reasoning of LLMs a Mirage? A Data Distribution Lens* — The DataAlchemy experiment, demonstrating that CoT reasoning is a fragile mirror of the training distribution `→ [arXiv:2508.01191]`
+- Zhao, C., et al. (2025). *Is Chain-of-Thought Reasoning of LLMs a Mirage? A Data Distribution Lens* — The DataAlchemy experiment, demonstrating that CoT reasoning is a fragile mirror of the training distribution `-> [arXiv:2508.01191]`
 
-- Li, T., et al. (2020). *Tilted Empirical Risk Minimization* — Balancing robustness and fairness through sample weight adjustment `→ [arXiv:2007.01162]`
+- Li, T., et al. (2020). *Tilted Empirical Risk Minimization* — Balancing robustness and fairness through sample weight adjustment `-> [arXiv:2007.01162]`
 
-- Sricharan, K. & Srivastava, A. (2018). *Building robust classifiers through generation of confident out of distribution examples* — Using GANs to generate OOD samples for adversarial training `→ [arXiv:1812.00239]`
+- Sricharan, K. & Srivastava, A. (2018). *Building robust classifiers through generation of confident out of distribution examples* — Using GANs to generate OOD samples for adversarial training `-> [arXiv:1812.00239]`
 
-- Woodland, M., et al. (2024). *Dimensionality Reduction and Nearest Neighbors for Improving Out-of-Distribution Detection in Medical Image Segmentation* — OOD detection and shortcut learning in medical images `→ [arXiv:2408.02761]`
+- Woodland, M., et al. (2024). *Dimensionality Reduction and Nearest Neighbors for Improving Out-of-Distribution Detection in Medical Image Segmentation* — OOD detection and shortcut learning in medical images `-> [arXiv:2408.02761]`
 
 - Vapnik, V. & Chervonenkis, A. (1971). *On the Uniform Convergence of Relative Frequencies of Events to Their Probabilities* — Foundational work of statistical learning theory, the theoretical basis of ERM
 

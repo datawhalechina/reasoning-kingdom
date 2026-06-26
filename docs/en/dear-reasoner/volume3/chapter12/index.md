@@ -30,9 +30,9 @@ Mr. Pallas's Cat nodded: "Yes, this is the idea of **unfolding through time**. B
 He drew a diagram of unfolding on the whiteboard:
 
 ```
-Time step 1: x₁ → network → h₁
-Time step 2: x₂ → network → h₂  
-Time step 3: x₂ → network → h₃
+Time step 1: x₁ -> network -> h₁
+Time step 2: x₂ -> network -> h₂  
+Time step 3: x₂ -> network -> h₃
 ...
 ```
 
@@ -71,7 +71,7 @@ Piglet grasped the design: "$W_{hh}$ determines 'how much of the past to remembe
 Mr. Pallas's Cat drew an unrolled diagram of a long sequence on the whiteboard:
 
 ```
-h₀ → h₁ → h₂ → ... → h₅₀
+h₀ -> h₁ -> h₂ -> ... -> h₅₀
 ```
 
 "When error propagates backward from time step 50 to time step 1," he explained, "it must be multiplied by $W_{hh}$ fifty times in succession. If the eigenvalues of $W_{hh}$ are less than 1, the gradient decays exponentially to near zero — this is **vanishing gradients**."
@@ -216,7 +216,7 @@ class LSTMCell:
         self.input_size = input_size
         self.hidden_size = hidden_size
         
-        # Combined weight matrix: [h_{t-1}, x_t] → four gates
+        # Combined weight matrix: [h_{t-1}, x_t] -> four gates
         # Order: forget gate, input gate, candidate memory, output gate
         self.W = np.random.randn(hidden_size + input_size, 4 * hidden_size) * 0.01
         self.b = np.zeros((1, 4 * hidden_size))

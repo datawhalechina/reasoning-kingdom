@@ -125,8 +125,8 @@ The softmax version performs **global competition** — each query simultaneousl
 The linear version performs **incremental accumulation** — no global normalization needed; the state is maintained online via prefix sum, at the cost of losing softmax's exact competition.
 
 This trade-off is not an engineering compromise — it is a **fundamental tension between the normalization operator and associativity**:
-- softmax requires global information to normalize → cannot satisfy associativity → $O(T^2)$
-- linear kernel uses associativity → loses global normalization → $O(T)$
+- softmax requires global information to normalize -> cannot satisfy associativity -> $O(T^2)$
+- linear kernel uses associativity -> loses global normalization -> $O(T)$
 
 You cannot have both exact partition-function normalization and linear complexity. This is an **irreducible computational constraint**, not an implementation detail.
 
@@ -309,7 +309,7 @@ Extracting attention from GPT-2 on the sentence *"Because the storm intensified,
 
 <figure>
 <p><img src="/figures/ch09_causal_fig1_attention_asymmetry.png" alt="Attention Heatmap and Asymmetry Matrix" /></p>
-<figcaption>Figure 1. Left: GPT-2 last-layer average attention heatmap — effect positions (rows) assign higher attention weights to cause positions (columns), consistent with causal direction. Right: Asymmetry matrix A − Aᵀ, red indicates forward causal flow (row→col) dominates, blue indicates reverse flow.</figcaption>
+<figcaption>Figure 1. Left: GPT-2 last-layer average attention heatmap — effect positions (rows) assign higher attention weights to cause positions (columns), consistent with causal direction. Right: Asymmetry matrix A − Aᵀ, red indicates forward causal flow (row->col) dominates, blue indicates reverse flow.</figcaption>
 </figure>
 
 <figure>
@@ -330,7 +330,7 @@ Chapter 9 Bonus: Causal Reinterpretation of Self-Attention
 ==========================================================
 Visualizes attention matrices from GPT-2 on causal sentences,
 checking whether attention shows directional asymmetry consistent
-with cause→effect direction.
+with cause->effect direction.
 
 Thought experiment by Zixi Li (2025).
 """
@@ -421,7 +421,7 @@ def outer_product_demo(d_k=8, T=6, seed=0):
 
 def do_intervene(attn_matrix, intervene_row, force_col):
     """
-    Hard intervention: do(cause=force_col → effect=intervene_row)
+    Hard intervention: do(cause=force_col -> effect=intervene_row)
     Collapse the intervene_row row into a one-hot pointing at force_col.
     Equivalent to Pearl's hard do operation: cut all other incoming edges.
     """
@@ -464,7 +464,7 @@ def plot_all(tokens, attentions):
     fig1.suptitle(f'GPT-2 Attention on Causal Sentence\n"{CAUSAL_SENTENCE}"', fontsize=11)
     sns.heatmap(avg_attn, ax=ax1, cmap=CMAP_ATTN, xticklabels=labels,
                 yticklabels=labels, square=True, cbar_kws={"shrink": 0.8})
-    ax1.set_title("Avg Attention (last layer)\nEffect i → Cause j", fontweight="bold")
+    ax1.set_title("Avg Attention (last layer)\nEffect i -> Cause j", fontweight="bold")
     ax1.set_xlabel("Cause candidate j"); ax1.set_ylabel("Effect position i")
     ax1.tick_params(axis='x', rotation=45, labelsize=8)
     ax1.tick_params(axis='y', rotation=0,  labelsize=8)
@@ -472,7 +472,7 @@ def plot_all(tokens, attentions):
     sns.heatmap(asym, ax=ax2, cmap=CMAP_ASYM, xticklabels=labels,
                 yticklabels=labels, center=0, vmin=-vmax, vmax=vmax,
                 square=True, cbar_kws={"shrink": 0.8})
-    ax2.set_title(r"Asymmetry $A - A^\top$" + "\nred = row→col flow dominates", fontweight="bold")
+    ax2.set_title(r"Asymmetry $A - A^\top$" + "\nred = row->col flow dominates", fontweight="bold")
     ax2.set_xlabel("j"); ax2.set_ylabel("i")
     ax2.tick_params(axis='x', rotation=45, labelsize=8)
     ax2.tick_params(axis='y', rotation=0,  labelsize=8)
@@ -537,15 +537,15 @@ def plot_do_intervention(avg_attn, labels, intervene_row, force_col):
     fig, axes = plt.subplots(1, 3, figsize=(16, 5))
     fig.suptitle(
         f"do-Operator in Attention Space\n"
-        f"Intervening on row i={intervene_row} ({labels[intervene_row]}) → "
+        f"Intervening on row i={intervene_row} ({labels[intervene_row]}) -> "
         f"force cause = col j={force_col} ({labels[force_col]})",
         fontsize=11
     )
     for ax, mat, title in zip(axes,
         [avg_attn, soft_do, hard_do],
         ["Original Attention\n(soft causal posterior)",
-         f"Soft do(j={force_col}→i={intervene_row})\n(boost path, keep others)",
-         f"Hard do(j={force_col}→i={intervene_row})\n(one-hot, Pearl's original)"]):
+         f"Soft do(j={force_col}->i={intervene_row})\n(boost path, keep others)",
+         f"Hard do(j={force_col}->i={intervene_row})\n(one-hot, Pearl's original)"]):
         sns.heatmap(mat, ax=ax, cmap=CMAP_ATTN,
                     xticklabels=labels, yticklabels=labels,
                     square=True, vmin=0, vmax=1, cbar_kws={"shrink": 0.8})
@@ -651,7 +651,7 @@ On the sentence *"Because the storm intensified, the ship finally sank."*, apply
 
 <figure>
 <p><img src="/figures/ch09_causal_fig4_do_intervention.png" alt="do-Operator Intervention on Attention Matrix" /></p>
-<figcaption>Figure 4. Causal intervention comparison in attention space. Left: Original soft causal posterior (normal attention). Middle: Soft do intervention (λ=3.0, boosting the storm→sank path, preserving remaining causal paths). Right: Hard do intervention (one-hot collapse, all other causal paths cut, corresponding to Pearl's exact do operation). The blue rectangle highlights the intervened row position.</figcaption>
+<figcaption>Figure 4. Causal intervention comparison in attention space. Left: Original soft causal posterior (normal attention). Middle: Soft do intervention (λ=3.0, boosting the storm->sank path, preserving remaining causal paths). Right: Hard do intervention (one-hot collapse, all other causal paths cut, corresponding to Pearl's exact do operation). The blue rectangle highlights the intervened row position.</figcaption>
 </figure>
 
 The hard intervention visualization directly corresponds to the "cut incoming edges" surgery in Pearl's causal diagram: the row for position "sank" collapses from a dispersed causal posterior into a fully determined pointer — its sole cause is "storm." All other possible causal paths are zeroed out.
@@ -762,16 +762,16 @@ Your disappointment points here — to a genuine frontier. **This is not a bad t
 
 **The Hopfield Genealogy**
 - Hopfield, J.J. (1982). *Neural networks and physical systems with emergent collective computational abilities* — The original paper: energy function and associative memory
-- Ramsauer, H. et al. (2020). *Hopfield Networks is All You Need* `→ [arXiv:2008.02217]` — Mathematical equivalence proof between modern Hopfield networks and self-attention
-- Katharopoulos, A. et al. (2020). *Transformers are RNNs: Fast Autoregressive Transformers with Linear Attention* `→ [arXiv:2006.16236]` — Kernel derivation and prefix-sum reduction for linear attention
+- Ramsauer, H. et al. (2020). *Hopfield Networks is All You Need* `-> [arXiv:2008.02217]` — Mathematical equivalence proof between modern Hopfield networks and self-attention
+- Katharopoulos, A. et al. (2020). *Transformers are RNNs: Fast Autoregressive Transformers with Linear Attention* `-> [arXiv:2006.16236]` — Kernel derivation and prefix-sum reduction for linear attention
 
 **Linear Attention and State Space Models**
-- Gu, A. et al. (2021). *Combining Recurrent, Convolutional, and Continuous-time Models with Linear State Space Layers* `→ [arXiv:2110.13985]` — S4, HiPPO, discretization of integral operators
-- Gu, A. & Dao, T. (2023). *Mamba: Linear-Time Sequence Modeling with Selective State Spaces* `→ [arXiv:2312.00752]` — Selective scan mechanism
+- Gu, A. et al. (2021). *Combining Recurrent, Convolutional, and Continuous-time Models with Linear State Space Layers* `-> [arXiv:2110.13985]` — S4, HiPPO, discretization of integral operators
+- Gu, A. & Dao, T. (2023). *Mamba: Linear-Time Sequence Modeling with Selective State Spaces* `-> [arXiv:2312.00752]` — Selective scan mechanism
 
 **Causal Inference Framework**
 - Pearl, J. & Mackenzie, D. (2018). *The Book of Why* — Systematic framework for causal inference, do-operator, and the causal ladder
-- Vaswani, A. et al. (2017). *Attention Is All You Need* `→ [arXiv:1706.03762]`
-- Geiger, A. et al. (2021). *Causal Abstractions of Neural Networks* `→ [arXiv:2106.02997]` — Understanding neural network internal structure through causal abstraction
-- Vig, J. et al. (2020). *Causal Mediation Analysis for Interpreting Neural NLP: The Case of Gender Bias* `→ [arXiv:2004.12265]` — Detecting semantic roles of attention heads via causal mediation analysis
-- Kadem, M. & Zheng, R. (2026). *Interpreting Transformers Through Attention Head Intervention* `→ [arXiv:2601.04398]` — From visualization to intervention: a survey on the evolution of causal interpretability methods for attention heads
+- Vaswani, A. et al. (2017). *Attention Is All You Need* `-> [arXiv:1706.03762]`
+- Geiger, A. et al. (2021). *Causal Abstractions of Neural Networks* `-> [arXiv:2106.02997]` — Understanding neural network internal structure through causal abstraction
+- Vig, J. et al. (2020). *Causal Mediation Analysis for Interpreting Neural NLP: The Case of Gender Bias* `-> [arXiv:2004.12265]` — Detecting semantic roles of attention heads via causal mediation analysis
+- Kadem, M. & Zheng, R. (2026). *Interpreting Transformers Through Attention Head Intervention* `-> [arXiv:2601.04398]` — From visualization to intervention: a survey on the evolution of causal interpretability methods for attention heads

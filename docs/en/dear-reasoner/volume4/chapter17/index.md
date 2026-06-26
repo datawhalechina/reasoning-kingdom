@@ -94,9 +94,9 @@ Good question. Let me share some insights:
 - Does it need explainability? (Medical diagnosis needs explanation; recommendation systems can be black boxes)
 
 **Step 2: Choose the right mode of thinking**
-- **Certainty + clear rules** → algorithmic thinking
-- **Fuzziness + abundant data** → neural network thinking
-- **Need for understanding + explanation** → reasoning thinking
+- **Certainty + clear rules** -> algorithmic thinking
+- **Fuzziness + abundant data** -> neural network thinking
+- **Need for understanding + explanation** -> reasoning thinking
 
 **Step 3: Combine them**
 Often, the best solution is a **combination**. For example:
@@ -119,7 +119,7 @@ This is one of the most important wisdoms: **don't solve problems bundled togeth
 
 Take autonomous driving:
 - Don't use one model for object detection, path planning, and decision control simultaneously
-- Instead: detection module → planning module → control module
+- Instead: detection module -> planning module -> control module
 - Each module is relatively independent, easy to debug, improve, and replace
 
 **The wisdom of decoupling**: complex systems are not tangled messes, but organic combinations of clear modules.
@@ -154,7 +154,7 @@ How would you design a solution?
 Let me guess your thought processes:
 
 **Piglet** might think:
-1. Problem decomposition: reminder → confirmation → recording
+1. Problem decomposition: reminder -> confirmation -> recording
 2. Algorithm design: scheduled reminders, button confirmation, database logging
 3. Hardware choice: smart pillbox? Mobile app? Voice assistant?
 
