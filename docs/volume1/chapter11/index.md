@@ -266,7 +266,7 @@ EMA是一个**低通滤波器**,有效时间窗口$T_{\text{eff}} = \frac{1 + \b
 **这就是为什么Collins能用$c = 32$而不崩溃**:EMA提供了额外的$\sqrt{T_{\text{eff}}} \approx 4$倍方差压缩。
 
 <figure>
-<img src="/ref/COLLINS/Code_Generated_Image_1.png" />
+<img src="/ref/COLLINS/Code_Generated_Image_2.png" />
 <figcaption>图11.1:Hash-Adam参数激活热图——EMA平滑效果</figcaption>
 </figure>
 
@@ -381,7 +381,7 @@ $$
 这是**浓度不等式**的威力:高维空间中,随机变量以指数速度集中在期望附近。
 
 <figure>
-<img src="/ref/COLLINS/Code_Generated_Image_2.png" />
+<img src="/ref/COLLINS/Code_Generated_Image_1.png" />
 <figcaption>图11.2:Chernoff界分析——最优压缩比约为33.7x</figcaption>
 </figure>
 
