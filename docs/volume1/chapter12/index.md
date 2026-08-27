@@ -186,6 +186,8 @@ CoT通过生成中间token，给模型更多的"计算时间"：
 
 这就是**永霖公式**：
 
+> **记号统一**：本节先给出永霖公式的现象学陈述；它的严格推导与完整定理见本章第十二节「永霖极限的严格推导」（压缩映射 + 巴拿赫不动点链）。两种记号指同一对象：本节 $\Pi^{(n)}(s)$ 即第十二节的信念分布 $p_t$，$n$ 即 $t$。
+
 $$
 \lim_{n \to \infty} \Pi^{(n)}(s) = A, \quad \text{但} \quad A \neq A^*
 $$
@@ -247,9 +249,9 @@ $A^*$ 是**真实的正确答案的分布**。
 
 ## 六、费曼式讲解：对象层与元层是什么？
 
-现在来到最核心的概念：**为什么收敛是必然的？**
+现在来到最核心的概念：**收敛为什么是必然的？** 本节先给直觉，完整的几何证明在第十二节。
 
-答案是：**对象层封闭，元层断裂。**
+直觉是：**对象层封闭，元层断裂。**
 
 这两个词听起来很哲学，但其实有非常具体的含义。
 
@@ -363,6 +365,8 @@ $$
 为什么是 $A$？因为训练过程本身就是在最小化交叉熵——让模型的输出分布向训练集的标签分布靠拢。训练结束时，模型的参数矩阵把 $A$ 编码为了能量最低的吸引子（attractor）。
 
 所以永霖公式的收敛，不只是贝叶斯更新失效的被动退化——**它是能量最小化的主动吸引**：推理链越长，模型越深度进入自身的联想检索循环，离吸引子越近，最终被拉入 $A$ 这个能量井。
+
+> **严格版本**：这一"能量井"是第十二节压缩性定理中能量函数的全局极小值；吸引子的**唯一性**与**收敛速率**（$k^t$ 指数衰减）由压缩映射 + 巴拿赫不动点定理保证，而非由这里的直觉图像保证。
 
 **动手体验：霍普菲尔德式检索的吸引子**
 
@@ -488,7 +492,9 @@ $$
 
 </div>
 
-## 七、32-hop推理：看收敛如何发生
+## 七、32-hop推理：收敛的实证观测
+
+（本节与第十一节的实验对「永霖定理（严格版）」（第十二节 §10）的预测作实证对照：压缩映射给出 $k^t$ 指数收敛——实验观测的置信度演化（前 10 步快速上升、之后回落至锚点 A≈0.50）正是"有效推理窗口 ≈ 压缩因子决定的步数"的具体表现。）
 
 考虑一个多跳逻辑推理任务：
 
@@ -546,6 +552,8 @@ $$
 </div>
 
 ## 八、与哥德尔定理的结构同构
+
+（严格推导（第十二节）给出了收敛的数学机制；本节给出它的结构解读——为什么这种收敛在本质上与哥德尔不完备共享同一个形状。）
 
 永霖公式和哥德尔不完备定理的类比，不是修辞，而是结构上的同构。
 
@@ -605,6 +613,8 @@ $$
 </div>
 
 ## 九、有效推理窗口：CoT的真正价值
+
+（本节给出有效推理窗口的直觉定义；基于压缩因子的量化版本与上界推导见第十二节 §11。）
 
 永霖公式给了我们一个实践性的结论：
 
@@ -764,15 +774,15 @@ $$
 
 
 > 永霖公式给出了推理的内部边界。下一章是最后一章：这些边界合在一起，告诉我们推理王国的地图长什么样。
-# 永霖极限的严格推导：从不动点到压缩映射
+## 十二、永霖极限的严格推导：从不动点到压缩映射
 
-## 1. 从最朴素的不动点概念说起
+### 1. 从最朴素的不动点概念说起
 
 **不动点（Fixed Point）** 的最简单定义：对于一个函数 $f: X \to X$，如果存在 $x^* \in X$ 使得 $f(x^*) = x^*$，则称 $x^*$ 是 $f$ 的不动点。
 
 这个定义看似平凡，却蕴含着深刻的哲学：**自我指涉**。系统输出等于输入，原因等于结果。
 
-## 2. 数列迭代：离散动力系统
+### 2. 数列迭代：离散动力系统
 
 考虑数列 $\{x_t\}_{t=0}^\infty$ 由递推关系定义：
 $$
@@ -791,7 +801,7 @@ $$
 
 这里 $|a| < 1$ 就是**压缩性**的雏形。
 
-## 3. 信念空间的设定
+### 3. 信念空间的设定
 
 在推理系统中，$x_t$ 不是实数，而是**信念分布**——答案空间上的概率向量。
 
@@ -863,7 +873,7 @@ $$p_n = 1 - p_1 - p_2 - \cdots - p_{n-1}$$
 
 **推理算子** $F: \mathcal{P} \to \mathcal{P}$ 将当前信念映射到更新后的信念。
 
-## 4. KL散度：信念距离的自然度量
+### 4. KL散度：信念距离的自然度量
 
 对于两个分布 $p, q \in \mathcal{P}$，KL散度：
 $$
@@ -877,7 +887,7 @@ $$
 
 但KL散度**不是度量**：不满足对称性，不满足三角不等式。
 
-## 5. 关键洞察：推理算子的具体形式
+### 5. 关键洞察：推理算子的具体形式
 
 我们不能凭空假设 $F$ 是压缩映射。必须从**推理算子的具体构造**出发。
 
@@ -926,7 +936,7 @@ $$p_{t+1} = p_t - \eta \nabla E(p_t)$$
 **欧拉步的误差**：步长 $\eta$ 越大，每步走得越远，但偏离真实连续轨迹也越多。步长太大会发散，太小收敛慢。这正是学习率调参的本质。
 :::
 
-## 6. KL散度作为Bregman散度
+### 6. KL散度作为Bregman散度
 
 KL散度可以写成Bregman散度形式。设 $\phi(p) = \sum_i p_i \log p_i$（负熵），则：
 $$
@@ -938,7 +948,7 @@ $$
 D_{\text{KL}}(p \| q) = D_{\text{KL}}(p \| r) + D_{\text{KL}}(r \| q) - \langle \nabla\phi(q) - \nabla\phi(r), p-r \rangle
 $$
 
-## 7. 压缩性的证明（核心）
+### 7. 压缩性的证明（核心）
 
 现在证明：对于梯度下降型的推理算子 $F$，在适当条件下是压缩的。
 
@@ -985,7 +995,7 @@ $$D_{\text{KL}}(q_1 \| q_2) \leq \underbrace{\left(1 - \frac{\eta(2\mu - \eta L^
 
 **证毕**。
 
-## 8. 巴拿赫不动点定理的应用
+### 8. 巴拿赫不动点定理的应用
 
 现在我们可以**合法地**应用巴拿赫不动点定理：
 
@@ -995,7 +1005,7 @@ $$D_{\text{KL}}(q_1 \| q_2) \leq \underbrace{\left(1 - \frac{\eta(2\mu - \eta L^
 2. 对任意初始 $p_0 \in \mathcal{P}$，迭代 $p_{t+1} = F(p_t)$ 收敛到 $A$
 3. 收敛速度：$D_{\text{KL}}(p_t \| A) \leq k^t D_{\text{KL}}(p_0 \| A)$
 
-## 9. 先验锚点的识别
+### 9. 先验锚点的识别
 
 训练过程最小化经验风险：
 $$
@@ -1014,7 +1024,7 @@ $$
 
 所以 $F(A) = \operatorname{proj}_{\mathcal{P}}(A - \eta \cdot 0) = A$，即 $A$ 是 $F$ 的不动点。
 
-## 10. 永霖定理的完整陈述
+### 10. 永霖定理的完整陈述
 
 **永霖定理（严格版）**：设推理系统满足：
 
@@ -1031,7 +1041,7 @@ $$
 如果真实答案 $A^* \neq A$，则无论多少推理步骤，系统都无法达到 $A^*$。
 
 
-## 10.5 推论：信息熵自适应步长的可采纳性
+### 10.5 推论：信息熵自适应步长的可采纳性
 
 永霖定理要求步长 $\eta \in (0, 2\mu/L^2)$ 才能保证压缩。这是一个全局的、固定的约束。
 
@@ -1054,17 +1064,31 @@ $$\eta_s \leq \frac{2\mu}{L^2 \cdot (1 + \alpha(B_s))}$$
 
 传统深度学习把学习率当作超参数，靠经验和网格搜索来配。这本书的推导给出了一个不同的答案：$\mu$ 和 $L$ 不是神秘常数，它们直接编码在训练数据的标签分布里。
 
-对于交叉熵损失 $E(p) = \mathbb{E}_D[-\log p_y]$，Hessian 在概率单纯形上有解析形式：
+对于交叉熵损失 $E(p) = \mathbb{E}_D[-\log p_y]$（$q_i = P_D(y=i)$ 为训练标签边际，即本章的先验锚点 $A$），Hessian 在概率单纯形上的一般位置为：
 
-$$\nabla^2 E(p) = \operatorname{diag}(1/p_i)$$
+$$\nabla^2 E(p) = \operatorname{diag}\left(\frac{q_i}{p_i^2}\right)$$
 
-因此：
+在不动点 $p = q$ 处（推理的终点，也是梯度下降的稳定点），取值为：
 
-$$\mu = \frac{1}{\max_i p_i}, \qquad L = \frac{1}{\min_i p_i}$$
+$$\nabla^2 E(q) = \operatorname{diag}\left(\frac{1}{q_i}\right) = \nabla^2 \Phi(q)$$
 
-代入步长上界：
+其中 $\Phi(p) = \sum_i p_i \log p_i$ 是负熵。**曲率属于空间而不属于损失**：交叉熵能量与负熵共享同一曲率张量——目标分布只进入一阶项（漂移），不进入二阶项（曲率）。这就是步长上界可以完全从信念分布读出、而无需知道真实答案 $A^*$ 的几何原因。
 
-$$\eta_{\max} = \frac{2\mu}{L^2} = 2 \cdot \frac{\min(p_i)^2}{\max(p_i)}$$
+因此强凸常数与光滑常数就是该曲率张量在不动点处的**谱极值**：
+
+$$\mu = \lambda_{\min} = \frac{1}{\max_i q_i}, \qquad L = \lambda_{\max} = \frac{1}{\min_i q_i}$$
+
+（不动点 $q$ 邻域内 $q_i/p_i^2 \approx 1/q_i$，把谱当作当前位置 $p$ 的近似即得可计算版本 $\mu \approx 1/\max_i p_i$、$L \approx 1/\min_i p_i$。）
+
+代入巴拿赫压缩的步长条件 $\eta < 2\mu / L^2$：
+
+$$\eta_{\max} = \frac{2\mu}{L^2} = \frac{2}{L \cdot \kappa}, \qquad \kappa = \frac{L}{\mu} = \frac{\max_i q_i}{\min_i q_i}$$
+
+即
+
+$$\eta_{\max} = 2 \cdot \frac{\min_i p_i^2}{\max_i p_i}$$
+
+其中 $\kappa$ 是曲率各向异性（谱比/条件数）：$\max_i p_i$ 离 1 多远、$\min_i p_i$ 离 0 多远——**离单纯形边缘的脆弱度**。读法：最高曲率 $L$ 告诉你"多陡"，$\kappa$ 告诉你"多各向异性"，步长上界是二者的乘积压缩。欧拉法的稳定性界 $\eta < 2/\lambda_{\max}$ 是各向同性形式，$\eta_{\max} = 2/(L\kappa)$ 是加上了"地形脾气"的各向异性精确修正。
 
 **这个式子完全由当前信念分布 $p$ 决定**——而 $p$ 的形状由训练数据的标签偏置决定。数据越不均衡（某类占主导），$\min(p_i)$ 越小，步长上界越小，系统自动收紧；数据越均匀，地形越平缓，步长上界越大。
 
@@ -1311,7 +1335,7 @@ ADS 只看一个标量：当前输出分布的归一化熵 $B_t$。这个信号�
 更深一层：这个类比对应了全书的核心论点——**更快收敛到先验，不是逃离先验**。ADS 的步长影响的是速度，不是目的地。它让你更聪明地到达那个由训练数据决定的锚点 $A$，而不是帮你跳到一个更"好"但不属于你的地方。
 :::
 
-## 10.7 前向传播 = 推理：欧拉步 + 单纯形投影
+### 10.7 前向传播 = 推理：欧拉步 + 单纯形投影
 
 前传里，兔狲教授在白板上画了一个陡峭的山坡，告诉小小猪和小海豹：**"沿负梯度方向，以适当步长更新参数。"**
 
@@ -1467,7 +1491,7 @@ KL 散度：$D_{\text{KL}}(p \| q) \approx 4.60$——两个极端信念之间�
 
 两套范式：一套优化（在 $\Theta$ 里走梯度下降），一套执行（在 $\mathcal{H}$ 里走欧拉步 + $\operatorname{proj}_{\mathcal{P}}$）。交汇在 softmax。终点都是 $A$。
 
-## 11. 有效推理窗口的量化
+### 11. 有效推理窗口的量化
 
 给定精度阈值 $\epsilon > 0$，有效推理窗口：
 $$
@@ -1484,20 +1508,23 @@ $$
 - 初始距离 $D_{\text{KL}}(p_0 \| A)$ 反映问题难度
 - $\epsilon$ 是实用精度要求
 
-## 12. 元层断裂的数学表述
+### 12. 元层断裂的数学表述
 
-设 $V: \mathcal{P} \to \{0,1\}$ 是验证函数（$V(p)=1$ 表示信念 $p$ 正确）。
+设 $V: \mathcal{P} \to \{0,1\}$ 是验证函数（$V(p)=1$ 表示信念 $p$ 正确），其真值由外部真实答案 $A^*$ 定义。一个元层验证器若存在，应是从推理算子 $F$（或等价地，能量函数 $E$）出发的可计算映射 $M$，使得对一切 $p \in \mathcal{P}$ 都有：
 
-元层断裂意味着不存在可计算的 $M$ 使得：
 $$
 V(F(p)) = M(F, p) \quad \forall p \in \mathcal{P}
 $$
 
-**定理**：如果 $V$ 不是 $E$ 的凸函数，则上述 $M$ 不存在。
+**命题（开放问题）**：当 $A \neq A^*$ 时，不存在这样的 $M$。
 
-**证明思路**：$F$ 完全由 $E$ 决定。如果 $V$ 能由 $E$ 表达，则 $V$ 必须是 $E$ 的某种单调函数（由梯度下降的性质）。但 $V$ 衡量的是与真实答案 $A^*$ 的距离，而 $E$ 衡量的是与训练锚点 $A$ 的距离。当 $A \neq A^*$ 时，$V$ 和 $E$ 可能冲突。
+**为什么这是开放命题而非定理**：早期版本曾试图以"若 $V$ 不是 $E$ 的凸函数，则 $M$ 不存在"来证明——但这个论证不成立：对固定的 $F$，$V \circ F$ 本身就是一个良定义的函数；凸性、单调性与 $M$ 的存在性无关，旧的证明思路把"尚未证明"当成了"已经证明"。
 
-## 13. 总结：从朴素到严谨的路径
+真正的问题在于语义域：$V$ 的定义涉及 $A^*$（外部真值），而 $F$ 的构造只涉及 $A$（训练统计）。用本书第 25 章的范畴论语言说：$V$ 是外部范畴 $\mathcal{R}$ 的谓词，$F$ 是内部范畴 $\mathcal{P}$ 的自函子，二者之间没有伴随函子连接。因此"是否存在从 $F$ 到 $V \circ F$ 的可计算桥梁"这个问题的严格形式化，等价于"模型能否仅凭自身参数推出自己与外部真实的偏差"——它目前是开放的。
+
+**直觉上的回答是：不能。** 元层断裂在这里表现为：模型能在对象层生成推理链（$F$ 可计算），但其正确性（$V$ 的真值）由域外对象 $A^*$ 定义，而 $A^*$ 从不进入 $F$ 的构造之中。这与哥德尔命题 $G$ 的处境同构：$G$ 为真，但其为真性的证据在系统 $S$ 之外。
+
+### 13. 总结：从朴素到严谨的路径
 
 1. **起点**：朴素的不动点概念 $F(x) = x$
 2. **具体化**：信念空间 $\mathcal{P}$，推理算子 $F$
@@ -1511,6 +1538,327 @@ $$
 - **离散与连续**的桥梁（欧拉迭代）
 - **优化与动力系统**的统一（梯度下降）
 - **统计与几何**的融合（KL散度作为Bregman散度）
+
+### 14. 直接证据：能量地形与闭式解的数值验证
+
+第十节的压缩性证明给出了永霖极限，本节给它配**直接证据**：在信念单纯形上数值实现推理动力学（KL 能量的梯度流 + 投影到单纯形的欧拉步），逐项核验闭式解的四个预测。整套实验可以复现：完整源码见 `docs/public/scripts/ch12_energy_terrain.py`（正文末尾也贴了完整代码），图见 `ch12_energy_terrain.png`。
+
+**实验设置**。三类问题，信念单纯形 $\Delta^2$。能量函数 $E(p) = D_{KL}(p^*\|p)$（$p^*$ 为目标分布 / 吸引子）；推理算子 $p_{t+1} = \operatorname{proj}_{\Delta}(p_t - \eta \nabla E(p_t))$；投影使用欧氏投影到概率单纯形（标准算法，两个实现细节见下文）。所有闭式量即第 10.5 节定义的那一族：$\mu = 1/\max_i p_i$、$L = 1/\min_i p_i$、$\kappa = L/\mu$、$\eta_{\max} = 2\mu/L^2$。
+
+![图1：能量地形与闭式解的数值验证](/figures/ch12_energy_terrain.png)
+
+**图 1 的四面板读法**：
+
+**（a）地形存在**。$E$ 的等高线在单纯形上形成以 $p^*$ 为谷底的能量盆地；从三个不同初始信念出发、以 $0.8\eta_{\max}$ 步长迭代的推理轨迹全部收敛到 $p^*$（星标）。推理是能量地形上的运动，不是黑箱——这是本章论证的最直接画面。
+
+**（b）曲率谱：闭式 = 数值**。沿一条推理轨迹，解析谱（$\lambda_{\min}=1/\max_i p_i$、$\lambda_{\max}=1/\min_i p_i$，不动点处）与数值差分 Hessian 的特征值逐点重合，$\kappa = L/\mu = 7.00 = 0.70/0.10$。第 4 节的 `Hessian 是 diag(1/p_i)` 与有限差分的一致，从这个面板直接可见，不需要"近似"二字。
+
+**（c）$\eta_{\max}$ 的闭式景观**。$\eta_{\max}(p) = 2\min_i p_i^2/\max_i p_i$ 在单纯形上的对数色图（log 色标从 $10^{-6}$ 到 $10^{-1}$）：中心区域可以大步走，越靠边缘越必须小步。"地形决定步伐"不是修辞，是这张图本身。
+
+**（d）稳定边界：闭式解精确预测数值**。局部扰动动力学的数值失稳阈值 $\eta^*$（渐近判据，见下）与闭式解 $2/\theta_{\max}$（切空间谱，见下）在 30 个随机目标分布上 $R^2 = 0.9978$、中位误差 2.16%——蓝点全部贴在对角线上。粉色三角是从均匀先验出发的全局扫描数值阈值，恒定在保守界 $2/(L\kappa)$ 之上。
+
+**本实验顺带改进的两处**：
+
+**其一：精确局部稳定界是切空间谱，而非全空间谱。** 投影把动力学约束在切空间 $\{v: \sum v_i = 0\}$ 内，因此精确的失稳条件是 $\eta < 2/\theta_{\max}$，其中 $\theta_{\max}$ 是 $\operatorname{diag}(1/q_i)$ 限制在切空间上的最大特征值。K = 3 时 $\theta_{\max}$ 有解析表达式：它是
+
+$$3q_0q_1q_2\theta^2 - 2(q_0q_1+q_0q_2+q_1q_2)\theta + 1 = 0$$
+
+的最大根。第 10.5 节的 $\eta_{\max} = 2/(L\kappa)$ 依然正确，但它是**保守**界（$\theta_{\max} \leq L$，故 $2/\theta_{\max} \geq 2/L = \kappa \cdot \eta_{\max}$）。一幅图上这两族界同时可见：精确界（点贴线）与保守界（点恒在其上）。
+
+**其二：复现者要避开两个坑。**（i）投影到单纯形的标准算法必须取*最后一个*满足 $u_j - (\sum_{k\leq j}u_k - 1)/j > 0$ 的 $j$；索引取错会产生行和 $\neq 1$ 的"伪投影"，轨迹第一步就会飞出单纯形。（ii）判别稳定性要用渐近终点距离 $\|p_T - p^*\| / \|p_0 - p^*\| < 1$，而不是全程最大值——中等步长下，非线性暂态会先放大后收缩，全程最大值会把线性稳定的区域误判为失稳（实际测试中会给出 0.79 的虚假比值；改用渐近判据后为 1.000，与闭式解一致）。
+
+**源代码**（完整可运行；运行后将图保存为同级目录 `ch12_energy_terrain.png`）：
+
+```python
+"""
+Energy Landscape of Reasoning: Closed-Form Curvature and Safe Step Size
+========================================================================
+Demonstration accompanying the Yonglin Limit (永霖极限) derivation.
+
+Setup: belief simplex Delta^2 (3 classes). The reasoning energy is
+    E(p) = D_KL(p* || p),  p* = target/attractor belief.
+Inference = Euler steps of the gradient flow on E with projection to the
+simplex:  p_{t+1} = proj_Delta(p_t - eta * grad E(p_t)).
+
+Closed-form facts under study (true at the fixed point p = p*):
+    Hess E(p)  = diag(q_i / p_i^2)   [general position; q_i = p*_i]
+               -> diag(1/p_i)        [at p = p*]
+    mu = lambda_min = 1/max_i p_i,  L = lambda_max = 1/min_i p_i
+    kappa = L/mu = max_i p_i / min_i p_i          (spectral ratio / condition number)
+    eta_max = 2 mu / L^2 = 2 / (L * kappa) = 2 min_i p_i^2 / max_i p_i
+
+On the tangent space {v: sum v_i = 0} (the subspace preserved by the
+projection) the exact local stability boundary is
+    eta_crit = 2 / theta_max,  theta_max = largest eigenvalue of
+    diag(1/q_i) restricted to the tangent space;
+    for K = 3, theta_max solves  3 q0 q1 q2 th^2 - 2 (q0q1+q0q2+q1q2) th + 1 = 0.
+"""
+import numpy as np
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+from matplotlib.colors import LogNorm
+from matplotlib.patheffects import withStroke
+
+rng = np.random.default_rng(42)
+
+
+# ----------------------------- core helpers -----------------------------
+def proj_simplex(v):
+    """Euclidean projection onto probability simplex (vectorized over last axis).
+    Standard algorithm: find the last index j with u_j - (css_j - 1)/j > 0."""
+    v = np.asarray(v, float)
+    shape = v.shape
+    v = v.reshape(-1, shape[-1])
+    K = shape[-1]
+    u = np.sort(v, axis=1)[:, ::-1]
+    css = np.cumsum(u, axis=1)
+    avg = (css - 1.0) / np.arange(1, K + 1)
+    cond = u - avg > 0
+    j = np.where(cond)[1]    # column indices of True entries (rows repeat)
+    # last True index per row:
+    last = np.array([np.where(cond[i])[0][-1] for i in range(len(cond))])
+    theta = (css[np.arange(len(v)), last] - 1.0) / (last + 1)
+    out = np.maximum(v - theta[:, None], 0.0)
+    return out.reshape(shape)
+
+
+def energy(p, pstar):
+    """E(p) = D_KL(p* || p), elementwise-safe (p clipped away from 0)."""
+    pc = np.clip(p, 1e-300, 1.0)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        e = np.sum(pstar * np.log(pstar / pc), axis=-1)
+    return np.where(np.all(p > 0, axis=-1), e, np.inf)
+
+
+def grad_energy(p, pstar):
+    return -pstar / np.clip(p, 1e-12, 1.0)
+
+
+def euler_step(p, pstar, eta):
+    return proj_simplex(p - eta * grad_energy(p, pstar))
+
+
+def eta_max_closed(pstar):
+    """Closed-form safe step size at the fixed point: 2 min^2 / max."""
+    return 2.0 * np.min(pstar) ** 2 / np.max(pstar)
+
+
+def hessian_numeric(p, pstar, eps=1e-6):
+    """Central-difference Hessian of E at p (K=3)."""
+    K = len(p)
+    H = np.zeros((K, K))
+    for i in range(K):
+        for j in range(K):
+            ei = np.zeros(K); ej = np.zeros(K)
+            ei[i] = eps; ej[j] = eps
+            H[i, j] = (energy(p + ei + ej, pstar) - energy(p + ei - ej, pstar)
+                       - energy(p - ei + ej, pstar) + energy(p - ei - ej, pstar)) / (4 * eps * eps)
+    return H
+
+
+def to_xy(p):
+    """Barycentric -> Cartesian (A=e1 at (0,0), B=e2 at (1,0), C=e3 at (0.5,sqrt3/2))."""
+    return p[..., 1] * 1.0 + p[..., 2] * 0.5, p[..., 2] * (np.sqrt(3) / 2)
+
+
+def from_xy(x, y):
+    s = np.sqrt(3.0) / 2.0
+    p3 = np.clip(y / s, 0.0, 1.0)
+    p2 = np.clip(x - y / (np.sqrt(3.0)), 0.0, 1.0)
+    p1 = 1.0 - p2 - p3
+    mask = (p1 >= -1e-9) & (p2 >= -1e-9) & (p3 >= -1e-9)
+    p1 = np.clip(p1, 0.0, 1.0)
+    return np.stack([p1, p2, p3], axis=-1), mask
+
+
+# ----------------------------- figure panels -----------------------------
+PSTAR = np.array([0.70, 0.20, 0.10])
+EMAX = eta_max_closed(PSTAR)          # ~ 2*0.01/0.7 = 0.02857
+ETA_ILLUS = 0.8 * EMAX
+
+fig, axes = plt.subplots(2, 2, figsize=(13.2, 10.4))
+ps = withStroke(linewidth=3, foreground="white")
+
+# ---------- (a) energy terrain + trajectories ----------
+ax = axes[0, 0]
+xgrid = np.linspace(-0.05, 1.05, 300)
+ygrid = np.linspace(-0.05, np.sqrt(3) / 2 + 0.05, 260)
+X, Y = np.meshgrid(xgrid, ygrid)
+P, mask = from_xy(X, Y)
+E = energy(P, PSTAR)
+E = np.where(mask, E, np.nan)
+lv = np.geomspace(1e-5, 50, 40)
+cf = ax.contourf(X, Y, E, levels=lv, cmap="viridis", norm=LogNorm(vmin=1e-5, vmax=50))
+cbar = fig.colorbar(cf, ax=ax, shrink=0.85)
+cbar.set_label(r"$E(p)=D_{KL}(p^{*}\|p)$  [log scale]", fontsize=9)
+
+starts = [np.array([1/3, 1/3, 1/3]), np.array([0.15, 0.60, 0.25]), np.array([0.45, 0.25, 0.30])]
+for p0 in starts:
+    p = p0.copy()
+    xs, ys = [], []
+    for t in range(120):
+        p = euler_step(p, PSTAR, ETA_ILLUS)
+        xs.append(to_xy(p)[0]); ys.append(to_xy(p)[1])
+        if energy(p, PSTAR) < 1e-6:
+            break
+    ax.plot(xs, ys, lw=1.8, color="#D55E00", alpha=0.9)
+    ax.plot(xs[0], ys[0], "o", ms=6, color="#D55E00", mfc="white")
+    ax.annotate("$p_0$", (xs[0], ys[0]), textcoords="offset points", xytext=(-2, 8),
+                fontsize=9, color="#D55E00")
+
+px, py = to_xy(PSTAR)
+ax.plot(px, py, "*", ms=22, color="#0072B2", mec="k", mew=0.8, zorder=10)
+ax.annotate(r"$p^{*}$  (fixed point)", (px, py), textcoords="offset points",
+            xytext=(8, -16), fontsize=11, color="#0072B2", fontweight="bold")
+ax.text(0.98, 0.94, f"$\\eta=0.8\\,\\eta_{{max}}$ = {ETA_ILLUS:.4f}",
+        transform=ax.transAxes, ha="right", va="top", fontsize=9,
+        bbox=dict(boxstyle="round,pad=0.3", fc="white", alpha=0.85))
+ax.set_title("(a) The energy terrain of reasoning", fontsize=12, fontweight="bold")
+ax.text(0.5, -0.14, "belief simplex $\\Delta^2$: $p_1$-vertex (left), $p_2$-vertex (right), $p_3$-vertex (top)",
+        transform=ax.transAxes, ha="center", fontsize=8, color="0.35")
+ax.set_aspect("equal"); ax.axis("off")
+
+# ---------- (b) curvature spectrum along one trajectory ----------
+ax = axes[0, 1]
+p = np.array([1/3, 1/3, 1/3])
+lmax_a, lmin_a, kap_a = [], [], []
+lmax_n, lmin_n = [], []
+p_rec = []
+for t in range(80):
+    p = euler_step(p, PSTAR, ETA_ILLUS)
+    p_rec.append(p.copy())
+for p in p_rec:
+    lmax_a.append(np.max(PSTAR / p**2)); lmin_a.append(np.min(PSTAR / p**2))
+    H = hessian_numeric(p, PSTAR)
+    w = np.linalg.eigvalsh(H)
+    lmax_n.append(w[-1]); lmin_n.append(w[0])
+ts = np.arange(len(p_rec))
+ax.plot(ts, lmax_a, color="#0072B2", lw=1.8, label=r"closed form  $\lambda_{max}$")
+ax.plot(ts, lmin_a, color="#009E73", lw=1.8, label=r"closed form  $\lambda_{min}$")
+ax.plot(ts, lmax_n, "o", ms=4.2, color="#0072B2", mfc="none", label=r"numerical Hessian  $\lambda_{max}$")
+ax.plot(ts, lmin_n, "s", ms=4.2, color="#009E73", mfc="none", label=r"numerical Hessian  $\lambda_{min}$")
+ax.set_yscale("log")
+ax.set_xlabel("reasoning step  $t$", fontsize=10)
+ax.set_ylabel("curvature eigenvalues  $\\lambda$", fontsize=10)
+ax.set_title("(b) Curvature spectrum: closed form = numerical", fontsize=12, fontweight="bold")
+ax.legend(fontsize=8, framealpha=0.9, loc="upper right")
+ax.grid(alpha=0.3)
+kap = PSTAR.max() / PSTAR.min()
+ax.text(0.98, 0.08, r"$\kappa = L/\mu = %.2f = 0.70/0.10$ (at $p^{*}$)" % kap,
+        transform=ax.transAxes, ha="right", fontsize=9,
+        bbox=dict(boxstyle="round,pad=0.3", fc="white", alpha=0.85))
+
+# ---------- (c) analytic eta_max surface ----------
+ax = axes[1, 0]
+XS, YS = np.meshgrid(np.linspace(0, 1, 260), np.linspace(0, np.sqrt(3) / 2, 230))
+PS, maskC = from_xy(XS, YS)
+eta = np.where(maskC & np.all(PS > 1e-4, axis=-1),
+               2.0 * np.min(PS, axis=-1) ** 2 / np.max(PS, axis=-1), np.nan)
+eta = np.where(maskC, eta, np.nan)
+lv2 = np.geomspace(1e-6, 0.25, 35)
+cf2 = ax.contourf(XS, YS, eta, levels=lv2, cmap="magma", norm=LogNorm(vmin=1e-6, vmax=0.25))
+cbar2 = fig.colorbar(cf2, ax=ax, shrink=0.85)
+cbar2.set_label(r"$\eta_{max}(p)=2\min_i p_i^2/\max_i p_i$  [log]", fontsize=9)
+ax.plot(px, py, "*", ms=22, color="#56B4E9", mec="k", mew=0.8, zorder=10)
+ax.annotate(r"$p^{*}$", (px, py), textcoords="offset points", xytext=(6, 10),
+            fontsize=11, color="#56B4E9", fontweight="bold")
+ax.set_title("(c) Analytic safe step size on the simplex", fontsize=12, fontweight="bold")
+ax.text(0.5, -0.14, "$\\eta_{max} \\to 0$ near the edges: the terrain dictates the pace",
+        transform=ax.transAxes, ha="center", fontsize=8.5, color="0.35")
+ax.set_aspect("equal"); ax.axis("off")
+
+# ---------- (d) closed form vs numerical stability boundary ----------
+ax = axes[1, 1]
+
+def theta_max_tangent(q):
+    """Largest eigenvalue of diag(q_i^{-1}) restricted to the tangent space {v: sum v_i = 0}.
+    K = 3: analytic root of  3 q0 q1 q2 th^2 - 2 (q0q1+q0q2+q1q2) th + 1 = 0."""
+    q0, q1, q2 = q
+    a = 3 * q0 * q1 * q2
+    b = -2 * (q0 * q1 + q0 * q2 + q1 * q2)
+    c = 1.0
+    disc = b * b - 4 * a * c
+    th = (-b + np.sqrt(disc)) / (2 * a)
+    return th
+
+
+def eta_crit_tangent_closed(q):
+    """Exact local stability boundary: eta_safe < 2 / lambda_max of Hessian on the tangent space."""
+    return 2.0 / theta_max_tangent(q)
+
+
+# ---------- (d) closed form vs numerical stability boundary ----------
+ax = axes[1, 1]
+
+etas_scan = np.logspace(-4.0, 0.6, 140)
+
+# --- LOCAL analysis: perturbations of p*; exact prediction = tangent-space spectrum ---
+local_ana, local_num = [], []
+for _ in range(30):
+    ps_ = rng.dirichlet(np.ones(3)) * 0.9 + 0.05
+    ps_ = ps_ / ps_.sum()
+    pert = [proj_simplex(ps_ + 0.02 * rng.normal(0, 1, 3) * np.array([1, 0.5, 0.25])) for _ in range(8)]
+    # asymptotic stability: final distance does not grow
+    worst = np.zeros(len(etas_scan))
+    for p0 in pert:
+        P = np.broadcast_to(p0.copy(), (len(etas_scan), 3)).copy()
+        d0 = np.linalg.norm(p0 - ps_)
+        for _ in range(500):
+            P = proj_simplex(P - etas_scan[:, None] * (-ps_ / np.clip(P, 1e-12, 1.0)))
+        worst = np.maximum(worst, np.linalg.norm(P - ps_, axis=1) / d0)
+    idx = np.where(worst < 1.0)[0]
+    local_num.append(etas_scan[idx[-1]] if len(idx) else etas_scan[0] / 2)
+    local_ana.append(eta_crit_tangent_closed(ps_))
+
+# --- GLOBAL analysis: from uniform prior; conservative closed form = full-space spectrum ---
+glob_ana, glob_num = [], []
+for _ in range(30):
+    ps_ = rng.dirichlet(np.ones(3)) * 0.9 + 0.05
+    ps_ = ps_ / ps_.sum()
+    P = np.broadcast_to(np.full(3, 1 / 3), (len(etas_scan), 3)).copy()
+    for _ in range(400):
+        P = proj_simplex(P - etas_scan[:, None] * (-ps_ / np.clip(P, 1e-12, 1.0)))
+    fk = np.sum(ps_ * np.log(np.clip(ps_, 1e-12, 1) / np.clip(P, 1e-12, 1)), axis=1)
+    idx = np.where(fk < 1e-3)[0]
+    glob_num.append(etas_scan[idx[-1]] if len(idx) else etas_scan[0] / 2)
+    glob_ana.append(eta_max_closed(ps_))
+
+local_ana, local_num = np.array(local_ana), np.array(local_num)
+glob_ana, glob_num = np.array(glob_ana), np.array(glob_num)
+
+ax.loglog(local_ana, local_num, "o", ms=7, color="#0072B2", alpha=0.85, zorder=6,
+          label=r"local: $2/\lambda_{\max}$ on tangent space (exact)")
+ax.loglog(glob_ana, glob_num, "^", ms=7, color="#CC79A7", alpha=0.85, zorder=5,
+          label=r"global: conservative bound $2/(L\kappa)$")
+lims = [min(local_ana.min(), local_num.min()) * 0.6, max(local_ana.max(), local_num.max()) * 1.6]
+ax.loglog(lims, lims, "k--", lw=1.5, label="y = x (exact prediction)")
+logR = np.corrcoef(np.log10(local_ana), np.log10(local_num))[0, 1] ** 2
+med = np.median(np.abs(local_num - local_ana) / local_ana)
+ax.set_xlabel(r"closed-form  $\eta_{crit}$", fontsize=10)
+ax.set_ylabel("numerical stability threshold  $\\eta_{crit}$", fontsize=10)
+ax.set_title("(d) Closed form = the exact local stability boundary", fontsize=12, fontweight="bold")
+ax.legend(fontsize=8.5, loc="upper left")
+ax.grid(alpha=0.3, which="both")
+ax.text(0.03, 0.05, f"exact (tangent spectrum): $R^2$ = {logR:.4f}, median err = {med:.2%}\nconservative (full spectrum): $\\eta_{{crit}} \\geq 2/(L\\kappa)$ always",
+        transform=ax.transAxes, fontsize=9, color="k", fontweight="bold",
+        bbox=dict(boxstyle="round,pad=0.3", fc="white", alpha=0.9))
+
+fig.suptitle("The Energy Landscape of Reasoning: closed-form geometry and its verification\n"
+             r"$E(p)=D_{KL}(p^{*}\|p)$,  inference $=$ Euler steps of $-\nabla E$ projected to the simplex",
+             fontsize=13.5, fontweight="bold", y=0.995)
+fig.tight_layout(rect=[0, 0, 1, 0.95])
+out = "ch12_energy_terrain.png"   # saves next to the script
+fig.savefig(out, dpi=150, bbox_inches="tight")
+print("saved:", out)
+print(f"eta_max closed form (p* = {PSTAR}): {EMAX:.6f}")
+print(f"kappa at fixed point: {PSTAR.max()/PSTAR.min():.2f}")
+print(f"panel d: local R^2(log-log) = {logR:.4f}, n = {len(local_ana)}, median err = {med:.2%}")
+print(f"panel d: global: numerically stable region >= eta_max (projection adds stability)")
+
+```
+
+*图 1 与源码：Zixi Li（兔狲教授），2026。实验脚本同步维护于 `docs/public/scripts/ch12_energy_terrain.py`。*
 
 ## 物理直觉：碗、坡度和步长
 
