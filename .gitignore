@@ -7,6 +7,8 @@ docs_en/.vitepress/cache
 docs_en/.vitepress/.temp/
 **/.DS_Store
 scripts/
+!docs/public/scripts/
+!docs/public/scripts/*
 .claude/
 package-lock.json
 backup/
