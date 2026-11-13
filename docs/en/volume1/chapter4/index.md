@@ -1,6 +1,6 @@
 # Chapter 4: The Manifold Hypothesis — The Hidden Order of High-Dimensional Data
 
-> You think data is randomly scattered in high-dimensional space. It isn't. It's squeezed onto a thin, curved surface.
+> You think data is scattered at random through high-dimensional space. It isn't. It's squeezed onto a thin, curved surface.
 
 <div class="center">
 
@@ -8,70 +8,70 @@
 
 </div>
 
-## I. The Absurdity of Dimensionality
+## 1. The Absurdity of Dimension
 
 First, a thought experiment.
 
-On a line segment, randomly scatter 100 points. On average, the distance between adjacent points is about 1/100 of the segment's length — the density is high, the sampling is sufficient.
+Drop 100 points at random on a line segment. On average, the distance between neighboring points is about 1/100 of the segment's length — dense, well sampled.
 
-Now put these 100 points into a square. To maintain the same sampling density, you need $100^2 = 10000$ points.
+Now put those 100 points into a square. To keep the same sampling density, you need $100^2 = 10000$ points.
 
-Put them into a cube? You need $100^3 = 1000000$ points.
+A cube? That needs $100^3 = 1000000$ points.
 
-This is the **Curse of Dimensionality** — when Bellman named this phenomenon in 1957, he probably never imagined it would become the ghost haunting the entire field of machine learning.
+This is the **Curse of Dimensionality** — when Bellman named the phenomenon in 1957, he probably didn't expect it to haunt the entire field of machine learning.
 
-:::details The Curse of Dimensionality: Why Is Everything Sparse in High-Dimensional Space?
-The **Curse of Dimensionality** says: as the dimensionality of data increases, covering space at the same density requires an exponentially growing number of samples.
+:::details The Curse of Dimensionality: Why Is Everything Sparse in High Dimensions?
+The **Curse of Dimensionality** says: as the dimension of data grows, covering the space at the same density requires an exponentially growing number of samples.
 
-Intuitive examples:
-- Scatter 100 points on a 1D line segment (0 to 1), average spacing = 0.01, reasonably dense
-- To maintain the same density in a 2D square, you need 100² = 10,000 points
-- In a 10D hypercube, you need 100¹⁰ = 10²⁰ points — more than the number of atoms in the observable universe
+An intuitive example:
+- 100 points on a 1D line (0 to 1): average spacing = 0.01 — still fairly dense
+- To keep the same density in a 2D square, you need 100² = 10,000 points
+- A 10D hypercube needs 100¹⁰ = 10²⁰ points — more than the number of atoms in the observable universe
 
-This isn't just "needing more data." More fundamentally: in high-dimensional space, **the concept of distance loses its meaning** — distances between all points tend toward equality, and "neighbors" become indistinguishable.
+It's not just "we need more data." The deeper issue: in high-dimensional space, **the very concept of distance breaks down** — the distances between all points converge to the same value, and "nearest neighbor" becomes indistinguishable.
 
-This is why many algorithms that work in low dimensions (k-NN, clustering) perform poorly in high dimensions. And the Manifold Hypothesis (see below) offers precisely an escape: real data is not uniformly scattered in high-dimensional space; it has low-dimensional structure.
+That's why many algorithms that work well in low dimensions (k-NN, clustering) perform badly in high dimensions. And the manifold hypothesis (below) offers exactly a way out: real data is not uniformly scattered through high-dimensional space — it has low-dimensional structure.
 :::
 
 
-As dimensionality grows, covering space at the same density requires sample sizes that inflate exponentially. But that's only the surface of the problem. The truly eerie thing happens in geometry.
+As dimension grows, the number of samples needed to cover space at equal density explodes exponentially. But that's only the surface of the problem. The truly strange things happen in geometry.
 
-In a $d$-dimensional unit hypersphere, randomly pick two points. Their distance satisfies:
+Take two random points inside a $d$-dimensional unit hypersphere. Their distance satisfies:
 
 $$
 \mathbb{E}[\|x - y\|] \to \sqrt{2}, \quad d \to \infty
 $$
 
-And the **variance** of the distance tends to zero.
+while the variance of the distance goes to zero.
 
-This means: in high-dimensional space, distances between all points tend toward equality. The nearest neighbor and the farthest neighbor become almost equally far. Distance-based similarity measures — cosine similarity, Euclidean distance, $k$-NN classification — all fail in high dimensions, because the concept of "near" loses its discriminative power.
+Which means: in high-dimensional space, all distances between points converge to the same value. The nearest neighbor and the farthest neighbor become almost equally far. Distance-based similarity measures — cosine similarity, Euclidean distance, $k$-NN classification — all fail in high dimensions, because "near" has lost its discriminating power.
 
-If you randomly initialize two 1000-dimensional vectors, their cosine similarity is almost certainly close to zero. Not because they are semantically opposite, but because in 1000 dimensions, random vectors are almost certainly orthogonal.
+If you randomly initialize two 1000-dimensional vectors, their cosine similarity is almost surely close to zero. Not because they are semantically opposite, but because in 1000 dimensions, random vectors are almost surely orthogonal.
 
-**What does orthogonality mean?** Two vectors being orthogonal, i.e., $\vec{u} \cdot \vec{v} = 0$, geometrically means they are perpendicular to each other, mutually uncorrelated — the projection of one vector onto the direction of the other is zero. In low dimensions, orthogonality is a special relationship that requires deliberate construction. In high dimensions, orthogonality is the default state, the inevitable consequence of randomness.
+**What does orthogonality mean?** Two vectors are orthogonal, i.e. $\vec{u} \cdot \vec{v} = 0$, which geometrically means they stand perpendicular to each other and are uncorrelated — the projection of one vector onto the other's direction is zero. In low dimensions, orthogonality is a special relationship that must be deliberately constructed. In high dimensions, orthogonality is the default state, the inevitable product of randomness.
 
-This fact echoes back at us in two places.
+This fact echoes back to us in two places.
 
-**Echo One: The concept space of expert systems.** In Chapter 2, expert systems represented knowledge with discrete symbols — `"is a mammal"`, `"has wings"`, `"can fly"`, each symbol is an atom, and relationships between concepts must be explicitly written into rules. Re-examining this from the perspective of high-dimensional geometry: each discrete symbol amounts to placing a dimension on some orthogonal basis. `"Cat"` and `"dog"` have no intrinsic relationship in a symbolic system; they are two independent tokens, just as two random unit vectors are almost certainly orthogonal. The fundamental dilemma of expert systems — their inability to automatically capture continuous similarities between concepts — is, from this angle, because they forcibly embed the world into an **artificial orthogonal basis**. The world is not orthogonal, but symbolic systems pretend it is.
+**Echo 1: The conceptual space of expert systems.** In Chapter 2, expert systems represented knowledge with discrete symbols — `"is a mammal"`, `"has wings"`, `"can fly"` — each symbol an atom, and the relationships between concepts had to be written explicitly into rules. Look at this again from the viewpoint of high-dimensional geometry: each discrete symbol amounts to a dimension placed on some orthogonal basis. `"Cat"` and `"dog"` have no intrinsic relation in a symbolic system; they are two independent tokens, just as two random unit vectors are almost surely orthogonal. The expert system's fundamental dilemma — its inability to automatically capture continuous similarity between concepts — from this angle, is because it forces the world into an **artificial orthogonal basis**. The world is not orthogonal, but the symbolic system pretends it is.
 
 ::: info Professor Pallas's Cat Commentary
-The orthogonality of high-dimensional space is not a bug, but a feature. In extremely high dimensions, random vectors are almost certainly orthogonal — this means they are naturally decoupled, mutually independent. This decoupling is precisely the prerequisite for the success of high-dimensional embedding representation learning: each dimension can independently characterize different semantic aspects without needing to be "glued together" as in low-dimensional space.
+The orthogonality of high-dimensional space is not a bug, but a feature. In extremely high dimensions, random vectors are almost surely orthogonal — which means they are naturally decoupled, independent of each other. This decoupling is exactly the precondition for high-dimensional embedding learning to succeed: each dimension can independently characterize a different semantic aspect, without having to "stick together" the way they must in low-dimensional space.
 
-The problem with expert systems is precisely that they **deliberately manufacture** this orthogonality, but in an extremely inefficient dimensionality. They hard-code each concept as an orthogonal basis vector, creating a finite-dimensional, artificial, discrete orthogonal representation. This representation is conceptually clean but representationally extremely inefficient — it cannot capture continuous similarities between concepts, nor can it exploit the "free lunch" provided by the natural orthogonality of high-dimensional space.
+The expert system's problem is precisely that it **deliberately manufactures** this orthogonality — but in an extremely inefficient number of dimensions. It hard-codes each concept as an orthogonal basis vector, creating a finite-dimensional, artificial, discrete orthogonal representation. This representation is conceptually clean, but extremely inefficient in representational power — it cannot capture continuous similarity between concepts, and it cannot exploit the "free lunch" that high-dimensional space's natural orthogonality provides.
 
-Truly high-dimensional embeddings (like word vectors) are powerful because they let the data itself decide how to maintain semantic continuity while leveraging the orthogonality of high-dimensional space. The training process does not forcibly orthogonalize; rather, statistical constraints push vectors onto a manifold — a manifold that is neither the orthogonal random desert of complete independence nor the low-dimensional quagmire of complete correlation, but a carefully folded, semantically rich curved surface.
+What makes real high-dimensional embeddings (such as word vectors) powerful is that they let the data decide how to exploit high-dimensional orthogonality while preserving semantic continuity. Training does not force orthogonality; it lets statistical constraints push the vectors onto a manifold — a surface that is neither a fully orthogonal random desert, nor a fully correlated low-dimensional swamp, but a carefully folded, semantically rich surface.
 :::
 
-**Echo Two: The analogical arithmetic of word vectors.** In Chapter 3, we saw the elegant equation $\vec{\text{King}} - \vec{\text{Man}} + \vec{\text{Woman}} \approx \vec{\text{Queen}}$ and asked: is this reasoning, or statistical coincidence? Now, with the background of high-dimensional orthogonality, we can state its limitations more precisely: word vectors can do this arithmetic precisely because the training data has pushed them away from their randomly initialized orthogonal state — the co-occurrence constraints in the corpus pulled random vectors into a low-dimensional semantic manifold. The effectiveness of analogical arithmetic is the credit of the manifold structure, not the wisdom of the algorithm. And when the analogy fails (`doctor - man + woman ≈ nurse`, rather than female doctor), the reason is that the biases of the training corpus have distorted the manifold — the curvature of the semantic space in that region is not the curvature of "objective concepts," but the curvature of "corpus statistical bias."
+**Echo 2: The analogy arithmetic of word vectors.** In Chapter 3, we saw the neat equation $\vec{\text{King}} - \vec{\text{Man}} + \vec{\text{Woman}} \approx \vec{\text{Queen}}$ and asked: is this reasoning, or statistical coincidence? Now, with high-dimensional orthogonality as background, we can state its limit more precisely: word vectors can do this arithmetic precisely because training data pushed them away from the orthogonal state of random initialization — the co-occurrence constraints in the corpus pull random vectors into a low-dimensional semantic manifold. The analogy arithmetic works: credit goes to manifold structure, not to the algorithm's wisdom. And when the analogy fails (`doctor - man + woman ≈ nurse`, rather than female doctor), the reason is that the training corpus's bias has warped the manifold — the curvature of the semantic space in that region is not the curvature of "objective concepts", but the curvature of "corpus statistical bias".
 
-These two echoes point to the same question: if random high-dimensional space is an orthogonal desert, then the reason "meaningful data" can be learned must be that the data is not random — it is compressed into a low-dimensional structure by some constraint. This is what the Manifold Hypothesis is about.
+These two echoes point to one question: if random high-dimensional space is an orthogonal desert, then "meaningful data" must be learnable precisely because the data is not random — something has compressed it into a low-dimensional structure. That is what the manifold hypothesis is about.
 
 <figure>
-<p><img src="/figures/ch04_fig1_curse_of_dimensionality.png" alt="Curse of Dimensionality: The collapse of random point-pair distance distributions as dimensionality increases" /></p>
-<figcaption>Curse of Dimensionality: The collapse of random point-pair distance distributions as dimensionality increases</figcaption>
+<p><img src="/figures/ch04_fig1_curse_of_dimensionality.png" alt="The Curse of Dimensionality: the collapse of the distance distribution of random point pairs as dimension grows" /></p>
+<figcaption>The Curse of Dimensionality: the collapse of the distance distribution of random point pairs as dimension grows</figcaption>
 </figure>
 
-*Figure 1: Left panel, distance distributions of random point pairs in 2, 10, 100, 1000 dimensions. The higher the dimension, the more concentrated the distribution, with variance tending to zero — "distance" loses its discriminative power. Right panel, histogram of pairwise cosine similarities of 1000-dimensional random vectors, almost entirely piled near zero.*
+*Figure 1: Left, the distance distribution of random point pairs in 2, 10, 100, and 1000 dimensions. The higher the dimension, the more concentrated the distribution, variance → 0 — "distance" loses its ability to discriminate. Right, a histogram of pairwise cosine similarities of 1000-dimensional random vectors, almost all piled up near zero.*
 
 <div class="center">
 
@@ -79,17 +79,17 @@ These two echoes point to the same question: if random high-dimensional space is
 
 </div>
 
-This poses a fundamental problem for machine learning: if data were truly high-dimensional and random, then any algorithm based on distance or similarity — neural networks included — should not work.
+This confronts machine learning with a fundamental problem: if data really were high-dimensional random, then any algorithm based on distance or similarity — including neural networks — should not work.
 
 But they do work.
 
-There are two possible explanations here:
+There are two possible explanations:
 
-First, these algorithms bypass the constraints of high-dimensional geometry in some way we don't fully understand.
+First, these algorithms get around the limits of high-dimensional geometry in some way we don't fully understand.
 
 Second, the data itself is not high-dimensional random.
 
-The second explanation is correct.
+The second explanation is right.
 
 <div class="center">
 
@@ -99,19 +99,19 @@ The second explanation is correct.
 
 ## A Pause
 
-Wait — don't rush to accept the conclusion that "the second explanation is correct."
+Wait — before accepting the conclusion that "the second explanation is right", let's slow down.
 
-Why would natural data cluster on a low-dimensional manifold? This is a fact that needs explanation, not an axiom.
+Why does natural data gather on a low-dimensional manifold? This is a fact that needs explaining, not an axiom.
 
-One answer is: physical laws constrain the space of possible states — variations of human faces are governed by bones, muscles, and the physics of lighting, so possible faces are far fewer than possible pixel combinations.
+One answer: the laws of physics constrain the space of possible states — face variation is governed by the physics of bones, muscles, and lighting, so the possible faces are vastly fewer than the possible pixel combinations.
 
-But this answer implicitly assumes: **the world has regularities, and these regularities are low-dimensional.**
+But this answer smuggles in an assumption: **the world is lawful, and those laws are low-dimensional.**
 
-What justifies this assumption? If the world's true regularities were high-dimensional and chaotic, the Manifold Hypothesis would collapse — and machine learning shouldn't work.
+Why should that assumption hold? If the world's real laws were high-dimensional and chaotic, the manifold hypothesis would collapse — and machine learning shouldn't work.
 
-Then why does it indeed work? Is it because physical laws truly are low-dimensional, or because we have only tested it on "those problems where the Manifold Hypothesis holds"?
+Then why does it in fact work? Is it because physical laws really are low-dimensional, or because we just happened to test it only on "the problems where the manifold hypothesis holds"?
 
-Set this question aside for now.
+Leave that question aside for now.
 
 <div class="center">
 
@@ -119,55 +119,55 @@ Set this question aside for now.
 
 </div>
 
-## II. The Manifold Hypothesis: Constraints Create Curved Surfaces
+## 2. The Manifold Hypothesis: Constraints Create Surfaces
 
-The core statement of the **Manifold Hypothesis** is:
+The core claim of the **Manifold Hypothesis** is:
 
-> Natural data (images, language, sound), though living in high-dimensional space, actually clusters near a smooth, curved surface (a manifold) whose intrinsic dimensionality is far lower than the ambient dimensionality.
+> Natural data (images, language, sound) lives in high-dimensional space, but it actually gathers near a smooth surface (a manifold) whose intrinsic dimension is far lower than the ambient dimension of the space it lives in.
 
-"Manifold" is a mathematical term meaning a topological structure that locally looks like Euclidean space. A two-dimensional surface embedded in three-dimensional space is a manifold — the Earth's surface is a manifold, the Möbius strip is a manifold, the surface of a bent pipe is a manifold.
+"A manifold" is a mathematical term, meaning a topological structure that looks like Euclidean space locally. A 2D surface embedded in 3D space is a manifold — the earth's surface is a manifold, a Möbius strip is a manifold, the surface of a bent pipe is a manifold.
 
-:::details Manifold: Understanding Through the Earth's Surface
-A **manifold** is a geometric object defined as: locally it looks "flat" (like ordinary Euclidean plane), but globally it can be curved.
+:::details Manifold: Understand It Through the Earth's Surface
+A **manifold** is a geometric object defined this way: it looks "flat" locally (like an ordinary Euclidean plane), but can be curved as a whole.
 
-The best example: **the Earth's surface**. If you stand at any point on Earth and look only at a very small patch under your feet, it looks no different from flat ground — this is "locally like Euclidean space." But globally, the Earth's surface is spherical, not flat. The Earth's surface is a 2-dimensional manifold embedded in 3-dimensional space.
+The best example: **the earth's surface**. Stand at any point on earth and look only at the tiny patch beneath your feet — it looks no different from flat ground. That is "locally like Euclidean space". But seen as a whole, the earth's surface is spherical, not planar. The earth's surface is a 2D manifold embedded in 3D space.
 
-In the machine learning context:
-- The 49,152-dimensional space of face images = the analog of 3D space
-- The few-dozen-dimensional curved surface where real face distributions live = the analog of the Earth's surface
+In machine-learning terms:
+- The 49,152-dimensional space of face images is the analogue of 3D space
+- The tens-of-dimensions surface where real faces actually live is the analogue of the earth's surface
 
-**Why is the Manifold Hypothesis important?** Because it explains why machine learning can work: data is not high-dimensional random, but clusters on low-dimensional curved surfaces, and algorithms are actually learning the structure of this low-dimensional surface.
+**Why does the manifold hypothesis matter?** Because it explains why machine learning works: the data is not high-dimensional random, but gathered on a low-dimensional surface, and algorithms are in fact learning the structure of this low-dimensional surface.
 :::
 
 
-Let's build intuition with a concrete example:
+Build intuition with a concrete example:
 
-A $128 \times 128$ color face image, as a vector, has dimensionality $128 \times 128 \times 3 = 49152$. In this space, the number of possible pixel combinations is $256^{49152}$ — countless orders of magnitude more than the number of atoms in the universe.
+A $128 \times 128$ color face image, as a vector, has dimension $128 \times 128 \times 3 = 49152$. In that space, the possible pixel combinations number $256^{49152}$ — more orders of magnitude than the atoms in the universe.
 
-But "real faces" occupy only an extremely tiny region of this space. What parameters determine a real face?
+But "real faces" occupy only an extremely small region of this space. What parameters determine a real face?
 
 - Identity (whose face)
 
-- Pose (how much the head is turned, at what elevation angle)
+- Pose (how many degrees the head is turned, the elevation angle)
 
-- Lighting (where does the light come from, what intensity)
+- Lighting (where the light comes from, how strong it is)
 
 - Expression (smiling? frowning?)
 
 - Age
 
-About a dozen to a few dozen parameters can describe the vast majority of facial variations. This means the intrinsic dimensionality of face images is about a few dozen dimensions, not 49,152 dimensions.
+Roughly a dozen to a few dozen parameters can describe most of the variation in a face. This means the intrinsic dimension of face images is on the order of tens — not 49,152.
 
-Image data is squeezed onto a manifold of approximately a few dozen dimensions, embedded in 49,152-dimensional space.
+Image data is squeezed onto a roughly tens-of-dimensions manifold embedded in 49,152-dimensional space.
 
-The same is true for language data. "Grammatical English sentences" occupy only an extremely small fraction of all possible word sequences. "Semantically reasonable sentences" occupy an even smaller fraction of all grammatical English sentences. Each layer of constraint is a fold and a compression of the manifold.
+Language data is the same. "Valid English sentences" are only a tiny fraction of all possible word sequences. "Sensible meanings" are an even smaller fraction of all valid English sentences. Every layer of constraint is one more fold and compression of the manifold.
 
 <figure>
-<p><img src="/figures/ch04_fig2_manifold_embedding.png" alt="Manifold embedding: The structure of a low-dimensional curved surface in high-dimensional space" /></p>
-<figcaption>Manifold embedding: The structure of a low-dimensional curved surface in high-dimensional space</figcaption>
+<p><img src="/figures/ch04_fig2_manifold_embedding.png" alt="Manifold embedding: the structure of a low-dimensional surface in high-dimensional space" /></p>
+<figcaption>Manifold embedding: the structure of a low-dimensional surface in high-dimensional space</figcaption>
 </figure>
 
-*Figure 2: Left panel, a 2-dimensional manifold (Swiss Roll dataset) embedded in 3-dimensional space — the 3D coordinates appear complex, but the data is smoothly distributed along two intrinsic dimensions (u, v coordinates after unrolling). Right panel, manifold learning (UMAP) applied to the same dataset, recovering the intrinsic 2D structure. Colors encode the continuity of intrinsic coordinates — points that are locally adjacent in high-dimensional space remain adjacent.*
+*Figure 2: Left, a 2D manifold (the Swiss Roll dataset) embedded in 3D space — the 3D coordinates look complicated, yet the data is distributed smoothly along two intrinsic dimensions (the unfolded u, v coordinates). Right, manifold learning (UMAP) on the same dataset recovers the intrinsic 2D structure. Color encodes the continuity of the intrinsic coordinates — local neighbors stay neighbors in high-dimensional space.*
 
 <div class="center">
 
@@ -175,13 +175,13 @@ The same is true for language data. "Grammatical English sentences" occupy only 
 
 </div>
 
-Why does natural data cluster on a manifold? This is not coincidence; it is an **inevitable consequence of the generative process**.
+Why does natural data gather on a manifold? Not by coincidence — it is the **inevitable result of the generation process**.
 
-All data is produced by some generative process. Face images are produced by biological processes — DNA, bone structure, skin texture — these parameters are finite and vary continuously. Language is produced by grammatical rules and semantic constraints. Music is produced by physics (sound waves) and cultural conventions.
+Any data is produced by some generation process. Face images are produced by biological processes — DNA, bone structure, skin texture; these parameters are finite and vary continuously. Language is produced by grammar rules and semantic constraints. Music is produced by physics (sound waves) and cultural conventions.
 
-The **constraints** of the generative process are the **curvature** of the manifold. The stronger the constraints, the lower-dimensional and more curved the manifold.
+The **constraints** of the generation process are the **curvature** of the manifold. The stronger the constraints, the lower-dimensional and more curved the manifold.
 
-This is a profound fact: the intrinsic dimensionality of data is not an inherent property of the data, but a projection of the **structure of the world that generates the data**.
+This is a profound fact: the intrinsic dimension of data is not a property inherent to the data, but a projection of the **structure of the world that generates it**.
 
 <div class="center">
 
@@ -189,44 +189,44 @@ This is a profound fact: the intrinsic dimensionality of data is not an inherent
 
 </div>
 
-## III. Training Is Folding
+## 3. Training Is Folding
 
-Now we arrive at the most important part of this chapter.
+Now we've reached the most important part of this chapter.
 
-We usually say that neural networks are "learning" — learning to recognize cats, learning to translate languages, learning to predict the next word. This phrasing is dangerous. "Learning" implies some kind of understanding, some process of internalizing knowledge.
+Usually we say neural networks "learn" — learn to recognize cats, learn to translate languages, learn to predict the next word. This phrasing is dangerous. "Learning" suggests some kind of understanding, some process of internalizing knowledge.
 
-A more accurate phrasing is: **neural networks are doing manifold transformations.**
+A more accurate statement: **neural networks perform manifold transformations.**
 
-Let's unfold the working principle of an autoencoder:
+Unfold how an autoencoder works:
 
 $$
 \text{Input } x \in \mathbb{R}^D \xrightarrow{\text{Encoder } f} \text{Latent code } z \in \mathbb{R}^d \xrightarrow{\text{Decoder } g} \text{Reconstruction } \hat{x} \in \mathbb{R}^D
 $$
 
-where $d \ll D$. The training objective is to minimize the reconstruction error $\|x - \hat{x}\|^2$.
+with $d \ll D$. The training goal is to minimize the reconstruction error $\|x - \hat{x}\|^2$.
 
-What is happening here? The encoder $f$ learns to map high-dimensional inputs to a low-dimensional latent space $z$, and this low-dimensional space happens to be precisely the coordinate system of the data manifold. The decoder $g$ learns to reconstruct high-dimensional inputs from manifold coordinates.
+What is happening here? The encoder $f$ learns to map high-dimensional inputs to the low-dimensional latent space $z$, and this low-dimensional space happens to be exactly the coordinate system of the data manifold. The decoder $g$ learns to reconstruct high-dimensional inputs from manifold coordinates.
 
-In other words, what the encoder learns is the **parameterization of the manifold** — it finds a set of coordinates that can be used to describe points on the manifold. What the decoder learns is the mapping between this set of coordinates and the original high-dimensional representation.
+In other words, what the encoder learns is a **parameterization of the manifold** — it finds a set of coordinates that can describe points on the manifold. What the decoder learns is the mapping between those coordinates and the original high-dimensional representation.
 
-It's not just autoencoders. Classification networks do the same thing. When you train a ResNet to recognize image categories, the feature vector before the last fully connected layer is the manifold coordinates learned by the network — it's just that this coordinate system is specifically designed to be "useful for classification."
+It's not just autoencoders. Classification networks do the same thing. When you train a ResNet to recognize image categories, the feature vector before the final fully-connected layer is exactly the manifold coordinates the network learned — only this coordinate system is deliberately designed to be "useful for classification".
 
 Backpropagation is the process of adjusting this coordinate system. Every gradient update changes the way the network maps high-dimensional inputs to the low-dimensional latent space — that is, it changes the parameterization of the manifold.
 
-**The essence of training is folding the manifold structure of past seen data into the curvature of the parameters.**
+**The essence of training is folding the manifold structure of the data seen in the past into the curvature of the parameters.**
 
-The word "folding" matters. Not "storing," not "memorizing" — folding. Training data is not stored item by item into the network — the network doesn't have enough parameters to store every sample of the training set. What happens is: the statistical structure of the data, the geometric features of the manifold the data lives on, are compressed into the configuration of network weights.
+The word "folding" matters. Not "storage", not "memory" — folding. Training data is not stored item by item in the network — the network doesn't have nearly enough parameters to store every sample of the training set. What happens is: the statistical structure of the data, the geometric features of the manifold the data lives on, are compressed into the configuration of network weights.
 
-$10^6$ face images, each 49,152 dimensions. ResNet-50 has roughly $2.5 \times 10^7$ parameters. With 25 million numbers, it remembers the manifold structure described by 49 billion pixel values. The compression ratio is about 200:1.
+$10^6$ face images, each 49,152-dimensional. ResNet-50 has about $2.5 \times 10^7$ parameters. With 25 million numbers, it remembers the manifold structure described by 49.2 billion pixel values. The compression ratio is about 200:1.
 
 This is not learning. This is topological compression.
 
 <figure>
-<p><img src="/figures/ch04_fig3_compression_bottleneck.png" alt="Training process: Mapping from high-dimensional data to compressed manifold parameters" /></p>
-<figcaption>Training process: Mapping from high-dimensional data to compressed manifold parameters</figcaption>
+<p><img src="/figures/ch04_fig3_compression_bottleneck.png" alt="Training: the mapping from high-dimensional data to compressed manifold parameters" /></p>
+<figcaption>Training: the mapping from high-dimensional data to compressed manifold parameters</figcaption>
 </figure>
 
-*Figure 3: Top, the encoder progressively maps high-dimensional data (a 3D point cloud scattered on a 2D manifold) to 1D latent codes. Bottom, the evolution of the latent space during training — as epochs increase, the latent representation moves from chaotic to structured. Colors represent continuous coordinates of the data on the original manifold; color continuity means local structure is preserved.*
+*Figure 3: Top, the encoder gradually maps high-dimensional data (a 3D point cloud scattered on a 2D manifold) into a 1D latent code. Bottom, the evolution of the latent space during training — as epochs increase, the latent representation goes from chaotic to structured. Color represents the continuous coordinate of the data on the original manifold; continuous color means local structure is preserved.*
 
 <div class="center">
 
@@ -234,17 +234,17 @@ This is not learning. This is topological compression.
 
 </div>
 
-Here is a deep question worth pausing to think about: What is stored in the parameters?
+There is a deep question here worth pausing on: what is stored in the parameters?
 
-One intuition is: parameters store "knowledge" — about what cats look like, about grammatical rules, about physical laws.
+An intuition is: the parameters store "knowledge" — what cats look like, the rules of grammar, the laws of physics.
 
-But a more accurate formulation is: parameters store a **compressed encoding of the manifold structure of the training data**.
+But the more accurate statement is: the parameters store a **compressed encoding of the training data's manifold structure**.
 
-Knowing this, you can understand why pretraining is effective — the same manifold (e.g., "natural images") can be shared across multiple tasks, and the manifold parameterization learned in pretraining can be transferred.
+Once you know this, you can understand why pretraining works — the same manifold (say, "natural images") can be shared by multiple tasks, and the manifold parameterization learned in pretraining can be transferred.
 
-You can also understand why fine-tuning sometimes changes model behavior and sometimes doesn't — it depends on whether the manifold on which your new task lives is a subset of the pretraining manifold.
+You can also understand why fine-tuning sometimes changes model behavior and sometimes doesn't — it depends on whether the manifold of your new task is a subset of the pretraining manifold.
 
-And, you start to understand why large models hallucinate — about this, Act IV will discuss.
+And you begin to understand why large models hallucinate — the fourth act will cover this.
 
 <div class="center">
 
@@ -252,71 +252,71 @@ And, you start to understand why large models hallucinate — about this, Act IV
 
 </div>
 
-## IV. The Bill for Compression
+## 4. The Bill for Compression
 
-Any compression has a cost. This is not an empirical observation; it's an information-theoretic theorem.
+Any compression has a cost. This is not an empirical observation; it is an information-theoretic theorem.
 
-Shannon's source coding theorem tells us: the limit of what you can losslessly compress is the entropy of the source. Beyond this limit, you must lose information. Neural network compression far exceeds this limit, so it must be losing information.
+Shannon's source coding theorem tells us: the limit of lossless compression is the entropy of the source. Beyond that limit, you must lose information. Neural network compression goes far beyond that limit, so it must be losing information.
 
-What is being lost?
+What is lost?
 
-**The First Bill: Points off the Manifold**
+**Tally 1: Points off the Manifold**
 
-After training, the network's parameters encode the manifold on which the training data lives. When, at test time, it encounters a point not on this manifold — images from different distributions, unseen language phenomena, counterfactual reasoning scenarios — what does the network do?
+After training, the network's parameters encode the manifold where the training data lives. When at test time it encounters a point that is not on this manifold — images from a different distribution, language phenomena never seen, counterfactual reasoning scenarios — what does the network do?
 
-It has no alert saying "this point is not on my manifold." It can only forcefully pull this point to the nearest region of the manifold, and then output an answer according to the logic of that region.
+It has no alarm saying "this point is not on my manifold". It can only drag the point forcibly to the nearest manifold region, then answer according to that region's logic.
 
-The result: **confident error**. Not "I don't know," but "it looks like X, so I answer X" — even if X is completely wrong.
+Result: **confident errors**. Not "I don't know", but "it looks like X, so I answer X" — even when X is completely wrong.
 
-This is the geometric root of the Distribution Shift problem: the manifold learned by the model and the manifold of the real world diverge outside the training distribution. The greater the shift, the greater the error, but the confidence remains unchanged — because confidence is a function of manifold coordinates, not a function of "how far from the manifold."
+This is the geometric root of the Distribution Shift problem: the manifold the model learned and the manifold of the real world disagree outside the training distribution. The larger the shift, the larger the error — but the confidence stays unchanged, because confidence is a function of manifold coordinates, not a function of "how far the point is from the manifold".
 
-**The Second Bill: Isometry Within the Manifold**
+**Tally 2: Isometry inside the Manifold**
 
-During compression, certain regions of the manifold are "stretched," and certain regions are "compressed."
+When compressing, some regions of the manifold are "stretched", others are "squeezed".
 
-Where training data is dense, the network-learned parameterization has high resolution — adjacent inputs map to adjacent latent codes, and local geometry is well-preserved.
+Where training data is dense, the network's learned parameterization has high resolution — adjacent inputs map to adjacent latent codes, and local geometry is preserved well.
 
-Where training data is sparse, the network parameterization has low resolution — adjacent inputs may be mapped far apart in latent space, or inputs far apart may be mapped to adjacent positions in latent space.
+Where training data is sparse, the network's parameterization has low resolution — adjacent inputs may map to far-apart places in latent space, or far-apart inputs may map to adjacent places.
 
-This means that **the network generalizes well in dense regions of training data, and poorly in sparse regions** — not randomly poor, but systematically poor: the manifold structure of sparse regions is "filled in by interpolation," padded with the most common patterns from the training data, not the true structure of that region.
+This means, the network generalizes well where training data is dense and poorly where it is sparse — not random poorness, but patterned: the manifold structure of sparse regions gets "hallucinated", and what fills it in is the most common patterns of the training data, not the true structure of that region.
 
-The result of interpolation-based filling is hallucination.
+The result of that hallucinated filling is hallucination.
 
-**The Third Bill: Tishby's Information Bottleneck**
+**Tally 3: Tishby's Information Bottleneck**
 
 In 2017, Naftali Tishby proposed a theoretical framework for this process — the **Information Bottleneck**.
 
-Training a neural network is essentially making a trade-off:
+Training a neural network is essentially a trade-off:
 
 $$
 \min_{z} \left[ I(X; Z) - \beta \cdot I(Z; Y) \right]
 $$
 
-where $X$ is the input, $Y$ is the label, $Z$ is the intermediate representation, $I(\cdot;\cdot)$ is mutual information, and $\beta$ is the trade-off parameter.
+where $X$ is the input, $Y$ the label, $Z$ the intermediate representation, $I(\cdot; \cdot)$ mutual information, and $\beta$ the trade-off parameter.
 
-The first term $I(X; Z)$ measures how much input information the intermediate representation $Z$ retains — the smaller, the better, meaning more compression.
+The first term $I(X; Z)$ measures how much input information the intermediate representation $Z$ keeps — smaller is better, meaning more compression.
 
-The second term $I(Z; Y)$ measures how much information about the label $Z$ retains — the larger, the better, meaning more useful for the task.
+The second term $I(Z; Y)$ measures how much information about the label $Z$ keeps — larger is better, meaning more useful for the task.
 
-The optimal solution of this trade-off is a "sufficient statistic" — retaining all the information needed to predict the label while discarding all redundant information.
+The optimal solution of this trade-off is a "sufficient statistic" — it keeps all the information needed to predict the label and discards all redundant information.
 
-Tishby's claim is: the training process occurs in two phases — first the "fitting" phase, where mutual information $I(Z; Y)$ increases rapidly, and the network learns to capture label-relevant information; then the "compression" phase, where $I(X; Z)$ begins to decrease, and the network starts discarding label-irrelevant information.
+Tishby's claim is that training happens in two stages — first the "fitting" stage, where mutual information $I(Z; Y)$ increases rapidly as the network learns to capture label-related information; then the "compression" stage, where $I(X; Z)$ starts to fall as the network begins to discard information irrelevant to the label.
 
-This theory is beautiful. But it is also controversial — subsequent work (Saxe et al., 2018) found that the compression phase does not appear in many situations, depending on the choice of activation function. The Information Bottleneck is a valuable analytical framework, but not a complete theory `-> [Tishby & Schwartz-Ziv, 2017, arXiv:1703.00810]` `-> [Saxe et al., 2018, arXiv:1812.09881]`.
+This theory is beautiful. But it is also controversial — subsequent research (Saxe et al., 2018) found that the compression stage does not appear in many cases, depending on the choice of activation function. The information bottleneck is a valuable analytical framework, but not a complete theory `-> [Tishby & Schwartz-Ziv, 2017, arXiv:1703.00810]` `-> [Saxe et al., 2018, arXiv:1812.09881]`.
 
-**The Final Bill**
+**The final tally**
 
-Adding up the three bills, the cost of manifold compression is:
+Add the three tallies together, and the cost of manifold compression is:
 
 1. In-distribution: good generalization, accurate confidence
 
-2. Distribution boundary: generalization begins to degrade, confidence remains high (danger zone)
+2. At the edge of distribution: generalization starts to degrade, but confidence remains high (danger zone)
 
-3. Out-of-distribution: poor generalization, but confidence can still be very high (most dangerous zone)
+3. Out-of-distribution: poor generalization, yet confidence can still be very high (most dangerous zone)
 
-The network does not know it is standing at the edge of the manifold. It only knows that the current input maps to some coordinate in latent space, and then outputs according to the logic of that coordinate. There is no built-in "uncertainty sensor" telling it: you are making an inference about a region you have never truly understood.
+The network does not know it is standing at the edge of the manifold. It only knows that the current input mapped to some coordinate in the latent space, and then it outputs according to that coordinate's logic. There is no built-in "uncertainty sensor" telling it: you are now making inferences about a region you have never truly understood.
 
-This is not a bug; it is an inevitable structural consequence of manifold compression.
+This is not a bug; it is the inevitable structural consequence of manifold compression.
 
 <div class="center">
 
@@ -324,15 +324,15 @@ This is not a bug; it is an inevitable structural consequence of manifold compre
 
 </div>
 
-## V. The Limits of Compression: How Small Can a Manifold Be Compressed?
+## 5. The Limit of Compression: How Small Can a Manifold Be Squeezed?
 
-The Manifold Hypothesis says high-dimensional data is squeezed onto a low-dimensional manifold. So how "low" is this low dimension? To what extent can it be compressed?
+The manifold hypothesis says high-dimensional data squeezes onto a low-dimensional manifold. So how low is "low"? How far can compression go?
 
-This is an information-theoretic question, not merely a geometric one.
+This is an information-theoretic question, not just a geometric one.
 
-**Rate-Distortion Theory Gives a Lower Bound**
+**Rate-distortion theory gives a lower bound**
 
-Shannon's rate-distortion theory tells us: to reconstruct a signal with distortion $D$, at least $R(D)$ bits of information are needed. This $R(D)$ is an **information-theoretic lower bound** that no compression algorithm can break.
+Shannon's rate-distortion theory tells us: to reconstruct a signal with distortion $D$, you need at least $R(D)$ bits of information. That $R(D)$ is an **information-theoretic lower bound** — no compression algorithm can break through it.
 
 For data on a manifold:
 
@@ -340,41 +340,47 @@ $$
 R(D) = \min_{p(\hat{x}|x): \mathbb{E}[d(x, \hat{x})] \leq D} I(X; \hat{X})
 $$
 
-When you compress a neural network's hidden layer dimension from $d$ to $k$, you are essentially performing lossy compression — certain details of the original manifold are inevitably lost.
+When you compress a neural network's hidden layer dimension from $d$ to $k$, what you are really doing is lossy compression — some details of the original manifold are inevitably lost.
 
-**Intrinsic Dimensionality**
+**Intrinsic dimension**
 
-The **intrinsic dimensionality** of a manifold is the minimum number of coordinates needed to describe the manifold. This quantity can be estimated using the distribution of pairwise distances:
+The **intrinsic dimensionality** of a manifold is the minimum number of coordinates needed to describe it. This quantity can be estimated from the distribution of pairwise distances:
 
 $$
 d_{\text{int}} = -\frac{\log n}{\log (r / R)}
 $$
 
-where $r$ is the nearest-neighbor radius, and $R$ is the maximum radius.
+where $r$ is the near-neighbor radius and $R$ the maximum radius.
 
-Experimental results are striking: the intrinsic dimensionality of ImageNet images is about 40, far lower than the raw pixel dimensionality ($224 \times 224 \times 3 \approx 150{,}000$). The intrinsic dimensionality of language model representation spaces is about 13-20, far lower than the hidden dimension (768 or higher).
+The experimental results are surprising: the intrinsic dimension of ImageNet images is about 40, far smaller than the raw pixel dimension ($224 \times 224 \times 3 \approx 150{,}000$). The intrinsic dimension of language models' representation spaces is about 13–20, far smaller than the hidden dimension (768 or more).
 
-This shows that real-world data is indeed squeezed onto extremely low-dimensional manifolds.
+This shows that real-world data really does squeeze onto extremely low-dimensional manifolds.
 
-**But a Hard Lower Bound Exists**
+**But there is a hard floor**
 
-Compression is not infinite. Once compressed below the intrinsic dimensionality, distortion rises sharply — you start losing the structure of the manifold itself, not merely losing noise.
+Compression is not unlimited. Once compressing below the intrinsic dimension, distortion rises sharply — you start losing the manifold's own structure, not just noise.
 
-This is why knowledge distillation (compressing from a large model to a small model) has a performance cliff: beyond a certain compression ratio, the model is not "a bit worse" but "completely collapses." The rate-distortion curve drops sharply after the inflection point.
+This is why knowledge distillation (compressing a large model into a small one) has a performance cliff: past a certain compression ratio, the model is not "a bit worse" — it "collapses completely". The rate-distortion curve drops precipitously after the elbow.
 
-This hard lower bound, and how to use randomization to break the limits of deterministic compression, is the topic of Chapter 11.
+This hard floor, and how randomization can break through the limits of deterministic compression, is the subject of Chapter 11.
 
-## VI. A Brief Pause
+<div class="center">
 
-Let me sort out what this chapter has done.
+------------------------------------------------------------------------
 
-In high-dimensional space, random data cannot be learned — distance loses meaning, and sampling requires an exponential amount of data. The reason machine learning works is not that it has overcome high dimensionality, but that the data itself is not high-dimensional random. Natural data clusters on a low-dimensional manifold, a result of the combined action of the physical processes, biological constraints, and grammatical rules that generate the data.
+</div>
 
-The training of neural networks is the process of compressing the manifold structure of the training data into parameters. Not storage — compression. The compression ratio is on the order of 100:1 to 1000:1.
+## 6. A Small Pause
 
-Compression has unavoidable costs: points off the manifold are forcibly projected, the structure of sparse regions is filled in by interpolation, and confidence decouples from accuracy under distribution shift. These costs are not engineering flaws; they are structural consequences of information-theoretic constraints.
+Let me take stock of what this chapter did.
 
-This leads to the question of Chapter 5: if what models learn is manifold structure, not causal laws, then why do their out-of-distribution behaviors always fail systematically? What exactly is the gap between statistical correlation and genuine reasoning?
+In high-dimensional space, random data cannot be learned — distance loses meaning, and sampling requires exponentially many data points. Machine learning works not because it overcomes high-dimensionality, but because the data itself is not high-dimensional random. Natural data gathers on low-dimensional manifolds, and that is the joint result of the physical processes, biological constraints, and grammar rules that generate the data.
+
+Training a neural network is the process of compressing the training data's manifold structure into the parameters. Not storage — compression. The compression ratio is on the order of 100:1 to 1000:1.
+
+Compression has unavoidable costs: points off the manifold are forcibly projected, sparse regions get their structure hallucinated, and under distribution shift confidence and accuracy decouple from each other. These costs are not engineering flaws; they are structural consequences of information-theoretic constraints.
+
+This leads to the question of Chapter 5: if what a model learns is manifold structure rather than causal laws, why does its behavior systematically fail outside the distribution? Where is the difference between statistical correlation and genuine reasoning?
 
 <div class="center">
 
@@ -383,23 +389,23 @@ This leads to the question of Chapter 5: if what models learn is manifold struct
 </div>
 
 
-> The manifold tells us where the data is, but it doesn't tell us whether what the model learns is the true law. In the next chapter, we will see how statistical fitting becomes a trap for reasoning.
+> The manifold tells us where the data is, but not whether the model learned the real laws. In the next chapter, we will see how statistical fitting becomes a trap for reasoning.
 
-## Unresolved
+## Open Questions
 
-- How well does the manifold learned by a neural network "match" the manifold of real-world data? We lack good tools to measure this degree of match.
+- How well does the manifold a neural network learns actually "match" the manifold of real-world data? We have no good tools for measuring this match.
 
-- Can the intrinsic dimensionality of a manifold be estimated? What methods exist, and what assumptions do they each make? What is the intrinsic dimensionality in the activation space of LLMs?
+- Can the intrinsic dimension of a manifold be estimated? What methods exist, and what does each assume? In the activation space of an LLM, what is the intrinsic dimension?
 
-- Does the portion of information lost by "compression" contain the structures needed for reasoning? Or does reasoning ability happen to reside in the portion that is preserved?
+- Does the information lost in "compression" include the structure that reasoning requires? Or does reasoning ability happen to live in the part that was kept?
 
-- If you train a neural network on completely random data, what kind of "manifold" would it learn? The answer to this thought experiment will tell us about the necessity of the Manifold Hypothesis.
+- If you trained a neural network on completely random data, what kind of "manifold" would it learn? The answer to this thought experiment would tell us how necessary the manifold hypothesis is.
 
-- The two-phase theory of the Information Bottleneck (fitting + compression) remains experimentally controversial. If the compression phase does not exist, what accounts for the generalization of neural networks?
+- The two-stage information bottleneck theory (fitting + compression) is still experimentally contested. If the compression stage doesn't exist, what explains neural network generalization?
 
-- **The manifold structure of knowledge**: Knowledge graphs are discrete symbolic manifolds; word vectors are continuous semantic manifolds. How do these two types of manifolds **map onto each other and validate each other**? Is there a unified "knowledge manifold" theory?
+- **The manifold structure of knowledge**: a knowledge graph is a discrete symbolic manifold, and word vectors are a continuous semantic manifold. How do these two manifolds **map to each other and validate each other**? Is there a unified "knowledge manifold" theory?
 
-- **Multi-level manifolds**: The phase-space manifold of physical systems (life), the logical-space manifold of symbolic systems (knowledge), the representation-space manifold of statistical systems (learning) — do there exist **isomorphisms or mappings** among these manifolds at different levels?
+- **Manifolds at multiple levels**: the phase-space manifolds of physical systems (life), the logical-space manifolds of symbolic systems (knowledge), the representation-space manifolds of statistical systems (learning) — do **isomorphisms or mapping relations** exist among these different levels of manifolds?
 
 <div class="center">
 
@@ -409,7 +415,7 @@ This leads to the question of Chapter 5: if what models learn is manifold struct
 
 ## Try It Yourself: Compress a Manifold, Then Find Its Bill
 
-The core proposition of this chapter is: compression has a cost, and the location of the cost is not random; it follows patterns. You will verify this firsthand using a minimal autoencoder — not to obtain a good model, but to precisely locate where compression lies.
+The core claim of this chapter is: compression has costs, and the location of those costs is not random — it is patterned. You will verify this by hand with a minimal autoencoder — not to get a good model, but to pinpoint exactly where compression cheated.
 
 <div class="center">
 
@@ -419,9 +425,9 @@ The core proposition of this chapter is: compression has a cost, and the locatio
 
 ### Step 1: Generate Your Manifold Data
 
-Don't use a real dataset; that introduces too many confounders. Start from a manifold whose **generative process you fully understand**.
+Don't use a real dataset — too many distractions. Start from a manifold whose **generation process you fully understand**.
 
-Generate one of the following datasets:
+Generate one of the following:
 
 **Option A: A 2D Torus Embedded in 3D**
 
@@ -430,43 +436,43 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 np.random.seed(42)
-N = 2000  # Number of sample points
+N = 2000  # number of sample points
 
-# Uniformly sample the torus's two angular parameters
-t = np.random.uniform(0, 2 * np.pi, N)   # Angle around the main axis
-phi = np.random.uniform(0, 2 * np.pi, N) # Angle around the tube cross-section
+# Uniformly sample the two angular parameters of the torus
+t = np.random.uniform(0, 2 * np.pi, N)   # angle around the main axis
+phi = np.random.uniform(0, 2 * np.pi, N) # angle around the tube cross-section
 
-r = 3.0    # Major torus radius
-tube = 1.0 # Tube radius
+r = 3.0    # main ring radius
+tube = 1.0 # tube radius
 
 # Torus parametric equations: embedded in 3D space
 x = (r + tube * np.cos(phi)) * np.cos(t)
 y = (r + tube * np.cos(phi)) * np.sin(t)
 z = tube * np.sin(phi)
 
-# Add small Gaussian noise to simulate measurement error
+# Add a small amount of Gaussian noise to simulate measurement error
 noise_std = 0.05
 x += np.random.normal(0, noise_std, N)
 y += np.random.normal(0, noise_std, N)
 z += np.random.normal(0, noise_std, N)
 
-# Assemble into data matrix, shape=(N, 3)
+# Stack the three coordinates into a data matrix of shape=(N, 3)
 data_torus = np.stack([x, y, z], axis=1)
 # Save intrinsic coordinates for later coloring (t is the main angle, phi is the tube angle)
 intrinsic_t = t
 intrinsic_phi = phi
 
-# Visualization (colored by t values)
+# Visualize (colored by the t value)
 fig = plt.figure(figsize=(8, 6))
 ax = fig.add_subplot(111, projection='3d')
 sc = ax.scatter(x, y, z, c=t, cmap='hsv', s=2, alpha=0.6)
-plt.colorbar(sc, label='Intrinsic coordinate t')
+plt.colorbar(sc, label='intrinsic coordinate t')
 ax.set_title('Torus manifold (Option A)')
 plt.tight_layout()
 plt.show()
 ```
 
-**Option B: Swiss Roll (the data illustrated in this chapter)**
+**Option B: Swiss Roll (the dataset in this chapter's figure)**
 
 ```python
 import numpy as np
@@ -474,40 +480,40 @@ import matplotlib.pyplot as plt
 from sklearn.datasets import make_swiss_roll
 
 np.random.seed(42)
-N = 2000  # Number of sample points
+N = 2000  # number of sample points
 
-# Use sklearn to generate the standard Swiss Roll
-# t is the intrinsic coordinate (roll angle), z is the intrinsic coordinate in the height direction
+# Generate the standard Swiss Roll with sklearn
+# t is the intrinsic coordinate (unfold angle), z is the intrinsic coordinate along the height
 data_swiss, t_swiss = make_swiss_roll(n_samples=N, noise=0.1, random_state=42)
-# data_swiss shape=(N, 3), columns are x, y, z (3D embedding coordinates)
+# data_swiss has shape=(N, 3); the columns are x, y, z (3D embedding coordinates)
 
-# Or manually generate (equivalent effect):
-t_manual = np.random.uniform(1.5 * np.pi, 4.5 * np.pi, N)  # Roll angle
+# Or generate it manually (equivalent):
+t_manual = np.random.uniform(1.5 * np.pi, 4.5 * np.pi, N)  # unfold angle
 x_manual = t_manual * np.cos(t_manual)
-z_manual = np.random.uniform(0, 1, N)                        # Height (second intrinsic dimension)
+z_manual = np.random.uniform(0, 1, N)                        # height (second intrinsic dimension)
 y_manual = t_manual * np.sin(t_manual)
-# Add small Gaussian noise
+# Add a small amount of Gaussian noise
 x_manual += np.random.normal(0, 0.1, N)
 y_manual += np.random.normal(0, 0.1, N)
 z_manual += np.random.normal(0, 0.05, N)
 
-# Visualize the manually generated Swiss Roll (colored by t values)
+# Visualize the manually generated Swiss Roll (colored by t)
 fig = plt.figure(figsize=(8, 6))
 ax = fig.add_subplot(111, projection='3d')
 sc = ax.scatter(x_manual, y_manual, z_manual, c=t_manual, cmap='viridis', s=2)
-plt.colorbar(sc, label='Intrinsic coordinate t (roll angle)')
+plt.colorbar(sc, label='intrinsic coordinate t (unfold angle)')
 ax.set_title('Swiss Roll manifold (Option B)')
 plt.tight_layout()
 plt.show()
 
-# Use the sklearn version going forward (more standard)
+# Use the sklearn version from here on (more standard)
 data = data_swiss          # 3D coordinates, shape=(N, 3)
-intrinsic_t = t_swiss      # Intrinsic coordinate t, used for coloring
+intrinsic_t = t_swiss      # intrinsic coordinate t, used for coloring
 ```
 
-Option B has an intrinsic dimensionality of 2 (t and z), embedded in 3D space.
+Option B has an intrinsic dimension of 2 (t and z), embedded in 3D space.
 
-**Your first question (answer before writing code):** What is the "true intrinsic dimensionality" of this data? If you use PCA for dimensionality reduction, how many principal components do you think you need to retain to preserve how much variance? Write down your prediction, and compare it with the actual results later.
+**Your first question (answer before writing code):** What is this data's "true intrinsic dimension"? If you use PCA for dimensionality reduction, how many principal components do you think you need to keep to retain most of the variance? Write down your prediction; compare it with the actual result later.
 
 <div class="center">
 
@@ -517,7 +523,7 @@ Option B has an intrinsic dimensionality of 2 (t and z), embedded in 3D space.
 
 ### Step 2: Implement a Minimal Autoencoder
 
-Architecture definition:
+Structure definition:
 
 ```python
 import numpy as np
@@ -526,32 +532,32 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
 
-# ── Autoencoder architecture definition ──────────────────────────────────────────
+# --- Autoencoder architecture ---
 class Autoencoder(nn.Module):
     def __init__(self, bottleneck_dim):
         super().__init__()
         # Encoder: 3 -> 16 -> d (bottleneck dimension)
         self.encoder = nn.Sequential(
-            nn.Linear(3, 16),      # Input is 3-dimensional (embedded data points)
-            nn.ReLU(),             # Nonlinear activation
-            nn.Linear(16, bottleneck_dim)  # Output d-dimensional latent code z
+            nn.Linear(3, 16),      # 3D input (embedded data points)
+            nn.ReLU(),             # non-linear activation
+            nn.Linear(16, bottleneck_dim)  # d-dimensional latent code z
         )
-        # Decoder: d -> 16 -> 3 (reconstruct original coordinates)
+        # Decoder: d -> 16 -> 3 (reconstruct the original coordinates)
         self.decoder = nn.Sequential(
             nn.Linear(bottleneck_dim, 16),
             nn.ReLU(),
-            nn.Linear(16, 3)       # Output 3-dimensional reconstruction
+            nn.Linear(16, 3)       # 3-dimensional reconstruction
         )
 
     def forward(self, x):
-        z = self.encoder(x)    # Encode
-        x_hat = self.decoder(z)  # Decode
+        z = self.encoder(x)    # encode
+        x_hat = self.decoder(z)  # decode
         return x_hat, z
 
-# ── Training function ────────────────────────────────────────────────────
+# --- Training function ---
 def train_autoencoder(data_tensor, bottleneck_dim, n_epochs=300, lr=1e-3):
     """
-    Train an autoencoder until reconstruction error converges.
+    Train the autoencoder until the reconstruction error converges.
     Returns the trained model.
     """
     dataset = TensorDataset(data_tensor)
@@ -559,28 +565,28 @@ def train_autoencoder(data_tensor, bottleneck_dim, n_epochs=300, lr=1e-3):
 
     model = Autoencoder(bottleneck_dim)
     optimizer = optim.Adam(model.parameters(), lr=lr)
-    loss_fn = nn.MSELoss()  # Loss function: Mean Squared Error (reconstruction error)
+    loss_fn = nn.MSELoss()  # loss function: mean squared error (reconstruction error)
 
     for epoch in range(n_epochs):
         for (batch,) in loader:
             optimizer.zero_grad()
             x_hat, _ = model(batch)
-            loss = loss_fn(x_hat, batch)  # Reconstruction error
+            loss = loss_fn(x_hat, batch)  # reconstruction error
             loss.backward()
             optimizer.step()
 
     return model
 
-# ── Example: using Swiss Roll data, initially set bottleneck dimension d=2 ───────────────
-# (Assume data has been generated in the previous step, shape=(N, 3))
-data_tensor = torch.tensor(data, dtype=torch.float32)  # Convert to PyTorch tensor
+# --- Example: use the Swiss Roll data, starting with bottleneck dimension d=2 ---
+# (Assume data was generated in the previous step, shape=(N, 3))
+data_tensor = torch.tensor(data, dtype=torch.float32)  # convert to a PyTorch tensor
 
 # Train an autoencoder with bottleneck dimension d=2
 model_d2 = train_autoencoder(data_tensor, bottleneck_dim=2)
-print("d=2 autoencoder training complete")
+print("Autoencoder for d=2 trained")
 ```
 
-Train until reconstruction error converges. No need to tune hyperparameters; the default settings will work.
+Train until the reconstruction error converges. No hyperparameter tuning — the default settings are fine.
 
 <div class="center">
 
@@ -588,64 +594,64 @@ Train until reconstruction error converges. No need to tune hyperparameters; the
 
 </div>
 
-### Step 3: Systematically Vary the Bottleneck Dimension and Record the Bill
+### Step 3: Systematically Change the Bottleneck Dimension and Record the Bill
 
-Train with d = 1, 2, 3, 4, 5 respectively, and for each d, record:
+Train with d = 1, 2, 3, 4, 5, and for each d record:
 
 ```python
 import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
 
-# Split data into training and test sets (80% / 20%)
+# Split the data into train and test sets (80% / 20%)
 N = len(data_tensor)
 split = int(0.8 * N)
 train_data = data_tensor[:split]
 test_data  = data_tensor[split:]
 
-results = {}  # Store results for each bottleneck dimension
+results = {}  # stores the results for each bottleneck dimension
 
 for d in [1, 2, 3, 4, 5]:
-    # 1. Train autoencoder
+    # 1. Train the autoencoder
     model = train_autoencoder(train_data, bottleneck_dim=d, n_epochs=300)
     model.eval()
 
     with torch.no_grad():
-        # 2. Compute average reconstruction error (MSE) on the training set
+        # 2. Compute the average reconstruction error (MSE) on the train set
         train_hat, train_z = model(train_data)
         train_mse = nn.MSELoss()(train_hat, train_data).item()
 
-        # 3. Compute average reconstruction error on the test set
+        # 3. Compute the average reconstruction error on the test set
         test_hat, test_z = model(test_data)
         test_mse = nn.MSELoss()(test_hat, test_data).item()
 
     results[d] = {'train_mse': train_mse, 'test_mse': test_mse,
                   'train_z': train_z.numpy(), 'model': model}
 
-    # 4. Visualize the latent space (colored by intrinsic coordinate t values)
-    train_t = intrinsic_t[:split]  # Intrinsic coordinates corresponding to training set
+    # 4. Visualize the latent space (colored by intrinsic coordinate t)
+    train_t = intrinsic_t[:split]  # intrinsic coordinates of the train set
     if d == 1:
-        # d=1: latent space is a line, draw a 1D scatter plot
+        # d=1: the latent space is a line, plot a 1D scatter
         fig, ax = plt.subplots(figsize=(8, 2))
         sc = ax.scatter(train_z.numpy()[:, 0],
                         np.zeros(len(train_z)),
                         c=train_t, cmap='viridis', s=5)
-        plt.colorbar(sc, label='Intrinsic coordinate t')
-        ax.set_title(f'd={d} Latent space (1D)')
+        plt.colorbar(sc, label='intrinsic coordinate t')
+        ax.set_title(f'd={d} latent space (1D)')
     elif d == 2:
-        # d=2: directly draw 2D scatter plot
+        # d=2: plot a 2D scatter directly
         fig, ax = plt.subplots(figsize=(6, 5))
         sc = ax.scatter(train_z.numpy()[:, 0],
                         train_z.numpy()[:, 1],
                         c=train_t, cmap='viridis', s=5)
-        plt.colorbar(sc, label='Intrinsic coordinate t')
-        ax.set_title(f'd={d} Latent space (2D)')
+        plt.colorbar(sc, label='intrinsic coordinate t')
+        ax.set_title(f'd={d} latent space (2D)')
     plt.tight_layout()
     plt.show()
 
-    # 5. Randomly sample 20 points from latent space, decode, and plot in 3D
+    # 5. Sample 20 points from the latent space, decode them, and plot them in 3D
     with torch.no_grad():
-        # Uniformly sample in latent space (using the range of training set latent codes)
+        # Uniformly sample the latent space (using the range of the train-set latent codes)
         z_min = train_z.min(dim=0).values
         z_max = train_z.max(dim=0).values
         z_samples = torch.rand(20, d) * (z_max - z_min) + z_min
@@ -654,24 +660,24 @@ for d in [1, 2, 3, 4, 5]:
     fig = plt.figure(figsize=(7, 5))
     ax = fig.add_subplot(111, projection='3d')
     ax.scatter(data[:split, 0], data[:split, 1], data[:split, 2],
-               c='lightblue', s=1, alpha=0.3, label='Training data')
+               c='lightblue', s=1, alpha=0.3, label='train data')
     ax.scatter(decoded_samples[:, 0], decoded_samples[:, 1], decoded_samples[:, 2],
-               c='red', s=50, zorder=5, label='Random decoded points')
-    ax.set_title(f'd={d} Random decoding (randomly sampled latent points)')
+               c='red', s=50, zorder=5, label='randomly decoded points')
+    ax.set_title(f'd={d} random decoding (randomly sampled latent points)')
     ax.legend()
     plt.tight_layout()
     plt.show()
 
-    print(f"d={d}: Train MSE={train_mse:.4f}, Test MSE={test_mse:.4f}")
+    print(f"d={d}: train MSE={train_mse:.4f}, test MSE={test_mse:.4f}")
 
 print("\nComparison across bottleneck dimensions:")
 for d, r in results.items():
-    print(f"  d={d}: Train MSE={r['train_mse']:.4f}, Test MSE={r['test_mse']:.4f}")
+    print(f"  d={d}: train MSE={r['train_mse']:.4f}, test MSE={r['test_mse']:.4f}")
 ```
 
-**Your second question:** When d=1, the encoder compresses a 2D manifold into 1D. What does it preserve? What does it lose? Does the arrangement of points in the latent space preserve the topological structure of the original manifold (e.g., the toroidal relationship of the circle)?
+**Your second question:** When d=1, the encoder compressed a 2D manifold into 1D. What did it keep? What did it lose? Does the arrangement of points in the latent space preserve the original manifold's topology (for example, the circular loop relationship)?
 
-**Your third question (core question):** When d=2, if you color the points in the latent space using the original intrinsic coordinates (t and φ, or t and z), are the colors continuously graded? If yes, what does that indicate? If not, what does that indicate?
+**Your third question (the core question):** When d=2, if you color the latent-space points by the original intrinsic coordinates (t and φ, or t and z), do the colors vary continuously? If yes, what does that mean? If not, what does that mean?
 
 <div class="center">
 
@@ -679,11 +685,11 @@ for d, r in results.items():
 
 </div>
 
-### Step 4: Find the Behavior of Out-of-Distribution Points
+### Step 4: Find Out What Happens to Out-of-Distribution Points
 
-Generate a batch of points that are **not on your manifold** — for example, random 3D Gaussian noise points.
+Generate a batch of points that are **not on your manifold** — for example, random Gaussian noise points in 3D.
 
-Feed this batch of points into your autoencoder:
+Feed that batch through your autoencoder:
 
 ```python
 import torch
@@ -695,58 +701,58 @@ import matplotlib.pyplot as plt
 model = results[2]['model']
 model.eval()
 
-# Out-of-distribution data: sample 100 points from a standard 3D Gaussian
-# Note: these points are scattered throughout the 3D space, not restricted to near the manifold
-ood_data = torch.randn(100, 3)  # Standard normal, mean 0, variance 1
+# OOD data: sample 100 points from a standard 3D Gaussian distribution
+# Note: these points are scattered across the whole 3D space, not restricted to the manifold
+ood_data = torch.randn(100, 3)  # standard normal with mean 0 and variance 1
 
 with torch.no_grad():
-    # Pass through autoencoder reconstruction (encode -> decode)
+    # Reconstruct with the autoencoder (encode -> decode)
     ood_reconstructed, ood_z = model(ood_data)
 
-# Compute reconstruction error for each category of data
-loss_fn = nn.MSELoss(reduction='none')  # Compute error per sample individually
+# Compute the reconstruction errors for both datasets
+loss_fn = nn.MSELoss(reduction='none')  # compute the error for each sample individually
 with torch.no_grad():
     train_hat, _ = model(train_data)
-    # Per-sample MSE on training data (averaged over three dimensions)
+    # MSE of each train sample (averaged over the three dimensions)
     train_errors = loss_fn(train_hat, train_data).mean(dim=1).numpy()
-    # Per-sample MSE on OOD data
+    # MSE of each OOD sample
     ood_errors   = loss_fn(ood_reconstructed, ood_data).mean(dim=1).numpy()
 
-# Compare reconstruction errors
-print(f"Training set average reconstruction error: {train_errors.mean():.4f} ± {train_errors.std():.4f}")
-print(f"OOD point average reconstruction error: {ood_errors.mean():.4f} ± {ood_errors.std():.4f}")
+# Compare the reconstruction errors
+print(f"Average reconstruction error on train set: {train_errors.mean():.4f} ± {train_errors.std():.4f}")
+print(f"Average reconstruction error on OOD points: {ood_errors.mean():.4f} ± {ood_errors.std():.4f}")
 
-# Visualization: plot the reconstruction results of OOD points in 3D space
-# Observe where they land (whether they are "pulled" near the manifold)
+# Visualize: plot the reconstruction of the OOD points in 3D
+# Observe where they land (whether they are "pulled" toward the manifold)
 fig = plt.figure(figsize=(10, 5))
 
-# Left panel: original OOD points
+# Left panel: the original OOD points
 ax1 = fig.add_subplot(121, projection='3d')
 ax1.scatter(data[:500, 0], data[:500, 1], data[:500, 2],
-            c='lightblue', s=2, alpha=0.3, label='Training manifold')
+            c='lightblue', s=2, alpha=0.3, label='train manifold')
 ax1.scatter(ood_data[:, 0], ood_data[:, 1], ood_data[:, 2],
-            c='red', s=30, label='OOD original points')
-ax1.set_title('OOD original points (scattered in 3D space)')
+            c='red', s=30, label='OOD points (original)')
+ax1.set_title('OOD points (scattered in 3D space)')
 ax1.legend(fontsize=8)
 
-# Right panel: positions of OOD points after autoencoder reconstruction
+# Right panel: OOD points after reconstruction by the autoencoder
 ax2 = fig.add_subplot(122, projection='3d')
 ax2.scatter(data[:500, 0], data[:500, 1], data[:500, 2],
-            c='lightblue', s=2, alpha=0.3, label='Training manifold')
+            c='lightblue', s=2, alpha=0.3, label='train manifold')
 ax2.scatter(ood_reconstructed[:, 0].numpy(),
             ood_reconstructed[:, 1].numpy(),
             ood_reconstructed[:, 2].numpy(),
-            c='orange', s=30, label='OOD reconstructed points')
-ax2.set_title('OOD points after reconstruction — "pulled" near the manifold')
+            c='orange', s=30, label='OOD points (reconstructed)')
+ax2.set_title('OOD points after reconstruction — "pulled" toward the manifold')
 ax2.legend(fontsize=8)
 
 plt.tight_layout()
 plt.show()
 ```
 
-**Your fourth question:** After passing through the autoencoder, where are the out-of-distribution points "pulled" to? Are their reconstruction results random, or do they systematically land in a certain region of the training manifold?
+**Your fourth question:** After going through the autoencoder, where do the out-of-distribution points get "pulled"? Are their reconstructions random, or do they systematically land in some region of the training manifold?
 
-This is exactly what Section IV of this chapter described: "The network has no alert saying 'this point is not on my manifold.' It can only forcefully pull this point to the nearest region of the manifold." You have just witnessed this process firsthand.
+This is what Section 4 of this chapter said: "The network has no alarm saying 'this point is not on my manifold'. It can only drag the point forcibly to the nearest manifold region." You just watched this process with your own hands.
 
 <div class="center">
 
@@ -754,19 +760,19 @@ This is exactly what Section IV of this chapter described: "The network has no a
 
 </div>
 
-### Step 5: Estimate the Intrinsic Dimensionality of Your Manifold
+### Step 5: Estimate Your Manifold's Intrinsic Dimension
 
-Returning to Step 1, now perform a data-driven intrinsic dimensionality estimate:
+Back to Step 1 — now do a data-driven intrinsic-dimension estimate:
 
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 
-# Perform PCA on the training data (using numpy arrays, not tensors)
+# Run PCA on the training data (a numpy array, not a tensor)
 train_np = data[:split]  # shape=(N_train, 3)
 
-pca = PCA()               # No limit on number of components; compute all
+pca = PCA()               # keep all components (no limit)
 pca.fit(train_np)
 
 # Variance ratio explained by each principal component
@@ -774,12 +780,12 @@ explained_ratio = pca.explained_variance_ratio_
 # Cumulative explained variance curve
 cumulative_ratio = np.cumsum(explained_ratio)
 
-# Plot cumulative variance curve
+# Plot the cumulative variance curves
 fig, axes = plt.subplots(1, 2, figsize=(12, 5))
 
 # Left panel: variance explained by each principal component
 axes[0].bar(range(1, len(explained_ratio) + 1), explained_ratio, color='steelblue')
-axes[0].set_xlabel('Principal component number')
+axes[0].set_xlabel('Principal component index')
 axes[0].set_ylabel('Explained variance ratio')
 axes[0].set_title('Variance explained by each principal component')
 
@@ -795,23 +801,23 @@ axes[1].legend()
 plt.tight_layout()
 plt.show()
 
-# Find how many principal components are needed for cumulative explained variance ≥ 95%
+# Find how many principal components are needed to explain 95% of the variance
 n_components_95 = np.searchsorted(cumulative_ratio, 0.95) + 1
-print(f"Number of principal components needed for cumulative explained variance ≥ 95%: {n_components_95}")
-print(f"Explained variance by each principal component: {explained_ratio.round(4)}")
+print(f"Principal components needed for cumulative variance >= 95%: {n_components_95}")
+print(f"Variance explained by each component: {explained_ratio.round(4)}")
 print(f"Cumulative explained variance: {cumulative_ratio.round(4)}")
 
-# Compare with autoencoder results
-print(f"\nPCA-estimated intrinsic dimensionality: {n_components_95}")
-print("Autoencoder test MSE at each bottleneck dimension:")
+# Compare with the autoencoder results
+print(f"\nIntrinsic dimension estimated by PCA: {n_components_95}")
+print("Test MSE of the autoencoder at each bottleneck dimension:")
 for d, r in results.items():
-    print(f"  d={d}: Test MSE={r['test_mse']:.4f}")
-print("(The inflection point where MSE suddenly spikes corresponds to the autoencoder-estimated intrinsic dimensionality)")
+    print(f"  d={d}: test MSE={r['test_mse']:.4f}")
+print("(The point where the MSE jumps sharply corresponds to the intrinsic dimension estimated by the autoencoder)")
 ```
 
 Compare this number with the prediction you wrote down in Step 1.
 
-**Your fifth question:** Does the intrinsic dimensionality estimated by your PCA match the "minimum lossless bottleneck dimension" you obtained from the autoencoder? If there is a discrepancy, what do you think accounts for it — PCA's linearity assumption, or the autoencoder's nonlinearity?
+**Your fifth question:** Is the intrinsic dimension you estimated with PCA consistent with the "smallest lossless bottleneck dimension" you got from the autoencoder? If they differ, what do you think causes the difference — PCA's linearity assumption, or the autoencoder's nonlinearity?
 
 <div class="center">
 
@@ -819,17 +825,17 @@ Compare this number with the prediction you wrote down in Step 1.
 
 </div>
 
-### Verification Criteria
+### Checklist
 
-After completing these five steps, you should be able to answer the following three questions — and answer them using your own experimental data, not using the text of this chapter:
+After finishing these five steps, you should be able to answer the following three questions — and answer them with your own experimental data, not with this chapter's text:
 
-1. When compression goes below the intrinsic dimensionality of the manifold, what is the cost? Where does the cost appear?
+1. What is the cost of compressing below the manifold's intrinsic dimension? Where does the cost appear?
 
-2. How are out-of-distribution points "hallucinatorily processed" after passing through the autoencoder?
+2. How are out-of-distribution points "handled hallucinatively" after passing through the autoencoder?
 
-3. "Where training data is dense, generalization is good; where sparse, generalization is poor" — in your experiment, which part of the manifold corresponds to sparse regions? Is reconstruction error higher there?
+3. "Where training data is dense, generalization is good; where it is sparse, generalization is poor" — in your experiment, which part of the manifold does the sparse region correspond to? Is the reconstruction error higher there?
 
-If you do only one thing, do Step 4. That is the shortest experiment that will most intuitively help you understand how "hallucination" happens.
+If you only do one thing, do Step 4. It's the shortest experiment, and the one that makes you intuit most directly how "hallucination" happens.
 
 <div class="center">
 
@@ -839,83 +845,87 @@ If you do only one thing, do Step 4. That is the shortest experiment that will m
 
 ## Summary: From Manifolds to Knowledge Structures — The Deep Connections of the First Four Chapters
 
-As we close the first four chapters, let us review the path we have walked, and the deep connections between the new content in Chapters 1 and 2.
+As we close the first four chapters, let's review the road we've walked, and the deeper connections between what is new in Chapter 1 and Chapter 2.
 
 ### Three Levels of Reasoning Systems
 
 The first four chapters actually describe reasoning systems at **three different levels**, which share a **meta-pattern**:
 
 1. **The Physical Level (New in Chapter 1)**: **Living systems** as open systems
-   - Achieve local entropy reduction through energy flow
-   - Maintain order at the cost of environmental entropy increase
+   - Achieve local entropy reduction through energy flows
+   - Order maintained at the cost of environmental entropy increase
    - Dissipative structures: self-organization far from equilibrium
 
-2. **The Symbolic Level (New in Chapter 2)**: **Knowledge systems** as symbolic structures  
-   - Achieve precise reasoning through logical rules
-   - Obtain interpretability at the cost of construction effort
-   - Knowledge graphs: the scaled implementation of symbolism
+2. **The Symbolic Level (New in Chapter 2)**: **Knowledge systems** as symbolic structures
+   - Exact reasoning through logical rules
+   - Interpretability bought at the cost of construction effort
+   - Knowledge graphs: symbolic AI implemented at scale
 
-3. **The Statistical Level (Chapters 3-4)**: **Learning systems** as statistical models
-   - Learn pattern recognition through data flow
-   - Obtain generalization ability at the cost of computational complexity
-   - Manifold Hypothesis: the low-dimensional structure of high-dimensional data
+3. **The Statistical Level (Chapters 3–4)**: **Learning systems** as statistical models
+   - Pattern recognition learned from data flows
+   - Generalization bought at the cost of computational complexity
+   - The manifold hypothesis: the low-dimensional structure of high-dimensional data
 
-### A Unified Perspective: Structure, Cost, Flow
+### A Unified View: Structure, Cost, Flow
 
 These three levels share a **unified framework**:
 
-| Dimension | Physical Level (Life) | Symbolic Level (Knowledge) | Statistical Level (Learning) |
+| Dimension | Physical level (life) | Symbolic level (knowledge) | Statistical level (learning) |
 |------|----------------|----------------|----------------|
 | **Core mechanism** | Energy flow | Logical reasoning | Pattern recognition |
-| **Form of order** | Physical structure ordered | Symbolic structure ordered | Representation space ordered |
-| **Maintenance cost** | Environmental entropy increase | Construction cost | Computational complexity |
-| **External input** | Energy/matter | Knowledge/rules | Data/samples |
-| **Structural assumption** | Dissipative structures | Closed world | Manifold Hypothesis |
+| **Form of order** | Physical structural order | Symbolic structural order | Representation-space order |
+| **Cost of maintenance** | Environmental entropy | Construction cost | Computational complexity |
+| **External input** | Energy / matter | Knowledge / rules | Data / samples |
+| **Structural assumption** | Dissipative structures | Closed world | Manifold hypothesis |
 
-### From Discrete to Continuous: The Evolution of Representation
+### From Discrete to Continuous: The Evolution of Representations
 
-The first four chapters also showcase the evolutionary trajectory of **knowledge representation**:
+The first four chapters also trace the evolution of **knowledge representations**:
 
 1. **Discrete symbols** (Chapter 2): If-Then rules, knowledge graph triples
-2. **Continuous vectors** (Chapter 3): Word embeddings, semantic space
-3. **Low-dimensional manifolds** (Chapter 4): Intrinsic dimensionality, the intrinsic structure of data
+2. **Continuous vectors** (Chapter 3): word embeddings, semantic spaces
+3. **Low-dimensional manifolds** (Chapter 4): intrinsic dimension, the internal structure of data
 
-**Key insight**: Knowledge graphs are **discrete symbolic manifolds**; word vectors are **continuous semantic manifolds**. Both attempt to capture the **structure** of the world, just using different mathematical languages.
+**Key insight**: a knowledge graph is a **discrete symbolic manifold**, and word vectors are a **continuous semantic manifold**. Both are trying to capture the world's **structure** — just in different mathematical languages.
 
-### The Meta-Question: Multi-Level Implementation of Reasoning
+### The Meta-Question: Reasoning at Multiple Levels
 
-This leads to a **meta-question**: What is reasoning?
+This leads to a **meta-question**: what is reasoning?
 
-- **The physical answer**: Reasoning is the cognitive strategy by which life counters entropy increase
-- **The symbolic answer**: Reasoning is the derivation of a symbolic system following logical rules  
-- **The statistical answer**: Reasoning is pattern matching by a statistical model on a manifold
+- **Physical answer**: reasoning is a cognitive strategy life uses to fight entropy
+- **Symbolic answer**: reasoning is a symbolic system's derivation following logical rules
+- **Statistical answer**: reasoning is a statistical model's pattern matching on the manifold
 
-These three answers are **all correct, but all incomplete**. True reasoning may be the **synergy of all three**:
-- The physical level provides the **existential foundation** (why reasoning is needed)
-- The symbolic level provides the **precise framework** (how to formalize reasoning)
-- The statistical level provides the **implementation mechanism** (how to compute reasoning)
+These three answers are **all right, but none is complete**. Real reasoning may be the **coordination of all three**:
+- The physical level provides the **existential basis** (why reasoning is needed)
+- The symbolic level provides the **precise framework** (how reasoning is formalized)
+- The statistical level provides the **implementation mechanism** (how reasoning is computed)
 
-### Reflection Questions: Where Are the Boundaries?
+## Exercises: Where Are the Boundaries?
 
-Each level has its own **boundaries**:
-- Physical level: thermodynamic limits (Landauer's principle)
+Each level has its own **boundary**:
+- Physical level: thermodynamic limit (Landauer's principle)
 - Symbolic level: knowledge boundary (closed-world assumption)
-- Statistical level: generalization boundary (Manifold Hypothesis)
+- Statistical level: generalization boundary (manifold hypothesis)
 
-**The ultimate question**: When an AI system "reasons," at which level is it operating? Or does genuine intelligence require **integration across these levels**?
+**The final question**: when an AI system "reasons", which level is it working on? Or does true intelligence require an **integration that transcends these levels**?
 
----
+<div class="center">
+
+------------------------------------------------------------------------
+
+</div>
 
 ## Further Reading
 
-- Tishby, N. & Schwartz-Ziv, M. (2017). *Opening the Black Box of Deep Neural Networks via Information* — The deep learning version of Information Bottleneck theory, proposing the two-phase training hypothesis `-> [arXiv:1703.00810]`
+- Tishby, N. & Schwartz-Ziv, M. (2017). *Opening the Black Box of Deep Neural Networks via Information* — the deep-learning version of information bottleneck theory, proposing the two-phase training hypothesis `-> [arXiv:1703.00810]`
 
-- Saxe, A. et al. (2018). *On the Information Bottleneck Theory of Deep Learning* — Criticism and revision of Tishby's Information Bottleneck theory, showing the compression phase depends on activation function choice `-> [arXiv:1812.09881]`
+- Saxe, A. et al. (2018). *On the Information Bottleneck Theory of Deep Learning* — critique and correction of Tishby's theory, showing the compression phase depends on the choice of activation function `-> [arXiv:1812.09881]`
 
-- Fefferman, C., Mitter, S. & Narayanan, H. (2016). *Testing the Manifold Hypothesis* — Mathematical testing of the Manifold Hypothesis: when does it hold, when does it not `-> [arXiv:1204.1423]`
+- Fefferman, C., Mitter, S. & Narayanan, H. (2016). *Testing the Manifold Hypothesis* — mathematical tests of the manifold hypothesis: when it holds and when it doesn't `-> [arXiv:1204.1423]`
 
-- Bengio, Y., Courville, A. & Vincent, P. (2013). *Representation Learning: A Review and New Perspectives* — A review of representation learning, including the relationship between manifold learning and deep representations `-> [arXiv:1206.5538]`
+- Bengio, Y., Courville, A. & Vincent, P. (2013). *Representation Learning: A Review and New Perspectives* — survey of representation learning, covering the relationship between manifold learning and deep representations `-> [arXiv:1206.5538]`
 
-- Bellman, R. (1957). *Dynamic Programming* — The original source of the Curse of Dimensionality; Bellman named this phenomenon in the context of optimization
+- Bellman, R. (1957). *Dynamic Programming* — the original source of the Curse of Dimensionality; Bellman named the phenomenon in an optimization context
 
-- [Zixi Li, 2026b] Collins — Randomized optimizer, $O(1)$ state compression, information-theoretic proof of safe compression ratio $c_{\text{opt}} \approx 34$
+- Chapter 11 of this book, Sections 5–9: the Collins randomized optimizer — information-theoretic proofs and experiments for $O(1)$ state compression and the safe compression ratio $c_{\text{opt}} \approx 34$ (code in Chapter 11's appendix: `collins_adam.py`)

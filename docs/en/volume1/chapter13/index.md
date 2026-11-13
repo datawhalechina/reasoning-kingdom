@@ -1,6 +1,6 @@
 # Chapter 13: The Boundaries of Reasoning — and Why We Must Accept Them
 
-> Turing asked: Can machines think? The harder question is: Can we know that it is thinking?
+> Turing asked: can machines think? The harder question is: can we know that they think?
 
 <div class="center">
 
@@ -8,21 +8,21 @@
 
 </div>
 
-## I. The Existence of Boundaries
+## 1. The Boundaries Exist
 
-This book began in Chapter 1 with entropy increase and prediction, traversed symbol systems, word vectors, neural networks, Transformers, search algorithms, complexity theory. We have seen the tremendous progress of AI reasoning, and we have also seen its fundamental limitations.
+This book started with entropy and prediction in Chapter 1, and has passed through symbolic systems, word vectors, neural networks, Transformers, search algorithms, and complexity theory. We have seen the great progress of AI reasoning, and we have seen its fundamental limits.
 
-Now it is time to face a deeper question: **Does reasoning itself have boundaries?**
+Now it is time to face a deeper question: **does reasoning itself have boundaries?**
 
-The answer is: yes. And this boundary is not a technical limitation, but a **logical necessity**.
+The answer is: yes. And that boundary is not a technical limit — it is a **logical necessity**.
 
-The Halting Problem from Chapter 7 tells us: some problems are simply undecidable. Given a program and its input, no algorithm can determine whether it will halt.
+Chapter 7's halting problem told us: some questions simply cannot be decided. Given a program and its input, no algorithm can decide whether it will halt.
 
-The Yonglin Formula from Chapter 12 tells us: reasoning chains will ultimately converge back to prior anchor points, the object level closes, the meta-level fractures.
+Chapter 12's Yonglin's formula told us: reasoning chains eventually converge back to the prior anchor — the object layer closes and the meta layer breaks.
 
-These two results point to the same fact: **any sufficiently powerful reasoning system contains problems it cannot solve**.
+These two results point at the same fact: **any sufficiently powerful reasoning system contains problems it cannot solve**.
 
-This is not a failure, but a mathematical truth.
+This is not failure. It is mathematical truth.
 
 <div class="center">
 
@@ -30,44 +30,44 @@ This is not a failure, but a mathematical truth.
 
 </div>
 
-## II. Gödel's Echo
+## 2. The Echo of Gödel
 
-In 1931, Gödel proved a theorem that shook the mathematical world: **any sufficiently strong formal system contains true propositions that it cannot prove**.
+In 1931, Gödel proved a theorem that shook the mathematical world: **any sufficiently strong formal system contains true propositions it cannot prove**.
 
 Let me restate this theorem in the simplest way.
 
-Suppose you have a formal system $S$ that has:
+Suppose you have a formal system $S$, with:
 
-- A set of axioms: the starting points the system acknowledges
-- A set of inference rules: how to derive new propositions from axioms
+- a set of axioms — the starting points the system acknowledges
+- a set of inference rules — how to derive new propositions from the axioms
 
-As long as this system is sufficiently strong — strong enough to express basic arithmetic, strong enough to talk about "proof" itself — Gödel can construct a special proposition $G$ within the system:
+As long as this system is strong enough — strong enough to express basic arithmetic, strong enough to talk about "proof" itself — Gödel can construct a special proposition $G$ inside it:
 
 $$
-G = \text{"Proposition G is unprovable in system S"}
+G = \text{"G is not provable in system S"}
 $$
 
 Now ask: is $G$ true?
 
-**Case 1**: If $G$ is provable, then what $G$ says — "G is unprovable" — is false. A sound formal system has proven a false proposition; the system collapses.
+**Case 1**: if $G$ is provable, then what $G$ says — "G is not provable" — is false. A sound formal system proved a false proposition. The system collapses.
 
-**Case 2**: If $G$ is unprovable, then what $G$ says — "G is unprovable" — is true. So $G$ is true, but the system cannot prove it.
+**Case 2**: if $G$ is not provable, then what $G$ says is true. So $G$ is true, but the system cannot prove it.
 
-Conclusion: **There exists a true proposition $G$ that system $S$ cannot prove**.
+Conclusion: **there is a true proposition $G$ that system $S$ cannot prove**.
 
-Stop, let this sentence turn around in your head a few times.
+Stop, and let that sentence turn around in your head.
 
-"Proposition $G$ is unprovable in system $S$" — if it's provable, it lied; if it's unprovable, it told the truth. This sentence is not describing the world; it is describing itself. And when you try to judge whether it's true or false, you've already fallen into the pit it dug.
+"The proposition $G$ is unprovable in system $S$" — if it is provable, it is lying; if it is not provable, it is telling the truth. This sentence is not describing the world; it is describing itself. And when you try to decide whether it is true, you have already fallen into the pit it dug.
 
 This is not a failure of logic; it is the structural cost of self-reference. Any sufficiently strong system contains such a pit, because "sufficiently strong" itself means: it can not only talk about objects, but also talk about how it talks about objects.
 
-:::details Why Does "Sufficiently Strong" Bring Self-Reference?
-Gödel's technique is not simply writing a paradox, but encoding "proof" into arithmetic relations. Propositions, proof sequences, and inference rules can all be numbered, becoming relations between natural numbers. Thus, a system that seems only to talk about addition and multiplication suddenly acquires the ability to talk about "whether a certain proposition is provable."
+### Why Does "Sufficiently Strong" Bring Self-Reference?
 
-This is where the danger lies: once a system can encode its own syntax, it can construct propositions that point to themselves. Self-reference is not an add-on feature, but a side effect of sufficient expressive power.
-:::
+Gödel's trick is not simply writing down a paradox; it is encoding "proof" as arithmetic relations. Propositions, proof sequences, inference rules can all be numbered and turned into relations between natural numbers. So a system that seems to only talk about addition and multiplication suddenly gains the ability to talk about "whether this proposition is provable".
 
-This also explains why incompleteness is not "the system is not strong enough." On the contrary, the stronger the system, the more inevitably it encounters its own shadow.
+That is where the danger lies: once a system can encode its own syntax, it can construct propositions that point at itself. Self-reference is not an added feature; it is a side effect of being expressive enough.
+
+This also explains why incompleteness is not about "the system not being strong enough". Quite the opposite: the stronger a system is, the more inevitably it meets its own shadow.
 
 <div class="center">
 
@@ -75,99 +75,45 @@ This also explains why incompleteness is not "the system is not strong enough." 
 
 </div>
 
-## III. The Yonglin Formula and Gödel's Theorem: A Structural Isomorphism
+## 3. Gödel's Boundary: The Shape of Incompleteness
 
-Between the Yonglin Formula of [Zixi Li, 2025b] and Gödel's incompleteness theorem, there exists a structural isomorphism that deserves serious elaboration.
+The lesson of Gödel's incompleteness theorem for reasoning is not the conclusion "there exist unprovable propositions" itself, but a deeper structure it reveals: **a system can generate infinitely many legal steps in internally consistent fashion, yet cannot guarantee from the inside that those steps reach the truth outside the system.**
 
-Recall the Yonglin Formula:
-
-$$
-\lim_{n \to \infty} \Pi^{(n)}(s) = A, \quad \text{but} \quad A \neq A^*
-$$
-
-This formula says: **the object level closes, the meta-level fractures**.
-
-- **Object level**: the model can generate reasoning chains, maintaining internal self-consistency
-- **Meta-level**: the model cannot truly jump out of its own parameters and training distribution to verify whether the reasoning chain reaches external truth
-- **Prior anchor point $A$**: the internal attractor to which the model ultimately converges
-- **True anchor point $A^*$**: the correct structure of the task in the external world
-
-This and Gödel's theorem are not "somewhat similar," but share the same deep shape: a system can generate infinitely many legitimate steps internally, yet cannot, from within, guarantee that these steps arrive at truth outside the system.
-
-| Gödel's Theorem | Yonglin Formula |
-|:-----------|:---------|
-| Formal system $S$ | AI reasoning system |
-| Axioms + inference rules | Training data + network architecture |
-| Proposition $G$: "G is unprovable" | Prior anchor point $A$: "A is correct" |
-| $G$ is true but unprovable | $A \neq A^*$ but the system converges to $A$ |
-| System cannot prove its own completeness from within | Model cannot verify its own reasoning from within |
-
-First-row mapping: **Formal system $S$ ↔ AI reasoning system**.
-
-A formal system is not a single sentence, but an entire machine for generating legitimate propositions: it has axioms, inference rules, and a criterion for "what counts as a proof." An AI reasoning system is also not a single answer, but an entire machine for generating reasoning trajectories: it has training data, network architecture, decoding strategies, context windows, attention distribution mechanisms.
-
-So the correspondence here is not a metaphor, but a structural correspondence: both are "starting from internal rules, generating a sequence of seemingly legitimate symbols." Formal systems generate proofs; AI systems generate reasoning chains.
-
-Second-row mapping: **Axioms + inference rules ↔ Training data + network architecture**.
-
-The axioms of a formal system determine what it acknowledges as starting points; the inference rules determine how it is allowed to advance. The training data of a large model determines which patterns it treats as "natural"; the network architecture determines how these patterns are combined, compressed, retrieved, and unfolded.
-
-If the axioms of a formal system are its worldview, then training data is the model's worldview. If inference rules are the kinematics of a formal system, then network architecture is the kinematics of the model. Where a system can go depends not only on where it "wants" to go, but even more on where it was allowed to start and in what way it is allowed to move.
-
-Third-row mapping: **Gödel proposition $G$ ↔ Prior anchor point $A$**.
-
-The uncanniness of the Gödel proposition $G$ lies in this: it stuffs the system's meta-level problem back into the object level. On the surface it is an ordinary proposition; more deeply, it asks "can the system prove this proposition."
-
-The prior anchor point $A$ also has a similar dual identity. On the surface, it is merely the answer tendency to which the model converges at the end of a reasoning chain; looking deeper, it represents the training distribution structure that the model cannot escape. The model thinks it is reasoning about the external world, but in reality it is often sliding along internal attractors.
-
-This is why $A$ is not an ordinary wrong answer. An ordinary wrong answer can be corrected by the next step of reasoning; the prior anchor point, however, is the attractor center of the reasoning dynamics itself. The more you let the model "keep thinking," the more likely it is to self-consistently orbit this center.
-
-Fourth-row mapping: **True but unprovable ↔ Anchor point not equal to truth but still converged to**.
-
-In Gödel's theorem, $G$ is true, but the system cannot prove $G$. In the Yonglin Formula, the external truth is $A^*$, but the model, in object-level reasoning, converges to $A$, and generally $A \neq A^*$.
-
-This does not mean the model is necessarily wrong, nor that formal systems are necessarily useless. Quite the opposite: formal systems can prove vast numbers of theorems; models can complete vast amounts of reasoning. The problem is that, once you demand that the system provide, from within, a guarantee that "I have arrived at the complete truth," it will fail.
-
-:::details Technical Detail: Why Can Training Data + Network Architecture Correspond to Axioms + Inference Rules?
 A formal system can be written as a triple:
 
 $$
 S = (\mathcal{A}, \mathcal{R}, \vdash)
 $$
 
-Where $\mathcal{A}$ is the set of axioms, $\mathcal{R}$ is the inference rules, and $\vdash$ is the provability relation. An AI reasoning system can also be abstracted as:
+where $\mathcal{A}$ is the set of axioms, $\mathcal{R}$ the inference rules, and $\vdash$ the provability relation. The uncanniness of Gödel's proposition $G$ is this: it stuffs the system's meta-level question back into the object level. On the surface it is an ordinary proposition; in fact it asks "can the system prove this proposition".
 
-$$
-M = (D, \Theta, \Pi)
-$$
+This brings three direct consequences:
 
-Where $D$ is the training data distribution, $\Theta$ is the state transition mechanism determined by network architecture and parameters, and $\Pi$ is the distribution of reasoning trajectories generated by decoding.
+**Consequence one: self-verification has a structural ceiling.** A system can prove many theorems with $S$, but once you ask it to give an internal guarantee of "I have reached all the truth", it fails. This is not a defect of the system; it is a shape shared by every sufficiently strong system.
 
-Under this abstraction:
+**Consequence two: internal consistency is not external truth.** A system can generate infinitely many seemingly correct proofs within its own boundaries, and mistake that internal consistency for external truth. The real danger is not that the system makes mistakes, but that it cannot use itself to prove itself right.
 
-- $\mathcal{A} \leftrightarrow D$: the starting points the system acknowledges / the world statistics the model absorbs
-- $\mathcal{R} \leftrightarrow \Theta$: legitimate derivation rules / implicit state transition rules
-- $\vdash \leftrightarrow \Pi$: provability relation / generatable reasoning trajectories
+**Consequence three: there is still a lot to do inside the boundaries.** Precisely because a system cannot vouch for itself, we need external checkpoints — machine proof checkers, independent verifiers, human review. Completeness was never a property of the system; it is a division of labor between people and systems.
 
-The Yonglin Formula is not concerned with whether a particular output step is elegant, but with whether, when $\Pi$ is repeatedly iterated, it can leave the basin of attraction jointly shaped by $D$ and $\Theta$. The conclusion is: in the absence of external meta-level verification, reasoning trajectories will converge back to the prior anchor point $A$.
+:::details Technical Detail: The Abstraction of a Formal System Is Roomy Enough to Hold a Reasoning System
+Put $S = (\mathcal{A}, \mathcal{R}, \vdash)$ side by side with a reasoning system:
+
+- $\mathcal{A}$: the starting points the system acknowledges (axioms / the training distribution and the prior)
+- $\mathcal{R}$: the legal derivation rules (inference rules / hidden-state transition rules)
+- $\vdash$: the provability relation (whether a derivation step is accepted)
+
+The benefit of this abstraction: it moves the discussion of "system boundaries" from mathematics into reasoning research, without assuming a reasoning system and a mathematical system are the same kind of thing. Gödel spoke of formal systems, not neural networks. His lesson is structural: any system that "generates legal steps with its own rules" cannot use itself to prove its own completeness.
 :::
 
-:::details 
-Technical Detail: Why Can $A$ Correspond to Gödel Proposition $G$?
-The core of Gödel proposition $G$ is not "this sentence is convoluted," but that it turns the system's proof capability into an object within the system. It forces the system to answer: "Can I prove what I cannot prove?"
+:::details An Easy Point of Confusion: $G$ and $A$ Are Not the Same Thing
+Gödel's proposition $G$ turns the system's proof power into an object inside the system — it forces the system to answer "can I prove what I cannot prove".
 
-The prior anchor point $A$ also turns the model's meta-level limitation into object-level output. The model does not say "I cannot escape the training distribution"; it merely gives an answer that appears plausible, linguistically fluent, and internally self-consistent. This answer is the projection of the meta-level limitation onto the object level.
+A reasoning model's prior anchor $A$ is another thing: the model does not say "I cannot escape the training distribution". It simply gives an answer that looks reasonable, reads smoothly, and is internally consistent — and that answer is the meta-level limit projected into the object level.
 
-Therefore, the correspondence is not: $A$ and $G$ look alike.
+The two propositions are similar in language but different in mechanism: $G$'s unprovability comes from a formal system's self-referential power; $A$'s convergence comes from the basin of attraction of the reasoning dynamics. Gödel's lesson and Yonglin's formula's lesson each hold independently; neither can be derived from the other.
 
-The correspondence is: both compress the meta-level boundary that the system cannot cross into an object visible within the system.
+The judgment really worth taking away: **any sufficiently powerful reasoning system encodes its own limits into its own structure**. Gödel is the example that takes this judgment furthest, and most precisely.
 :::
-
-The bonus section of Chapter 9 revealed the physical intuition of this convergence: self-attention is mathematically equivalent to a one-step retrieval of Hopfield associative memory; the statistical bias $A$ of the training data is encoded as the global minimum of the energy function — an attractor. The longer the reasoning chain, the more the model is pulled toward this attractor. The convergence of the Yonglin Formula is the necessity of energy minimization, not merely the passive failure of Bayesian updating.
-
-Thus, Gödel's logical incompleteness, the Yonglin Formula's meta-level fracture, and Hopfield's energy attraction describe the same thing projected in different languages: **any sufficiently strong reasoning system encodes its own limitations into its own structure**.
-
-What is truly dangerous is not that the system makes mistakes. What is truly dangerous is that: the system can generate infinitely many seemingly correct reasons within its own boundaries, and mistake this internal self-consistency for external truth.
 
 <div class="center">
 
@@ -175,126 +121,121 @@ What is truly dangerous is not that the system makes mistakes. What is truly dan
 
 </div>
 
-## IV. Hands-On: Construct an Undecidable Problem
+## 4. Try It Yourself: Constructing an Undecidable Problem
 
-Let us personally experience the undecidability of the Halting Problem.
+Let us experience the undecidability of the halting problem with our own hands.
 
-**Step 1: Assume the existence of a halting decider**
+**Step 1: assume a halting decider exists**
 
-**Step 2: Construct the diagonalization program**
+**Step 2: construct the diagonalization program**
 
-The Python code below concretizes this thought experiment. We first define a "hypothetical" halting decider (in reality impossible to precisely implement), then construct the diagonalization program that makes it self-contradict, and finally verify the inevitability of the contradiction through exhaustive simulation.
+The Python below makes this thought experiment concrete. We first define a "hypothetical" halting decider (which in reality cannot be implemented exactly), then construct the diagonalization program that drives it into contradiction, and finally verify with a brute-force simulation that the contradiction must happen.
 
 ```python
 import sys
 import threading
 
 # ------------------------------------------------------------------
-# Step 1: Simulate an "approximate halting decider" using timeout
-#   A true HALT cannot exist; here we use a finite timeout as an approximation:
-#   If func returns within timeout seconds, judge as "halts"; otherwise, "does not halt".
+# Step 1: simulate an "approximate halting checker" with a timeout
+#   A true HALT cannot exist; here we approximate it with a finite timeout:
+#   if the program returns within `timeout` seconds, we judge it "halts",
+#   otherwise we judge it "does not halt".
 # ------------------------------------------------------------------
 def approximate_halt(func, timeout=0.05):
     """
-    Approximately judge whether func() will halt within timeout seconds.
-    Returns True for "judged to halt", False for "judged not to halt".
+    Approximate whether func() halts within `timeout` seconds.
+    Returns True for "judged halting", False for "judged non-halting".
     """
     result = [None]
 
     def runner():
         try:
             func()
-            result[0] = True   # Function returned normally -> halts
+            result[0] = True   # function returned normally -> halts
         except Exception:
-            result[0] = True   # Throwing an exception also counts as halting
+            result[0] = True   # raising an exception also counts as halting
 
     t = threading.Thread(target=runner, daemon=True)
     t.start()
     t.join(timeout)
-    # Timed out without finishing -> judged as "does not halt"
+    # still running after the timeout -> judged as "does not halt"
     return result[0] is True
 
 # ------------------------------------------------------------------
-# Step 2: Construct the diagonalization program DIAG
-#   DIAG's logic:
-#     If HALT(DIAG) returns True (judged that DIAG will halt)
-#       -> DIAG enters an infinite loop (actually does not halt)
-#     Otherwise (judged that DIAG does not halt)
-#       -> DIAG immediately returns (actually halts)
+# Step 2: construct the diagonalization program DIAG
+#   The logic of DIAG:
+#     If HALT(DIAG) returns True (judges that DIAG will halt)
+#         -> DIAG enters an infinite loop (actually does not halt)
+#     Otherwise (judged not to halt)
+#         -> DIAG returns immediately (actually halts)
 # ------------------------------------------------------------------
 def make_diag(halt_checker):
-    """Factory function: construct a diagonalization program using the given halt_checker"""
+    """Factory function: build a diagonalization program from the given halt_checker"""
     def diag():
-        # First ask the "decider": will I (diag) myself halt?
+        # First ask the "checker": will I (diag) halt?
         will_halt = halt_checker(diag)
         if will_halt:
-            # Decider says I will halt -> I'll just loop forever
+            # The checker says I will halt -> I stubbornly loop forever
             while True:
                 pass
         else:
-            # Decider says I won't halt -> I'll just return immediately
+            # The checker says I will not halt -> I stubbornly return at once
             return
 
     return diag
 
 # ------------------------------------------------------------------
-# Step 3: Ask: will DIAG(DIAG) halt? Reveal the contradiction
+# Step 3: ask whether DIAG(DIAG) will halt, revealing the contradiction
 # ------------------------------------------------------------------
 print("=" * 55)
-print("Halting Problem Undecidability: Diagonalization Argument")
+print("Undecidability of the halting problem: the diagonalization argument")
 print("=" * 55)
 
 diag = make_diag(approximate_halt)
 
-# First use the decider to predict the result
+# First predict with the checker
 prediction = approximate_halt(diag)
-print(f"\nDecider predicts: DIAG will {'halt' if prediction else 'not halt'}")
+print(f"\nChecker prediction: DIAG will {'halt' if prediction else 'not halt'}")
 
-# Then use timeout to actually observe DIAG's behavior
+# Then actually observe DIAG's behavior using a timeout
 actual_halted = approximate_halt(diag, timeout=0.1)
 print(f"Actual observation: DIAG {'halted' if actual_halted else 'did not halt (timeout)'}")
 
-# Determine whether a contradiction occurred
+# Check whether a contradiction arises
 if prediction != actual_halted:
-    print("\n-> Contradiction! The decider's prediction is opposite to DIAG's actual behavior.")
+    print("\n-> Contradiction! The checker's prediction is the opposite of DIAG's actual behavior.")
 else:
-    # Note: Due to timeout approximation, two observations may "coincidentally" agree,
-    # but this is only an error of the approximate decider, not affecting the rigorous mathematical proof.
-    print("\n-> Note: timeout approximation obscures the contradiction, but the rigorous mathematical proof")
-    print("   guarantees that a precise HALT necessarily leads to contradiction (see analysis below).")
+    # Note: the timeout approximation may make the two observations
+    # "coincidentally" agree; this is only the error of an approximate
+    # checker and does not affect the rigorous mathematical proof.
+    print("\n-> Note: the timeout approximation may mask the contradiction, but the rigorous proof")
+    print("   guarantees the exact HALT inevitably leads to a contradiction (see the analysis below).")
 
-print("\n--- Rigorous Logical Analysis ---")
-print("Case A: HALT(DIAG, DIAG) = True  -> DIAG loops forever -> Actually does not halt -> Contradiction!")
-print("Case B: HALT(DIAG, DIAG) = False -> DIAG returns immediately -> Actually halts   -> Contradiction!")
-print("\nConclusion: A precise halting decider HALT is logically impossible.")
-print("      This is not because the algorithm is not smart enough, but a logical necessity.")
+print("\n--- Rigorous logical analysis ---")
+print("Case A: HALT(DIAG, DIAG) = True  -> DIAG loops forever -> actually does not halt -> contradiction!")
+print("Case B: HALT(DIAG, DIAG) = False -> DIAG returns at once -> actually halts   -> contradiction!")
+print("\nConclusion: an exact halting checker HALT is logically impossible.")
+print("      This is not a matter of algorithmic cleverness, but a logical necessity.")
 ```
 
-**Step 3: Ask DIAG(DIAG)**
+**Step 3: ask DIAG(DIAG)**
 
-Now ask: will DIAG(DIAG) halt?
+Now ask: does DIAG(DIAG) halt?
 
 - **If HALT(DIAG, DIAG) returns True**:
-
-  - Meaning DIAG(DIAG) will halt
-
-  - But according to DIAG's definition, it will enter an infinite loop
-
-  - Contradiction!
-
+  - that means DIAG(DIAG) halts
+  - but by DIAG's definition, it enters an infinite loop
+  - contradiction!
 - **If HALT(DIAG, DIAG) returns False**:
-
-  - Meaning DIAG(DIAG) does not halt
-
-  - But according to DIAG's definition, it will immediately return (halt)
-
-  - Contradiction!
+  - that means DIAG(DIAG) does not halt
+  - but by DIAG's definition, it returns immediately (halts)
+  - contradiction!
 
 **Conclusion**: HALT cannot exist.
 
-**What does this contradiction illustrate?**
+**What does this contradiction tell us?**
 
-It's not that we haven't yet found a sufficiently clever algorithm, but that **no algorithm can solve the Halting Problem**. This is logical necessity, not technical limitation.
+Not that we have not yet found an algorithm clever enough, but that **no algorithm can solve the halting problem**. It is a logical necessity, not a technical limit.
 
 <div class="center">
 
@@ -302,110 +243,47 @@ It's not that we haven't yet found a sufficiently clever algorithm, but that **n
 
 </div>
 
-## V. The Map of the Reasoning Kingdom
+## 5. The Map of the Reasoning Kingdom
 
 Now let us step back.
 
-Spread out the previous thirteen chapters: Chapter 1's entropy increase tells us why the world needs prediction, Chapter 2's symbols tell us how humans wrote prediction into operable rules, Chapters 3 through 6 tell us how neural networks compress symbols into vectors, advance vectors into states, organize states into the attention flow of the Transformer. Chapter 7's complexity tells us: not all searches can be completed elegantly. Chapter 8's heuristics tell us: when exactness is unreachable, we must learn to compromise at a cost. Chapters 9 through 11 tell us: attention, search, and randomization can all push the boundary forward a bit, but cannot push away the boundary itself. Chapter 12's Yonglin Formula finally tells us: even the act of "continuing to reason" itself has its own convergence limit.
+Lay out the thirteen earlier chapters: Chapter 1's entropy told us why the world needs prediction; Chapter 2's symbols told us how humans write predictions into workable rules; Chapters 3 through 6 told us how neural networks compress symbols into vectors, push vectors into states, and organize states into the attention flow of a Transformer; Chapter 7's complexity told us: not every search can be finished beautifully; Chapter 8's heuristics told us: when exactness is unavailable, we must learn to compromise at a price; Chapters 9 through 11 told us: attention, search, and randomization can each push the boundary a little — but not the boundary away; Chapter 12's Yonglin's formula told us, finally: even "continuing to reason" has its own convergence limit.
 
-All of these ultimately fall onto this map.
+All of it ends up on this map.
 
-**Central Zone: Decidable Problems.**
+**The center: decidable problems.**
 
-This is the brightest district of the Reasoning Kingdom. Sorting, shortest paths, dynamic programming, linear algebra, many engineering optimization problems — all live here. They are not necessarily simple, but at least there are clear roads: given an input, the algorithm will stop, the answer can be verified, the complexity can be estimated.
+This is the brightest district of the Reasoning Kingdom. Sorting, shortest paths, dynamic programming, linear algebra, and many engineering optimization problems live here. They are not necessarily easy, but they have clear roads: given an input, the algorithm will stop; the answer can be verified; the complexity can be estimated.
 
-P-class problems are the main roads of the central district: solvable in polynomial time. NP-class problems are more complex neighborhoods: answers can be quickly verified, but finding answers may be extremely expensive. The $\mu(L,d)$ phase diagram from Chapter 7 tells us that even within NP, not every street is equally dark. Solvability is not a switch, but a continuous landscape.
+P-class problems are the main arteries of the downtown area: solvable in polynomial time. NP-class problems are the trickier neighborhoods: an answer can be verified quickly, but finding the answer can be extremely expensive. Chapter 7's $\mu(L, d)$ phase diagram told us: even inside NP, not every street is equally dark. Solvability is not a switch; it is a continuous landscape.
 
-**The Fog Belt: Phase Transition Regions.**
+**The fog belt: the phase-transition region** — a phase transition is a sharp change in behavior as a parameter crosses a threshold.
 
-Moving further out, you will encounter fog.
+Walk further out and you meet fog.
 
-OpenXOR's $\alpha \approx 4.26$ is a typical fog belt: instances abruptly change from "almost always solvable" to "almost always unsolvable." Collins' $c_{\text{opt}} \approx 34$ is also a fog belt: compression moves from safe to dangerous. The effective reasoning window of CoT is likewise a fog belt: reasoning slides from effective unfolding gradually toward repeating priors.
+OpenXOR's $\alpha \approx 4.26$ is a typical fog belt: instances switch from "almost always solvable" to "almost always unsolvable" abruptly. Collins's $c_{\text{opt}} \approx 34$ is also a fog belt: compression goes from safe to dangerous. CoT's effective reasoning window is likewise a fog belt: reasoning slides gradually from productive unfolding into the repetition of the prior.
 
-The most important feature of the fog belt is: it is not a wall. You cannot simply say "here it's solvable, there it's not." In the fog, tiny parameter changes can cause enormous consequences. One extra constraint, a bit of extra compression, a few too many steps in the reasoning chain — any of these can cause the system to slide from lucidity into hallucination.
+The most important feature of a fog belt: it is not a wall. You cannot simply say "solvable here, unsolvable there". In the fog, tiny parameter changes cause huge consequences. One extra constraint, a bit more compression, a few steps too many of reasoning — any of these can slide a system from lucidity into hallucination.
 
-**Outer Ring: Undecidability and Incompleteness.**
+**The outer ring: undecidability and incompleteness.**
 
-Further out lies the dark border of the Kingdom.
+Further still, the dark frontier of the kingdom.
 
-The Halting Problem tells us: some problems have no universal decision algorithm. Gödel's proposition tells us: some true propositions cannot be proven within the system. The Yonglin Formula tells us: some reasoning chains cannot complete meta-level self-verification within the model.
+The halting problem tells us: some problems have no general decision algorithm. Gödel's proposition tells us: some true propositions cannot be proven inside a system. Yonglin's formula tells us: some reasoning chains cannot complete meta-level self-verification inside the model — each is its own boundary, not three statements of the same thing.
 
-These three are not the same theorem, but they point in the same direction: when a system is sufficiently strong — strong enough to express, simulate, and reflect upon itself — it inevitably generates its own blind spots.
+These three are not the same theorem, but they point in the same direction: when a system is strong enough to express, simulate, and reflect on itself, it inevitably generates its own blind spot.
 
-:::details Distinctions Among the Three Boundaries
-- **Complexity boundary**: The problem is solvable, but may be too slow. A typical example is NP-hard search.
-- **Phase transition boundary**: The problem does not suddenly become unsolvable, but becomes sharply harder in a certain parameter region. A typical example is 3-SAT's $\alpha \approx 4.26$.
-- **Logical boundary**: The problem is not slow, but no universal algorithm exists. Typical examples are the Halting Problem and Gödel incompleteness.
+:::details The Difference Between the Three Boundaries
+- **Complexity boundary**: the problem is solvable, but possibly far too slow. Typical example: NP-hard search.
+- **Phase-transition boundary**: the problem does not suddenly become unsolvable — it sharply hardens in some parameter region. Typical example: 3-SAT's $\alpha \approx 4.26$.
+- **Logical boundary**: the problem is not slow — no general algorithm exists at all. Typical examples: the halting problem and Gödel's incompleteness.
 
-Conflating these three leads to two kinds of errors: one is mistaking logical impossibility for insufficient engineering effort; the other is prematurely declaring engineering difficulty as philosophical destiny.
+Conflating the three causes two kinds of mistakes: mistaking a logical impossibility for insufficient engineering effort, or prematurely declaring an engineering difficulty a philosophical fate.
 :::
 
-This map tells us: **the boundary of reasoning is not a line, but a gradient of fog; at the end of the fog lies not a bigger model, but the horizon of logic itself**.
+This map tells us: **the boundary of reasoning is not a line, but a fog with a gradient; at the end of the fog, there is no bigger model — only the horizon of logic itself**.
 
-This is what Volume I truly wants to say: reasoning is not an infinitely ascending ladder, but a search for paths across the three terrains of decidability, phase transition, and incompleteness. Knowing where you stand is more important than blindly charging forward.
-
-<div class="center">
-
-------------------------------------------------------------------------
-
-</div>
-
-## VI. Pseudocode: Formalizing the Boundaries
-
-**Algorithm 1: Diagonalization Proof of the Halting Problem**
-
-    Proof of the Undecidability of the Halting Problem:
-
-    Assumption: There exists a decider HALT(P, x)
-
-    Construct the diagonal program:
-    def DIAG(P):
-      if HALT(P, P):
-        loop_forever()  # Infinite loop
-      else:
-        return  # Halt
-
-    Ask: HALT(DIAG, DIAG) = ?
-
-    Case 1: HALT(DIAG, DIAG) = True
-      -> DIAG(DIAG) will halt
-      -> But DIAG's definition: if HALT returns True, then loop forever
-      -> Contradiction!
-
-    Case 2: HALT(DIAG, DIAG) = False
-      -> DIAG(DIAG) does not halt
-      -> But DIAG's definition: if HALT returns False, then halt
-      -> Contradiction!
-
-    Conclusion: HALT does not exist
-
-![Diagonalization Argument: Visualization of the Undecidability of the Halting Problem](/figures/ch15_fig1_diagonalization.png)
-
-*Figure 1: Matrix representation of the diagonalization argument. Rows are programs P, columns are inputs x, cells mark the result of HALT(P,x) (H=halt, L=loop). The cells on the diagonal, HALT(P,P), define DIAG: where the diagonal has H, make DIAG loop; where it has L, make DIAG halt. DIAG must appear in some row — but that row's value on the diagonal contradicts DIAG's definition. This contradiction is logical necessity, not technical limitation.*
-
-**Algorithm 2: Meta-Level Fracture of the Yonglin Formula**
-
-    Meta-Level Fracture Detection (AI system S, Reasoning task T):
-    Input: AI system, Reasoning task
-    Output: Object-level conclusion, Meta-level limitation
-
-    1. Object-level reasoning:
-       C = S.reason(T)  # System gives a conclusion
-
-    2. Meta-level verification:
-       Ask: "Can S prove that C is correct?"
-
-    3. Incompleteness detection:
-       if S cannot verify C at the meta-level:
-         # There exists a true proposition C*, true at the object level but unprovable at the meta-level
-         return (C, "Meta-level fracture")
-
-    4. Analogy to Gödel:
-       G = "Proposition G is unprovable"
-       # G is true, but the system cannot prove G
-       # Yonglin Formula: A is the prior, but A ≠ A*
-
-    5. Return (C, "Object level closed, meta-level fractured")
+That is what Volume 1 really wants to say: reasoning is not an infinitely rising staircase; it is finding a path among three kinds of terrain — the decidable, the phase-transition, and the incomplete. Knowing where you stand matters more than charging ahead blindly.
 
 <div class="center">
 
@@ -413,112 +291,173 @@ This is what Volume I truly wants to say: reasoning is not an infinitely ascendi
 
 </div>
 
+## 6. Pseudocode: Formalizing the Boundaries
+
+**Algorithm 1: The Diagonalization Proof of the Halting Problem**
+
+```text
+Halting-problem undecidability proof:
+
+Assumption: a decider HALT(P, x) exists
+
+Construct the diagonal program:
+def DIAG(P):
+  if HALT(P, P):
+    loop_forever()   # infinite loop
+  else:
+    return           # halt
+
+Ask: HALT(DIAG, DIAG) = ?
+
+Case 1: HALT(DIAG, DIAG) = True
+  -> DIAG(DIAG) halts
+  -> but DIAG definition: if HALT returns True, loop forever
+  -> contradiction!
+
+Case 2: HALT(DIAG, DIAG) = False
+  -> DIAG(DIAG) does not halt
+  -> but DIAG definition: if HALT returns False, halt
+  -> contradiction!
+
+Conclusion: HALT does not exist
+```
+
+![The diagonalization argument: a visualization of the undecidability of the halting problem](/figures/ch15_fig1_diagonalization.png)
+
+*Figure 1: the matrix view of the diagonalization argument. Rows are programs P, columns are inputs x, and each cell records the result of HALT(P, x) (H = halts, L = loops). The diagonal cells HALT(P, P) define DIAG: where the diagonal says H, DIAG loops; where it says L, DIAG halts. DIAG must appear in some row — but that row's diagonal value contradicts DIAG's definition. The contradiction is a logical necessity, not a technical limit.*
+
+**Algorithm 2: The Meta-Level Break of Yonglin's Formula**
+
+```text
+Meta-layer break detection (AI system S, reasoning task T):
+
+Input:  AI system, reasoning task
+Output: object-level conclusion, meta-layer limit
+
+1. Object-level reasoning:
+   C = S.reason(T)
+
+2. Meta-layer verification:
+   ask: "can S prove C is correct?"
+
+3. Incompleteness detection:
+   if S cannot verify C at the meta layer:
+     # there exists a true proposition C* that is true at
+     # the object layer but unprovable at the meta layer
+     return (C, "meta-layer break")
+
+4. Return (C, "object layer closed, meta layer broken")
+```
+
+*Note: the "existence" in Step 3 is not Gödel's proof; it is a direct consequence of Yonglin's formula — the model verifies reasoning with the same set of parameters that produced the reasoning, so once the anchor $A$ is not $A^*$, the verification is permanently misaligned.*
+
 <div class="center">
 
 ------------------------------------------------------------------------
 
 </div>
 
-## VII. The Future of Reasoning: How Far Can We Go Within the Boundaries
+## 7. The Future of Reasoning: How Far Can We Go Inside the Boundaries
 
-Acknowledging the existence of boundaries does not mean giving up. Boundaries give direction: **within the boundaries, how far can we go?**
+Acknowledging that boundaries exist does not mean giving up. The boundaries give direction: **how far can we go inside them?**
 
 ---
 
-### 7.1 From Impossibility to "Probabilistic Possibility"
+### 7.1 From Impossible to "Probabilistically Possible"
 
-The Yonglin Formula reveals meta-level fracture — when the model verifies its own reasoning, it uses the same set of parameters that produced the reasoning, unable to truly step outside.
+Yonglin's formula revealed the meta-level break: when a model verifies its own reasoning, it uses the same set of parameters that produced the reasoning, so it cannot truly jump out.
 
-But this is not binary. It is not "completely can" or "completely cannot," but a probabilistic spectrum:
+But this is not binary. Not "fully possible" or "fully impossible" — it is a probabilistic spectrum:
 
-- **Short-chain reasoning** (3-5 steps): meta-level fracture has small impact; the model can effectively self-correct
-- **Medium-chain reasoning** (10-20 steps): error accumulation begins to manifest; external calibration points are needed
-- **Long-chain reasoning** (50+ steps): prior anchor point dominates; self-correction is nearly ineffective
+- **Short chains** (3–5 steps): the meta-level break barely matters; the model can effectively self-correct
+- **Medium chains** (10–20 steps): error accumulation starts to show; external calibration points are needed
+- **Long chains** (50+ steps): the prior anchor dominates; self-correction nearly fails
 
-This has direct implications for system design: **do not let the model complete reasoning chains beyond the effective reasoning window alone**. Interrupting, calibrating, restarting — these are necessary engineering compensations.
+This has a direct implication for system design: **do not let a model complete a reasoning chain beyond its effective reasoning window by itself**. Interrupting, calibrating, restarting — these are necessary engineering compensations.
 
 ---
 
-### 7.2 External Verifiers: Breaking Meta-Level Closure
+### 7.2 External Verifiers: Breaking the Meta-Level Closure
 
-The fundamental problem of the Yonglin Formula is self-reference — using reasoning itself to verify reasoning.
+The fundamental problem in Yonglin's formula is self-reference — verifying reasoning with reasoning itself.
 
-The approach to break this cycle is to introduce **independent external verifiers**:
+The idea to break the loop is introducing an **independent external verifier**:
 
-- **Formal verification**: Machine proofs of mathematical theorems (Lean, Coq). The model generates proof drafts; the formal system independently verifies each step. The verifier does not share the model's parameters; the meta-level fracture is repaired by external force.
-- **Symbolic execution**: In code reasoning, let an interpreter actually run the code generated by the model, using execution results as verification signals.
-- **Multi-model debate**: Use two independently trained models to challenge each other's reasoning, reducing the impact of systematic bias.
+- **Formal verification**: machine proof of mathematical theorems (Lean, Coq). The model generates a draft proof, and a formal system independently verifies every step. The verifier shares no parameters with the model; the meta-level break is repaired by an external force.
+- **Symbolic execution**: in code reasoning, let an interpreter actually run the code the model generated, and use the execution result as the verification signal.
+- **Multi-model debate**: two independently trained models challenge each other's reasoning, reducing the influence of systematic bias.
 
-The common logic of these approaches is: **move the meta-level from inside the model to outside**. There is no parameter sharing between the external verifier and the internal reasoner; Gödelian self-reference is physically severed.
+The common logic of these approaches: **move the meta layer from inside the model to outside it**. There is no parameter sharing between the external verifier and the internal reasoner; the self-reference is physically severed.
+
+Feel this gap with your own hands: on real models, the only force that ever moves a belief is an outside one — an independent detector report drives the model's belief (Section 14.7: with a 0.90-reliability detector the model tracks the Bayesian posterior to a median KL of 0.02), while 128 steps of the model re-reading its own belief leave $P(\text{YES})$ frozen at its anchor 0.485 (Section 14.8). An external checkpoint can do what the internal dynamics alone cannot. The meta-level break is not unfixable; it needs an external force to fix it.
 
 ---
 
 ### 7.3 Extended Context: A Longer Effective Reasoning Window
 
-The effective reasoning window $t_{\text{conv}}$ is not fixed; it is related to model capacity, task structure, and training method.
+The effective reasoning window $t_{\text{conv}}$ is not fixed; it depends on model capacity, task structure, and training method.
 
-Research directions from the past two years:
+Research directions in recent years:
 
-- **Long-range CoT training**: DeepSeek-R1's GRPO discovered that intra-group competitive pressure spontaneously produces longer, more structurally complete reasoning chains — this amounts to extending the effective reasoning window during training.
-- **Memory augmentation**: Externalizing intermediate reasoning steps to external storage (tool calls, vector databases), so the model doesn't have to hold all intermediate states in activations.
-- **Recursive refinement**: Reasoning about the same problem multiple times, each time using the previous output as a new starting point, similar to iterative convergence in numerical methods.
+- **Long-horizon CoT training**: DeepSeek-R1's GRPO found that intra-group competitive pressure spontaneously produces longer, more structured reasoning chains — which effectively stretches the effective reasoning window during training.
+- **Memory augmentation**: externalize intermediate reasoning steps to external storage (tool calls, vector stores), so the model does not have to hold all intermediate states in its activations.
+- **Recursive refinement**: reason about the same problem multiple times, each time using the previous output as a new starting point — similar to iterative convergence of numerical methods.
 
 ---
 
-### 7.4 Accepting Boundaries Is the Starting Point of Design
+### 7.4 Accepting the Boundary Is Where Design Begins
 
-The Halting Problem tells us: there is no universal decidable algorithm. P≠NP (if it holds) tells us: there is no universal efficient search. The Yonglin Formula tells us: there is no complete self-verification.
+The halting problem tells us: there is no general decidable algorithm. P≠NP (if it holds) tells us: there is no general efficient search. Yonglin's formula tells us: there is no complete self-verification.
 
-But these three boundaries precisely outline a design space:
+But these three boundaries happen to outline a design space:
 
-| Boundary | Engineering Compensation |
+| Boundary | Engineering compensation |
 |:-----|:--------|
-| Halting undecidability | Bounded computation, timeout termination |
+| Undecidable halting problem | Bounded computation, timeout termination |
 | NP-hard search | Heuristics, approximation algorithms, randomization |
-| Meta-level fracture | External verifiers, tool calls, multi-model debate |
+| Meta-level break | External verifiers, tool calls, multi-model debate |
 
-Every tool in this book — A*, MCTS, ADS, Collins, Transformer — is an engineering compensation within some boundary. They do not break through boundaries, but **find the optimal way to survive within the boundaries**.
+Every tool in this book — A\*, MCTS, ADS, Collins, Transformer — is an engineering compensation inside some boundary. They do not break the boundaries; they find the optimal way to survive within them.
 
-This is perhaps the most honest definition of reasoning: **finding the optimal path within constraints**.
+Perhaps this is the most honest definition of reasoning: **finding the optimal path within constraints**.
 
+## 8. Accept the Boundaries, Rather Than Deny Them
 
-## VIII. Accept Boundaries, Rather Than Deny Boundaries
-
-The core argument of this book is: **reasoning has boundaries, and these boundaries are fundamental**.
+The core thesis of this book is: **reasoning has boundaries, and these boundaries are fundamental**.
 
 But this is not a pessimistic conclusion; it is the starting point of liberation.
 
-When we accept the existence of boundaries, we no longer pursue impossible perfection:
+When we accept the existence of boundaries, we stop chasing impossible perfection:
 
-- No longer expect AI to solve all problems
-- No longer believe that larger models can eliminate all limitations
-- No longer view incompleteness as a defect
+- no longer expecting AI to solve every problem
+- no longer believing a larger model removes all limits
+- no longer treating incompleteness as a defect
 
-Instead, we begin to ask more meaningful questions:
+Instead, we start asking more meaningful questions:
 
-- **Within the boundaries, how well can we do?**
-- **How to identify whether a problem lies within or beyond the boundaries?**
-- **How to make the best decisions under uncertainty?**
+- **Within the boundaries, how good can we do?**
+- **How do we recognize whether a problem is inside or outside the boundaries?**
+- **How do we make the best decisions under uncertainty?**
 
-Chapter 7's μ(L,d) phase diagram tells us: solvability is not binary, but probabilistic. Near the phase transition point, problems exist in a superposition of solvable and unsolvable.
+Chapter 7's $\mu(\alpha)$ phase diagram told us: solvability is not binary; it is probabilistic. Near the phase-transition point, a problem is in a superposition of solvable and unsolvable.
 
-Chapter 8's heuristics tell us: when the optimal solution is unreachable, we need a "good enough" solution, and must be able to precisely quantify the degree of "good enough."
+Chapter 8's heuristics told us: when the optimal solution is unavailable, we need "good enough" solutions — while being able to quantify exactly how good "good enough" is.
 
-Chapter 10's MCTS tells us: reasoning does not require "understanding," only effective search.
+Chapter 10's MCTS told us: reasoning does not need "understanding"; it needs effective search.
 
-Chapter 11's Collins tells us: randomization can break through deterministic lower bounds, trading probabilistic guarantees for efficiency gains.
+Chapter 11's Collins told us: randomization can break a deterministic lower bound, trading probabilistic guarantees for efficiency gain.
 
-Chapter 13's Yonglin Formula tells us: the value of CoT lies in the effective reasoning window before convergence, not in the total number of steps.
+Chapter 12's Yonglin's formula told us: CoT's value is in the effective reasoning window before convergence, not in the total number of steps.
 
-**These are all wisdoms within the boundaries.**
+**All of this is wisdom within the boundaries.**
 
 But there is a trap here.
 
-Using heuristics, approximation algorithms, and external verifiers to optimize within the boundaries — this itself can also become another kind of "arrogance of artifacts": treating boundaries as engineering problems to be conquered, rather than logical facts to be respected. Technical systems are best at reformulating every problem as "can we optimize it a bit more." But in some places, the problem is not that you haven't optimized enough, but that you forgot to ask: optimization for what?
+Optimizing within the boundaries with heuristics, approximation algorithms, and external verifiers — this itself can become another kind of "arrogance of things": treating the boundary as an engineering problem to conquer, rather than a logical fact to respect. Technical systems are best at recasting every problem as "can this be optimized a little more?" Yet in some places, the problem is not that you have not optimized enough; it is that you forgot to ask: optimized for what?
 
-The true boundary of reasoning is not technical, but purposive. What is reasoning for? If only for accuracy, then continuing to optimize within the boundaries is enough. If it is for understanding — for humans to understand the world, understand themselves, understand others — then the boundary is not a wall, but a signpost. It tells you: up to here, beyond this is no longer the territory of reasoning.
+The real boundary of reasoning is not technical; it is about purpose. What is reasoning for? If it is only for accuracy, then optimizing within the boundary is enough. If it is for understanding — for people to understand the world, themselves, and each other — then the boundary is not a wall; it is a signpost. It tells you: this far, and beyond this is not reasoning's territory.
 
-What remains is humor, aesthetic judgment, moral courage, the capacity to love — those human qualities that algorithms cannot imitate, and should not be swallowed by algorithms.
+What remains is a sense of humor, aesthetic judgment, moral courage, the capacity to love — the human qualities that algorithms cannot imitate and should not be absorbed.
 
 <div class="center">
 
@@ -526,30 +465,30 @@ What remains is humor, aesthetic judgment, moral courage, the capacity to love �
 
 </div>
 
-## IX. Boundaries Are Possibility
+## 9. The Boundary Is Possibility
 
-Boundaries are not endpoints, but starting points.
+The boundary is not the end; it is the beginning.
 
-When we know certain problems are undecidable, we don't waste time searching for perfect algorithms, but turn to approximations, heuristics, probabilistic guarantees.
+When we know certain problems are undecidable, we will not waste time searching for a perfect algorithm, but turn to approximation, heuristics, probabilistic guarantees.
 
-When we know reasoning converges to prior anchor points, we don't blindly increase reasoning steps, but optimize the effective reasoning window.
+When we know reasoning converges to the prior anchor, we will not blindly increase the number of reasoning steps, but optimize the effective reasoning window.
 
-When we know global receptive field and linear complexity cannot both be achieved, we don't pursue non-existent architectures, but search for the optimum in the trade-off.
+When we know a global receptive field and linear complexity cannot be had together, we will not pursue an architecture that does not exist, but find the optimum in the tradeoff.
 
-**Boundaries define the space of possibility.**
+**The boundary defines the space of possibilities.**
 
-Within the boundaries, we have infinite creative space:
+Within the boundaries, we have unlimited creative room:
 
-- Better heuristic functions
-- More efficient search algorithms
-- More precise approximation guarantees
-- Smarter resource allocation
+- better heuristic functions
+- more efficient search algorithms
+- more precise approximation guarantees
+- cleverer resource allocation
 
 Beyond the boundaries, we have deeper theoretical questions:
 
-- Can boundaries be pushed forward?
-- Do the boundaries of different problems share a unified mathematical structure?
-- Is human reasoning also constrained by the same boundaries?
+- Can the boundary be pushed?
+- Do different problems' boundaries share a unified mathematical structure?
+- Is human reasoning subject to the same boundaries?
 
 <div class="center">
 
@@ -557,21 +496,17 @@ Beyond the boundaries, we have deeper theoretical questions:
 
 </div>
 
-## Unresolved
+## Open Questions
 
-This book began with unresolved questions and ends with unresolved questions.
+This book began with open questions, and it ends with open questions.
 
-- **Are the boundaries of reasoning fixed, or can they be pushed forward?** Can P vs NP be proven? Or is it itself an undecidable proposition?
+- **Are the boundaries of reasoning fixed, or can they be pushed?** Can P vs NP be proven? Or is it itself an undecidable statement?
+- **Can we construct a system "weak enough" to avoid incompleteness?** If a system is not strong enough, it will not run into Gödel's proposition. But would such a system still be useful?
+- **After accepting the limits, what should we do?** Optimize within the boundaries, or try to break through them?
+- **Where are the boundaries of human reasoning?** Are we also bound by Yonglin's formula? If so, how do we overcome it?
+- **Is uncertainty a defect or a feature?** Perhaps the essence of reasoning is making the best guess under incomplete information, rather than seeking absolute truth.
 
-- **Can we build a "sufficiently weak" system to avoid incompleteness?** If the system is not strong enough, it won't encounter the Gödel proposition. But is such a system still useful?
-
-- **After accepting limitations, what should we do?** Optimize within the boundaries, or try to break through the boundaries?
-
-- **Where are the boundaries of human reasoning?** Are we also constrained by the Yonglin Formula? If so, how do we overcome it?
-
-- **Is uncertainty a defect or a feature?** Perhaps the essence of reasoning is precisely making the best guess under incomplete information, rather than seeking absolute truth.
-
-**These questions have no answers. But asking the questions is itself the meaning of reasoning.**
+**These questions have no answers. But asking them — that itself is the meaning of reasoning.**
 
 <div class="center">
 
@@ -581,19 +516,13 @@ This book began with unresolved questions and ends with unresolved questions.
 
 ## Further Reading
 
-- [Zixi Li, 2025b] — The Yonglin Formula, theoretical proof of reasoning incompleteness, with structural isomorphism to Gödel's incompleteness theorem
-
-- Gödel, K. (1931). *Über formal unentscheidbare Sätze der Principia Mathematica und verwandter Systeme I* — Original paper on incompleteness theorems
-
-- Turing, A. (1936). *On Computable Numbers, with an Application to the Entscheidungsproblem* — Halting Problem and computability
-
-- Turing, A. (1950). *Computing Machinery and Intelligence* — The Turing Test, can machines think?
-
-- Penrose, R. (1989). *The Emperor's New Mind* — Gödel's theorem and philosophical discussion of artificial intelligence
-
-- [Hamkins & Nenu, 2024] — Historical Clarification of the Halting Problem `-> [arXiv:2310.07927]`
-
-- Hofstadter, D. (1979). *Gödel, Escher, Bach: An Eternal Golden Braid* — Classic work on self-reference, recursion, and consciousness
+- Chapter 12 of this book, Yonglin's formula — the theoretical proof of reasoning incompleteness (derivation and script included)
+- Gödel, K. (1931). *Über formal unentscheidbare Sätze der Principia Mathematica und verwandter Systeme I* — the original paper of the incompleteness theorem
+- Turing, A. (1936). *On Computable Numbers, with an Application to the Entscheidungsproblem* — the halting problem and computability
+- Turing, A. (1950). *Computing Machinery and Intelligence* — the Turing test: can machines think?
+- Penrose, R. (1989). *The Emperor's New Mind* — the philosophical discussion of Gödel's theorem and AI
+- [Hamkins & Nenu, 2024] — historical clarification of the halting problem `-> [arXiv:2310.07927]`
+- Hofstadter, D. (1979). *Gödel, Escher, Bach: An Eternal Golden Braid* — the classic on self-reference, recursion, and consciousness
 
 <div class="center">
 
@@ -603,18 +532,18 @@ This book began with unresolved questions and ends with unresolved questions.
 
 ## Epilogue
 
-The boundary of the Reasoning Kingdom is not a wall, but a horizon.
+The boundary of the Reasoning Kingdom is not a wall; it is a horizon.
 
-When you stand on the boundary, what you see is not an endpoint, but a vaster unknown.
+When you stand on the boundary, what you see is not an ending, but a broader expanse of the unknown.
 
-This book has attempted to sketch the outline of this horizon — from entropy increase and prediction to symbol systems, from word vectors to neural networks, from Transformers to complexity theory, from search to reasoning, from efficiency to boundaries.
+This book has tried to draw the outline of this horizon — from entropy and prediction to symbolic systems, from word vectors to neural networks, from Transformers to complexity theory, from search to reasoning, from effectiveness to boundaries.
 
-But the horizon is forever ahead.
+But the horizon is always ahead.
 
-Every answer leads to new questions. Every boundary hints at deeper structures.
+Every answer leads to new questions. Every boundary hints at a deeper structure.
 
-**The journey of reasoning has no endpoint, only deeper understanding.**
+**The journey of reasoning has no end, only deeper understanding.**
 
-And this is precisely the charm of reasoning.
+And that is precisely the charm of reasoning.
 
 Good luck.

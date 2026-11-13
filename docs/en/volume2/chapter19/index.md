@@ -1,307 +1,408 @@
-# Chapter 19: Complexity as the Geometry of Reasoning — Why Some Reasoning Cannot Be Accelerated at All
+# Chapter 19: Complexity as the Geometry of Reasoning — Why Some Reasoning Can't Be Sped Up at All
 
-> P≠NP is not a proposition about machine speed. It is a proposition about the intrinsic structure of problems.
-
----
-
-Chapter 18 left us with an uncomfortable observation: even with a complete causal graph, performing inference on the graph — identifying causal effects, computing identifiable expressions — sees the cost rise sharply in complex situations. This is not because the algorithm is poorly written; the problem itself is hard.
-
-This "intrinsically hard" requires a precise mathematical meaning.
-
-In the context of formal systems, "hard" has a quantified version: how many steps are needed from axioms to a theorem? Chapter 14 mentioned that verifying a proof can be done in polynomial time, but discovering a proof has no universally efficient algorithm. This asymmetry has a formal name in computation theory: the **separation of P and NP** — if it indeed holds.
-
-What this chapter sets out to do is turn this intuition of "hard" into a precise geometric picture.
+> P ≠ NP is not a claim about how fast machines run. It's a claim about the intrinsic structure of problems.
 
 ---
 
-## 19.0 The Seeker and the Ticket-Checker Game: Why Verification Is Easier Than Discovery
+The end of Chapter 18 left us with an uncomfortable observation: even with a complete causal graph in hand, doing inference on the graph — identifying causal effects, computing identifiable expressions — becomes dramatically more expensive in complex cases. It's not that the algorithms are written badly; the problem itself is hard.
 
-Complexity theory can begin with a very simple game.
+This "hard in itself" needs a precise mathematical meaning.
 
-A golden ticket is hidden inside a maze. The seeker's task is to find it; the ticket-checker's task is to verify whether a ticket handed in by others is genuine. The seeker may have to grope through an exponential number of branching paths. The ticket-checker, however, has it easy: as soon as the ticket is handed over, he just checks the seal, the serial number, and whether the path record complies with the rules.
+In the setting of formal systems, "hard" has a quantified version: how many steps does it take to get from the axioms to a theorem? Chapter 14 noted that verifying a proof can be done in polynomial time, but there is no universal efficient algorithm for finding one. This asymmetry has a formal name in computational theory: the **separation of P and NP** — if it holds.
 
-This is the intuitive difference between P and NP.
+What this chapter does is turn that intuition of "hard" into a precise geometric picture.
 
-If a problem is in P, the seeker himself can find the answer in polynomial time. If a problem is in NP, then at least when the answer is "yes," someone can hand the ticket-checker a polynomial-length certificate, allowing the ticket-checker to confirm it quickly.
+---
 
-NP-complete problems are something even more terrifying: they are like a universal maze, into which all NP mazes can be efficiently translated. If you can quickly find the golden ticket in this maze, then you can quickly find the golden ticket in all NP mazes.
+## 19.0 The Seeker and Ticket-Checker Game: Why Verifying Is Easier Than Finding
+
+Complexity theory can start from a very simple game.
+
+A golden ticket is hidden in a maze. The seeker's job is to find it; the ticket checker's job is to check whether a ticket someone hands over is genuine. The seeker may have to feel around in an exponential number of branching corridors. The ticket checker has it easy: the moment a ticket arrives, he just checks whether the stamp, the serial number, and the path record follow the rules.
+
+That's the intuitive difference between P and NP.
+
+If a problem is in P, the seeker can find the answer on his own in polynomial time. If a problem is in NP, then at least when the answer is "yes," someone can hand the ticket checker a certificate of polynomial length, and the checker can quickly confirm it.
+
+NP-complete problems are something even more fearsome: they're like a universal maze that every NP maze can be efficiently translated into. If you can quickly find the golden ticket in this maze, you can quickly find the golden ticket in every NP maze.
 
 :::details The Formal Skeleton of This Game
-- **State space**: input instance $x$, candidate certificate $w$, verifier state.
-- **Legal moves**: the seeker generates candidate $w$; the ticket-checker checks $V(x,w)$ in polynomial time.
+- **State space**: an input instance $x$, a candidate certificate $w$, and the verifier's state.
+- **Legal moves**: the seeker generates a candidate $w$; the ticket checker examines $V(x,w)$ in polynomial time.
 - **Transition rules**: the search process moves through candidate space; the verification process scans the certificate according to a deterministic algorithm.
-- **Victory condition**: the seeker finds a certificate making $V(x,w)=1$, or proves no such certificate exists.
-- **Failure mode**: certificates are easy to check, but the candidate space is too large to exhaustively enumerate; fast verification does not imply fast discovery.
+- **Win condition**: the seeker finds a certificate such that $V(x,w)=1$, or proves that no such certificate exists.
+- **Failure mode**: the certificate is easy to check, but the candidate space is too large to exhaust; verifying fast doesn't mean finding fast.
 :::
 
-This game spells out the coldness of complexity theory: what is hard is not "confirming the answer once you know it," but "finding the answer when you don't know it." Proofs, planning, SAT, combinatorial search — all are stuck on this asymmetry.
+This game spells out the cold part of complexity theory: what's hard isn't "confirming the answer once you know it," but "finding the answer when you don't know it." Proofs, planning, SAT, combinatorial search — all of them get stuck on this asymmetry.
 
-The halting problem pushes the game even deeper: some mazes are not just too large, but you fundamentally cannot design any ticket-checker that can always determine "whether the seeker will ever come out." That is not NP-type difficulty, but the boundary of computability.
+The halting problem pushes the game deeper still: some mazes aren't too big — the problem is that you simply cannot design a ticket checker who can always decide whether the seeker will get out. That isn't NP-hardness; that's the boundary of computability.
 
 ::: info Professor Pallas's Cat's Commentary
-The most stinging part of the ticket-checker game is that it humiliates "hindsight wisdom." Once the answer is laid out, everyone finds it simple; the true difficulty hides before the answer appears. What P and NP ask is precisely: between creation and verification, is there a principled abyss?
+The sharpest thing about the ticket-checker game is that it humiliates hindsight. Once the answer is laid out, everyone finds it obvious; the real difficulty hides before the answer appears. What P and NP ask is this: is there a principled chasm between creating and checking?
 :::
+
+## 19.0.5 Playing the Game in Code
+
+The maze is small enough to exhaust. The program below runs subset-sum on 18 numbers: the ticket checker verifies in a handful of additions, while the seeker has to walk the candidate space — and every operation is counted.
+
+```python
+#!/usr/bin/env python3
+"""
+seeker_ticket_checker.py -- the Seeker and Ticket-Checker Game of Ch. 19.
+Book reference: The Reasoning Kingdom, Volume 2, Chapter 19, Section 19.0
+"The Seeker and Ticket-Checker Game: Why Verifying Is Easier Than Finding."
+A golden ticket hides in a maze. The seeker must search corridor after
+corridor; the ticket checker only glances at a handed-in ticket. This
+program runs the game on a real NP problem, subset-sum:
+  * the TICKET CHECKER verifies a claimed subset in linear time,
+  * the SEEKER must exhaust candidates -- and we count every operation,
+  * a fake ticket gets refused on the spot.
+The asymmetry you will see is the cold part of complexity theory: what is
+hard is not confirming the answer once you know it, but finding it when
+you do not. (NP-completeness: subset-sum is one of the universal mazes
+every NP problem can be translated into -- one line here, a chapter in
+the book.)
+Run:  python3 seeker_ticket_checker.py
+"""
+from itertools import combinations
+
+NUMBERS = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61]
+TARGET = 128  # = 2 + 7 + 19 + 41 + 59, a sum some subset actually reaches
+
+
+def verify(numbers, target, ticket):
+    """The ticket checker: is this subset a genuine ticket?
+    ticket: a tuple of indices. Cost: one addition per element.
+    Returns (ok, operations_used)."""
+    ops = 0
+    total = 0
+    for i in ticket:
+        total += numbers[i]
+        ops += 1
+    return total == target, ops
+
+
+def seek(numbers, target):
+    """The seeker: exhaust candidate subsets until one sums to target.
+    Returns (ticket, candidates_tried, operations_used). Real, counted."""
+    ops = 0
+    tried = 0
+    for size in range(len(numbers) + 1):
+        for ticket in combinations(range(len(numbers)), size):
+            tried += 1
+            total = 0
+            for i in ticket:
+                total += numbers[i]
+                ops += 1
+            if total == target:
+                return ticket, tried, ops
+    return None, tried, ops
+
+
+def demo():
+    print("=" * 70)
+    print(" THE SEEKER AND TICKET-CHECKER GAME -- subset-sum, run for real")
+    print(" The Reasoning Kingdom, Volume 2, Chapter 19 (Sec. 19.0)")
+    print("=" * 70)
+    print(f"\nThe maze: {len(NUMBERS)} numbers, find a subset summing to {TARGET}.")
+    print(f"  numbers: {NUMBERS}")
+
+    # The checker's easy life: a real ticket, then a fake one.
+    real_ticket = (0, 3, 7, 12, 16)          # 2 + 7 + 19 + 41 + 59
+    ok, ops = verify(NUMBERS, TARGET, real_ticket)
+    print(f"\nTicket checker, genuine ticket {real_ticket}:")
+    print(f"  verdict: {ok}, operations used: {ops}")
+    assert ok
+
+    fake_ticket = (1, 4, 9)
+    ok, ops = verify(NUMBERS, TARGET, fake_ticket)
+    print(f"Ticket checker, fake ticket {fake_ticket}:")
+    print(f"  verdict: {ok}, operations used: {ops} -- refused on the spot")
+    assert not ok
+
+    # The seeker's hard life.
+    ticket, tried, ops = seek(NUMBERS, TARGET)
+    print("\nSeeker, searching corridor by corridor:")
+    print(f"  candidates tried: {tried}")
+    print(f"  operations used:  {ops}")
+    print(f"  ticket found:     {ticket}")
+    print(f"  check the find:   {verify(NUMBERS, TARGET, ticket)}")
+    assert ticket is not None
+
+    print("\nThe asymmetry, in one glance:")
+    print(f"  checking the answer cost {len(real_ticket)} additions;")
+    print(f"  finding it cost {ops} additions across {tried} candidates.")
+    print("  The candidate space has 2**18 = 262144 subsets; the checker")
+    print("  never has to look at 262143 of them. That gap is what P and")
+    print("  NP are about: creating is not the same job as checking.")
+    print("=" * 70)
+
+
+if __name__ == "__main__":
+    demo()
+```
+
+---
 
 ## 19.1 The Intrinsic Structure of Problems
 
-Let us begin with a distinction that catches people by surprise.
+Let's start with a distinction that may come as a surprise.
 
-There are two kinds of "difficulty," superficially similar, yet fundamentally different.
+There are two kinds of "hard," superficially similar, fundamentally different.
 
-**The first kind of difficulty**: the problem is large, the data are abundant, the computer needs to run for a long time. This is difficulty in the engineering sense, which can be alleviated by faster hardware, smarter algorithms, or more parallel computation. This kind of difficulty has no principled boundary.
+**The first kind**: the problem is large, the data is vast, and the computer needs to run for a long time. This is difficulty in the engineering sense, and it can be eased with faster hardware, smarter algorithms, and more parallel computing. This kind of hardness has no principled boundary.
 
-**The second kind of difficulty**: no matter what algorithm you use, no matter how fast the hardware, certain problems require exponential time. This is difficulty in the mathematical sense — not an engineering issue, but determined by the intrinsic structure of the problem itself.
+**The second kind**: no matter which algorithm you use, no matter how fast the hardware, some problems simply require exponential time. This is difficulty in the mathematical sense — not an engineering issue, but a consequence of the problem's intrinsic structure.
 
-Complexity theory concerns the second kind of difficulty. Its question is not "is this algorithm fast," but "can this problem be solved quickly by any algorithm at all."
+Complexity theory cares about the second kind. Its question isn't "is this algorithm fast?" — it's "can this problem be solved fast by any algorithm whatsoever?"
 
 ::: info Professor Pallas's Cat's Commentary
-Many people, upon hearing P≠NP, associate it with "computers are not fast enough." This is a completely mistaken understanding. What P≠NP says is: even if you were given an infinitely fast computer, certain problems would still require exponential time. Speed cannot buy structure. The geometric shape of a problem does not change because the machine becomes faster.
+Many people hear P ≠ NP and think "computers aren't fast enough." That's completely wrong. P ≠ NP says: even if you're given a computer of unlimited speed, some problems still need exponential time. Speed can't buy structure. The geometry of a problem doesn't change when machines get faster.
 :::
 
-To give "fast" a precise meaning, a measuring stick is needed.
+To give "fast" a precise meaning, you need a measuring scale.
 
-**Time complexity**: for a problem with input size $n$, how many steps does the optimal algorithm require to produce the answer? If there exists an algorithm such that the number of steps is polynomial in $n$ ($n^2, n^3, n^{100}$…), the problem is called **polynomial-time solvable**; if all known algorithms require an exponential number of steps ($2^n, n!, \ldots$), the problem rapidly becomes unsolvable in practice as $n$ grows.
+**Time complexity**: for a problem with input size $n$, how many steps does the best algorithm need to produce the answer? If an algorithm exists whose step count is a polynomial in $n$ ($n^2, n^3, n^{100}$……), the problem is called **polynomial-time solvable**; if every known algorithm needs an exponential number of steps ($2^n, n!, \ldots$), the problem quickly becomes intractable in practice as $n$ grows.
 
-The gulf between polynomial and exponential is the core dividing line of complexity theory. When $n = 100$, $n^{10} = 10^{20}$, already enormous; $2^{100} \approx 10^{30}$, more than the number of atoms in the universe. As $n$ grows further, this gap only becomes more absurd.
+The gap between polynomial and exponential is the central dividing line of complexity theory. At $n=100$, $n^{10} = 10^{20}$ is already enormous; $2^{100} \approx 10^{30}$, more than the number of atoms in the universe. As $n$ grows further, this gap only becomes more absurd.
 
 ### 19.1.5 Facing the Numbers: What Polynomial vs. Exponential Actually Means
 
-Putting the numbers on the table is more powerful than any abstract talk of "exponential explosion." Assume each operation takes 1 nanosecond ($10^{-9}$ seconds).
+Putting actual numbers on the table beats any abstract talk of "exponential explosion." Suppose each operation takes 1 nanosecond ($10^{-9}$ seconds).
 
-| Input Size $n$ | $n^2$ (Polynomial) | $2^n$ (Exponential) |
+| Input size $n$ | $n^2$ (polynomial) | $2^n$ (exponential) |
 |:------------|:---------------|:------------|
 | 10 | 100 ns | 1 μs |
 | 20 | 400 ns | 1 ms |
 | 50 | 2.5 μs | 13 days |
 | 100 | 10 μs | $4 \times 10^{13}$ years |
-| 200 | 40 μs | ... |
+| 200 | 40 μs | … |
 
-When $n=100$, the time required for $2^{100}$ steps is about 3000 times longer than the age of the universe. This is not "a bit slow" — it is **physically impossible**.
+At $n=100$, $2^{100}$ steps would take about 3,000 times longer than the age of the universe. This isn't "a bit slow" — this is **physically impossible**.
 
-But wait — $n^{10}$ is also a polynomial, and when $n=100$, $10^{20}$ ns ≈ 3171 years. Polynomial is not necessarily fast, but the key difference is: polynomial growth is bounded by a fixed exponent $k$ ($n^k$), while the exponent of an exponential function is itself growing ($k^n$). As $n$ increases, the polynomial will always be left behind by the exponential — this is an asymptotic dividing line, not an absolute speed comparison.
+But wait — $n^{10}$ is also a polynomial. At $n=100$, $10^{20}$ nanoseconds ≈ 3,171 years. So polynomials aren't necessarily fast. The key difference is this: a polynomial's growth is bounded by a fixed exponent $k$ ($n^k$), while in an exponential function the exponent itself is what grows ($k^n$). As $n$ increases, a polynomial is always left behind by an exponential — that's an asymptotic dividing line, not a matter of absolute speed.
 
-More importantly, most "natural" polynomial-time algorithms have small exponents ($n, n^2, n^3, n\log n$), not $n^{100}$. In the theoretical framework, the boundary between "polynomial" and "exponential" captures the practical divide between "solvable" and "unsolvable" — even though theory admits $n^{100}$ as polynomial, no one would use it in practice.
+More importantly, most "naturally" occurring polynomial-time algorithms have small exponents ($n, n^2, n^3, n\log n$), not $n^{100}$. In the theoretical framework, the boundary between "polynomial" and "exponential" captures the practical divide between "solvable" and "unsolvable" — even though theory admits that $n^{100}$ is a polynomial, in practice nobody would ever use it.
 
 ---
 
-## 19.2 P and NP: Two Capabilities
+## 19.2 P and NP: Two Kinds of Capability
 
 Now we can define the two most important complexity classes.
 
-**P (Polynomial time)**: the set of all decision problems that can be **solved** in polynomial time. A decision problem is a "yes or no" question: does this graph contain a Hamiltonian cycle? Is this number prime? Is this proposition provable in this logical system?
+**P (polynomial time)**: the set of all decision problems that can be **solved** in polynomial time. A decision problem is one that asks yes or no: does this graph have a Hamiltonian cycle? Is this number prime? Is this proposition provable in this logical system?
 
-"Being in P" means: there exists an algorithm that, for any input of size $n$, produces the correct "yes" or "no" in $O(n^k)$ steps ($k$ is some fixed constant, independent of the input).
+"In P" means: there is an algorithm that, for any input of size $n$, gives the correct "yes" or "no" within $O(n^k)$ steps, where $k$ is some fixed constant independent of the input.
 
-**NP (Nondeterministic Polynomial time)**: the set of all decision problems whose answers can be **verified** in polynomial time. More precisely: for "yes" instances, there exists a polynomial-length **certificate** that can be verified in polynomial time.
+**NP (nondeterministic polynomial time)**: the set of all decision problems whose answers can be **verified** in polynomial time. More precisely: for every "yes" instance, there exists a certificate of polynomial length that can be verified in polynomial time.
 
-"Being in NP" means: if the answer is "yes," then someone can show you a short proof, allowing you to confirm in polynomial time that this proof is correct.
+"In NP" means: if the answer is "yes," someone can show you a brief proof, and you can confirm within polynomial time that the proof is correct.
 
-Note the asymmetry here — precisely the echo of the asymmetry from Chapter 14: **verifying** a proof is efficient (polynomial time); **discovering** a proof is not necessarily efficient (may require exponential time).
+Note the asymmetry here — it's an echo of the asymmetry from Chapter 14: **verifying** a proof is efficient (polynomial time), but **finding** a proof need not be (it may take exponential time).
 
-All problems in P are also in NP (if you can solve a problem in polynomial time, you can certainly verify the answer in polynomial time — just compute it again). The question is: **are all problems in NP also in P?**
+Every problem in P is in NP (if you can solve a problem in polynomial time, you can certainly verify an answer in polynomial time — just solve it again). The question is: **is every problem in NP also in P?**
 
-This is the $\mathsf{P} \stackrel{?}{=} \mathsf{NP}$ problem.
+That's the question $\mathsf{P} \stackrel{?}{=} \mathsf{NP}$.
 
 ::: info Why Almost Everyone Believes P ≠ NP
-Strictly speaking, P ≠ NP is an unproven conjecture. But over the decades, the accumulated experience of mathematicians and computer scientists has built a strong conviction: between solving and verifying, there exists a fundamental gulf. If P = NP, then any solution that can be quickly verified can also be quickly found — this would mean the collapse of cryptography (breaking encryption would be as fast as verifying a key), would mean creativity is equivalent to verification, would mean that the discovery and verification of mathematical proofs have no essential difference. This picture is destructive to all our intuitions about reasoning and creativity. The belief in P ≠ NP is the mathematical expression of the basic intuition that "solving is harder than verifying."
+Strictly speaking, P ≠ NP is an unproven conjecture. But decades of experience among mathematicians and computer scientists have accumulated into a strong belief: between solving and verifying there lies a fundamental chasm. If P = NP, then any solution that can be quickly verified could also be quickly found — which would mean the collapse of cryptography (breaking a code as fast as checking a key), it would mean creativity is equivalent to checking, and it would mean there's no essential difference between finding a mathematical proof and verifying one. That picture is devastating to every intuition we have about reasoning and creation. The belief in P ≠ NP is the mathematical expression of the basic intuition that solving is harder than verifying.
 :::
 
 ---
 
-## 19.3 NP-complete: The Hardest Problems
+## 19.3 NP-Complete: The Hardest Problems
 
-Problems in NP are not all equal. Some problems, if they could be solved quickly, would enable the quick solution of **all** problems in NP. These problems are called **NP-complete**.
+The problems in NP are not all alike. Some problems have the property that, if you could solve them quickly, you could solve every problem in NP quickly. These problems are called **NP-complete**.
 
-This concept requires a tool: **polynomial-time reduction**. If problem $A$ can be polynomial-time reduced to problem $B$ (denoted $A \leq_p B$), it means: there exists a polynomial-time transformation that converts any instance of $A$ into an equivalent instance of $B$. If you can solve $B$ quickly, then through this transformation, you can also solve $A$ quickly.
+This concept requires one tool: **polynomial-time reduction**. If problem $A$ can be reduced in polynomial time to problem $B$ (written $A \leq_p B$), it means: there is a polynomial-time transformation that turns any instance of $A$ into an equivalent instance of $B$. If you can solve $B$ quickly, then through this transformation you can also solve $A$ quickly.
 
-:::details 
-Polynomial-time Reduction: Using "Translation" to Understand "Equally Hard"
-Polynomial-time reduction ($A \leq_p B$) says: problem $A$ is no harder than problem $B$ — you can use an efficient "translator" to turn any instance of $A$ into an equivalent instance of $B$, and then use a solver for $B$ to solve $A$.
+:::details Polynomial-Time Reduction: Understanding "Just as Hard" Through "Translation"
+A polynomial-time reduction ($A \leq_p B$) says this: problem $A$ is no harder than problem $B$ — you can use an efficient "translation" to turn any instance of $A$ into an equivalent instance of $B$, then solve $A$ with $B$'s solver.
 
-Analogy: if you have an English-Chinese dictionary (the translation function), and you can read Chinese, then you can read English — reading English is no harder than reading Chinese (given the dictionary).
+Analogy: if you have an English–Chinese dictionary (a translation function) and you can read Chinese, then you can read English — English reading is no harder than Chinese reading (given the dictionary).
 
-**The significance of NP-completeness**: if $C$ is NP-complete, it means every problem in NP can be polynomial-time "translated" into $C$. Therefore:
-- If someone finds a polynomial-time algorithm for solving $C$, then through the reduction chain, all NP problems can be solved in polynomial time, i.e., P = NP
+**What NP-completeness means**: if $C$ is NP-complete, then every problem in NP can be translated into $C$ in polynomial time. Therefore:
+- If someone finds a polynomial-time algorithm for $C$, then through the reduction chain, all NP problems can be solved in polynomial time — i.e., P = NP
 - If P ≠ NP, then $C$ has no polynomial-time algorithm
 
-This is why "solving one NP-complete problem" is equivalent to "solving all NP problems" — NP-complete problems are the "representatives" of NP-hardness.
+That's why "solving one NP-complete problem" is equivalent to "solving all NP problems" — the NP-complete problems are the "representatives" of NP difficulty.
 :::
 
+**The definition of NP-complete**: problem $C$ is NP-complete if and only if:
+1. $C \in \mathsf{NP}$ (its answer can be quickly verified);
+2. For every $A \in \mathsf{NP}$, $A \leq_p C$ (every problem in NP can be reduced to $C$).
 
-The definition of NP-complete: problem $C$ is NP-complete if and only if:
-1. $C \in \mathsf{NP}$ (answers can be quickly verified);
-2. For all $A \in \mathsf{NP}$, $A \leq_p C$ (all problems in NP can be reduced to $C$).
+The first problem proven NP-complete was **SAT** (the boolean satisfiability problem): given a boolean formula, is there an assignment of variables that makes the formula true? Stephen Cook's 1971 proof — the Cook–Levin theorem — is a founding work of complexity theory.
 
-The first problem proven to be NP-complete was **SAT** (Boolean satisfiability problem): given a Boolean formula, does there exist an assignment of variables making the formula true? Stephen Cook's 1971 proof — the Cook-Levin theorem — is the foundational work of complexity theory.
+SAT being NP-complete means: if you can quickly decide whether a boolean formula is satisfiable, you can quickly solve every problem in NP — including the traveling salesperson problem, graph coloring, the knapsack problem … and, yes, some causal discovery problems.
 
-That SAT is NP-complete means: if you can quickly determine whether a Boolean formula is satisfiable, you can quickly solve all problems in NP, including the traveling salesman problem, graph coloring, knapsack... and, certain causal discovery problems.
-
-::: info Why SAT Is the Core of Reasoning
-The Boolean satisfiability problem, in the context of formal logic, is: given a set of propositional formulas, does there exist a truth assignment making them all true? This is precisely the problem of finding a model — the core operation of logical semantics. Chapter 14 said "verifying a proof can be done in polynomial time," corresponding to: given a candidate assignment, checking whether it satisfies the formula merely requires term-by-term substitution, doable in polynomial time. And "discovering" an assignment that makes the formula true is SAT — NP-complete. The asymmetry of reasoning here acquires a precise computational characterization.
+::: info Why SAT Is at the Heart of Reasoning
+In the language of formal logic, the boolean satisfiability problem is: given a set of propositional formulas, is there a truth assignment that makes them all true? That's exactly the problem of finding a model — the core operation of logical semantics. Chapter 14 said "verifying a proof can be done in polynomial time." The counterpart here: given a candidate assignment, checking whether it satisfies the formula merely requires substituting each value in — done in polynomial time. Whereas "finding" an assignment that makes the formula true is SAT — NP-complete. The asymmetry of reasoning gets a precise computational characterization here.
 :::
 
-### 19.3.5 Hands-On: Build a Reduction Yourself (3-SAT -> Vertex Cover)
+### 19.3.5 Hands-on: Build a Reduction Yourself (3-SAT → Vertex Cover)
 
-Reduction is not an abstract concept — it is a translation you can perform with your own hands. Below we translate an instance of 3-SAT into an instance of Vertex Cover — every step is concrete and traceable.
+A reduction is not an abstract concept — it's a translation you can do with your own hands. Below we translate a 3-SAT instance into a vertex cover instance — every step traceable.
 
-**Source problem**: 3-SAT instance:
+**The source problem**: a 3-SAT instance:
 $$(x_1 \lor \neg x_2 \lor x_3) \land (\neg x_1 \lor x_2 \lor \neg x_3) \land (x_2 \lor x_3 \lor \neg x_3)$$
 
 Three clauses, three variables.
 
-**Translation rules**:
+**The translation rules**:
 1. For each variable $x_i$, create a "variable edge" connecting $x_i$ and $\neg x_i$ (two vertices).
-2. For each clause, create a triangular "clause gadget" — three vertices corresponding to the three literals of the clause.
+2. For each clause, create a triangular "clause gadget" — three vertices, one for each literal in the clause.
 
-**Target value** $k = |\text{variables}| + 2 \times |\text{clauses}| = 3 + 2 \times 3 = 9$.
+**The target value** $k = |\text{variables}| + 2 \times |\text{clauses}| = 3 + 2 \times 3 = 9$.
 
-**Constructed graph** (vertex list):
-- Variable gadgets: $(x_1, \neg x_1)$, $(x_2, \neg x_2)$, $(x_3, \neg x_3)$, each connected by an edge
-- Clause 1 gadget: three vertices connected as a triangle, labeled $\{x_1, \neg x_2, x_3\}$ (corresponding to the three literals of clause 1)
-- Clause 2 gadget: a triangle of three vertices, labeled $\{\neg x_1, x_2, \neg x_3\}$
-- Clause 3 gadget: a triangle of three vertices, labeled $\{x_2, x_3, \neg x_3\}$
+**The constructed graph (the node list)**:
+- Variable gadgets: $(x_1, \neg x_1)$, $(x_2, \neg x_2)$, $(x_3, \neg x_3)$, each pair joined by one edge
+- Clause 1 gadget: three nodes in a triangle, labeled $\{x_1, \neg x_2, x_3\}$ (the three literals of clause 1)
+- Clause 2 gadget: a triangle of three nodes, labeled $\{\neg x_1, x_2, \neg x_3\}$
+- Clause 3 gadget: a triangle of three nodes, labeled $\{x_2, x_3, \neg x_3\}$
 
-**Connecting edges**: The literal labels inside each clause gadget are connected to the corresponding vertex in the variable gadgets. For example, the $x_1$ node in clause 1 is connected to the $x_1$ vertex in the variable gadget by an edge; the $\neg x_2$ node in clause 1 is connected to the $\neg x_2$ vertex in the variable gadget.
+**The wiring**: each literal node in a clause gadget is connected to the matching vertex in the variable gadget. For example, clause 1's $x_1$ node gets an edge to $x_1$ in the variable gadget; clause 1's $\neg x_2$ node gets an edge to $\neg x_2$ in the variable gadget.
 
-**Why does this reduction work?** (Intuitive version):
-- To cover all edges: for each variable gadget's single edge, at least one of $\{x_i, \neg x_i\}$ must be selected — this corresponds to the variable being assigned true or false.
-- Each clause gadget's triangle has 3 internal edges, requiring at least 2 vertices to cover — but the variable vertices you selected may have already "incidentally" covered one edge of the clause gadget (via the connecting edges). If a literal in the clause is true, its corresponding variable vertex has already covered that connecting edge, so the clause triangle only needs the other 2 vertices.
+**Why does this reduction work? (The intuition)**:
+- To cover all edges: for each variable gadget's edge, you must pick at least one of $\{x_i, \neg x_i\}$ — which corresponds to assigning the variable true or false.
+- Each clause gadget's triangle has 3 internal edges, needing at least 2 vertices to cover — but the variable vertices you pick may already cover one of the clause triangle's edges "for free" (via the wiring). If some literal of the clause is true, its corresponding variable vertex already covers that wiring edge, so the clause triangle only needs 2 more vertices.
 - A vertex cover of size $k=9$ exists if and only if the 3-SAT formula is satisfiable.
 
-**Concrete assignment-to-cover correspondence**: Take the assignment $x_1=1, x_2=1, x_3=1$. The variable gadgets select $\{x_1, x_2, x_3\}$ (3 vertices). Clause 1: $x_1=1$ already covers the edge corresponding to $x_1$, leaving 2 vertices $\{\neg x_2, x_3\}$ in the triangle — select them (2 vertices). The same reasoning applies to the other clauses. Total vertices = $3 + 3 \times 2 = 9$. ✓
+**The correspondence between a specific assignment and a cover**: take the assignment $x_1 = 1, x_2 = 1, x_3 = 1$. In the variable gadgets, pick $\{x_1, x_2, x_3\}$ (3 vertices). Clause 1: $x_1 = 1$ already covers the wiring edge for $x_1$, so the triangle leaves 2 vertices $\{\neg x_2, x_3\}$ — pick them (2 vertices). The other clauses work the same way. Total vertices = $3 + 3 \times 2 = 9$. ✓
 
-The approximate polynomial-time construction of this reduction: draw a triangle for each clause, add two vertices for each variable edge, connect the literal nodes of each clause to the corresponding variable nodes. The entire operation can be completed in $O(n+m)$ time ($n$ = number of variables, $m$ = number of clauses).
+The reduction's construction takes polynomial time: draw a triangle for each clause, add two vertices for each variable edge, wire each clause's literal nodes to the matching variable nodes. All of it can be done in $O(n+m)$ time ($n$ = number of variables, $m$ = number of clauses).
 
-**What have you just done?** You translated a logic problem ("does there exist an assignment making all these clauses simultaneously true") into a graph problem ("does this graph have a vertex cover of at most 9 vertices"). If you have a black-box solver for Vertex Cover, you can use it to solve 3-SAT — because you can translate any 3-SAT instance into an equivalent Vertex Cover instance. This is the power of reduction: not proving that a problem is hard, but proving that if this problem is easy, then another problem is easy too.
+**What did you just do?** You translated a logic problem ("does there exist an assignment making all these clauses true at once?") into a graph problem ("does this graph have a vertex cover with no more than 9 vertices?"). If you had a black-box vertex-cover solver, you could use it to solve 3-SAT — because you can translate any 3-SAT instance into an equivalent vertex cover instance. That's the power of reduction: it doesn't prove that one problem is hard; it proves that if one problem is easy, then the other is easy too.
 
-::: info Professor Manul's Commentary
-Doing a reduction by hand is a completely different experience from reading a definition of reduction. Once you've done it, you realize: reduction is not an abstract "if A then B," but a concrete, programmable translation function. Every reduction is a compiler — translating the language of one problem into the language of another. The "equivalence" of NP-complete problems is not a philosophical resemblance, but a computation that can be run.
+::: info Professor Pallas's Cat's Commentary
+Building a reduction with your own hands and reading a definition of reduction are completely different experiences. Once you've done one, you realize: a reduction isn't an abstract "if A then B" — it's a concrete, programmable translation function. Every reduction is a compiler — it translates the language of one problem into the language of another. The "equivalence" of NP-complete problems isn't a philosophical similarity; it's computation you can actually run.
 :::
 
 ---
 
 ## 19.4 The Halting Problem: A Boundary Deeper Than NP
 
-The discussion of P and NP presupposes that problems are at least answerable by algorithms — only differing in speed. But there exists another kind of boundary: some problems admit no algorithm to answer them at all, no matter how much time is given.
+The discussion of P and NP presupposes that the problems can at least be answered by some algorithm — just fast or slow. But there's another kind of boundary: for some problems, no algorithm whatsoever can answer them, no matter how much time you allow.
 
-**The halting problem**: given a program and its input, will this program eventually halt, or run forever?
+**The halting problem**: given a program and its input, will the program eventually halt, or will it run forever?
 
-Turing proved in 1936: there exists no algorithm that can correctly answer the halting problem for all programs.
+Turing proved in 1936: no algorithm can correctly answer the halting problem for all programs.
 
-The proof is a classic self-referential construction, identical in essence to Gödel's method.
+The proof is the classic self-referential construction, essentially the same method as Gödel's.
 
-Assume there exists a program $H(P, I)$ that accepts program $P$ and input $I$, and always, in finitely many steps, correctly answers: whether $P$ on input $I$ will halt. Now construct another program $D$:
+Suppose a program $H(P,I)$ exists, which accepts a program $P$ and input $I$, and always correctly answers, in finitely many steps: does $P$ halt on input $I$? Now construct another program $D$:
 
-$$D(P) = \begin{cases} \text{loop forever} & \text{if } H(P, P) = \text{halts} \\ \text{halt} & \text{if } H(P, P) = \text{does not halt} \end{cases}$$
+$$D(P) = \begin{cases} \text{loop forever} & \text{if } H(P,P) = \text{halts} \\ \text{halt} & \text{if } H(P,P) = \text{does not halt} \end{cases}$$
 
-$D$ treats the program $P$ as its own input, asks $H$: "Does $P$ on input $P$ halt?" and then does the opposite.
+$D$ takes the program $P$ as its own input, asks $H$: "Does $P$ halt on input $P$?" — and then does the opposite.
 
-Now ask: does $D$ on input $D$ halt?
+Now ask: does $D$ halt on input $D$?
 
-- If $H(D, D) = $ halts: $D$ will loop forever — $H$ has lied.
-- If $H(D, D) = $ does not halt: $D$ will halt — $H$ has lied again.
+- If $H(D,D) = \text{halts}$: then $D$ will loop forever — $H$ lied.
+- If $H(D,D) = \text{does not halt}$: then $D$ will halt — $H$ lied again.
 
-$H$ gives the wrong answer in every case. Contradiction. Hence $H$ does not exist.
+In every case $H$ gives the wrong answer. Contradiction. So $H$ does not exist.
 
-The structure of this proof is entirely parallel to the construction of the Gödel sentence $G$ in Chapter 15: $G$ says "I am not provable in this system," $D$ says "I do the opposite of what $H$ judges." Both, through self-reference, drive any system that attempts to completely characterize itself into contradiction. The halting problem and the incompleteness theorems are two sides of the same coin.
+The structure of this proof runs exactly parallel to the construction of Gödel's sentence $G$ in Chapter 15: $G$ says "I am not provable in this system," and $D$ says "I am the opposite of what $H$ judges." Both use self-reference to force any system that tries to fully characterize itself into contradiction. The halting problem and the incompleteness theorem are two sides of the same coin.
 
 ::: info Professor Pallas's Cat's Commentary
-Once you see this clearly, Gödel's and Turing's two "shocking results" become one result, expressed in two languages. Mathematical self-reference and computational self-reference have exactly the same structure. If you have only memorized the two theorems separately, you have not yet understood them.
+Once you see this, Gödel's and Turing's two "shocking results" become one result expressed in two languages. Mathematical self-reference and computational self-reference have exactly the same structure. If you've just memorized the two theorems separately, you haven't really understood them.
 :::
 
-::: info From Logic to Computation: The Equivalence
-More precisely: Gödelian incompleteness in Peano arithmetic can be proved via the halting problem for Turing machines, and vice versa. Recursive function theory (Computability Theory) establishes this precise correspondence: a proposition is undecidable in a system if and only if the corresponding computational problem is undecidable. Incompleteness is not a phenomenon peculiar to logic, but an intrinsic limitation shared by any sufficiently strong formal system — including universal computers.
+::: info The Equivalence from Logic to Computation
+More precisely: the Gödel incompleteness of Peano arithmetic can be proven through the halting problem of Turing machines, and vice versa. Computability theory establishes this exact correspondence: a proposition is undecidable in a system if and only if the corresponding computational problem is undecidable. Incompleteness is not a phenomenon peculiar to logic — it's an intrinsic limit shared by every sufficiently strong formal system, including any universal computer.
 :::
 
-That the halting problem is undecidable means there exists a boundary deeper than NP-completeness: not "requires exponential time," but "no algorithm in any finite time." The landscape of complexity, from bottom to top, is roughly:
+The halting problem being undecidable means there's a boundary deeper than NP-complete: not "needs exponential time," but "no algorithm works within any finite time." The complexity landscape, from bottom to top, looks roughly like:
 
 $$\mathsf{P} \subseteq \mathsf{NP} \subseteq \mathsf{PSPACE} \subseteq \cdots \subseteq \text{decidable} \subseteq \text{enumerable} \subsetneq \text{all problems}$$
 
-The halting problem lives at the "enumerable but not decidable" level — you can verify in finitely many steps that a halting program indeed halts (just run it and wait for it to stop), but you cannot confirm in finitely many steps that a non-halting program will never halt (you've waited a hundred million steps and it still hasn't halted; this does not mean it will never halt).
+The halting problem lives at the "enumerable but undecidable" level — you can verify in finitely many steps that a halting program really halts (just run it and wait for it to stop), but you cannot confirm in finitely many steps that a non-halting program will never stop (you wait 100 million steps, and it hasn't stopped — that doesn't mean it never will).
 
-### 19.4.5 Space and Alternation: NP Is Not the Whole Story
+### 19.4.5 Space and Alternation: NP Isn't the Whole Story
 
-Beyond time, there is another constraint: **space (memory)**.
+Besides time, there's another constraint: **space (memory)**.
 
-**PSPACE**: the set of all problems solvable in polynomial space. It can be shown that $\mathsf{NP} \subseteq \mathsf{PSPACE}$ (because you can enumerate all possible certificates in polynomial space — reclaiming space after each use, without storing all certificates at once). But it is not known whether NP equals PSPACE.
+**PSPACE**: the set of all problems solvable in polynomial space. One can prove $\mathsf{NP} \subseteq \mathsf{PSPACE}$ (you can enumerate all possible certificates in polynomial space — reclaim the space once you're done rather than storing all of them at once). But whether NP equals PSPACE is unknown.
 
-PSPACE contains problems that are harder than those in NP. For example: **Quantified Boolean Formula (QBF)** is PSPACE-complete. QBF extends SAT: it does not merely ask "does there exist an assignment making the formula true," but asks about layers of alternating quantifiers, such as "$\forall x_1 \exists x_2 \forall x_3 \ldots$ making the formula true." This structure of "alternating quantifiers," at the intersection of complexity and logic, corresponds to the **Polynomial Hierarchy** — stacking the existential quantifiers of NP and the universal quantifiers of coNP layer upon layer, each layer (conjectured to be) harder than the last.
+PSPACE contains problems harder than anything in NP. For example: **quantified boolean formulas (QBF)** are PSPACE-complete. QBF extends SAT: instead of just asking "does an assignment exist that makes the formula true," it asks about layers of interleaved quantifiers, such as "$\forall x_1 \exists x_2 \forall x_3 \ldots$ makes the formula true." This "alternating quantifier" structure, at the intersection of complexity and logic, corresponds to the **polynomial hierarchy** — layering the existential quantifiers of NP over the universal quantifiers of coNP, with each layer (conjecturally) harder than the one below.
 
-**The Polynomial Hierarchy** (abbreviated):
-- $\Sigma_1^p = \mathsf{NP}$: problems for which $\exists$ a certificate that can be verified
-- $\Pi_1^p = \mathsf{coNP}$: problems for which $\forall$ certificates satisfy some condition
-- $\Sigma_2^p$: $\exists$ a certificate, such that $\forall$ another certificate, some condition holds
-- $\Pi_2^p$: $\forall$ a certificate, $\exists$ another certificate...
-- ...and so on
+**The polynomial hierarchy** (rough version):
+- $\Sigma_1^p = \mathsf{NP}$: $\exists$ one certificate that can verify the problem
+- $\Pi_1^p = \mathsf{coNP}$: $\forall$ certificates, some condition holds
+- $\Sigma_2^p$: $\exists$ one certificate such that $\forall$ another certificate, some condition holds
+- $\Pi_2^p$: $\forall$ certificates, $\exists$ another certificate …
+- … and so on
 
-Each level of the hierarchy is (conjectured to be) strictly contained in the next. If one level collapses (equals the next), the entire hierarchy collapses to that level. For example, if NP = coNP, then $\Sigma_1^p = \Pi_1^p$, and it can be shown that the entire Polynomial Hierarchy collapses to the first level.
+Every level (conjecturally) strictly contains the one below. If any level collapses (equals the one below), the whole hierarchy collapses down to that level. For example, if NP = coNP, then $\Sigma_1^p = \Pi_1^p$, and from there one can prove the entire polynomial hierarchy collapses to the first level.
 
-**What does this have to do with Chapter 15?** The alternating quantifier structure of the Polynomial Hierarchy directly corresponds to theorem length in logic: how many alternations of "for all" and "there exists" a proposition contains determines which level of the hierarchy the complexity of its proof lies in. Godelian incompleteness and complexity theory are precisely linked through this correspondence — a system being "sufficiently strong," in the language of complexity, is equivalent to "being able to express enough layers of quantifier alternation."
+**What does this have to do with Chapter 15?** The alternating-quantifier structure of the polynomial hierarchy corresponds directly to proof length in logic: how many alternations of "for all" and "there exists" a proposition contains determines which level of the hierarchy its proof complexity sits at. Gödel incompleteness and complexity theory are linked precisely through this correspondence — a system's "sufficient strength," in the language of complexity, is equivalent to "being able to express enough layers of quantifier alternation."
 
 ---
 
 ## 19.5 Oracle Separation: The Boundary Is Real
 
-There is a natural question: is the separation between P and NP merely a limitation of our current techniques, rather than a principled boundary?
+A natural question arises: is the separation between P and NP merely a limitation of our current techniques, rather than a principled boundary?
 
-Relativization gives us a partial answer.
+Relativization gives us part of the answer.
 
-Equip an algorithm with an **Oracle** — a black box that can answer a certain class of questions in one step. Depending on the choice of Oracle, the relationship between P and NP can change. Baker, Gill, and Solovay proved in 1975:
+Give an algorithm an **Oracle** — a black box that can answer one specific kind of question in a single step. Depending on which Oracle you choose, the relationship between P and NP can change. In 1975, Baker, Gill, and Solovay proved:
 
 - There exists an Oracle $A$ such that, relative to $A$, $\mathsf{P}^A = \mathsf{NP}^A$;
 - There exists an Oracle $B$ such that, relative to $B$, $\mathsf{P}^B \neq \mathsf{NP}^B$.
 
-The implication of this result is: **a proof of P ≠ NP cannot be accomplished using relativization techniques**. Any proof approach based on counting or algebra that "relativizes" (i.e., remains valid for Oracle models) cannot distinguish the P = NP world from the P ≠ NP world.
+The meaning of this result is: **a proof of P ≠ NP cannot be carried out using relativization**. Any proof route based on counting or algebra that "relativizes" (i.e., still holds in Oracle models) cannot distinguish the world where P = NP from the world where P ≠ NP.
 
-This does not say P ≠ NP cannot be proved, but that the proof must be non-relativizing — must penetrate into the essential structure of computation, rather than staying at the level of algorithmic operations. This requirement, to this day, no one has satisfied.
+This doesn't say P ≠ NP is unprovable — it says the proof must be non-relativizing: it must reach into the essential structure of computation rather than stay at the level of algorithmic manipulation. So far, nobody has satisfied that requirement.
 
-The known technical barriers — relativization, natural proofs, algebrization — each indicate: the road to P ≠ NP does not pass through any route familiar to us. The depth of this problem is perhaps commensurate with its importance.
+Every known technical barrier — relativization, natural proofs, algebraization — says the same thing: the road to P ≠ NP does not pass through any route we're familiar with. The depth of this problem is perhaps proportionate to its importance.
 
 ---
 
-## 19.6 The Cost of Reasoning: Returning to Causation
+## 19.6 The Price of Reasoning: Back to Causality
 
-The causal discovery problem of Chapter 18 can now be precisely located within the complexity framework.
+The causal discovery problems of Chapter 18 can now be placed precisely within the complexity framework.
 
-**Causal structure learning**: given observational data on a set of variables, find a causal graph consistent with the data. In the general case — with $n$ variables, the number of possible DAGs grows super-exponentially with $n$; exhaustive search is utterly infeasible.
+**Causal structure learning**: given observational data on a set of variables, find the causal graph consistent with the data. In general — with $n$ variables, the number of possible DAGs grows super-exponentially in $n$, so exhaustive search isn't even remotely feasible.
 
 Known results:
 
-- Under certain restrictions (assuming the causal Markov condition and faithfulness condition), the PC algorithm can recover the skeleton (undirected edges) of the causal graph in polynomial time;
-- But determining edge directions — distinguishing different graphs within a Markov equivalence class — is NP-hard in the general case;
-- In the presence of latent variables, even the skeleton is difficult to recover.
+- Under certain restrictions (assuming the causal Markov condition and the faithfulness condition), the PC algorithm can recover the skeleton of the causal graph (the undirected edges) in polynomial time;
+- But determining the directions of edges — distinguishing different graphs within a Markov equivalence class — is NP-hard in general;
+- With hidden variables, even the skeleton is hard to recover.
 
-This result indicates: **precise causal inference is computationally fundamentally hard**. Not because the algorithm is poorly written, but because the problem itself falls into the NP-hard category. Even with perfect data, one cannot systematically find the answer quickly.
+These results say: **exact causal inference is fundamentally hard computationally**. Not because the algorithms are written badly, but because the problem itself falls in the NP-hard regime. Even with perfect data, there is no systematic way to find the answer quickly.
 
-This is a riposte to Chapter 18: give me the graph, and I can do causal inference — but obtaining the graph itself may carry an unbearable cost.
+This is a punch-back at Chapter 18: give me the graph and I can do causal inference — but obtaining the graph itself may cost more than one can pay.
 
-The dilemma of causal reasoning is an instance of the universal dilemma of reasoning: **exact reasoning is often computationally infeasible**. This is not a problem of algorithms; it is determined by the geometric shape of the problem space; there are no shortcuts.
+The dilemma of causal inference is one instance of a general dilemma of reasoning: **exact inference is often computationally infeasible**. This is not an algorithmic problem — it's determined by the geometry of the problem space, and there are no shortcuts.
 
-Returning to the Seeker and Ticket-Checker game: given a candidate causal graph, in many cases you can check whether it satisfies certain conditional independence relations; but finding that graph among all possible DAGs is another problem. The ticket-checker can stamp quickly, but that does not mean the seeker can quickly walk out of the maze. Chapter 18 gave us the rules for cutting wires; Chapter 19 reminds us: first finding which graph to cut from may itself be an exponential maze.
+Back to the seeker and ticket-checker game: hand it a candidate causal graph, and often enough you can check whether it satisfies certain conditional-independence relations; but finding that graph among all possible DAGs is a different problem. The ticket checker can stamp quickly — that doesn't mean the seeker can get out of the maze quickly. Chapter 18 gave us the rules for cutting wires; Chapter 19 reminds us that finding which graph to cut may itself be an exponential maze.
 
 ---
 
 ## 19.7 The Equivalence of Proof and Computation
 
-Chapter 14 stated: proofs are syntactic objects, verification is polynomial-time doable, discovery is not necessarily so. Chapter 19 turns this intuition into a rigorous statement.
+Chapter 14 said: proofs are syntactic objects; verification can be done in polynomial time; finding them need not be. This chapter turns that intuition into rigorous statements.
 
-**Propositional logic satisfiability (SAT) is NP-complete**: discovering an assignment that makes a given formula true, and discovering a proof, are equivalent in computational complexity.
+**The satisfiability of propositional logic (SAT) is NP-complete**: finding an assignment that makes a given formula true, and finding a proof, are computationally equivalent in complexity.
 
-A deeper correspondence: **proof length and computation steps**. The length of the shortest proof of a proposition in a given system corresponds to the minimum number of steps required to solve the corresponding problem in a given computational model. Proof complexity is precisely the field studying this correspondence — it connects the expressive power of logical systems to computational complexity classes.
+**A deeper correspondence: proof length and computation steps.** The length of the shortest proof of a proposition in some system corresponds to the minimum number of steps needed to solve the corresponding problem under some computational model. Proof complexity is precisely the field that studies this correspondence — it connects the expressive power of logical systems to computational complexity classes.
 
-A known result: if there exists some propositional proof system that can produce polynomial-length unsatisfiability proofs for any unsatisfiable instance of SAT, then NP = coNP. In other words, **any sufficiently weak proof system inevitably has true propositions requiring exponentially long proofs**. This is not Gödelian incompleteness — it is not saying the proposition is unprovable, but that even if provable, the proof may be so long as to be unusable.
+One known conclusion: if there existed a propositional proof system that could give polynomial-length unsatisfiability proofs for every unsatisfiable instance of SAT, then NP = coNP. In other words: **any sufficiently weak proof system must contain true propositions whose proofs require exponential length**. This is not Gödel incompleteness — it doesn't say the proposition is unprovable; it says even if it is provable, the proof may be so long as to be unusable.
 
-This is the formal answer to the suspense left by Chapter 14 ("does proof length matter?"): **yes, it matters greatly**. Proof length is a mirror of complexity; the expressive efficiency of a formal system is directly related to the difficulty of computational problems.
+This is the formal answer to the lingering question from Chapter 14 ("does the length of a proof matter?"): **yes, it matters enormously**. Proof length is the mirror image of complexity, and the expressive efficiency of a formal system directly translates to the difficulty of computational problems.
 
 ---
 
-## Unresolved
+## Open Questions
 
-**Is P ≠ NP true?** The vast majority believe it is, but no one has proved it. This is one of the most important unsolved problems in mathematics. If it is false — if P = NP — then all problems that can be quickly verified can be quickly solved, cryptography collapses, creativity is equivalent to verification, and the intrinsic cost of reasoning vanishes. This world contradicts all our intuitions, yet is not logically self-contradictory. Our belief in P ≠ NP is more firm than any proof of it.
+**Is P ≠ NP true?** The overwhelming majority believe so, but nobody has proved it. It's one of the most important unsolved problems in mathematics. If it's false — if P = NP — then every problem that can be quickly verified could be quickly solved: cryptography collapses, creativity becomes equivalent to inspection, and the intrinsic cost of reasoning disappears. That world contradicts all our intuitions, yet is not logically self-contradictory. Our belief in P ≠ NP is stronger than our proof of it.
 
-**Are the boundaries between complexity classes sharp?** Does an intermediate zone exist between P and NP — problems that are neither in P nor NP-complete? Ladner's theorem tells us: if P ≠ NP, then such problems exist, called NP-intermediate problems. The graph isomorphism problem is suspected to be such a problem, but this cannot currently be proved. The landscape of complexity is far richer than the two classes P and NP.
+**Are the boundaries of complexity classes sharp?** Does a middle ground exist between P and NP — problems that are neither in P nor NP-complete? Ladner's theorem tells us: if P ≠ NP, then such problems exist, called NP-intermediate problems. The graph isomorphism problem is suspected to be one, but as yet that cannot be proved. The complexity landscape is far richer than the two classes P and NP.
 
-**If exact reasoning is infeasible, what about approximate reasoning?** P ≠ NP says exact solutions are hard to find. But perhaps finding a "good enough" approximate solution is far cheaper? For some problems, this is true — polynomial-time approximation algorithms exist that can guarantee the solution quality is within some ratio of the optimal. But for other problems, approximation is equally NP-hard — even allowing error cannot escape the exponential cost. This distinction is the theme of Chapter 20: heuristics are not arbitrary approximations; they are promises with precise mathematical contracts.
+**If exact inference is infeasible, what about approximate inference?** P ≠ NP says exact solutions are hard to find. But maybe finding a "good enough" approximate solution costs far less? For some problems, yes — there exist polynomial-time approximation algorithms that guarantee the solution quality within some ratio of the optimum. But for other problems, approximation is likewise NP-hard — even allowing error, you can't escape the exponential cost. This distinction is the topic of Chapter 20: heuristics are not arbitrary approximations; they are commitments backed by exact mathematical contracts.
 
 ---
 
@@ -309,35 +410,35 @@ This is the formal answer to the suspense left by Chapter 14 ("does proof length
 
 **★ Warm-up**
 
-Classify each of the following problems: is it in P, in NP (but not known whether in P), or undecidable? Only classification and a one-sentence justification are required.
+Classify each of the following: is it in P, in NP (but not known to be in P), or undecidable? Just give the classification and a one-sentence reason.
 
-1. Given a sorted integer array and a target value, determine whether the target value is in the array (binary search)
-2. Given a Boolean formula, determine whether it is satisfiable (SAT)
-3. Given a program, determine whether it never outputs anything
-4. Given a graph, determine whether it contains a Hamiltonian cycle
-5. Given two programs, determine whether they produce the same output for all inputs
+1. Given a sorted array of integers and a target value, decide whether the target value is in the array (binary search)
+2. Given a boolean formula, decide whether it is satisfiable (SAT)
+3. Given a program, decide whether it never outputs anything
+4. Given a graph, decide whether it has a Hamiltonian cycle
+5. Given two programs, decide whether they produce the same output on every input
 
 ---
 
 **★★ Derivation**
 
-1. **Direction of reduction**: If $A \leq_p B$ ($A$ can be polynomial-time reduced to $B$), and $B \in \mathsf{P}$, then $A \in \mathsf{P}$. Conversely, if $A \leq_p B$ and $A$ is NP-complete, what does this imply for $B$? Consider two cases: $B \in \mathsf{NP}$ and $B \notin \mathsf{NP}$.
+1. **The direction of reduction**: if $A \leq_p B$ ($A$ can be reduced to $B$ in polynomial time) and $B \in \mathsf{P}$, then $A \in \mathsf{P}$. Conversely, if $A \leq_p B$ and $A$ is NP-complete, what does that imply about $B$? Consider the two cases: $B \in \mathsf{NP}$ and $B \notin \mathsf{NP}$.
 
-2. **Variants of the halting problem**: Which of the following three variants of the halting problem are decidable, and which are undecidable? Explain clearly.
-   - Given program $P$ and input $I$, does $P$ on $I$ halt within $10^{100}$ steps?
-   - Given program $P$, does $P$ halt on all inputs?
-   - Given program $P$, does $P$ halt on some input?
+2. **Variants of the halting problem**: of the three halting-problem variants below, which is decidable and which is undecidable? State your reasoning clearly.
+   - Given program $P$ and input $I$: does $P$ halt on $I$ within $10^{100}$ steps?
+   - Given program $P$: does $P$ halt on every input?
+   - Given program $P$: does $P$ halt on some input?
 
 ---
 
 **★★★ Challenge**
 
-Chapter 14 said: verifying a propositional logic proof can be done in polynomial time. This means "propositional logic theorem proving" — given a proposition $\varphi$ and a candidate proof sequence, determine whether this sequence is a valid proof of $\varphi$ — is in P.
+Chapter 14 said: verifying a propositional-logic proof is polynomial-time doable. That means "propositional-logic theorem verification" — given a proposition $\varphi$ and a candidate proof sequence, decide whether the sequence is a legal proof of $\varphi$ — is in P.
 
-Now consider a different problem: "given proposition $\varphi$, determine whether $\varphi$ is a theorem (i.e., whether a proof exists)."
+Now consider a different problem: "Given a proposition $\varphi$, decide whether $\varphi$ is a theorem (i.e., whether a proof exists)."
 
 1. Is this problem in NP? (Hint: what serves as the "certificate"?)
-2. SAT is NP-complete, and SAT is equivalent to "given a propositional formula, determine whether it is satisfiable." What is the relationship between "satisfiable" and "is a theorem" in propositional logic?
-3. Connect these two matters: if P = NP, what would this mean for the activity of "discovering proofs" in mathematics? If P ≠ NP, does this mean the proofs of certain mathematical theorems, even if they exist, are in principle unfindable?
+2. SAT is NP-complete, and SAT is equivalent to "given a propositional formula, decide whether it is satisfiable." In propositional logic, what is the relationship between "satisfiable" and "is a theorem"?
+3. Link the two things: if P = NP, what does that mean for "finding proofs" in mathematics? And if P ≠ NP, does that mean some mathematical theorems have proofs that, even though they exist, can in principle never be found?
 
-The third question touches a real problem in the philosophy of mathematics, currently without consensual answer. Try to distinguish the two situations "the proof exists but cannot be found" and "the proof does not exist" — write this distinction clearly using the language of this chapter.
+The third question touches a genuine problem in the philosophy of mathematics, and there's no consensus answer today. Try to distinguish the two cases — "a proof exists but cannot be found" and "no proof exists" — and state that distinction clearly in the language of this chapter.

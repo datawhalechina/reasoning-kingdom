@@ -1,12 +1,12 @@
-# 番外篇：注意力即因果——一个让 Transformer 自己都没想到的解读
+# 番外篇：注意力即因果——连 Transformer 自己都没想到的读法
 
-> 自注意力机制有两个身份，都是真的。
+> 自注意力有两个身份，都是真的。
 >
-> 第一个身份：它是霍普菲尔德联想记忆的现代版——一个在特征空间里做归一化检索的积分算子，1982年就存在了，只是被换了名字重新发现。
+> 第一个：它是霍普菲尔德联想记忆的现代版——一个在特征空间里做归一化检索的积分算子。它1982年就已经存在，只是被换了名字重新发现。
 >
-> 第二个身份：如果你从因果建模的角度推导它，你会得到完全相同的数学——注意力矩阵是序列上的软因果邻接矩阵，softmax是候选原因的后验分布。
+> 第二个：如果你从因果建模出发推导它，会得到完全相同的数学——注意力矩阵是序列上的软因果邻接矩阵，softmax 是候选原因的后验分布。
 >
-> 这两个身份不矛盾。它们指向同一件事，但各自照亮了不同的角落——以及同一面墙。
+> 这两个身份并不矛盾。它们指向同一件事，但各自照亮了不同的角落——以及同一面墙。
 
 <div class="center">
 
@@ -16,11 +16,11 @@
 
 ## 零、从霍普菲尔德到 Transformer：一个被遗忘的谱系
 
-1982年，霍普菲尔德在《美国国家科学院院刊》上发表了一篇23页的论文。他想做的事情极其简单：**让网络记住一些模式，然后在给定残缺输入时把完整模式检索出来。**
+1982年，霍普菲尔德在《美国国家科学院院刊》（PNAS）上发表了一篇23页的论文。他想做的事情极其简单：**让网络记住一些模式，然后在给定残缺输入时把完整模式检索出来。**
 
-这是联想记忆（associative memory）。不是分类，不是回归——是**检索**。
+这就是联想记忆（associative memory）——一种从部分线索返回存储模式的记忆。不是分类，不是回归——是**检索**。
 
-### 0.1 经典霍普菲尔德的能量最小化
+### 0.1 经典霍普菲尔德：能量最小化
 
 经典版本的更新规则把网络状态 $\xi$ 驱向能量最小值：
 
@@ -48,7 +48,7 @@ $$\xi^{\text{new}} = X \cdot \text{softmax}(\beta X^\top \xi)$$
 
 这不就是自注意力吗？
 
-把 $\xi$ 换成 $q_i$（Query），把 $X$ 换成 $K$（Keys）和 $V$（Values），把 $\beta = 1/\sqrt{d_k}$ 带入：
+把 $\xi$ 换成 $q_i$（Query），把 $X$ 换成 $K$（Keys）和 $V$（Values），把 $\beta = 1/\sqrt{d_k}$ 代入：
 
 $$\text{Attention}(Q, K, V) = \text{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right) V$$
 
@@ -56,7 +56,7 @@ $$\text{Attention}(Q, K, V) = \text{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\r
 
 这不是比喻，是数学等价。Transformer 每一次前向传播，都在做一次霍普菲尔德能量最小化——只是它只做了**一步**（而不是迭代到收敛）。
 
-### 0.3 softmax 是什么：归一化竞争，即前缀积分的离散版
+### 0.3 softmax 是什么：归一化竞争，前缀积分的离散形式
 
 现在问一个更深的问题：softmax 在这里的作用是什么？
 
@@ -68,7 +68,7 @@ $$\alpha(q, k) = \frac{e^{q \cdot k / \sqrt{d}}}{\int e^{q \cdot k' / \sqrt{d}} 
 
 这是一个**归一化积分算子**。分母是对所有可能的键做积分，分子是对特定键的指数响应。
 
-在离散序列情形，积分退化为前缀求和（因果mask下是前缀和，无mask下是全局和）：
+在离散序列情形，积分退化为前缀求和（因果掩码下是前缀和，无掩码下是全局和）：
 
 $$\alpha_{ij} = \frac{\exp(q_i \cdot k_j / \sqrt{d_k})}{\sum_{j'} \exp(q_i \cdot k_{j'} / \sqrt{d_k})}$$
 
@@ -76,7 +76,7 @@ $$\alpha_{ij} = \frac{\exp(q_i \cdot k_j / \sqrt{d_k})}{\sum_{j'} \exp(q_i \cdot
 
 **自注意力的 softmax，是霍普菲尔德联想记忆在离散序列上的配分函数归一化。**
 
-### 0.4 线性注意力：去掉 softmax，用结合律规约
+### 0.4 线性注意力：去掉 softmax，用结合律约简
 
 现在做一个手术：去掉 softmax。
 
@@ -88,7 +88,7 @@ $$\phi(q_i)^\top \phi(k_j) \approx \exp(q_i \cdot k_j / \sqrt{d_k})$$
 
 $$o_i = \frac{\sum_j \phi(q_i)^\top \phi(k_j) \cdot v_j}{\sum_j \phi(q_i)^\top \phi(k_j)}$$
 
-现在用**算子结合律**做规约。把 $\phi(q_i)^\top$ 提到求和号外面：
+现在用**算子结合律**做约简。把 $\phi(q_i)^\top$ 提到求和号外面：
 
 $$o_i = \frac{\phi(q_i)^\top \left(\sum_j \phi(k_j) v_j^\top\right)}{\phi(q_i)^\top \left(\sum_j \phi(k_j)\right)}$$
 
@@ -98,7 +98,7 @@ $$S_i = \sum_{j \leq i} \phi(k_j) v_j^\top, \quad z_i = \sum_{j \leq i} \phi(k_j
 
 这把复杂度从 $O(T^2)$ 降到 $O(T)$。
 
-**这就是线性注意力**——不是一种近似，而是去掉 softmax 归一化后，算子结合律自然给出的规约形式。
+**这就是线性注意力**——不是一种近似，而是去掉 softmax 归一化后，算子结合律自然给出的约简形式。
 
 它的连续极限是什么？把前缀求和换成积分：
 
@@ -120,7 +120,7 @@ $$S(t) = \int_0^t \phi(k(\tau)) v(\tau)^\top d\tau$$
 
 三者都是同一件事的不同投影：**在特征空间里，对所有候选记忆做归一化加权检索。**
 
-软max版做的是**全局竞争**——每个查询同时看所有键，配分函数在全序列上归一化。
+softmax 版做的是**全局竞争**——每个查询同时看所有键，配分函数在全序列上归一化。
 
 线性版做的是**增量积累**——不需要全局归一化，用前缀和在线维护状态，代价是失去 softmax 的精确竞争。
 
@@ -161,13 +161,13 @@ $$S(t) = \int_0^t \phi(k(\tau)) v(\tau)^\top d\tau$$
 
 </div>
 
-现在换一个推导方向。不从霍普菲尔德出发，而是从因果建模出发——看看走到最后，是否还是同一个地方。
+现在让我们走另一个推导方向。不从霍普菲尔德出发——从因果建模出发——看看走到路的尽头，是否会落在同一个地方。
 
-## 一、两种解读，一个数学
+## 一、两种读法，一个数学
 
-自注意力机制有一个标准解读，来自原论文的类比：
+自注意力有一个标准读法，来自原论文的类比：
 
-> Query 是查询，Key 是索引，Value 是内容。注意力分数是"这个查询和这个键有多匹配"。
+> Query 是一个查询，Key 是一个索引，Value 是内容。注意力分数是"这个查询和这个键有多匹配"。
 
 这是一个**信息检索**的类比。它有效，但它是工程直觉，不是数学必然。
 
@@ -183,7 +183,7 @@ $$S(t) = \int_0^t \phi(k(\tau)) v(\tau)^\top d\tau$$
 
 ## 二、从因果假设到外积
 
-假设我们要在连续空间里建模因果关系。
+假设我们要在连续空间里建模因与果。
 
 对于序列中任意一对位置 $i$（果）和 $j$（因），我们想建模这个假设：**"$j$ 是 $i$ 的原因，强度为多少？"**
 
@@ -233,15 +233,15 @@ $$\alpha_{ij} = \text{softmax}_j\left(\frac{q_i \cdot k_j}{\sqrt{d_k}}\right)$$
 
 </div>
 
-## 四、不对称性的新语义
+## 四、不对称性的新含义
 
-原版解读对 $W_Q \neq W_K$ 这个事实没有好的解释——它只能说"这是学出来的"。
+标准读法对 $W_Q \neq W_K$ 这个事实没有好的故事可讲——它只能说"这是训练学出来的"。
 
-因果解读直接给出了答案：**因果关系本来就不对称。**
+因果读法直接给出了答案：**因与果天生不对称。**
 
 $q_i \cdot k_j \neq q_j \cdot k_i$，因为"$j$ 是 $i$ 的原因"和"$i$ 是 $j$ 的原因"是两件不同的事。行投影和列投影用不同的权重矩阵 $W_Q$ 和 $W_K$，正是在编码这个不对称性。
 
-| | 原版解读（信息检索） | 因果解读（外积建模） |
+| | 标准读法（信息检索） | 因果读法（外积建模） |
 |---|---|---|
 | $W_Q$ | 查询矩阵 | 果空间投影 |
 | $W_K$ | 键矩阵 | 因空间投影 |
@@ -257,9 +257,9 @@ $q_i \cdot k_j \neq q_j \cdot k_i$，因为"$j$ 是 $i$ 的原因"和"$i$ 是 $j
 
 ## 五、softmax 是因果推断，不是归一化
 
-原版解读里，softmax 是"竞争注意力"——所有位置的注意力权重和为1。这是一个工程描述。
+标准读法里，softmax 是"竞争注意力"——所有位置的注意力权重和为1。这是一个工程描述。
 
-因果解读里，softmax 在做什么？
+因果读法里，softmax 在做什么？
 
 **它是在所有可能的"原因候选" $j$ 上，做一次软性的贝叶斯更新。**
 
@@ -275,13 +275,13 @@ $q_i \cdot k_j \neq q_j \cdot k_i$，因为"$j$ 是 $i$ 的原因"和"$i$ 是 $j
 
 ## 六、BERT vs GPT：两种因果假设
 
-BERT 是双向注意力——没有 mask，所有位置互相"看"。
+BERT 是双向注意力——没有 mask，每个位置都能"看"到其他所有位置。
 
-GPT 是单向因果 mask——只有过去可以"看"现在。
+GPT 是单向因果掩码——只有过去可以"看"现在。
 
-在因果解读的框架里：
+在因果读法的框架里：
 
-- **BERT** 建模的是**无向因果图**：任意两个位置之间可能存在因果关系，方向待定，由数据决定。适合"理解"任务——在已知完整上下文的情况下，推断哪些词对哪些词有影响。
+- **BERT** 建模的是**无向因果图**：任意两个位置之间可能存在因果关系，方向未定，交给数据决定。适合"理解"任务——在给定完整上下文时，推断哪些词影响哪些词。
 
 - **GPT** 建模的是**有向因果图（DAG）**：时间是唯一允许的因果方向。适合"生成"任务——在只知道历史的情况下，预测下一步。
 
@@ -297,29 +297,29 @@ GPT 问的是：**过去怎么影响了现在？**
 
 </div>
 
-## 七、实验验证：注意力矩阵的方向性
+## 七、实验：注意力矩阵的方向性
 
-如果注意力矩阵确实在做因果建模，有一个可观测的预测：
+如果注意力矩阵确实在做因果建模，就会有一个可观测的预测：
 
 **在因果方向明确的文本上，注意力矩阵应该表现出方向性不对称。**
 
-具体预测：给定"因为 A，所以 B"这类句子，处理"B"位置的 Q 应该主要对准"A"的 K（果看因）；处理"A"位置的 Q 对"B"的 K 权重应该低（因不回头看果）。
+具体预测：给定"因为 A，所以 B"这类句子，在"B"位置的 Q 应该主要锁定到"A"的 K（果看因）；在"A"位置的 Q 对"B"的 K 权重应该低（因不回头看果）。
 
-用 GPT-2 在句子 *"Because the storm intensified, the ship finally sank."* 上提取注意力，DAG 得分（最后一层平均）= **0.810**，显著高于随机基线 0.5。
+我们用 GPT-2 在句子 *"Because the storm intensified, the ship finally sank."* 上提取注意力，DAG 得分（最后一层平均）= **0.810**，远高于随机基线 0.5。
 
 <figure>
 <p><img src="/figures/ch09_causal_fig1_attention_asymmetry.png" alt="Attention Heatmap and Asymmetry Matrix" /></p>
-<figcaption>图1. 左：GPT-2 最后一层平均注意力热图——果位置（行）对因位置（列）的注意力权重更高，符合因果方向。右：不对称矩阵 A − Aᵀ，红色表示正向因果流（行->列）占主导，蓝色表示逆向流。</figcaption>
+<figcaption>图1. 左：GPT-2 最后一层的平均注意力热图——果位置（行）对因位置（列）给出更高的注意力权重，符合因果方向。右：不对称矩阵 A − Aᵀ；红色表示正向因果流（行->列）占主导，蓝色表示逆向流。</figcaption>
 </figure>
 
 <figure>
 <p><img src="/figures/ch09_causal_fig2_outer_product.png" alt="Outer Product Decomposition" /></p>
-<figcaption>图2. 左：外积矩阵 q_i ⊗ k_j 的热图（d_k × d_k），其迹等于点积，即原始注意力分数。右：由外积迹经 softmax 得到的注意力矩阵，重新解读为因果后验概率 P(j 是 i 的原因 | 上下文)，数值标注在格中。</figcaption>
+<figcaption>图2. 左：外积矩阵 q_i ⊗ k_j（d_k × d_k）的热图，其迹等于点积——也就是原始注意力分数。右：由外积的迹经 softmax 得到的注意力矩阵，重新解读为因果后验概率 P(j 是 i 的原因 | 上下文)，数值标注在格中。</figcaption>
 </figure>
 
 <figure>
 <p><img src="/figures/ch09_causal_fig3_dag.png" alt="Causal DAG from Attention" /></p>
-<figcaption>图3. 左：最后一层各注意力头的 DAG 得分柱状图——所有头均高于随机基线 0.5，与 GPT 单向因果掩码的时间正向流一致。右：从注意力权重推断的因果有向无环图，边宽正比于注意力权重，整体 DAG 得分 = 0.810。</figcaption>
+<figcaption>图3. 左：最后一层各注意力头的 DAG 得分——所有头都高于随机基线 0.5，与 GPT 单向因果掩码的时间正向流一致。右：从注意力权重推断出的有向无环图，边宽正比于注意力权重；整体 DAG 得分 = 0.810。</figcaption>
 </figure>
 
 完整代码如下：
@@ -358,7 +358,7 @@ CMAP_ASYM = "RdBu_r"
 
 CAUSAL_SENTENCE = "Because the storm intensified , the ship finally sank ."
 
-# ── 1. 获取注意力矩阵 ────────────────────────────────────────────────────────
+# ── 1. obtain the attention matrices ─────────────────────────────────────────────────────────
 
 def get_attention_real(sentence):
     tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
@@ -390,7 +390,7 @@ def get_attention_synthetic(sentence):
                   for _ in range(4)]
     return words, attentions
 
-# ── 2. 分析函数 ───────────────────────────────────────────────────────────────
+# ── 2. analysis functions ───────────────────────────────────────────────────────────────
 
 def average_attention(attentions, layer_idx=-1):
     return attentions[layer_idx].mean(axis=0)
@@ -401,29 +401,29 @@ def asymmetry_matrix(A):
 def dag_score(A):
     return np.tril(A, k=-1).sum() / (A.sum() + 1e-9)
 
-# ── 3. 外积理论核心 ───────────────────────────────────────────────────────────
+# ── 3. core of the outer-product theory ───────────────────────────────────────────────────────────
 
 def outer_product_demo(d_k=8, T=6, seed=0):
-    """验证 tr(q ⊗ k) == q·k，并生成因果后验注意力矩阵。"""
+    """Verify tr(q ⊗ k) == q·k and generate a causal posterior attention matrix."""
     rng = np.random.default_rng(seed)
     Q = rng.standard_normal((T, d_k))
     K = rng.standard_normal((T, d_k))
     scores = (Q @ K.T) / np.sqrt(d_k)
     attn = np.exp(scores)
     attn /= attn.sum(axis=-1, keepdims=True)
-    # 验证恒等式
+    # verify the identity
     for i in range(T):
         for j in range(T):
             assert abs(np.trace(np.outer(Q[i], K[j])) - Q[i] @ K[j]) < 1e-5
     return Q, K, scores, attn
 
-# ── 4. do 算子干预 ────────────────────────────────────────────────────────────
+# ── 4. do-operator intervention ────────────────────────────────────────────────────────────
 
 def do_intervene(attn_matrix, intervene_row, force_col):
     """
-    硬干预：do(cause=force_col -> effect=intervene_row)
-    将 intervene_row 行坍缩为 one-hot，指向 force_col。
-    等价于 Pearl 的硬 do 操作：切断所有其他入边。
+    Hard intervention: do(cause=force_col -> effect=intervene_row)
+    Collapse the intervene_row row to a one-hot vector pointing at force_col.
+    Equivalent to Pearl's hard do operation: cut off all other incoming edges.
     """
     result = attn_matrix.copy()
     result[intervene_row, :] = 0.0
@@ -432,8 +432,8 @@ def do_intervene(attn_matrix, intervene_row, force_col):
 
 def soft_do_intervene(attn_matrix, intervene_row, boost_col, strength=3.0):
     """
-    软干预：增强特定因果路径而不完全切断其他路径。
-    对应标准 Transformer 的 soft attention。
+    Soft intervention: boost a specific causal path without fully cutting the others.
+    Corresponds to the soft attention of a standard Transformer.
     """
     result = attn_matrix.copy()
     logits = np.log(result[intervene_row] + 1e-9)
@@ -443,7 +443,7 @@ def soft_do_intervene(attn_matrix, intervene_row, boost_col, strength=3.0):
     result[intervene_row] /= result[intervene_row].sum()
     return result
 
-# ── 5. 可视化 ─────────────────────────────────────────────────────────────────
+# ── 5. visualization ─────────────────────────────────────────────────────────────────
 
 def plot_all(tokens, attentions):
     T = len(tokens)
@@ -459,7 +459,7 @@ def plot_all(tokens, attentions):
     outer_ex = np.outer(Q[i_ex], K[j_ex])
     tr_val   = np.trace(outer_ex)
 
-    # Fig 1: 注意力热图 + 不对称矩阵
+    # Fig 1: attention heatmap + asymmetry matrix
     fig1, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 5))
     fig1.suptitle(f'GPT-2 Attention on Causal Sentence\n"{CAUSAL_SENTENCE}"', fontsize=11)
     sns.heatmap(avg_attn, ax=ax1, cmap=CMAP_ATTN, xticklabels=labels,
@@ -479,7 +479,7 @@ def plot_all(tokens, attentions):
     fig1.tight_layout()
     fig1.savefig(OUT_DIR / "ch09_causal_fig1_attention_asymmetry.png", dpi=150, bbox_inches="tight")
 
-    # Fig 2: 外积分解 + 因果后验
+    # Fig 2: outer-product decomposition + causal posterior
     fig2, (ax3, ax4) = plt.subplots(1, 2, figsize=(13, 5))
     fig2.suptitle(r"Outer-Product Decomposition: $A_{ij}=\mathrm{softmax}_j(\mathrm{tr}(q_i\otimes k_j)/\sqrt{d_k})$", fontsize=11)
     sns.heatmap(outer_ex, ax=ax3, cmap="coolwarm", center=0, square=True, cbar_kws={"shrink": 0.8})
@@ -498,7 +498,7 @@ def plot_all(tokens, attentions):
     fig2.tight_layout()
     fig2.savefig(OUT_DIR / "ch09_causal_fig2_outer_product.png", dpi=150, bbox_inches="tight")
 
-    # Fig 3: DAG 得分 + 因果 DAG 图
+    # Fig 3: DAG score + inferred causal DAG
     fig3, (ax5, ax6) = plt.subplots(1, 2, figsize=(13, 5))
     fig3.suptitle("Causal DAG Structure in Attention Heads", fontsize=11)
     last_layer = attentions[-1]
@@ -529,7 +529,7 @@ def plot_all(tokens, attentions):
     return score, avg_attn, labels
 
 def plot_do_intervention(avg_attn, labels, intervene_row, force_col):
-    """可视化硬/软 do 干预前后的注意力矩阵对比。"""
+    """Visualize attention matrices before and after hard/soft do intervention."""
     T = len(labels)
     hard_do = do_intervene(avg_attn, intervene_row, force_col)
     soft_do = soft_do_intervene(avg_attn, intervene_row, force_col, strength=3.0)
@@ -577,10 +577,10 @@ def main():
     dag_s, avg_attn, labels = plot_all(tokens, attentions)
     print(f"\nDAG score (last layer avg): {dag_s:.3f}")
 
-    # do 干预示例：对 "sank"（果）强制指向 "storm"（因）
+    # do-intervention example: force "sank" (effect) to point at "storm" (cause)
     sank_idx  = labels.index("sank") if "sank" in labels else 7
     storm_idx = labels.index("storm") if "storm" in labels else 2
-    print(f"\nApplying do-intervention: row={sank_idx}({labels[sank_idx]}) ← col={storm_idx}({labels[storm_idx]})")
+    print(f"\nApplying do-intervention: row={sank_idx} ({labels[sank_idx]}) ← col={storm_idx}({labels[storm_idx]})")
     plot_do_intervention(avg_attn, labels, sank_idx, storm_idx)
 
     print("\n── Theoretical check ─────────────────────────────")
@@ -610,7 +610,7 @@ if __name__ == "__main__":
 
 ### 8.1 注意力矩阵是隐式的因果邻接矩阵
 
-在因果解读下，$\alpha_{ij}$ 是"$j$ 是 $i$ 的原因"的后验概率。整个注意力矩阵 $\mathbf{A} \in \mathbb{R}^{T \times T}$ 是序列上的**软因果邻接矩阵**。
+在因果读法下，$\alpha_{ij}$ 是"$j$ 是 $i$ 的原因"的后验概率。整个注意力矩阵 $\mathbf{A} \in \mathbb{R}^{T \times T}$ 是序列上的**软因果邻接矩阵**。
 
 正常的前向传播是：
 
@@ -651,14 +651,14 @@ $$\alpha_{ij}^{\text{soft-do}} = \text{softmax}_j\left(\frac{q_i \cdot k_j}{\sqr
 
 <figure>
 <p><img src="/figures/ch09_causal_fig4_do_intervention.png" alt="do-Operator Intervention on Attention Matrix" /></p>
-<figcaption>图4. 注意力空间中的因果干预对比。左：原始软因果后验（正常注意力）。中：软 do 干预（λ=3.0，增强 storm->sank 路径，保留其余因果路径）。右：硬 do 干预（one-hot 坍缩，所有其他因果路径被切断，对应 Pearl 的精确 do 操作）。蓝色方框标出被干预的行位置。</figcaption>
+<figcaption>图4. 注意力空间中的因果干预对比。左：原始软因果后验（正常注意力）。中：软 do（λ=3.0，增强 storm->sank 路径，保留其余因果路径）。右：硬 do（one-hot 坍缩；其他所有因果路径都被切断，对应 Pearl 的精确 do）。蓝色方框标出被干预的行。</figcaption>
 </figure>
 
 硬干预的可视化直接对应 Pearl 因果图里"切断入边"的手术：位置"sank"那一行从分散的因果后验，坍缩为一个完全确定的指向——它的唯一原因是"storm"。其他所有可能的因果路径，被清零。
 
-### 8.5 causal mask 是全局 do 操作
+### 8.5 因果掩码是全局 do 操作
 
-GPT 的单向 causal mask 在这个框架里有了精确的因果语义：
+GPT 的单向因果掩码在这个框架里有了精确的因果语义：
 
 $$\text{do}\!\left(\alpha_{ij} = 0 \text{ for all } j > i\right)$$
 
@@ -684,7 +684,7 @@ $$\text{do}\!\left(\alpha_{ij} = 0 \text{ for all } j > i\right)$$
 
 **1. 因果图的可识别性**
 
-$\alpha_{ij}$ 高，是真的因果关系，还是统计共现？注意力机制无法从自身区分这两者。这是因果推断的根本困难在注意力空间里的重现。
+$\alpha_{ij}$ 很高：是真正的因果关系，还是统计共现？注意力机制无法靠自己区分这两者。这是因果推断的根本困难在注意力空间里的重现。
 
 **2. do 算子的语义位置**
 
@@ -692,7 +692,7 @@ Pearl 的 do 算子操作的是结构因果模型（SCM）——一个有明确�
 
 **3. 多头的因果分工**
 
-多头注意力有 $H$ 个头，每个头有不同的 $W_Q^h, W_K^h$。实验显示不同头的 DAG 得分不同。这意味着：每个头在建模不同的因果假设集合，还是从不同角度对同一个因果图做投影？
+多头注意力有 $H$ 个头，每个头都有自己的 $W_Q^h, W_K^h$。实验显示不同头的 DAG 得分不同。这是否意味着每个头在建模不同的因果假设集合，还是每个头从不同角度对同一个因果图做投影？
 
 **4. 训练动力学与因果学习**
 
@@ -700,7 +700,7 @@ Pearl 的 do 算子操作的是结构因果模型（SCM）——一个有明确�
 
 **5. 反事实推理能力**
 
-Pearl 因果阶梯的第三层是反事实：*如果当时不是storm，ship还会sank吗？* 在注意力框架里，这对应修改 $W_Q, W_K$ 然后重新推断——这不是推理时能做的事，而是需要改变模型参数。这意味着 Transformer 在架构层面被限制在因果阶梯的第二层，无法做严格的反事实推理。
+Pearl 因果阶梯的第三层是反事实：*如果当时没有风暴，船还会沉吗？* 在注意力框架里，这对应修改 $W_Q, W_K$ 然后重新推导——这不是推理时能做的事，因为它需要改变模型参数。这意味着 Transformer 在架构层面被限制在因果阶梯的第二层；严格的反事实推理对它关闭。
 
 这些问题目前没有答案。但它们指向一个方向：
 
@@ -712,11 +712,11 @@ Pearl 因果阶梯的第三层是反事实：*如果当时不是storm，ship还�
 
 </div>
 
-## 给读者的话：失望，然后呢？
+## 写给读者的话：失望？然后呢？
 
 如果你读到这里，心里浮现的第一个念头是"就这？都是加权平均？"——这个失望是合理的，甚至是必要的。
 
-让兔狲某直说：**自注意力、现代霍普菲尔德、线性注意力，本质上都是同一件事的不同包装——归一化联想检索。** 从1982年霍普菲尔德的Hebbian记忆，到2017年Transformer的softmax加权，到2020年线性注意力的前缀积分，这条谱系在做的事情从未改变：给定一个查询，在记忆库里找最相关的内容，加权返回。
+我直说吧：**自注意力、现代霍普菲尔德、线性注意力，本质上都是同一件事的不同包装——归一化联想检索。** 从1982年霍普菲尔德的Hebbian记忆，到2017年Transformer的softmax加权，到2020年线性注意力的前缀积分，这条谱系在做的事情从未改变：给定一个查询，在记忆库里找最相关的内容，加权返回。
 
 这是一个巨大的积分算子，不断被工程师用新名字重新发现。
 
@@ -732,7 +732,7 @@ Pearl 因果阶梯的第三层是反事实：*如果当时不是storm，ship还�
 
 物理学里一样的事发生过很多次。麦克斯韦方程组统一了电、磁、光——三个看起来毫不相干的现象。每次这种统一发生，第一反应都是"就这？这么简单？"然后才慢慢意识到：**简单不是贫乏，简单是深刻。**
 
-霍普菲尔德积分算子之于机器学习，也许就是麦克斯韦方程之于电磁学——不是"只有这一个"，而是"这一个足够深，能长出所有你以为不同的东西"。
+霍普菲尔德积分算子之于机器学习，就是麦克斯韦方程之于电磁学——不是"只有这一个"，而是"这一个足够深，能长出所有你以为不同的东西"。
 
 ---
 

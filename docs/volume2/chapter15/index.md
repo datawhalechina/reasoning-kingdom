@@ -18,7 +18,7 @@
 
 ---
 
-## 15.0 镜子命题游戏：当系统开始看见自己
+## 15.0 镜子语句游戏：当系统开始看见自己
 
 第14章的公理印章游戏还算安全：你盖章，按规则移动，最后得到定理。现在我们给这个游戏加一面镜子。
 
@@ -30,7 +30,7 @@
 
 1. **编号**：把公式变成数字，让语句成为系统内部可操作的对象。
 2. **引用**：构造一个谓词 $\mathsf{Prov}(n)$，表示“编号为 $n$ 的公式可证”。
-3. **照镜子**：制造一个命题 $G$，它说的不是外部世界，而是它自己：$G$ 不可证。
+3. **镜像**：制造一个命题 $G$，它说的不是外部世界，而是它自己：$G$ 不可证。
 
 如果系统证明了 $G$，它就证明了一个声称“我不可证”的命题，于是系统说谎；如果系统不能证明 $G$，那么 $G$ 说的恰好是真的，但系统抓不到它。
 
@@ -47,10 +47,10 @@
 形式系统不是因为弱才失败，而是因为强到能照见自己，才裂开。
 
 ::: info 兔狲教授评
-镜子命题游戏的残酷之处在于：镜子不是外敌。它是系统表达能力的一部分。你想让系统足够强，强到能谈论算术；它就顺手学会谈论自己。然后，裂缝出现。不是有人攻击了城堡，是城堡长出了自己的倒影。
+镜子语句游戏的残酷之处在于：镜子不是外敌。它是系统表达能力的一部分。你想让系统足够强，强到能谈论算术；它就顺手学会谈论自己。然后，裂缝出现。不是有人攻击了城堡，是城堡长出了自己的倒影。
 :::
 
-### 15.0.5 小型哥德尔编号：编码如何让系统长出镜子
+### 15.0.5 小型哥德尔编号：编码如何给系统一面镜子
 
 哥德尔编号不是抽象的"把符号映射到数字"，而是可以手动演示的机械编码。下面给一个极小的系统做一遍。
 
@@ -71,6 +71,512 @@ $$\text{编号} = 2^3 \cdot 3^1 \cdot 5^2 \cdot 7^3 \cdot 11^3 \cdot 13^1$$
 ::: info 兔狲教授评
 哥德尔编号不是"编码技巧"——它展示了"自指"如何作为表达能力的必然副产品出现。任何能够谈论加法和乘法的系统，自动地能够谈论关于自身的某些事实。不是因为"设计"了自指，而是因为系统的表达能力超过了某个阈值，自指就成了不可避免的数学事实。
 :::
+
+### 15.0.6 用代码玩镜子语句游戏
+
+15.0.5 节手工编号了一个公式。下面的程序把整个游戏跑起来：它复现那套编号（并与书中的确切数字核对），在一个小型形式系统里执行真正的证明搜索，然后构造出镜子语句 G——"G 不可证"——并用真实计算出的值跑一遍 15.0 节的那个分叉。
+
+```python
+#!/usr/bin/env python3
+"""
+mirror_sentence_game.py -- a runnable simulation of the Mirror-Sentence
+Game (Volume 2, Chapter 15, Sec. 15.0 and 15.0.5).
+
+The game has three steps, and this module runs all three:
+
+  1. NUMBERING   -- encode symbol strings as natural numbers (Goedel
+                    numbering), exactly the scheme of Sec. 15.0.5:
+                    P->1, ->->2, not->3 (the machine adds Q->4 so the
+                    toy system has two atoms).
+  2. REFERENCING -- build a real toy formal system (Lukasiewicz's three
+                    axiom schemas plus modus ponens), run an actual proof
+                    search, and implement Prov(n).
+  3. MIRRORING   -- diagonalize: build a sentence G whose content is
+                    "G is not provable", then run the fork from Sec. 15.0
+                    on real computed values.
+
+Honest scope: the toy system is propositional logic -- sound, complete,
+and decidable. No incompleteness fires inside it (its language has no
+word for "provable"); the crack is derived in Part 3 at the level of the
+machine's own code, where the fixed point genuinely exists. The full
+theorem needs arithmetic; this shows the mechanism, not a faked theorem.
+Proof searches are bounded; the caps below are generous for every formula
+shown. Style: functional -- no classes, formulas are immutable tuples.
+
+Run:  python3 mirror_sentence_game.py
+"""
+from __future__ import annotations
+
+import functools
+import itertools
+import math
+import string
+from typing import Dict, FrozenSet, Iterator, List, Optional, Tuple
+
+# The book's scheme (P=1, ->=2, not=3) extended to Q and plain ASCII so
+# Part 3 can quote sentences; real Goedel numbering covers every symbol
+# of the formal language the same way.
+CHARSET = "".join(
+    dict.fromkeys(
+        "P\u2192\u00acQ" + string.ascii_letters + string.digits
+        + " (){}[]:;,'\"+-*/<>=!._%" + "\\" + "\n" + "\t"
+    )
+)
+EXPONENT_OF: Dict[str, int] = {ch: i + 1 for i, ch in enumerate(CHARSET)}
+
+# ---------------------------------------------------------------------------
+# Primes and unique factorization
+# ---------------------------------------------------------------------------
+
+@functools.cache
+def prime(k: int) -> int:
+    """The k-th prime, 1-indexed."""
+    if k == 1:
+        return 2
+    n = prime(k - 1) + 1
+    while not _is_prime(n):
+        n += 1
+    return n
+
+
+def _is_prime(n: int) -> bool:
+    if n < 2:
+        return False
+    limit = math.isqrt(n)
+    i, p = 1, prime(1)
+    while p <= limit:
+        if n % p == 0:
+            return False
+        i += 1
+        p = prime(i)
+    return True
+
+
+def factorize(n: int, i: int = 1) -> Tuple[Tuple[int, int], ...]:
+    """Unique prime factorization of n >= 1, ascending primes."""
+    if n <= 1:
+        return ()
+    p = prime(i)
+    if n % p != 0:
+        return factorize(n, i + 1)
+    exponent, rest = 0, n
+    while rest % p == 0:
+        rest //= p
+        exponent += 1
+    return ((p, exponent),) + factorize(rest, i + 1)
+
+
+# ---------------------------------------------------------------------------
+# Part 1 -- NUMBERING
+# ---------------------------------------------------------------------------
+
+def encode_symbols(text: str) -> int:
+    """Goedel-number a symbol string: product of prime(i)^EXPONENT_OF[sym_i].
+    The empty string encodes to 1 (the empty product)."""
+    return functools.reduce(
+        lambda acc, pair: acc * prime(pair[0]) ** EXPONENT_OF[pair[1]],
+        enumerate(text, start=1),
+        1,
+    )
+
+
+def decode_number(n: int) -> Optional[str]:
+    """Inverse of encode_symbols; None when n names no symbol string."""
+    if n <= 0:
+        return None
+    try:
+        symbols = [CHARSET[exponent - 1] for _, exponent in factorize(n)]
+    except IndexError:
+        return None
+    return "".join(symbols)
+
+
+def encode_proof(formulas: Tuple[str, ...]) -> int:
+    """Second level: (F1,...,Fk) -> product of prime(i)^encode_symbols(Fi)."""
+    return functools.reduce(
+        lambda acc, pair: acc * prime(pair[0]) ** encode_symbols(pair[1]),
+        enumerate(formulas, start=1),
+        1,
+    )
+
+
+def decode_proof(n: int) -> Tuple[str, ...]:
+    """Inverse of encode_proof."""
+    return tuple(decode_number(exponent) for _, exponent in factorize(n))
+
+
+# ---------------------------------------------------------------------------
+# The toy formal language: formulas as immutable tuples
+# Grammar: F := P | Q | not F | (F -> F);  not binds tightest, -> right-assoc.
+# ---------------------------------------------------------------------------
+
+def parse_formula(text: str):
+    """Parse a symbol string into a formula tuple; ValueError if not well-formed."""
+    formula, i = _parse_implication(text, 0)
+    if i != len(text):
+        raise ValueError(f"trailing symbols at position {i}: {text[i:]!r}")
+    return formula
+
+
+def _parse_implication(text: str, i: int):
+    left, i = _parse_negation(text, i)
+    if i < len(text) and text[i] == "\u2192":
+        right, i = _parse_implication(text, i + 1)
+        return ("\u2192", left, right), i
+    return left, i
+
+
+def _parse_negation(text: str, i: int):
+    if i < len(text) and text[i] == "\u00ac":
+        inner, i = _parse_negation(text, i + 1)
+        return ("\u00ac", inner), i
+    if i < len(text) and text[i] == "(":
+        left, i = _parse_implication(text, i + 1)
+        if i >= len(text) or text[i] != "\u2192":
+            raise ValueError("expected '\u2192' inside parentheses")
+        right, i = _parse_implication(text, i + 1)
+        if i >= len(text) or text[i] != ")":
+            raise ValueError("expected ')'")
+        return ("\u2192", left, right), i + 1
+    if i < len(text) and text[i] in ("P", "Q"):
+        return text[i], i + 1
+    raise ValueError(f"cannot parse at position {i}: {text[i:]!r}")
+
+
+def show(formula) -> str:
+    """Canonical, fully parenthesized symbol string of a formula tuple."""
+    if isinstance(formula, str):
+        return formula
+    if formula[0] == "\u00ac":
+        return "\u00ac" + show(formula[1])
+    return "(" + show(formula[1]) + "\u2192" + show(formula[2]) + ")"
+
+
+def complexity(formula) -> int:
+    if isinstance(formula, str):
+        return 0
+    if formula[0] == "\u00ac":
+        return 1 + complexity(formula[1])
+    return 1 + complexity(formula[1]) + complexity(formula[2])
+
+
+def variables(formula) -> FrozenSet[str]:
+    if isinstance(formula, str):
+        return frozenset({formula})
+    if formula[0] == "\u00ac":
+        return variables(formula[1])
+    return variables(formula[1]) | variables(formula[2])
+
+
+def subformulas(formula) -> FrozenSet:
+    if isinstance(formula, str):
+        return frozenset({formula})
+    if formula[0] == "\u00ac":
+        return subformulas(formula[1]) | {formula}
+    return subformulas(formula[1]) | subformulas(formula[2]) | {formula}
+
+
+def evaluate(formula, assignment: Dict[str, bool]) -> bool:
+    if isinstance(formula, str):
+        return assignment[formula]
+    if formula[0] == "\u00ac":
+        return not evaluate(formula[1], assignment)
+    return (not evaluate(formula[1], assignment)) or evaluate(formula[2], assignment)
+
+
+def is_tautology(formula) -> bool:
+    vs = sorted(variables(formula))
+    return all(
+        evaluate(formula, dict(zip(vs, bits)))
+        for bits in itertools.product((False, True), repeat=len(vs))
+    )
+
+
+# ---------------------------------------------------------------------------
+# Part 2 -- REFERENCING: the toy formal system and a real Prov
+# Lukasiewicz's three axiom schemas plus modus ponens; sound and complete
+# for classical propositional logic.
+# ---------------------------------------------------------------------------
+
+def axiom_instances(subfs: FrozenSet, max_complexity: int = 8) -> List:
+    """All axiom instances built from formulas in `subfs`, under the cap.
+    (By the subformula property of Hilbert systems, a normal proof of F
+    only needs instances built from parts of F -- that is what keeps the
+    search fast without losing completeness.)"""
+    subfs = tuple(sorted(subfs, key=lambda f: (complexity(f), show(f))))
+    out: List = []
+    for x in subfs:
+        for y in subfs:
+            a1 = ("\u2192", x, ("\u2192", y, x))
+            if complexity(a1) <= max_complexity:
+                out.append(a1)
+            a3 = ("\u2192", ("\u2192", ("\u00ac", x), ("\u00ac", y)),
+                  ("\u2192", y, x))
+            if complexity(a3) <= max_complexity:
+                out.append(a3)
+            for z in subfs:
+                a2 = ("\u2192",
+                      ("\u2192", x, ("\u2192", y, z)),
+                      ("\u2192", ("\u2192", x, y), ("\u2192", x, z)))
+                if complexity(a2) <= max_complexity:
+                    out.append(a2)
+    return out
+
+
+def _candidate_space(goal, max_complexity: int) -> FrozenSet:
+    """Subformulas of the goal plus subformulas of all admissible axiom
+    instances -- the only formulas a normal proof of the goal can need."""
+    base = subformulas(goal)
+    instances = axiom_instances(base, max_complexity)
+    return functools.reduce(
+        lambda acc, f: acc | subformulas(f), instances, frozenset(base)
+    )
+
+
+def _bfs_closure(candidates: FrozenSet, start: List, max_rounds: int = 24):
+    """Forward proof search: the axiom-stamp game played honestly.
+    Start from axioms, apply modus ponens among derived formulas, never
+    leave the candidate space. Returns (parent, order); parent maps each
+    formula to None (axiom) or (a, b) (MP on a and b)."""
+    implications: Dict = {}
+    for c in candidates:
+        if isinstance(c, tuple) and c[0] == "\u2192":
+            implications.setdefault(c[1], []).append(c)
+    parent: Dict = {}
+    order: List = []
+
+    def add(f, src) -> None:
+        if f not in parent:
+            parent[f] = src
+            order.append(f)
+
+    for ax in start:
+        add(ax, None)
+    for _ in range(max_rounds):
+        grown = False
+        for a in list(order):
+            for b in implications.get(a, ()):
+                if b not in parent:
+                    continue          # the major premise must be derived
+                c = b[2]
+                if c in candidates and c not in parent:
+                    add(c, (a, b))
+                    grown = True
+        if not grown:
+            break
+    return parent, order
+
+
+def _rebuild(parent: Dict, goal) -> List:
+    """Recover a proof of `goal` from parent pointers, premises first."""
+    steps: List = []
+    seen = set()
+
+    def visit(f) -> None:
+        if f in seen:
+            return
+        src = parent[f]
+        if src is not None:
+            visit(src[0])
+            visit(src[1])
+        seen.add(f)
+        steps.append(f)
+
+    visit(goal)
+    return steps
+
+
+def search_proof(goal, max_complexity: int = 8, max_rounds: int = 24) -> Optional[List]:
+    """A proof of `goal` in the toy system, or None if the bounded search
+    closes without reaching it."""
+    candidates = _candidate_space(goal, max_complexity)
+    axioms = axiom_instances(subformulas(goal), max_complexity)
+    parent, _ = _bfs_closure(candidates, axioms, max_rounds)
+    if goal in parent:
+        return _rebuild(parent, goal)
+    return None
+
+
+def provable(n: int, max_complexity: int = 8, max_rounds: int = 24) -> bool:
+    """Prov(n): is the formula numbered n provable in the toy system?
+    Numbers that decode to no symbol string, or to a string that is not a
+    well-formed formula, are simply not provable."""
+    text = decode_number(n)
+    if text is None:
+        return False
+    try:
+        formula = parse_formula(text)
+    except ValueError:
+        return False
+    return search_proof(formula, max_complexity, max_rounds) is not None
+
+
+# ---------------------------------------------------------------------------
+# Part 3 -- MIRRORING: the diagonal sentence and the fork
+# ---------------------------------------------------------------------------
+
+QUINE_TEMPLATE = "q = %r; result = not provable(encode(q %% q))"
+
+
+def make_mirror_sentence() -> str:
+    """Fill the template with its own source, so the sentence's content
+    becomes 'not provable(encode(G))' where G is the sentence itself.
+    G is a fixed point of F(phi) = not Prov(<<phi>>) -- the same diagonal
+    as the Goedel sentence (Ch. 22.2.5 reads it as the fixed point of an
+    inference transformation)."""
+    return QUINE_TEMPLATE % QUINE_TEMPLATE
+
+
+def evaluate_mirror(sentence: str) -> bool:
+    """Run the mirror sentence and return what it says (its truth value).
+    Evaluating G computes: not provable(encode(G))."""
+    scope: Dict[str, object] = {"provable": provable, "encode": encode_symbols}
+    exec(compile(sentence, "<mirror-sentence>", "exec"), {"__builtins__": {}}, scope)
+    return bool(scope["result"])
+
+
+# ---------------------------------------------------------------------------
+# The demonstration
+# ---------------------------------------------------------------------------
+
+@functools.cache
+def _forms_at(c: int):
+    """All formulas of exactly complexity c over {P, Q}."""
+    if c == 0:
+        return ("P", "Q")
+    out = [("\u00ac", f) for f in _forms_at(c - 1)]
+    for i in range(c):
+        for f in _forms_at(i):
+            for g in _forms_at(c - 1 - i):
+                out.append(("\u2192", f, g))
+    return tuple(out)
+
+
+def _all_formulas(max_complexity: int) -> Iterator:
+    for c in range(max_complexity + 1):
+        yield from _forms_at(c)
+
+
+def _completeness_sweep(max_complexity: int = 2, max_rounds: int = 24) -> Dict:
+    """One shared proof search over {P, Q}, then compare 'tautology?'
+    against 'derived?' for every formula up to the given complexity."""
+    islands = list(_all_formulas(max_complexity))
+    base = functools.reduce(
+        lambda acc, f: acc | subformulas(f), islands, frozenset()
+    )
+    axioms = axiom_instances(base, max_complexity=8)
+    candidates = functools.reduce(
+        lambda acc, f: acc | subformulas(f), axioms, frozenset(base)
+    )
+    parent, _ = _bfs_closure(candidates, axioms, max_rounds)
+    derived = frozenset(parent)
+    taus = [f for f in islands if is_tautology(f)]
+    return {
+        "islands": islands,
+        "derived": derived,
+        "tautologies": taus,
+        "derived_tautologies": [f for f in taus if f in derived],
+        "derived_non_tautologies": [f for f in islands
+                                    if f in derived and not is_tautology(f)],
+    }
+
+
+def demo() -> None:
+    banner = "=" * 70
+    print(banner)
+    print(" THE MIRROR-SENTENCE GAME -- a runnable simulation")
+    print(" The Reasoning Kingdom, Volume 2, Chapter 15 (Sec. 15.0, 15.0.5)")
+    print(banner)
+
+    # Part 1
+    print("\nPART 1 -- NUMBERING (the book's scheme, run for real)")
+    print("  scheme: P->1, ->->2, not->3  (this machine adds Q->4)")
+    book_number = encode_symbols("\u00acP\u2192\u00ac\u00acP")
+    expected = 2 ** 3 * 3 ** 1 * 5 ** 2 * 7 ** 3 * 11 ** 3 * 13 ** 1
+    assert book_number == expected, "book example mismatch"
+    print(f"  encode(\"\u00acP\u2192\u00ac\u00acP\") = {book_number}")
+    print("    = 2^3 * 3^1 * 5^2 * 7^3 * 11^3 * 13^1   (matches Sec. 15.0.5)")
+    print(f'  decode({book_number}) = "{decode_number(book_number)}"')
+    print(f'  decode(32) = "{decode_number(32)}" -- not a formula: some')
+    print("    numbers name no formula at all (as the book promises)")
+    print('  encode("") = 1, decode(1) = ""  (the empty string lives at 1)')
+    proof_number = encode_proof(("P", "Q", "\u00acP"))
+    print(f"  proof level: encode_proof((P, Q, \u00acP)) = {proof_number}")
+    print(f"    decode_proof -> {decode_proof(proof_number)}")
+    print("  honest note: encoding the real 5-step proof below would need a")
+    print("    number with ~10^160 digits. Nobody ever multiplies it out --")
+    print("    the encoding exists to be expressible, not computed.")
+
+    # Part 2
+    print("\nPART 2 -- REFERENCING (a real toy formal system)")
+    print("  system: Lukasiewicz's A1/A2/A3 schemas + modus ponens, over {P, Q}.")
+    goal = parse_formula("P\u2192P")
+    proof = search_proof(goal)
+    assert proof is not None
+    n_pp = encode_symbols("P\u2192P")
+    print(f"  Prov(\u2308P\u2192P\u2309) = Prov({n_pp}) = True. The machine's actual proof:")
+    parent, _ = _bfs_closure(
+        _candidate_space(goal, 8), axiom_instances(subformulas(goal), 8), 24
+    )
+    index = {f: i + 1 for i, f in enumerate(proof)}
+    for i, f in enumerate(proof, start=1):
+        src = parent[f]
+        how = "axiom" if src is None else f"MP: {index[src[0]]}, {index[src[1]]}"
+        print(f"    {i}. {show(f):<42} [{how}]")
+    n_p = encode_symbols("P")
+    print(f"  Prov(\u2308P\u2309) = Prov({n_p}) = False: the search closed with no")
+    print("    derivation (and P is not a tautology).")
+    sweep = _completeness_sweep()
+    islands, derived = sweep["islands"], sweep["derived"]
+    print(f"  soundness: all {len(derived)} formulas the machine derived are")
+    print("    tautologies (checked by truth tables). The system does not lie.")
+    n_taut = len(sweep["tautologies"])
+    n_ok = len(sweep["derived_tautologies"])
+    n_bad = len(sweep["derived_non_tautologies"])
+    print(f"  completeness sweep: {len(islands)} formulas of complexity <= 2:")
+    print(f"    {n_ok}/{n_taut} tautologies derived; {n_bad} non-tautology derived")
+    print("    (the second number must be 0).")
+    assert n_ok == n_taut and n_bad == 0
+    print("  sound and complete on this little island -- exactly why the")
+    print("    mirror cannot crack it YET: its language has no word for")
+    print('    "provable". (Ch. 15.1: a complete decidable system never lies.)')
+
+    # Part 3
+    print("\nPART 3 -- MIRRORING (the fork, run live)")
+    sentence = make_mirror_sentence()
+    n = encode_symbols(sentence)
+    content = evaluate_mirror(sentence)
+    proven = provable(n)
+    print("  the machine builds a sentence G whose content is 'G is not provable':")
+    print(f"    G = {sentence}")
+    print(f"    n = encode(G) has {len(str(n))} digits, starting {str(n)[:40]}...")
+    print(f"    what G says, computed: {content}")
+    print(f"    can the toy system prove G: {proven}")
+    print("  the fork from Sec. 15.0, with real values:")
+    print("    G's claim is true, and the system cannot prove it. Here the")
+    print("    failure is visible: the toy's proof search cannot even parse G")
+    print("    -- a decidable system's language is too poor to mention")
+    print('    "provable".')
+    print("  why the crack must come once the system grows rich enough:")
+    print("    assume the system can vouch for itself (Prov sound and complete):")
+    print("      (1) provable*(G)  <=>  G is true")
+    print("      (2) G is true     <=>  not provable*(G)   [by G's own content]")
+    print("    (1) + (2)  =>  provable*(G) <=> not provable*(G)  -- contradiction.")
+    print("  fixed-point reading (Ch. 22.2.5): G is a fixed point of")
+    print("    F(phi) = not Prov(<<phi>>) -- the same diagonal as the Goedel")
+    print("    sentence.")
+    print("\n  Professor Pallas says:")
+    print('    "The cruelty of the mirror-sentence game: the mirror is no external')
+    print("    enemy. It is part of the system's expressive power. ... No one")
+    print('    attacked the castle -- the castle grew its own reflection."')
+    print("\n" + banner)
+    print("  end of simulation -- every printed value came from a real computation")
+    print(banner)
+
+
+if __name__ == "__main__":
+    demo()
+```
 
 ## 15.1 一致性：系统不说谎
 
@@ -155,7 +661,7 @@ $$\text{编号} = 2^3 \cdot 3^1 \cdot 5^2 \cdot 7^3 \cdot 11^3 \cdot 13^1$$
 
 这就是自指的入口。
 
-回到镜子命题游戏，这一步相当于把“公式”做成了可以被系统拿在手里把玩的棋子。第14章的公理印章游戏只允许你在纸上写公式；现在，纸上的公式有了编号，编号又能回到纸上，被另一个公式谈论。游戏的状态空间突然多了一层：它不再只是“命题是什么”，而是“命题如何谈论命题”。
+回到镜子语句游戏，这一步相当于把“公式”做成了可以被系统拿在手里把玩的棋子。第14章的公理印章游戏只允许你在纸上写公式；现在，纸上的公式有了编号，编号又能回到纸上，被另一个公式谈论。游戏的状态空间突然多了一层：它不再只是“命题是什么”，而是“命题如何谈论命题”。
 
 这就是危险的来源。镜子一旦装上，系统就不只是向外看世界，也开始向内看自己的证明行为。哥德尔句不是从天而降的怪物，它是镜子规则自然允许的一步棋。
 
@@ -278,7 +784,7 @@ Hilbert 纲领的失败是科学史上最有价值的失败之一。正是因为
 
 ---
 
-## 15.8 实战：算术被形式化是什么感觉
+## 15.8 动手实践：算术被形式化是什么感觉
 
 本章一直在说"足够强的系统"——强到能表达算术。这不是抽象的描述。皮亚诺算术（PA）是这样一个系统，它有五条关于自然数的公理。在进入"悬而未决"之前，先花几分钟真实接触它。
 

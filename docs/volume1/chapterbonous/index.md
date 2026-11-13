@@ -75,12 +75,12 @@ $i$ 和 $j$ 是拓扑序中的层级——根节点是 $\text{Type}_0$，它的�
 from cocdo.kernel.terms import Sort, Pi, Var
 from cocdo.kernel.typing import type_of, Context
 
-# 合法的边：X(层级0) -> Y(层级1)
+# Legal edge: X(level 0) -> Y(level 1)
 ctx: Context = {"X": Sort(0), "Y": Sort(1)}
 edge = Pi("X", Sort(0), Sort(1))   # ✓ 0 < 1
 
-# 非法的边：Y(层级1) -> X(层级0)，构成循环
-bad_edge = Pi("Y", Sort(1), Sort(0))  # type_of 会拒绝这个
+# Illegal edge: Y(level 1) -> X(level 0), forms a cycle
+bad_edge = Pi("Y", Sort(1), Sort(0))  # type_of will reject this
 ```
 
 这个设计的意义不只是工程上的防御。它说的是：**因果图的无环性不是一个运行时检查，而是一个类型不变量**。一个带循环的因果模型，在 CocDo 里根本无法被构造出来——就像在强类型语言里，你无法把字符串赋值给整数变量。
@@ -116,17 +116,17 @@ CocDo 的实现：
 
 ```python
 def subst(term, var: str, replacement):
-    """把 term 里所有自由出现的 var 替换为 replacement。"""
+    """Replace all free occurrences of var in term with replacement."""
     if isinstance(term, Var):
         return replacement if term.name == var else term
     elif isinstance(term, Lam):
-        if term.var == var:          # 绑定变量遮蔽，停止替换
+        if term.var == var:          # bound variable shadows, stop substitution
             return term
         return Lam(term.var, term.domain, subst(term.body, var, replacement))
     elif isinstance(term, App):
         return App(subst(term.func, var, replacement),
                    subst(term.arg,  var, replacement))
-    return term  # Const, Sort 不含自由变量
+    return term  # Const, Sort contain no free variables
 ```
 
 "捕获避免"处理的是一个微妙的情况：如果 $M$ 里有一个 λ 绑定了和 $X$ 同名的变量，替换不应该进入那个绑定的作用域——否则会把本来指向外部的 $X$ 错误地替换掉。代码里的 `if term.var == var: return term` 就是这个检查。
@@ -135,10 +135,10 @@ def subst(term, var: str, replacement):
 
 ```python
 def beta_reduce(term, steps=100):
-    """按值调用归约到不动点。"""
+    """Call-by-value reduction to a fixed point."""
     for _ in range(steps):
         reduced = _step(term)
-        if reduced is term:   # 不动点：无法继续归约
+        if reduced is term:   # fixed point: cannot reduce further
             break
         term = reduced
     return term
@@ -227,13 +227,13 @@ $\rho$ 越大，无环约束的惩罚越强，$A$ 被迫向 DAG 靠近。代码�
 用增广拉格朗日法求解，每隔若干步收紧乘子 $\lambda$ 和惩罚系数 $\rho$。下面是 CocDo 在合成数据上的完整训练循环（来自 `examples/demo_gcastle.py`）：
 
 ```python
-# 用 gCastle 生成 5 节点线性高斯 DAG，1000 个样本
+# Use gCastle to generate a 5-node linear Gaussian DAG, 1000 samples
 from castle.datasets import DAG, IIDSimulation
 true_dag = DAG.erdos_renyi(n_nodes=5, n_edges=6, seed=42)
 dataset  = IIDSimulation(W=true_dag, n=1000, method="linear", sem_type="gauss")
 X = dataset.X  # (1000, 5)
 
-# 训练 CausalFFNN 学习因果权重矩阵 A
+# Train CausalFFNN to learn the causal weight matrix A
 ffnn = CausalFFNN(d_embed=32, hidden=128)
 rho, lam = 1.0, 0.0
 
@@ -244,7 +244,7 @@ for epoch in range(500):
     loss = recon + lam * h + (rho / 2) * h ** 2
     loss.backward(); optim.step()
     
-    # 每 50 步收紧约束
+    # Tighten constraint every 50 steps
     if (epoch + 1) % 50 == 0:
         lam += rho * h.item()
         if h > 0.25 * h_prev:
@@ -309,10 +309,10 @@ $$v^* = \arg\min_v \sum_j \left(\|E_{\text{next}}[j]\| - y^*_j\right)^2$$
 `CausalPlanner` 的核心是一个可微的单步传播：
 
 ```python
-# do-calculus 在嵌入空间的实现：
-A_do  = A * (1 - col_mask)      # 把干预节点的入边列清零
-E_do  = (1 - row_mask) * E + row_mask * interv_E   # 注入干预值
-E_next = A_do.T @ E_do + U      # 结构方程传播
+# do-calculus in embedding space:
+A_do  = A * (1 - col_mask)      # zero out the incoming edge columns of intervened nodes
+E_do  = (1 - row_mask) * E + row_mask * interv_E   # inject intervention values
+E_next = A_do.T @ E_do + U      # structural equation propagation
 ```
 
 然后对干预值 $a$ 求梯度，用 Adam 优化：
@@ -351,21 +351,21 @@ for _ in range(200):
 正 $\Delta$ = 下游激活（查询触发的知识链）；负 $\Delta$ = 上游前提（理解查询所需的概念）。
 
 ```
-查询："Transformer 注意力与贝叶斯推断的关系"
+Query: "The relationship between Transformer attention and Bayesian inference"
 
-[向量检索 RAG]
-  1. ch9·Transformer 的成功触发了...  cos=0.763
-  2. ch9·注意力作为因果性...          cos=0.682
+[Vector Retrieval RAG]
+  1. ch9·The success of Transformers triggered...  cos=0.763
+  2. ch9·Attention as causality...                cos=0.682
 
-[CausalSearch · Pearl 三步]
-  溯因锚点 -> ch9·Transformer 的成功...
+[CausalSearch · Pearl's Three Steps]
+  Abduction anchor -> ch9·The success of Transformers...
 
-  + 下游激活：
-    ch17·贝叶斯更新与 ch14 的比较...  Δ=+2.69e-02
-    ch20·PAC 与贝叶斯：ch17 的延续... Δ=+2.34e-02
+  + Downstream activation:
+    ch17·Comparison of Bayesian updating and ch14...  Δ=+2.69e-02
+    ch20·PAC and Bayesian: continuation of ch17...    Δ=+2.34e-02
 
-  * CausalSearch 独有（RAG 遗漏）：
-    ch17 贝叶斯推断 ×4，ch1 生成模型层，ch19 证明...
+  * Unique to CausalSearch (missed by RAG):
+    ch17 Bayesian inference ×4, ch1 generative model layer, ch19 proofs...
 ```
 
 向量检索找的是"表面相似"；CausalSearch 找的是"因果相关"——沿学到的因果边传播，而不是在嵌入空间里量距离。

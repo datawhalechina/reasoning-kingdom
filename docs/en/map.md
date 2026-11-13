@@ -118,23 +118,14 @@ The Reasoning Kingdom is now a complete trilogy:
 | **Ch20** The Heuristic Contract | Giving precise definitions to "good enough" | Admissibility, consistency, PAC learning | Approximation algorithms, theoretical guarantees |
 | **Ch21** Learning Theory | Understanding the nature of generalization | Learning as inverse inference | VC dimension, PAC learning |
 
-### Self-Reference and Emergence (Chapters 22-24)
+### Self-Reference and Emergence (Chapters 22-23)
 
 **Core question**: What happens when a reasoning system begins to reason about itself?
 
 | Chapter | Goal | Key Idea | Methods |
 |---------|------|----------|---------|
 | **Ch22** Self-Reference and Emergence | Exploring the meta-layer of reasoning | When reasoning systems reason about themselves | Curry-Howard correspondence, fixed-point theorems |
-| **Ch23** Yonglin-Lyapunov Correspondence | Describing the dynamics of reasoning systems | Reasoning as a dynamical system | Stability analysis, convergence boundaries |
-| **Ch24** Reasoning Convergence Through the Lens of Category Theory | Explaining the structural necessity of reasoning convergence with category theory | Ghost pointer corresponds to terminal objects; absent adjoint functors cause meta-layer rupture | Category theory, adjoint functors, Lyapunov functors, categorical interpretation of self-attention |
-
-### Conclusion (Chapter 25)
-
-**Core question**: How do the eight boundaries unify? What is the nature of reasoning?
-
-| Chapter | Goal | Key Idea | Methods |
-|---------|------|----------|---------|
-| **Ch25** The Unification of Boundaries | The culmination of the entire book — unifying the eight boundaries, proposing the Impossible Triangle, returning to the meta-question | All boundaries are the same boundary projected in different directions; AI's reasoning is a layered, bounded, conditional spectrum of capabilities | Boundary Unification Framework, Impossible Triangle Conjecture, Four-Level Answer |
+| **Ch23** The Yonglin–Lyapunov Correspondence | Describing the dynamics of reasoning systems | Reasoning as a dynamical system | Stability analysis, convergence boundaries |
 
 ---
 
@@ -195,20 +186,20 @@ This book's narrative is built around 6 original research contributions:
 ### By Reader Type
 - **Beginners / Young readers**: Start from the prequel -> Volume I -> Volume II (step by step)
 - **Engineers / Practitioners**: Prioritize Volume I (Ch1-13), focus on "do it yourself" sections
-- **Researchers / Theorists**: Prioritize Volume II (Ch14-24), focus on original research
+- **Researchers / Theorists**: Prioritize Volume II (Ch14-23), focus on original research
 - **Students / Self-learners**: Read sequentially: prequel -> Volume I -> Volume II
 
 ### By Interest
 - **To understand the current state of AI reasoning**: Prequel Ch10-15 -> Volume I Ch9 -> Volume I Ch12
 - **To understand the theoretical foundations**: Volume II Ch14 -> Volume II Ch15 -> Volume II Ch19
-- **To explore open questions**: Volume II Ch22 -> Ch25 -> each chapter's "Unresolved" sections
+- **To explore open questions**: Volume II Ch22-23 -> each chapter's "Unresolved" sections
 - **To build algorithmic thinking**: Prequel Ch1-7 -> Volume I Ch7-8
 
 ### By Time Available
 - **Quick start**: Prequel Ch1 -> Prequel Ch10 -> Volume I Ch9
-- **Systematic study**: Follow the trilogy order: prequel -> Volume I -> Volume II -> Ch25 (Conclusion)
+- **Systematic study**: Follow the trilogy order: prequel -> Volume I -> Volume II
 - **Topic study**: Follow the three major intellectual pillar threads
-- **Quick reference**: Map -> Professor Manul's Mini-Dictionary -> Relevant chapters -> Ch25 Conceptual Map
+- **Quick reference**: Map -> Professor Manul's Mini-Dictionary -> Relevant chapters -> Extended-chapter conceptual map
 
 ---
 

@@ -1,31 +1,31 @@
-# Chapter 22: Self-Reference and Emergence — When a Reasoning System Begins to Reason About Itself
+# Chapter 22: Self-Reference and Emergence — When a Reasoning System Starts Reasoning About Itself
 
-> The Curry-Howard correspondence tells us: proofs are programs. So, what are programs proving?
-
----
-
-The final paragraph of Chapter 21 brought us here: a sufficiently strong inference system begins to contain propositions about itself. At this moment, the Gödelian structure of Chapter 15 reappears.
-
-But Chapter 22 is not a repetition of Chapter 15. Gödel spoke of **boundaries** — those true propositions you cannot reach. Chapter 22 speaks of **openings** — near this boundary, new things are emerging.
-
-Having walked this far through the second volume, nine chapters of logical deduction, the vantage point is high enough for a panoramic view. This is also one of the most honest chapters: some questions we can only state, not resolve.
+> The Curry-Howard correspondence tells us: a proof is a program. So what is a program proving?
 
 ---
 
-## 22.1 Curry-Howard: Proofs as Programs
+The last paragraph of Chapter 21 brought us here: a reasoning system strong enough to start including propositions about itself. At this moment, the Gödel structure of Chapter 15 reappears.
 
-Chapter 14 established formal systems: propositions, inference rules, proofs. Chapter 19 discovered that computation and logic are equivalent at the level of complexity: SAT is NP-complete, and proof discovery in propositional logic is, in the worst case, as hard as SAT.
+But Chapter 22 is not a repeat of Chapter 15. Gödel was about the boundary — the true propositions you can never reach. Chapter 22 is about the openings — the new things emerging around that boundary.
 
-But how deep does the equivalence go?
+Nine chapters of logical deduction into Volume 2, and we are finally high enough to look down. This is one of the most honest chapters: some questions, we can only state, not solve.
 
-The **Curry-Howard correspondence** (also called the propositions-as-types correspondence) gives the answer: **as deep as it possibly can be**.
+---
 
-Precisely stated, it establishes the following correspondence:
+## 22.1 Curry-Howard: A Proof Is a Program
+
+Chapter 14 built a formal system: propositions, inference rules, proofs. Chapter 19 found that computation and logic are equivalent at the level of complexity: SAT is NP-complete, and finding a proof in propositional logic is, in the worst case, exactly as hard as SAT.
+
+But how deep is the equivalence?
+
+The **Curry-Howard correspondence** (also called the propositions-as-types correspondence) gives the answer: as deep as it can possibly be.
+
+Precisely, it sets up the following correspondence:
 
 | Logic | Type Theory / Programs |
 |------|-------------|
 | Proposition $A$ | Type $A$ |
-| Proof of proposition $A$ | Term (program) of type $A$ |
+| Proof of proposition $A$ | Term of type $A$ (a program) |
 | $A \to B$ (implication) | Function type $A \to B$ |
 | $A \land B$ (conjunction) | Product type $A \times B$ |
 | $A \lor B$ (disjunction) | Sum type $A + B$ |
@@ -33,304 +33,401 @@ Precisely stated, it establishes the following correspondence:
 | Modus ponens | Function application |
 | Deduction theorem | Function abstraction ($\lambda$ abstraction) |
 
-This is not a metaphor but an isomorphism: every step of logical deduction corresponds to every step of program computation; the normalization of a proof (simplifying to its simplest form) corresponds to the evaluation of a program (running to termination).
+This is not a metaphor — it is an isomorphism: every step of a logical derivation corresponds to a step of computation in a program; normalization of a proof (reducing it to its simplest form) corresponds to evaluation of a program (running it until it terminates).
 
-::: info Professor Manul's Commentary
-Many people nod here and then continue treating "logic" and "program" as two separate things. Isomorphism means: every step you prove in logic is a computational step in a programming language; every function you write "proves" some proposition. If you don't find this staggering, you haven't yet truly understood what this correspondence is saying.
+::: info Professor Pallas says
+Many people nod at this point and then go right on treating "logic" and "program" as two different things. An isomorphism means: every step you prove in logic is one computation step in a programming language; every function you write is "proving" some proposition. If this doesn't blow your mind, you haven't really understood what this correspondence is saying.
 :::
 
-A proposition "has a proof" is equivalent to its corresponding type "having a program" — the corresponding type is "inhabited." **Proofs are programs, propositions are types, verification is execution.**
+A proposition "has a proof" exactly when its corresponding type "has a program" — the corresponding type is "inhabited". **A proof is a program, a proposition is a type, and verification is running the program.**
 
-::: info Why This Correspondence Is Shocking
-Before the Curry-Howard correspondence, mathematics and computer science were two adjacent but separate fields. The correspondence tells us: they are two languages for the same thing. Every mathematical theorem can be understood as a program; every program "proves" some proposition — proving that its output type can be constructed from its input type. This is not a philosophical similarity, but an equivalence that can be precisely verified by formal means. Theorem-proving assistants like Lean, Coq, and Agda are built precisely on this equivalence: writing a program is writing a proof, type-checking is proof verification.
+::: info Why This Correspondence Is So Striking
+Before the Curry-Howard correspondence, mathematics and computer science were two neighboring but separate fields. The correspondence tells us: they are two languages for the same thing. Every mathematical theorem can be understood as a program; every program is "proving" some proposition — proving that its output type can be constructed from its input type. This is not a philosophical similarity; it is an equivalence that can be verified precisely with formal machinery. The proof assistants Lean, Coq, and Agda are built on exactly this equivalence: writing a program is writing a proof, and type checking is proof verification.
 :::
 
 ---
 
 ## 22.2 Fixed Points: The Algebra of Self-Reference
 
-The Gödel sentence $G$ of Chapter 15 is essentially a **self-referential construction**: $G$ talks about $G$'s own provability. The mathematical heart of this construction is the diagonalization lemma — a mechanism for constructing "a proposition that talks about itself."
+The Gödel sentence $G$ of Chapter 15 is, at heart, a self-referential construction: $G$ talks about its own provability. The mathematical heart of this construction is the diagonalization lemma — a mechanism for building "propositions that talk about themselves".
 
-But self-reference does not only appear in Gödel's theorem. It has a more general algebraic structure: **fixed points**.
+But self-reference does not only appear in Gödel's theorem. It has a more general algebraic structure: the **fixed point**.
 
-**Definition (Fixed Point)**: Given a function $f$, if there exists $x$ such that $f(x) = x$, then $x$ is called a fixed point of $f$.
+**Definition (fixed point)**: given a function $f$, if there exists $x$ such that $f(x) = x$, then $x$ is called a fixed point of $f$.
 
-In the $\lambda$-calculus (the minimal core language of programs), there is a famous fixed-point combinator $Y$:
+In the lambda calculus (the simplest core language of programs), there is a famous fixed-point combinator $Y$:
 
 $$Y = \lambda f.\, (\lambda x.\, f\,(x\,x))\,(\lambda x.\, f\,(x\,x))$$
 
-For any function $f$, $Y\,f$ is the fixed point of $f$: $Y\,f = f\,(Y\,f)$.
+For any function $f$, $Y\,f$ is a fixed point of $f$: $Y\,f = f\,(Y\,f)$.
 
-Expanding this equality, $Y\,f$ "runs" itself — it passes itself as an argument to $f$. The $Y$ combinator is the algebraic root of recursion: any recursive definition is, in essence, finding the fixed point of some functional equation.
+Unrolled, this equation shows that $Y\,f$ "runs" itself — it passes itself as an argument to $f$. The $Y$ combinator is the algebraic root of recursion: every recursive definition, in its essence, is looking for the fixed point of some function equation.
 
-:::details 
-**The $Y$ Combinator and the $\lambda$-Calculus: The "Minimal Core" of Programs**
+:::details The Y Combinator and the Lambda Calculus: The "Simplest Core" of Programs
+The lambda calculus is a model of computation proposed by Alonzo Church in the same era as Turing (the 1930s), and it is more compact than the Turing machine: only three kinds of elements — variables, function abstraction ($\lambda x. \text{body}$), and function application ($f\,a$).
 
-The $\lambda$-calculus (Lambda Calculus) is a model of computation proposed by Alonzo Church in the same period (the 1930s) as Turing, simpler than the Turing machine: it has only three elements — variables, function abstraction ($\lambda x. \text{body}$), function application ($f\, a$).
+$\lambda x. \text{body}$ means "a function that takes input $x$ and returns body". For example, $\lambda x. x+1$ is the "add-1 function".
 
-**$\lambda x. \text{body}$** means "a function that takes input $x$ and returns $\text{body}$." For example, $\lambda x. x+1$ is the "add-one function."
+The $Y$ combinator is the tool for doing "recursion" in the lambda calculus. Ordinary programming languages let you write `def f(x): return f(x-1)` directly, but in the pure lambda calculus functions have no names, so they cannot refer to themselves directly. The $Y$ combinator gets around this restriction: $Y\,g$ passes $g$ itself as an argument to $g$, which achieves recursion.
 
-**The $Y$ combinator** is a tool in the $\lambda$-calculus for implementing "recursion." In ordinary programming languages, one can directly write `def f(x): return f(x-1)`, but in pure $\lambda$-calculus, functions have no names and cannot directly self-reference. The $Y$ combinator bypasses this restriction: $Y\,g$ passes $g$ itself as an argument to $g$, thereby achieving recursion.
-
-**What does this have to do with self-reference?** The $Y$ combinator is "a function that finds its own fixed point" — it encodes self-reference as pure functional computation. Gödel's diagonalization lemma is, in essence, the same mathematical structure manifested in logic.
+**Why does this relate to self-reference?** The $Y$ combinator is "a function that finds its own fixed point" — it encodes self-reference as pure functional computation. Gödel's diagonalization lemma is, in essence, the same mathematical structure appearing in logic.
 :::
 
+Gödel's diagonalization lemma, in this language, is a fixed point of the "provability predicate": there exists a proposition $G$ such that $G \equiv \neg\mathsf{Prov}(\ulcorner G \urcorner)$ — $G$ is a fixed point of the predicate "I am not provable". The program $D$ in the halting problem is likewise a fixed-point construction: the behavior of $D$ on input $D$ depends on the behavior of $D$ on input $D$.
 
-Gödel's diagonalization lemma, in this language, is the fixed point of the "provability predicate": there exists a proposition $G$ such that $G \equiv \neg\mathsf{Prov}(\ulcorner G \urcorner)$ — $G$ is the fixed point of the predicate "negation of own provability." The program $D$ in the halting problem is likewise a fixed-point construction: the behavior of $D$ on input $D$ depends on the behavior of $D$ on input $D$.
+**Self-reference, fixed points, and diagonalization are different names for the same mathematical structure in different contexts.**
 
-**Self-reference, fixed points, diagonalization — these are the same mathematical structure under different names in different contexts.**
+### 22.2.3 Hands-on: Unrolling the Y Combinator in Three Steps
 
+The definition of the $Y$ combinator: $Y = \lambda f.\, (\lambda x.\, f\,(x\,x))\,(\lambda x.\, f\,(x\,x))$.
 
-### 22.2.3 Hands-On: Manually Unfolding the Y Combinator in Three Steps
-
-The definition of the Y combinator: $Y = \lambda f.\, (\lambda x.\, f\,(x\,x))\,(\lambda x.\, f\,(x\,x))$.
-
-Let us trace the expansion using the recursive definition of the factorial function. Let $f_{\text{fact}}$ be a "factorial template" — it knows the logic of factorial, but does not know how to recursively call itself:
+Trace the unrolling with the recursive definition of the factorial function. Let $f_{\text{fact}}$ be a "factorial template" — it knows the logic of factorial but not how to call itself recursively:
 
 $$f_{\text{fact}} = \lambda \text{self}.\, \lambda n.\, \text{if } n = 0 \text{ then } 1 \text{ else } n \times \text{self}(n-1)$$
 
-Note that $f_{\text{fact}}$'s parameter `self` is a function — give $f_{\text{fact}}$ a function that can compute factorial, and $f_{\text{fact}}$ will return a new factorial function.
+Note that the `self` parameter of $f_{\text{fact}}$ is a function — give $f_{\text{fact}}$ a function that computes factorials, and $f_{\text{fact}}$ returns a new factorial function.
 
-Now compute the behavior of $Y\,f_{\text{fact}}$ at $n=3$.
+Now compute the behavior of $Y\,f_{\text{fact}}$ at $n = 3$.
 
-**Step 0 (Definition)**:
+**Step 0 (definition)**:
 $$Y\,f_{\text{fact}} = (\lambda x.\, f_{\text{fact}}\,(x\,x))\,(\lambda x.\, f_{\text{fact}}\,(x\,x))$$
 
-Let $w = \lambda x.\, f_{\text{fact}}\,(x\,x)$, then $Y\,f_{\text{fact}} = w\,w$.
+Let $w = \lambda x.\, f_{\text{fact}}\,(x\,x)$; then $Y\,f_{\text{fact}} = w\,w$.
 
-**Step 1 (Unfold one level)**:
+**Step 1 (unroll one layer)**:
 $$w\,w = f_{\text{fact}}\,(w\,w)$$
 
-Pass $w\,w$ to $f_{\text{fact}}$'s `self` parameter. Unfolding $f_{\text{fact}}$'s definition:
+Pass $w\,w$ to the `self` parameter of $f_{\text{fact}}$. Unroll the definition of $f_{\text{fact}}$:
 $$f_{\text{fact}}\,(w\,w) = \lambda n.\, \text{if } n = 0 \text{ then } 1 \text{ else } n \times (w\,w)(n-1)$$
 
-Now $Y\,f_{\text{fact}}$ is a function that accepts $n$, and when $n>0$, it calls $(w\,w)(n-1)$.
+Now $Y\,f_{\text{fact}}$ is a function that takes $n$ and, when $n > 0$, calls $(w\,w)(n-1)$.
 
-**Step 2 (Evaluate at $n=3$)**:
-$$(Y\,f_{\text{fact}})(3) = \text{if } 3=0 \text{ then } 1 \text{ else } 3 \times (w\,w)(2)$$
+**Step 2 (evaluate at $n = 3$)**:
+$$(Y\,f_{\text{fact}})(3) = \text{if } 3 = 0 \text{ then } 1 \text{ else } 3 \times (w\,w)(2)$$
 
 Compute $(w\,w)(2)$ — this is exactly the same as computing $(Y\,f_{\text{fact}})(2)$! Because $w\,w = Y\,f_{\text{fact}}$. So:
-$$(w\,w)(2) = f_{\text{fact}}\,(w\,w)(2) = \text{if } 2=0 \text{ then } 1 \text{ else } 2 \times (w\,w)(1)$$
+$$(w\,w)(2) = f_{\text{fact}}\,(w\,w)(2) = \text{if } 2 = 0 \text{ then } 1 \text{ else } 2 \times (w\,w)(1)$$
 
-**Step 3 (Continue unfolding)**:
-$$(w\,w)(1) = f_{\text{fact}}\,(w\,w)(1) = \text{if } 1=0 \text{ then } 1 \text{ else } 1 \times (w\,w)(0)$$
-$$(w\,w)(0) = f_{\text{fact}}\,(w\,w)(0) = \text{if } 0=0 \text{ then } 1 \text{ else } \ldots = 1$$
+**Step 3 (keep unrolling)**:
+$$(w\,w)(1) = f_{\text{fact}}\,(w\,w)(1) = \text{if } 1 = 0 \text{ then } 1 \text{ else } 1 \times (w\,w)(0)$$
+$$(w\,w)(0) = f_{\text{fact}}\,(w\,w)(0) = \text{if } 0 = 0 \text{ then } 1 \text{ else } \ldots = 1$$
 
-**Collapse**:
+**Collecting results**:
 $$(w\,w)(1) = 1 \times 1 = 1$$
 $$(w\,w)(2) = 2 \times 1 = 2$$
 $$(Y\,f_{\text{fact}})(3) = 3 \times 2 = 6 \checkmark$$
 
-**Key Observation**: At each step, $(w\,w)$ "feeds" itself to $f_{\text{fact}}$ whenever recursion is needed. $f_{\text{fact}}$ does not know it is calling itself — it merely receives a function parameter `self` and calls it. But the construction of $w\,w$ guarantees that `self` is precisely $w\,w$ itself. The Y combinator has no magic — it simply encodes "calling itself" as "applying a function to itself."
+**The key observation**: at every step, $(w\,w)$ "feeds" itself to $f_{\text{fact}}$ when recursion is needed. $f_{\text{fact}}$ does not know that it is calling itself — it merely received a function argument `self` and calls it. But the construction of $w\,w$ guarantees that `self` is $w\,w$ itself. The $Y$ combinator has no magic — it just encodes "calling itself" as "applying a function to itself".
 
-**Compare this with the Godel sentence $G$**:
-- $Y$: $Y\,f = f\,(Y\,f)$ — $Y\,f$ is the fixed point of $f$; each unfolding of $Y\,f$ passes itself back to $f$
-- $G$: $G \leftrightarrow \neg\mathsf{Prov}(\ulcorner G \urcorner)$ — $G$ is the fixed point of the predicate "negation of provability"; $G$ asserts a proposition about its own provability
+**Compare this with the Gödel sentence $G$**:
+- $Y$: $Y\,f = f\,(Y\,f)$ — $Y\,f$ is a fixed point of $f$; every unrolling of $Y\,f$ passes itself back to $f$
+- $G$: $G \leftrightarrow \neg\mathsf{Prov}(\ulcorner G \urcorner)$ — $G$ is a fixed point of the predicate "not provable", and $G$ asserts a proposition about its own provability
 
-Both are the same mathematical structure: find an object such that applying some transformation to it yields, under some equivalence, the object itself. The Y combinator uses function application as the transformation; the diagonalization lemma uses the provability predicate as the transformation — same mathematical structure, different instances.
+Both are the same mathematical structure: find an object such that the result of applying a certain transformation to it is, in an equivalence sense, the object itself. The $Y$ combinator uses function application as the transformation; the diagonalization lemma uses the provability predicate. Same mathematical structure, different instances.
 
-::: info Professor Manul's Commentary
-Manually unfolding the Y combinator for three steps gives you a feeling that cannot be obtained from definitions alone: self-reference is not black magic, but a mechanism that can be traced step by step. $Y$ does not "see through" itself — it merely mechanically applies a function to itself. But that single mechanical action manufactures recursion, the formal model of self-awareness, and the computational version of Godel's theorem. Complexity arises from the iteration of simple rules under self-reference — this is one of the deepest motifs of the entire book.
+::: info Professor Pallas says
+Unrolling the Y combinator three steps by hand gives you a feeling you cannot get from the definition: self-reference is not black magic, but a mechanism you can trace step by step. $Y$ does not "see through" itself; it merely mechanically applies a function to itself. But this one mechanical act creates recursion, formal models of self-awareness, and the computational version of Gödel's theorem. Complexity comes from iterating simple rules under self-reference — one of the deepest themes of this whole book.
 :::
 
----
+### 22.2.5 The MP Game: Proof Sequences as Dynamical Systems
 
-## 22.2.5 The MP Game: Proof Sequences as Dynamical Systems
+Modus ponens (MP) is the most basic inference rule of propositional logic: with $p$, and with $p \to q$, you get $q$.
 
-Modus Ponens (MP) is the most fundamental inference rule of propositional logic: given $p$, given $p \to q$, one obtains $q$.
+Textbooks give a static definition of proof: a finite sequence of formulas $\{p_1, p_2, \ldots, p_n\}$, where each $p_i$ is either an axiom or obtained from earlier formulas by MP. This is a static definition — it describes an already-finished object.
 
-Textbooks give a definition of a proof: a finite sequence of formulas $\{p_1, p_2, \ldots, p_n\}$ where each $p_i$ is either an axiom or obtained from earlier formulas via MP. This is a static definition — it describes an already completed object.
+But what if we look at it dynamically?
 
-But what if we view it dynamically?
-
-**Game Setup**: Define a function $f: \mathsf{Formula} \to \mathsf{Formula}$, and let the proof sequence satisfy $p_{n+1} = f(p_n)$. In this way, a proof becomes an **orbit**:
+**Setting up the game**: define a function $f: \mathsf{Formula} \to \mathsf{Formula}$, and require the proof sequence to satisfy $p_{n+1} = f(p_n)$. Then a proof becomes an **orbit**:
 
 $$p_1 \xrightarrow{f} f(p_1) \xrightarrow{f} f^2(p_1) \xrightarrow{f} \cdots$$
 
-Each application of $f$ corresponds to one MP inference: from the current formula, deduce the next formula. A proof sequence is a segment of trajectory of this dynamical system.
+Each application of $f$ is one MP inference: from the current formula, derive the next one. The proof sequence is a trajectory of this dynamical system.
 
-**Three Fates of an Orbit**:
+**Three fates of an orbit**:
 
-1. **Apparent Halting**: The sequence reaches some $p_k$ such that $f(p_k) = p_k$ — formally a fixed point. But this only means the successor equals itself, not that $p_k$ is the true QED. $p_k$ could be a self-referential construction; "halting" is merely the special case of a cycle of period 1.
-2. **Finite Cycle**: There exist $k > j$ such that $p_k = p_j$ — the orbit goes in circles; no new content emerges.
-3. **Infinite Extension**: The sequence never terminates — corresponding to undecidability. No algorithm can determine, for arbitrary given $f$ and initial formula, whether the orbit will halt.
+1. **Apparent stopping**: the sequence reaches some $p_k$ such that $f(p_k) = p_k$ — formally a fixed point. But this only says the successor term equals itself; it does not guarantee that $p_k$ is a true QED. $p_k$ might be a self-referential construction; "stopping" is just the special case of a cycle of period 1.
+2. **Finite cycle**: there exist $k > j$ such that $p_k = p_j$ — the orbit circles around, no new content emerges.
+3. **Infinite extension**: the sequence never terminates — this corresponds to undecidability. No algorithm can decide, for an arbitrary given $f$ and initial formula, whether the orbit will stop.
 
-**The Cauchy Condition and the Subtlety of Halting**: Judging whether the first fate represents "true completion" is equivalent to asking: does the sequence become a Cauchy sequence?
+**The Cauchy condition and the subtlety of halting**: determining whether the first fate is "truly complete" is equivalent to asking: does the sequence become Cauchy?
 
-On the state space $\{0,1\}$ (or any discrete space), the Cauchy condition
+On a state space like $\{0, 1\}$ (or any discrete space), the Cauchy condition
 
 $$\forall \varepsilon > 0,\ \exists N,\ \forall m,n > N:\ d(p_m, p_n) < \varepsilon$$
 
-degenerates into "the sequence is eventually constant" — i.e., eventually fixed. $f(p_k) = p_k$ satisfies this condition. But the Cauchy condition only guarantees that the limit **exists**, not that the limit point is the "true answer."
+degenerates into "the sequence is eventually constant" — that is, eventually fixed. $f(p_k) = p_k$ satisfies this condition. But the Cauchy condition only guarantees that the limit exists, not that the limit point is the "true answer".
 
-Real-world computers have finite stack space, so we manually impose a cutoff condition — not halting automatically upon reaching the limit, but halting imposed from outside. This external condition, in a sufficiently strong system, cannot be internalized by the system itself.
+Real computers have finite stack space, so we impose a truncation condition by hand — not stopping automatically at the limit, but halting imposed from outside. This external condition, in a sufficiently strong system, cannot be internalized by the system itself.
 
-**A fixed point is the endpoint of a proof** — but only when the limit point is meaningful. When $f(\varphi) = \varphi$, $\varphi$ has "stabilized" under inference, but where it has stabilized requires external verification.
+**A fixed point is the end of a proof** — but only when the limit point is meaningful. When $f(\varphi) = \varphi$, $\varphi$ has "stabilized" under inference, but where it stabilized needs external verification.
 
-This is not merely a metaphor. The diagonalization lemma says: for any formula $A(x)$, there exists a sentence $\varphi$ such that $\varphi \leftrightarrow A(\ulcorner \varphi \urcorner)$. If we interpret $A$ as some "inference transform," $\varphi$ is the fixed point of that transform — it talks about itself and remains invariant under the transform. The Gödel sentence $G \equiv \neg\mathsf{Prov}(\ulcorner G \urcorner)$ is the fixed point of the "negation of provability" transform.
+This is not just a metaphor. The diagonalization lemma says: for any formula $A(x)$, there exists a sentence $\varphi$ such that $\varphi \leftrightarrow A(\ulcorner \varphi \urcorner)$. Reading $A$ as some kind of "inference transformation", $\varphi$ is a fixed point of that transformation — it talks about itself and is unchanged under the transformation. The Gödel sentence $G \equiv \neg\mathsf{Prov}(\ulcorner G \urcorner)$ is the fixed point of the transformation "not provable".
 
-**Curry-Howard's Reflection Here**: Under the CH isomorphism, formulas correspond to types, proof sequences correspond to reduction sequences of programs, $f$ corresponds to a function on types $F: \mathsf{Type} \to \mathsf{Type}$. The fixed point $f(\varphi) = \varphi$ corresponds to recursive types $F(T) \cong T$ — for example, the naturals $\mathsf{Nat} \cong 1 + \mathsf{Nat}$ is the fixed point of $F(T) = 1 + T$.
+**Curry-Howard in view**: under the CH isomorphism, formulas correspond to types, proof sequences correspond to reduction sequences of programs, and $f$ corresponds to a function $F: \mathsf{Type} \to \mathsf{Type}$ on types. The fixed point $f(\varphi) = \varphi$ corresponds to a recursive type $F(T) \cong T$ — for instance, the natural numbers $\mathsf{Nat} \cong 1 + \mathsf{Nat}$ are the fixed point of $F(T) = 1 + T$.
 
-The MP game unifies three things in a single framework: **the structure of proof, the orbits of dynamical systems, and the fixed points of recursive types**. They are the same mathematical object read in three different languages: logic, analysis, and type theory.
+The MP game brings three things together in one framework: **the structure of proofs, the orbits of a dynamical system, and the fixed points of recursive types**. They are different readings, in the languages of logic, analysis, and type theory, of the same mathematical object.
 
-::: info Professor Manul's Commentary
-The true danger of this game lies in the third fate: the infinitely extending orbit. You cannot determine from outside whether an orbit will halt — this is not a matter of insufficient computational power, but undecidability in principle. Every time you write down a proof, you are in effect claiming: this orbit will halt, and it will halt precisely where you want it to. This claim, in a sufficiently strong system, cannot be verified by the system itself.
+::: info Professor Pallas says
+The real danger of this game is in the third fate: an orbit that extends forever. You cannot tell from outside whether an orbit will stop — this is not because your computing power is insufficient, but because it is undecidable in principle. Every time you write down a proof, you are actually claiming: this orbit will stop, and it will stop where I want it to. In a sufficiently strong system, this claim cannot be verified by the system itself.
 :::
+
+### 22.2.6 The MP Game in Code
+
+The orbits are small enough to run. The program below shows all three fates of an orbit – apparent stopping, finite cycle, infinite extension – then the Cauchy trap, and finally a miniature of the mirror: the Goedel sentence as a fixed point of the transformation "not provable."
+
+```python
+#!/usr/bin/env python3
+"""
+mp_game.py -- the MP Game of Chapter 22: proof sequences as orbits.
+Book reference: The Reasoning Kingdom, Volume 2, Chapter 22, Section
+22.2.5 "The MP Game: Proof Sequences as Dynamical Systems."
+
+A proof is usually a finished object: a finite sequence of formulas. The
+MP game reads it dynamically: p_{n+1} = f(p_n), one modus ponens per
+step, and a proof becomes an orbit of a dynamical system. An orbit has
+exactly three fates -- and this program runs all three, plus the two
+subtleties the book warns about:
+
+  1. apparent stopping:  f(p) = p, but is p a TRUE QED?
+  2. finite cycle:       no new content ever appears;
+  3. infinite extension: the orbit never ends (undecidable, in general);
+  4. the Cauchy trap:    a converging sequence whose limit point is not
+                         where the transformation rests;
+  5. the mirror:         the Goedel sentence as a fixed point of the
+                         transformation F(phi) = "not provable(phi)",
+                         built here as a tiny self-referential program
+                         (Chapter 15's companion script runs the full
+                         numbering machinery; this is the miniature).
+
+Run:  python3 mp_game.py
+"""
+
+
+def orbit(f, x0, n):
+    """The first n+1 points of the orbit x0, f(x0), f(f(x0)), ..."""
+    out = [x0]
+    x = x0
+    for _ in range(n):
+        x = f(x)
+        out.append(x)
+    return out
+
+
+def demo():
+    print("=" * 70)
+    print(" THE MP GAME -- proof sequences as dynamical systems")
+    print(" The Reasoning Kingdom, Volume 2, Chapter 22 (Sec. 22.2.5)")
+    print("=" * 70)
+
+    # Fate 1: apparent stopping.
+    f1 = lambda x: x if x <= 0 else x - 1
+    print("\nFate 1 -- apparent stopping:  f(x) = max(x-1, 0), start at 5")
+    print("  orbit:", orbit(f1, 5, 8))
+    print("  f(0) = 0, a fixed point. But 'stopping' only says the")
+    print("  successor equals itself -- it does not guarantee 0 is a TRUE")
+    print("  QED. Apparent stopping is a cycle of period 1.")
+
+    # Fate 2: finite cycle.
+    f2 = lambda x: (x + 1) % 3
+    print("\nFate 2 -- finite cycle:  f(x) = (x+1) mod 3, start at 0")
+    print("  orbit:", orbit(f2, 0, 7))
+    print("  round and round; no new content ever emerges.")
+
+    # Fate 3: infinite extension.
+    f3 = lambda x: x + 1
+    print("\nFate 3 -- infinite extension:  f(x) = x+1, start at 0")
+    print("  orbit (first 8 points):", orbit(f3, 0, 7))
+    print("  it never terminates. And for an arbitrary f, no algorithm")
+    print("  can decide whether the orbit will ever stop -- that is")
+    print("  undecidability in principle, not slow hardware.")
+
+    # The Cauchy trap.
+    print("\nThe Cauchy trap:")
+    print("  sequence p_n = 1/n is Cauchy and converges to 0,")
+    print("  but under the transformation f(x) = x + 1, f(0) = 1.")
+    print("  the limit exists; the transformation does not rest there.")
+    print("  The Cauchy condition guarantees the limit EXISTS -- not that")
+    print("  the limit point is the TRUE answer.")
+
+    # The mirror: fixed point of "not provable".
+    THEOREMS = {"T1", "T2"}   # a toy provability predicate over strings
+
+    def provable(s):
+        return s in THEOREMS
+
+    q = "q = %r; content = not provable(q %% q)"
+    G = q % q
+    scope = {"provable": provable}
+    exec(G, {"__builtins__": {}}, scope)
+    print("\nThe mirror -- G as a fixed point of F = 'not provable':")
+    print(f"  G = {G}")
+    print(f"  what G says, computed: {scope['content']}")
+    print(f"  provable(G) = {provable(G)}")
+    print("  so G <-> not provable(G): G is a fixed point of the")
+    print("  transformation F(phi) = not Prov(<<phi>>). The diagonalization")
+    print("  lemma in Chapter 15 is the same fixed point, grown to full")
+    print("  arithmetic; the miniature here shows its shape.")
+
+    print("=" * 70)
+
+
+if __name__ == "__main__":
+    demo()
+```
 
 ---
 
 ## 22.3 Dependent Types: Propositions as Objects
 
-The Curry-Howard correspondence holds in simple type theory. But what happens if we make the type system strong enough — allowing types to depend on values?
+The Curry-Howard correspondence holds in simple type theory. But what happens if the type system is made strong enough — allowing types to depend on values?
 
-Dependent types allow expressions like: the type $\mathsf{Vec}(A, n)$ means "a vector of type $A$ of length $n$," where $n$ is a concrete natural number, not a type variable. The "inhabitants" (programs) of this type are all vectors whose length is exactly $n$.
+Dependent types allow expressions like: the type $\mathsf{Vec}(A, n)$ means "vectors of length $n$ with elements of type $A$", where $n$ is a specific natural number, not a type variable. The "inhabitants" (programs) of this type are all the vectors of exactly length $n$.
 
-:::details Dependent Types: Letting Types Carry "Proofs" (Prior Work: Martin-Löf, 1975)
-In ordinary programming languages, types and values are separated: `int` is a type, `42` is a value, and the type does not know what the specific value is.
+:::details Dependent Types: Making Types Carry "Proofs" (Earlier Work: Martin-Löf, 1975)
+In ordinary programming languages, types and values are separate: `int` is a type, `42` is a value, and a type does not know what the specific value is.
 
 Dependent types break this separation: **types can depend on values**.
 
-Examples:
-- Ordinary type: `Vec<int>` (integer vector, regardless of length)
-- Dependent type: `Vec<int, 5>` (a vector of exactly 5 integers, the length encoded in the type)
+Example:
+- Ordinary type: `Vec<int>` (a vector of integers, length unexplained)
+- Dependent type: `Vec<int, 5>` (a vector of exactly 5 integers; the length is encoded in the type)
 
-**Why is this useful?** Because more precise types = stronger compile-time checks. If the function signature is `concat : Vec<A, m> -> Vec<A, n> -> Vec<A, m+n>`, the compiler will **automatically verify** that the length after concatenation is correct — no runtime checking needed, bounds violations are impossible.
+**Why is this useful?** Because a more precise type = stronger compile-time checking. If the function signature is `concat : Vec<A, m> -> Vec<A, n> -> Vec<A, m+n>`, the compiler automatically verifies that the length after concatenation is correct — no runtime check needed, out-of-bounds is impossible.
 
-**Relation to Curry-Howard**: In dependent types, "$\forall x. P(x)$" (for all $x$, $P(x)$ holds) corresponds to the $\Pi$-type (for each $x$, there is a proof of type $P(x)$). Writing a program = constructing a proof. This is what makes systems like Lean/Coq/Agda possible: you are writing mathematical proofs in a programming language.
+**Relation to Curry-Howard**: in dependent types, "$\forall x. P(x)$" (for all $x$, $P(x)$ holds) corresponds to a $\Pi$-type (for each $x$, a proof of type $P(x)$). Writing a program = constructing a proof. This makes systems like Lean/Coq/Agda possible: you are writing mathematical proofs in a programming language.
 :::
-
 
 Under dependent types, the Curry-Howard correspondence extends to first-order logic:
 
 | First-Order Logic | Dependent Types |
 |---------|---------|
-| $\forall x.\, P(x)$ | $\Pi$-type: $\prod_{x : A} P(x)$ (function mapping from each $x$ to a proof of $P(x)$) |
-| $\exists x.\, P(x)$ | $\Sigma$-type: $\sum_{x : A} P(x)$ (a pair of an $x$ with an inhabitant of $P(x)$) |
+| $\forall x.\, P(x)$ | $\Pi$-type: $\prod_{x : A} P(x)$ (a function mapping each $x$ to a proof of $P(x)$) |
+| $\exists x.\, P(x)$ | $\Sigma$-type: $\sum_{x : A} P(x)$ (a pair of an $x$ such that $P(x)$ is inhabited) |
 
-Dependent type systems (such as Martin-Löf type theory) realize an ancient dream of mathematics: **the construction of mathematical objects and the proof of mathematical propositions are handled in a unified way within the same language**. Proving a proposition is constructing a program with the corresponding type; constructing a mathematical object is writing an inhabitant of the corresponding type.
+Dependent type systems (such as Martin-Löf type theory) realize an old dream of mathematics: constructing mathematical objects and proving mathematical propositions, handled together in the same language. Proving a proposition is constructing a program with the corresponding type; constructing a mathematical object is writing an inhabitant of the corresponding type.
 
-This is not a formal trick, but a profound unification: mathematics and computation, propositions and data, proofs and programs — in a sufficiently precise language, they are the same thing.
+This is not formal trickery, but a deep unification: mathematics and computation, propositions and data, proofs and programs — in a language precise enough, they are the same thing.
 
 ---
 
-## 22.4 Self-Reasoning of a Reasoning System: The Boundary Reappears
+## 22.4 A Reasoning System Reasoning About Itself: The Boundary Returns
 
-Now we arrive at the core question of this chapter.
+Now to the most central question of this chapter.
 
-A reasoning system — whether a formal logical system, a learning algorithm, or a large language model — when it becomes sufficiently complex and begins to reason about itself, the pattern of Chapter 15 inevitably emerges.
+A reasoning system — whether a formal logic system, a learning algorithm, or a large language model — once it is complex enough and starts reasoning about itself, the pattern of Chapter 15 inevitably appears.
 
-**At the formal system level**: Gödel's theorem says that any sufficiently strong consistent system has true propositions that it cannot prove (including propositions about its own consistency). Adding $G$ as an axiom yields a stronger system, but that stronger system has its own $G'$. This hierarchy has no top.
+**At the level of formal systems**: Gödel's theorem says that any sufficiently strong consistent system has true propositions it cannot prove (including the proposition about its own consistency). Add $G$ to the axioms and you get a stronger system, but this stronger system has its own $G'$. This hierarchy has no top.
 
-**At the learning system level**: The conclusion of Chapter 21 is that the inductive bias of learning cannot be determined from within the data — it is an external input. A learning system cannot infer from its own training data whether its inductive bias is appropriate, just as a formal system cannot prove its own consistency from its own axioms.
+**At the level of learning systems**: Chapter 21 concluded that a learning system's inductive bias cannot be determined from inside the data — it is external input. A learning system cannot infer from its own training data whether its inductive bias is appropriate, just as a formal system cannot prove its own consistency from its own axioms.
 
-::: info Professor Manul's Commentary
-Read this sentence twice. This is not saying that inductive bias is hard to choose, but that in principle, data cannot tell you whether your inductive bias is appropriate — just as a formal system cannot prove its own consistency from within. The true connection between Chapter 21 and Chapter 15 is here: the blind spot of learning and the incompleteness of logic are two languages for the same structural limitation.
+::: info Professor Pallas says
+Read that sentence twice. This is not saying that inductive bias is hard to choose; it is saying that, in principle, the data cannot tell you whether your inductive bias is appropriate — just as a formal system cannot prove its own consistency from inside. The real connection between Chapter 21 and Chapter 15 is here: the blind spot of learning and the incompleteness of logic are two languages for the same structural limit.
 :::
 
-**At the large language model level**: This is the most cutting-edge and also most uncertain question. Through training, large language models acquire some internal representation of language structure. Does this representation contain some formal approximation of "inference rules"? When a model "reasons" about its own reasoning process (e.g., chain-of-thought), what is it doing?
+**At the level of large language models**: this is the frontier, and the most unsettled question. Through training, a large language model obtains some internal representation of linguistic structure. Does this representation contain some form of approximation of "inference rules"? When the model "reasons" about its own reasoning process (for instance, chain-of-thought), what is it doing?
 
 ::: info A Formal Conjecture about Transformers
-An informal conjecture discussed in the research community: the attention mechanism of Transformers, at sufficient scale and training, implements a kind of **implicit causal inference** — by selecting relevant positions in context, it performs an approximate conditional independence test, which has structural similarity to the d-separation of Chapter 18. This is not a proven theorem but a conjecture requiring precise mathematical characterization. If it holds in some sense, then large language models are not merely pattern matchers but are performing some approximate causal inference — this conclusion would profoundly change our understanding of AI reasoning capabilities. But "in some sense" is a large escape hatch; existing theoretical tools cannot yet turn this conjecture into a theorem.
+An informal conjecture discussed in the research community: the attention mechanism of a Transformer, at sufficient scale and with sufficient training, implements some kind of implicit causal inference — by selecting relevant positions in the context, it performs an approximate test of conditional independence, which has a structural similarity to the d-separation of Chapter 18. This is not a proven theorem, but a conjecture that needs precise mathematical characterization. If it holds in some sense, then large language models are not merely pattern matchers; they are performing some approximate causal inference — and this conclusion would deeply reshape our understanding of AI reasoning ability. But "in some sense" is a large escape hatch; existing theoretical tools cannot yet turn this conjecture into a theorem.
 :::
 
 ---
 
-## 22.5 Emergence: When Quantitative Change Triggers Qualitative Change
+## 22.5 Emergence: When Quantity Turns Into Quality
 
-Self-reference and fixed points explain the algebraic structure of "a system reasoning about itself." But there is another phenomenon, commonly appearing in complex systems, that is even harder to formalize: **emergence**.
+Self-reference and fixed points explain the algebraic structure of "a system reasoning about itself". But there is another phenomenon, widespread in complex systems and even harder to formalize: **emergence**.
 
-Emergence says: when there are enough components and sufficiently rich interactions, a system exhibits properties that no individual part possesses and that cannot be predicted from simple superposition of the parts.
+Emergence says: when the parts are numerous enough and the interactions rich enough, the system exhibits properties that no single part has, and that cannot be predicted from a simple sum of the parts.
 
-In the training practice of large language models, emergent phenomena have already been observed: when model scale exceeds a certain threshold, certain capabilities (such as arithmetic reasoning, multi-step inference) suddenly appear, while being completely absent in smaller models. Such "suddenly appearing" capabilities are called emergent capabilities.
+In the training practice of large language models, emergence has been observed: when the model scale crosses some threshold, certain abilities (such as arithmetic reasoning, multi-step inference) suddenly appear, and are completely absent in smaller models. These "suddenly appearing" abilities are called emergent capabilities.
 
 ### Three Levels of Emergence
 
-Emergence is not a single phenomenon, but occurs on at least three levels, each corresponding to different theoretical tools.
+Emergence is not a single phenomenon; it happens on at least three levels, each corresponding to different theoretical tools.
 
-**Level 1: Combinatorial emergence.** Simple atoms combine to produce new behavioral capabilities, even though no single atom possesses that capability individually. Water molecules are composed of hydrogen and oxygen — hydrogen and oxygen individually are not "wet," but when combined they acquire the macroscopic property of "wetness." This is the most basic form of emergence, which can be roughly described by phase transition theory — near a critical point, the system's behavior undergoes a dramatic change.
+**Level 1: compositional emergence.** Simple atoms combine into new behavioral capacity, even though no single atom has it on its own. A water molecule consists of hydrogen and oxygen — hydrogen and oxygen are each not "wet", but combined they acquire the macroscopic property of "wet". This is the most basic form of emergence, and phase-transition theory can roughly describe it — near the critical point, the system's behavior changes drastically.
 
-**Level 2: Computational emergence.** A single rule of a Turing machine (the $\delta$ function) is extremely simple — given the current state and the symbol read, determine the next state, the symbol to write, and the direction of head movement. You cannot tell from a single rule that it can do calculus, play chess, or write poetry. Yet a universal Turing machine is just a simple $\delta$ plus a long tape. Computational capability is emergent — not possessed by any single rule in isolation, but produced by the combination of rules + infinite tape + sufficient time.
+**Level 2: computational emergence.** The single rule of a Turing machine (the $\delta$ function) is extremely simple — based on the current state and the symbol read, decide the next state, the symbol to write, and the head's direction of movement. You cannot see from a single rule that it can do calculus, play chess, or write poetry. But the "universal Turing machine" is a simple $\delta$ plus a long tape. Computational power is emergent — it belongs to no single rule, but arises from the combination of rules + infinite tape + enough time.
 
-**Level 3: Representational emergence.** In large language models, the capabilities produced by billions of parameters after training (such as analogical reasoning, emotion recognition, code generation) are not functions of any single parameter, nor were they planned by the designer. The training objective (next token prediction) contains no explicit instructions to "understand emotions" or "write code" — yet these capabilities manifest at sufficient scale.
+**Level 3: representational emergence.** In large language models, the abilities that billions of parameters produce after training (such as analogical reasoning, emotion recognition, code generation) are not the function of any single parameter, and were not in the designer's plans. The training objective (next-token prediction) contains no explicit instruction to "understand emotions" or "write code" — but these abilities show up at sufficient scale.
 
-### The Problem: Does Emergence Have a Theory?
+### The Problem: Is There a Theory of Emergence?
 
-But emergence is extremely difficult to handle in formal theory. It is not a mathematical concept that can be precisely defined — at least, current mathematical tools are insufficient. We have descriptions, not explanations; observations, not predictions.
+But emergence is extremely hard to handle in formal theory. It is not a mathematical concept that can be precisely defined — at least, the current mathematical tools are not enough. We have descriptions, no explanations; observations, no predictions.
 
-Information theory provides some clues. Emergence can be understood as: **the system exhibits a shorter total description length than its components.** A gas is composed of $10^{23}$ molecules, yet its state is fully described by just a few macroscopic variables (temperature, pressure, volume). The description length drops from $10^{23}$ to 3 — this is the "information compression" face of emergence. But how to derive this compressed description from the interactions of parts currently has no general theory.
+Information theory offers some clues. Emergence can be understood as: the system has a total description length shorter than that of its parts. A gas consists of $10^{23}$ molecules, but its state is completely described by a few macroscopic variables (temperature, pressure, volume). The description length drops from $10^{23}$ to 3 — this is the "information compression" face of emergence. But how to derive this compressive description from the interactions of the parts is, at present, without a general theory.
 
-Dynamical systems theory provides another perspective: emergence corresponds to phase transitions — when a system parameter crosses some critical value, behavior undergoes a sharp qualitative change. This perspective has explanatory power for physical systems, but for emergent phenomena in neural networks (capabilities suddenly appearing as scale increases), there is no precise predictive framework.
+Dynamical systems theory offers another view: emergence corresponds to phase transitions — when a parameter crosses some critical value, the behavior changes drastically and qualitatively. This view is explanatory for physical systems, but for neural-network emergence (abilities suddenly appearing as scale grows) there is no precise predictive framework yet.
 
-::: info Is Emergence a Real Phenomenon or a Measurement Illusion?
-Some researchers have pointed out: so-called "emergence" may partly be a product of how we measure. If measured with continuous (rather than discrete) performance metrics, some capabilities thought to emerge suddenly actually grow smoothly — it is only that at some threshold, smooth growth crosses the minimum capability threshold required by the task and is noticed by the observer. This does not deny the existence of emergent phenomena, but demands more precise characterization: does the performance curve truly have a discontinuity, or do our measurement tools introduce a spurious discontinuity? This question currently has no settled answer.
+::: info Is Emergence a Real Phenomenon, or an Illusion of Measurement?
+Some researchers point out: what is called "emergence" may be, in part, a product of the way it is measured. If measured with continuous (rather than discrete) performance metrics, some abilities taken to be suddenly emergent actually grow smoothly — just at some threshold, the smooth growth crosses the minimum ability bar required by the task and is noticed by the observer. This does not deny the existence of emergence, but demands a more precise characterization: does the performance curve really have a discontinuity, or do our measuring tools introduce a false discontinuity? There is currently no consensus.
 :::
 
 ---
 
-## 22.6 The Boundary of the Second Volume Is Also an Opening
+## 22.6 The Boundary of Volume 2, Which Is Also an Opening
 
-From Chapter 14 to Chapter 22, we have walked this path:
+From Chapter 14 to Chapter 22, the path has been this:
 
-From the foundations of formal systems, to the limits of consistency and completeness, to resource-sensitive linear logic, to the extension of truth values by probability, to the formalization of intervention by causal inference, to the geometric characterization of reasoning cost by complexity theory, to the formal contract of heuristics, to learning as inverse inference, and finally to self-reference and emergence.
+From the foundations of formal systems, to the limits of consistency and completeness, to resource-sensitive linear logic, to the expansion of probability over truth, to the formalization of intervention in causal inference, to complexity theory's geometric characterization of the cost of reasoning, to the formal contract of heuristics, to learning as inverse inference, and finally to self-reference and emergence.
 
-Every chapter was forced by the questions left by the previous chapter. Every chapter's ending left a question that made the next chapter inevitable.
+Each chapter was forced out by the questions left by the previous one. The ending of each chapter left a question, and that question made the next chapter inevitable.
 
-This path has arrived here, touching several boundaries:
+Along this path, we have touched several boundaries:
 
-- The Gödel boundary: a sufficiently strong system has true propositions that cannot be seen from within.
-- The Turing boundary: certain questions are in principle unanswerable by any algorithm.
-- The complexity boundary: certain problems are in principle unsolvable efficiently.
-- The inductive bias boundary: a learning system cannot determine from within whether its inductive bias is appropriate.
+- The Gödel boundary: sufficiently strong systems have true propositions they cannot see from inside.
+- The Turing boundary: certain problems cannot, in principle, be answered by any algorithm.
+- The complexity boundary: certain problems cannot, in principle, be solved efficiently.
+- The inductive bias boundary: a learning system cannot determine from inside whether its own inductive bias is appropriate.
 
-These boundaries are not obstacles but a map. They tell us: in the matter of reasoning, which regions are beyond the reach of both humans and machines, which regions are reachable but at high cost, and which regions can be made feasible through approximation.
+These boundaries are not obstacles; they are maps. They tell us: in this business of reasoning, which places are unreachable by both humans and machines, which are reachable but costly, and which can be traded for feasibility with approximations.
 
-Finally, there is a question that this book has not answered and cannot answer:
+Finally, there is one question this book does not answer, and cannot:
 
-**Where, on this map, do the reasoning capabilities currently exhibited by AI systems lie?**
+**Where does the reasoning ability AI systems currently display sit on this map?**
 
-Where have they arrived, where are their boundaries, are they approaching the boundaries of some formal theory, or are they working in an entirely different place? This is not a question answerable with existing tools — not because the question is unimportant, but because we do not yet have a sufficiently precise language to state it.
+How far has it reached, where are its boundaries, is it approaching the boundaries of some formal theory, or is it working in a completely different place? This is not a question answerable with existing tools — not because the question is unimportant, but because we do not yet have a language precise enough to state it.
 
 Building such a language is the work of the coming decades.
 
 ---
 
-## 22.7 From Logic to Dynamics: Three Lingering Questions
+## 22.7 From Logic to Dynamics: Three Leftover Questions
 
-The MP game has given us a new perspective: the proof sequence $\{p_1, p_2, \dots, p_n\}$ is an orbit, $f: \mathsf{Formula} \to \mathsf{Formula}$ is the evolution operator, $p_{n+1} = f(p_n)$.
+The MP game gave us a new perspective: a proof sequence $\{p_1, p_2, \ldots, p_n\}$ is an orbit, $f: \mathsf{Formula} \to \mathsf{Formula}$ is the evolution operator, and $p_{n+1} = f(p_n)$.
 
-The orbit has three fates: finite halting (fixed point), finite cycle, infinite extension.
+An orbit has three fates: finite stopping (fixed point), finite cycle, infinite extension.
 
-But this game leaves three questions that logical tools cannot answer:
+But the game leaves three questions that the tools of logic cannot answer:
 
-**Question One: Where does the orbit halt?**
+**Question 1: where does the orbit stop?**
 
-The fixed point $f(\varphi) = \varphi$ exists, but starting from an arbitrary initial formula $p_0$, which fixed point will the system ultimately converge to? Logic only tells us that fixed points exist, not the direction of attraction. This is a question of dynamics.
+A fixed point $f(\varphi) = \varphi$ exists, but starting from an arbitrary initial formula $p_0$, which fixed point does the system eventually converge to? Logic only tells us that fixed points exist, not the direction of attraction. This is a question of dynamics.
 
-**Question Two: What is the energy of convergence?**
+**Question 2: what is the energy of convergence?**
 
-If the orbit does converge, there must be some quantity that decreases monotonically — some kind of "energy." Logic has no concept of energy. But if we view the belief space $\mathcal{P}$ as the state space of a dynamical system, an energy function naturally emerges.
+If the orbit does converge, there must be some quantity decreasing monotonically — some "energy". Logic has no concept of energy. But if we view the belief space $\mathcal{P}$ as the state space of a dynamical system, the energy function emerges naturally.
 
-**Question Three: Where does the energy come from?**
+**Question 3: where does the energy come from?**
 
-The traditional approach is to manually guess an energy function and verify that it decreases. But if we have already observed the system converging to some prior anchor point $A$, can we do the reverse — derive the energy function from the convergence behavior rather than guessing it?
+The traditional approach is to hand-guess an energy function and verify that it decreases. But if we have already observed the system converging to some prior anchor $A$, can we go the other way — derive the energy function from the convergence behavior, rather than guessing it?
 
 These three questions are the entrance to Chapter 23.
 
-::: info Professor Manul's Commentary
-The MP game is the ferry crossing between logic and dynamics. On the logic shore, we ask "does a proof exist"; on the dynamics shore, we ask "where does the system go." The fixed point is a landmark shared by both shores — in logic, it is the endpoint of proof; in dynamics, it is the attractor. Cross over, and you will discover that the attractor has a name: the Yonglin Limit.
+::: info Professor Pallas says
+The MP game is the ferry between logic and dynamics. On the logic shore, we ask "does a proof exist?"; on the dynamics shore, we ask "where does the system go?". The fixed point is the landmark shared by both shores — in logic it is the end of a proof; in dynamics it is the attractor. Cross over, and you will find that the attractor has a name: the Yonglin limit.
 :::
 
 ---
 
-## Unresolved
+## Open Questions
 
-**How far can the Curry-Howard correspondence extend?** Currently, the correspondence is precise at the level of simple type theory and first-order logic. Higher-order logics (second-order logic, higher-order logic), modal logic, and linear logic (Chapter 16) all have different forms of Curry-Howard correspondence, but with varying degrees of precision and completeness. Is there a unified framework that brings all formal logical systems under the "propositions-as-types" perspective? This is the question that Homotopy Type Theory (HoTT) attempts to answer, but HoTT itself is still under development.
+**How far can the Curry-Howard correspondence extend?** At present, the correspondence is exact at the level of simple type theory and first-order logic. Higher-order logic (second-order logic, higher-order logic), modal logic, and linear logic (Chapter 16) all have Curry-Howard correspondences of different forms, but with differing degrees of exactness and completeness. Is there a unified framework that brings all formal logic systems into the "propositions as types" view? This is the question Homotopy Type Theory (HoTT) attempts to answer, but HoTT itself is still developing.
 
-**Does emergence have a mathematical theory?** Complexity science, phase transition theory, and information theory each provide partial characterizations of emergence, but there is no unified, predictive theory of emergence. Can the emergent capabilities of large language models be predicted and explained within some formal framework, or is it an essentially empirical phenomenon that cannot be captured in advance by theory?
+**Is there a mathematical theory of emergence?** Complexity science, phase-transition theory, and information theory each provide partial characterizations of emergence, but there is no unified, predictive theory of emergence. Can the emergent capabilities of large language models be predicted and explained within some formal framework, or is it in essence an empirical phenomenon that theory cannot capture in advance?
 
-**The capability boundary of self-referential reasoning**: When an AI system reasons about its own reasoning process, what true propositions about itself can it discover, and which boundaries — invisible from within — must it necessarily encounter? This is not merely a philosophical question but a practical one concerning AI safety and interpretability — a system that cannot reason about its own limitations: under what circumstances will it substitute confident error for honest uncertainty?
+**The capability boundary of self-referential reasoning**: when an AI system reasons about its own reasoning process, what true propositions about itself can it discover, and which boundaries must it inevitably fail to see from inside? This is not just a philosophical question, but a practical question about AI safety and interpretability — under what circumstances will a system that cannot reason about its own limits substitute confident error for honest uncertainty?
 
-**The dynamical gap left by the MP game**: If a proof sequence is an orbit, then a fixed point is merely the name for "halting," not the guarantee of "halting at the right place." What kind of energy function can constrain this orbit? Does this energy come from training data, prior anchor points, or the system's own structure? This question has already exceeded the logical language of this chapter and must be handed over to Chapter 23.
+**The dynamical gap left by the MP game**: if a proof sequence is an orbit, then a fixed point is only the name for "stopping", not a guarantee of "stopping in the right place". What kind of energy function can constrain this orbit? Does this energy come from the training data, from the prior anchor, or from the system's own structure? This question already goes beyond the logical language of this chapter and must be handed to Chapter 23.
 
 ---
 
@@ -338,35 +435,35 @@ The MP game is the ferry crossing between logic and dynamics. On the logic shore
 
 **★ Warm-up**
 
-The core of the Curry-Howard correspondence is: propositions correspond to types, proofs correspond to programs. For the following logical propositions, write out their corresponding types in type theory (using function types $\to$, product types $\times$, sum types $+$).
+The core of the Curry-Howard correspondence: propositions correspond to types, proofs correspond to programs. For each of the following logical propositions, write the corresponding type in type theory (using the function type $\to$, product type $\times$, and sum type $+$).
 
-1. $A \to A$ (identity law)
+1. $A \to A$ (law of identity)
 2. $A \to (B \to A)$ (weakening)
 3. $A \land B \to A$ (conjunction elimination)
 4. $A \to A \lor B$ (disjunction introduction)
 
-For item 1, write a concrete program (function) that "inhabits" this type, and verify that it indeed corresponds to "having proved $A \to A$."
+For item 1, write out a concrete program (function) that "inhabits" this type, and verify that what it corresponds to is indeed "a proof of $A \to A$".
 
 ---
 
 **★★ Derivation**
 
-1. **Fixed-point expansion**: The $Y$ combinator satisfies $Y\,f = f\,(Y\,f)$. Manually expand the first three steps of $Y\,(\lambda x.\, \text{if } x=0 \text{ then } 1 \text{ else } x \times (x-1))$ (interpret this as the recursive definition of the factorial function). Trace the expansion process and explain clearly how $Y$ "manufactures" recursion.
+1. **Fixed-point unrolling**: the $Y$ combinator satisfies $Y\,f = f\,(Y\,f)$. Manually unroll the first three steps of $Y\,(\lambda x.\, \text{if } x = 0 \text{ then } 1 \text{ else } x \times (x-1))$ (read this as the recursive definition of the factorial function). Trace the unrolling and explain clearly how $Y$ "creates" recursion.
 
-2. **Comparison of the Gödel sentence and the Y combinator**: The Gödel sentence $G$ says "I am unprovable"; $Y\,f$ satisfies $Y\,f = f\,(Y\,f)$. Both are self-referential constructions, but with different outcomes: $G$ leads to undecidability, $Y\,f$ leads to infinite looping (or recursive unfolding). List their similarities and differences in the following aspects: ① the mechanism of self-reference; ② the consequence of self-reference; ③ the way self-reference is "resolved" (if at all).
+2. **Gödel sentence vs. the Y combinator**: the Gödel sentence $G$ says "I am unprovable"; $Y\,f$ satisfies $Y\,f = f\,(Y\,f)$. Both are self-referential constructions, but with different results: $G$ leads to undecidability, $Y\,f$ leads to infinite looping (or recursive unrolling). List their similarities and differences in: (1) the mechanism of self-reference; (2) the consequence of self-reference; (3) the way self-reference is "resolved" (if any).
 
 ---
 
 **★★★ Challenge**
 
-Dependent type systems (such as Martin-Löf type theory) relate $\forall x.\, P(x)$ to the $\Pi$-type: a function that, for each $x$, returns a proof of $P(x)$.
+Dependent type systems (such as Martin-Löf type theory) correspond "$\forall x.\, P(x)$" to a $\Pi$-type: a function that returns, for each $x$, a proof of $P(x)$.
 
-Consider the proposition: "For all natural numbers $n$, the successor of $n$ is not equal to $0$," i.e., $\forall n \in \mathbb{N}.\, S(n) \neq 0$.
+Consider the proposition: "for all natural numbers $n$, the successor of $n$ is not equal to $0$", i.e. $\forall n \in \mathbb{N}.\, S(n) \neq 0$.
 
-1. In dependent type theory, what type does this proposition correspond to? Write it out in the language of $\Pi$-types.
-2. What does a "proof" of this proposition (i.e., an inhabitant of this type) look like? What input does it accept, and what does it return?
-3. Now consider: type-checking (verifying that a program has a given type) is equivalent to verifying a proof. Is this verification operation decidable? (Hint: dependent types make type-checking harder — compared to simple type systems, how does the complexity change?)
+1. In dependent type theory, what type does this proposition correspond to? Write it in the language of $\Pi$-types.
+2. What does the "proof" of this proposition (that is, the program inhabiting this type) look like? What input does it take, and what does it return?
+3. Now consider: type checking (verifying that a program has a given type) is equivalent to verifying a proof. Is this verification operation decidable? (Hint: dependent types make type checking harder — compared with simple type systems, how does the complexity change?)
 
-The third question touches upon the practical limitation of dependent type systems: the more powerful the functionality, the higher the cost of type-checking; the type-checking of some dependent type systems is even undecidable — this is yet another recurrence of the law that runs throughout this book: "the more powerful, the higher the cost."
+Question 3 touches the practical limits of dependent type systems: the more powerful the functionality, the higher the cost of type checking; the type checking of some dependent type systems is even undecidable — yet another performance of the book-wide law "the more powerful, the more costly".
 
-The third question has no standard answer. It is the last open question posed by the second volume at the technical level — formal tools at the boundary begin to touch problems that lie beyond the range of formalization. At that boundary, logic and intuition, proof and conjecture, form and meaning, intertwine in a way we have not yet fully understood. The book's final answer is in Chapter 25.
+Question 3 has no standard answer. It is the last open question Volume 2 raises at the technical level — formal tools at the boundary begin to touch problems beyond the reach of formalization. On that boundary, logic and intuition, proof and conjecture, form and meaning, entangle each other in ways we have not yet fully understood. The book's final answer is in Chapter 23.

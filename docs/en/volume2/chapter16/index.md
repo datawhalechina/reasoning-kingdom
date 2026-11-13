@@ -1,313 +1,400 @@
-# Chapter 16: Linear Logic and Resources — Each Assumption Used Only Once
+# Chapter 16: Linear Logic and Resources — Each Assumption Can Be Used Only Once
 
-> Classical logic assumes resources are unlimited. This is a lie, and an expensive one.
-
----
-
-Chapter 15 left us with an unsettling conclusion: so long as a system is sufficiently strong, there must exist true propositions it cannot prove; the system itself also cannot guarantee its own consistency. This is Gödel's gift — or rather, his curse.
-
-But what does "sufficiently strong" mean? Where does the strength lie?
-
-A formal system is powerful partly because its assumptions can be arbitrarily reused. You know $P$, and you can use $P$ a hundred times — it does not wear out, does not get exhausted, forever sitting there waiting for you to summon it. This ability corresponds to a structural rule quietly listed in Chapter 14: **contraction**. What contraction says is: one copy of an assumption and two copies are equivalent in inference. The redundant can be folded.
-
-This rule seems like common sense. But it is open to question.
-
-In 1987, Jean-Yves Girard asked a simple question: what happens if you remove the contraction rule?
-
-What happened went far beyond what he initially expected. What he obtained was not merely a weakened version of classical logic, but a completely new logic — **linear logic** — that precisely describes a world where resources are consumed.
+> Classical logic assumes, by default, that resources are unlimited. That's a lie — and an expensive one.
 
 ---
 
-## 16.0 The Disposable Kitchen Game: Each Resource Can Be Used Only Once
+Chapter 15 left us with an unsettling conclusion: as long as a system is strong enough, there are always true propositions it can't prove, and the system itself can't guarantee its own consistency. That was Gödel's gift — or, if you prefer, his curse.
 
-Classical logic is like a strange kitchen: you have one egg, yet you can fry a hundred omelets simultaneously. Because in classical logic, assumptions are not consumed. You use $A$ once, and $A$ is still there; use it again, and it is still there. This may be reasonable for "knowledge," but absurd for "resources."
+But what does "strong enough" actually mean? Where does the strength come from?
 
-So we switch kitchens.
+A formal system is powerful partly because its assumptions can be reused as much as you like. If you know $P$, you can use $P$ a hundred times — it doesn't wear out, it doesn't run out, it's always there waiting for you. This power corresponds to one of the structural rules quietly listed in Chapter 14: **contraction**. Contraction says: one copy of an assumption and two copies of an assumption are equivalent when it comes to inference. The extra copy can be folded away.
 
-On the table are several ingredient cards: egg $A$, flour $B$, butter $C$. Each recipe is a linear implication, for example
+That rule looks like common sense. But it can be questioned.
+
+In 1987, Jean-Yves Girard asked a simple question: what happens if you take away the contraction rule?
+
+Far more happened than he expected at first. What he got wasn't just a weakened version of classical logic; it was a whole new logic — **linear logic** — one that describes a world in which resources get consumed.
+
+---
+
+## 16.0 The One-Shot Kitchen Game: Each Ingredient Can Be Used Only Once
+
+Classical logic is like a strange kitchen: you have one egg, yet you can fry a hundred omelets at the same time. Because in classical logic, assumptions aren't consumed. You use $A$ once, and $A$ is still there; use it again, it's still there. That makes sense for "knowledge," but it's absurd for "resources."
+
+So let's switch to a different kitchen.
+
+On the table sit several ingredient cards: egg $A$, flour $B$, butter $C$. Each recipe is a linear implication, for example
 
 $$A \otimes B \multimap D$$
 
-meaning: consume one copy of $A$ and one copy of $B$, and obtain one dish $D$. Once used, the ingredient card disappears from the table. You cannot duplicate eggs out of thin air, nor can you take back butter that has already been used. Unless a certain card has a special marker $!A$ in front of it, indicating it is not an ordinary resource but knowledge that can be repeatedly invoked.
+which means: spend one $A$ and one $B$, and get a dish $D$. Once spent, the ingredient cards vanish from the table. You can't conjure an egg out of nothing, and you can't take back the butter you already used — unless one of the cards carries a special mark $!A$, meaning it isn't an ordinary resource but knowledge that can be called on again and again.
 
-This is the game-feel of linear logic: reasoning is no longer just "deriving truth from truth," but "completing transformations under resource conservation."
+That's the game-like feel of linear logic: reasoning is no longer just "from true to true"; it's "completing a transformation within a resource budget."
 
 :::details The formal skeleton of this game
-- **State space**: resource multisets, e.g., $\Gamma = \{A, A, B, !C\}$. The repeated appearance of $A$ means two real resources, not one symbol written twice.
-- **Legal actions**: consume resources according to linear rules and generate new resources; only $!A$ can be copied or discarded.
-- **Transition rules**: if the recipe $A \otimes B \multimap D$ exists, then the state $\Gamma, A, B$ can transition to $\Gamma, D$.
-- **Victory condition**: construct the target resource $G$ using finite resources.
-- **Failure mode**: the target seems derivable, but you secretly reused an already-consumed assumption along the way.
+- **State space**: a multiset of resources, e.g. $\Gamma = \{A, A, B, !C\}$. The repeated $A$ means two real resources, not one symbol written twice.
+- **Legal moves**: consume resources and create new ones according to the linear rules; only $!A$ may be copied or dropped.
+- **Transition rule**: if there is a recipe $A \otimes B \multimap D$, then the state $\Gamma, A, B$ can move to $\Gamma, D$.
+- **Winning condition**: build the target resource $G$ out of finite resources.
+- **Failure mode**: the target looks derivable, but somewhere along the way you silently reused an assumption that had already been spent.
 :::
 
-This game forces the reader to see what classical logic hides: **reasoning sometimes has a physical cost**. In programs, memory is not infinite; in communication protocols, a message sent cannot simultaneously remain in place; in quantum systems, an unknown quantum state cannot be arbitrarily cloned.
+This game forces the reader to see what classical logic hides: **reasoning often carries a physical cost**. In a program, memory is not infinite; in a communication protocol, a message sent cannot also stay where it was; in a quantum system, an unknown quantum state cannot be arbitrarily cloned.
 
-Linear logic is not a bizarre variant of classical logic. It is reminding us: classical logic defaults to a ridiculously rich world, where resources can be freely copied. The real world is not this generous.
+Linear logic isn't a bizarre variant of classical logic. It's a reminder: classical logic assumed a world obscenely rich in resources, where resources can be copied for free. The real world isn't that generous.
 
-::: info Professor Pallas's Cat comments
-The rules of the disposable kitchen game are simple: used means used. Many abstract logics, when they land in reality, collide with this sentence. You cannot use one five-dollar bill to buy two cups of coffee, nor can you use one pool of video memory to hold two mutually non-releasing models. Classical logic forgot this; linear logic handed the bill back.
+::: info Professor Manul comments
+The rules of the one-shot kitchen game are simple: once used, it's used. Lots of abstract logic runs head-first into this sentence the moment it lands in reality. You can't buy two cups of coffee with one five-dollar bill, and you can't fit two models that never release their memory into one chunk of VRAM. Classical logic forgot about this; linear logic hands the bill back to you.
 :::
 
-## 16.1 What Contraction Is Doing
+## 16.0.5 Playing the Game in Code
+
+The kitchen is small enough to run in a few lines. The program below keeps the table as an immutable tuple of cards, cooks what the recipes allow, and refuses — visibly — the moment you try to reuse a spent ingredient. That refusal is the whole game.
+
+```python
+#!/usr/bin/env python3
+"""
+one_shot_kitchen.py -- the One-Shot Kitchen Game of Chapter 16.
+Book reference: The Reasoning Kingdom, Volume 2, Chapter 16, Section 16.0
+"The One-Shot Kitchen Game: Each Ingredient Can Be Used Only Once."
+Classical logic is a strange kitchen: one egg, a hundred omelets at once,
+because assumptions are never consumed. Linear logic is the kitchen where
+an ingredient card vanishes the moment a recipe spends it. This program
+runs that kitchen:
+  * the table is a multiset of ingredient cards (an immutable sorted tuple),
+  * a recipe consumes its inputs and produces one dish,
+  * a card marked !C is knowledge, not a resource: it stays on the table,
+  * the kitchen refuses to cook with a card that is already spent.
+That refusal is the whole point. The failure mode of Section 16.0 is
+"somewhere along the way you silently reused an assumption that had
+already been spent." Here the reuse is not silent: it is a visible error.
+Run:  python3 one_shot_kitchen.py
+"""
+# A recipe: (needed cards, dish produced, cards that are reusable knowledge)
+# A x B -o D  : spend one egg and one flour, get one dish D.
+# !C -o cup   : knowledge C can be called on again and again.
+RECIPES = (
+    (("A", "B"), "D", frozenset()),
+    (("!C",), "cup", frozenset({"!C"})),
+)
+
+def cook(table, recipe):
+    """Apply one recipe to the table if every needed card is present.
+    Returns (new_table, dish), or None when a needed card is already
+    spent. Pure: the old table is never touched.
+    """
+    needed, produced, reusable = recipe
+    left = list(table)
+    for card in needed:
+        if card in reusable:
+            continue                # knowledge is not consumed
+        if card not in left:
+            return None             # the card was spent earlier
+        left.remove(card)
+    left.append(produced)
+    return tuple(sorted(left)), produced
+
+def demo():
+    print("=" * 70)
+    print(" THE ONE-SHOT KITCHEN GAME -- resources that run out")
+    print(" The Reasoning Kingdom, Volume 2, Chapter 16 (Sec. 16.0)")
+    print("=" * 70)
+    table = ("!C", "A", "B")
+    print(f"\nTable at start: {table}")
+    print("  recipes:  A x B -o D   (spend egg and flour, get dish D)")
+    print("            !C -o cup   (!C is knowledge: never spent)")
+    result = cook(table, RECIPES[0])
+    assert result is not None
+    table, dish = result
+    print(f"\nCook the omelet:      {table}   (A and B are gone; {dish} appeared)")
+    refused = cook(table, RECIPES[0])
+    assert refused is None
+    print("Cook it again:        refused.")
+    print("  the egg card is spent. Classical logic would hand you the same")
+    print("  egg back for free -- the contraction rule is a photocopier for")
+    print("  assumptions. This kitchen does not own a photocopier.")
+    table, cup = cook(table, RECIPES[1])
+    assert cup == "cup"
+    print(f"\nUse knowledge !C:     {table}")
+    table, cup2 = cook(table, RECIPES[1])
+    print(f"Use knowledge !C again: {table}")
+    print("  !C never left the table. Knowledge can be used again and again;")
+    print("  a resource cannot.")
+    print("\nThe point of the game: reasoning often carries a physical cost.")
+    print("  You cannot buy two cups of coffee with one five-dollar bill, and")
+    print("  you cannot clone an unknown quantum state. Classical logic assumed")
+    print("  a world obscenely rich in resources; the real world is not that")
+    print("  generous. Linear logic hands the bill back to you.")
+    print("=" * 70)
+
+if __name__ == "__main__":
+    demo()
+```
+
+## 16.1 What Does the Contraction Rule Do?
 
 Recall the form of the contraction rule:
 
 $$\frac{\Gamma, A, A \vdash B}{\Gamma, A \vdash B}$$
 
-Above the line: the context has two copies of $A$, and $B$ can be derived. Below the line: with only one copy of $A$, $B$ can also be derived.
+Above the line: two copies of $A$ in the context, and you can derive $B$. Below the line: only one copy of $A$, and you can still derive $B$.
 
-What this rule says is: **you know $A$, and you can use it arbitrarily many times, without needing to "pay" one copy of $A$ for each use**.
+What this rule says is: **you know $A$, so you can use it as many times as you like, without "paying" one copy of $A$ for each use**.
 
-In classical logic, this is perfectly reasonable. Knowledge is not material; you know "$1+1=2$," use it a hundred times, and it is still there, not diminished in the slightest.
+In classical logic that's completely reasonable. Knowledge isn't matter — you know "$1 + 1 = 2$", use it a hundred times, and it's still there, not a bit smaller.
 
 But not all "premises" in the world are knowledge.
 
-Consider this sentence: "I have one five-dollar bill, and I can buy one cup of coffee."
+Consider this sentence: "I have a five-dollar bill, and it buys a cup of coffee."
 
-This is a completely legal propositional inference: having five dollars $\to$ can buy coffee.
+That's a perfectly legal propositional inference: have a five-dollar bill → can buy coffee.
 
-But if you apply contraction to this proposition, you get: having one five-dollar bill, you can buy two cups of coffee. This is obviously wrong. That bill was used up.
+But if you apply contraction to this proposition, you get: have a five-dollar bill, can buy two cups of coffee. Obviously wrong. The bill was used up.
 
-Classical logic is helpless against this kind of error, because it does not distinguish at all between "knowledge that can be reused" and "resources that are consumed upon use." The starting point of linear logic is precisely: **these two kinds of things are fundamentally different, and require different symbols and different rules**.
+Classical logic is helpless against this mistake, because it doesn't distinguish "knowledge that can be reused freely" from "resources that are consumed by use." The starting point of linear logic is exactly this: **the two are fundamentally different things and need different symbols and different rules**.
 
-::: info Professor Pallas's Cat comments
-Classical logic handles knowledge; linear logic handles resources — this distinction is real, not fancy philosophy. When you write programs, memory runs out; quantum states cannot be cloned; messages in a protocol disappear once sent. Classical logic's modeling of these scenarios was wrong from the very beginning. Not approximately wrong, but fundamentally wrong.
+::: info Professor Manul comments
+Classical logic handles knowledge; linear logic handles resources — and the distinction is real, not fancy philosophy. When you write a program, memory runs out; quantum states can't be cloned; in a protocol, a message sent is gone. Classical logic's model of these scenarios was wrong from the start. Not approximately wrong — fundamentally wrong.
 :::
 
-::: info Is logic describing the world, or regulating inference?
+::: info Is logic describing the world, or governing inference?
 
-Here there is a philosophical divergence worth pausing to consider. Some would say: logic is not describing resource consumption; it is talking about truth values, and truth values are not "used up" or exhausted. This view is not wrong — classical logic is indeed about truth values.
+There's a philosophical split here worth stopping over. Some people say: logic isn't describing resource consumption; it talks about truth values, and truth values aren't "used up" by being employed. That view isn't wrong — classical logic is indeed about truth values.
 
-But linear logic has chosen another stance: logic is regulating **the legality of inference**, and inference takes place in a world that has costs. Not every "known" can be freely reused. If you want to use a resource, you must pay for it. This is not a denial of classical logic, but its generalization — classical logic is the degenerate version of linear logic after adding the special assumption that "resources can be arbitrarily copied."
+But linear logic takes another stance: logic governs **the legitimacy of inference**, and inference happens in a world with costs. Not every "known" fact can be reused for free. If you want to use a resource, you must pay for it. This isn't a denial of classical logic; it's a generalization — classical logic is the degenerate version of linear logic, arrived at by adding the special assumption "resources can be copied arbitrarily."
 :::
 
 ---
 
 ## 16.2 The Symbol System of Linear Logic
 
-Remove contraction, and the structure of logic changes. The most obvious change is: you can no longer casually "merge" two assumptions, because their counts begin to matter.
+Remove contraction, and the structure of logic changes. The most obvious change: you can no longer "merge" two assumptions at will, because their counts start to matter.
 
-Linear logic introduces a set of connectives that run parallel to classical logic but have different meanings.
+Linear logic introduces a set of connectives that run parallel to classical logic but mean something different.
 
-**Multiplicative connective $\otimes$ (tensor product)**: $A \otimes B$ means "simultaneously possess $A$ and $B$," and both of these resources genuinely exist, each occupying one copy. If you want to derive some conclusion from $A \otimes B$, you must simultaneously consume both resources $A$ and $B$. It corresponds to "parallel use" — two things happening at the same time.
+**Multiplicative connective $\otimes$ (tensor)**: $A \otimes B$ means "you have both $A$ and $B$", and both resources are real, each occupying a slot. To draw any conclusion from $A \otimes B$, you must consume both $A$ and $B$. It corresponds to "using things in parallel" — the two things happen at the same time.
 
-**Additive connective $\&$ (with)**: $A \,\&\, B$ means "possess two options $A$ and $B$, and you can choose to use one of them." But you can only choose one — the resource's destiny is decided at the moment of selection. It corresponds to "choice" — only one of the two things happens.
+**Additive connective $\&$ (with)**: $A \,\&\, B$ means "you hold the option of $A$ and the option of $B$, and you may pick one to use." But you can pick only one — the resource's fate is decided at the moment you choose. It corresponds to "choosing" — of the two things, only one happens.
 
-**Multiplicative disjunction ⅋ (par)**: the dual connective of linear logic, corresponding to the negated form of multiplicative conjunction.
+**Multiplicative disjunction ⅋ (par)**: the dual connective of linear logic, corresponding to the negated form of the multiplicative conjunction.
 
-**Additive disjunction $\oplus$ (plus)**: $A \oplus B$ means "possess either $A$ or $B$, but don't know which one" — this is an expression of information scarcity, not a selectable abundance.
+**Additive disjunction $\oplus$ (plus)**: $A \oplus B$ means "you have one of $A$ or $B$, but you have no idea which" — this expresses missing information, not an abundance of choices.
 
-:::details The four connectives of linear logic: understood through "ordering food" (prior work: Girard, 1987)
-The extra connectives in linear logic are clearest when analogized to ordering food at a restaurant:
+:::details The four connectives of linear logic, understood via ordering food (building on Girard, 1987)
+The extra connectives of linear logic are easiest to grasp through a restaurant-ordering analogy:
 
-| Symbol | Reading | Analogy | Meaning |
+| Symbol | Reads | Analogy | Meaning |
 |------|------|------|------|
-| $A \otimes B$ | tensor | Combo meal: burger **and** fries, both given | Simultaneously possess two resources; both must be consumed |
-| $A \,\&\, B$ | with | Today's special: burger **or** salad, choose one, up to you | Possess the right to choose, but can only pick one |
-| $A \oplus B$ | plus | Chef randomly gives you burger or salad; you don't know which | Possess one of them, but don't know which |
-| $A \multimap B$ | linear implication | Use one $A$ to exchange for one $B$; $A$ is consumed | Resource transformation, not knowledge derivation |
+| $A \otimes B$ | tensor | Combo meal: burger **and** fries, you get both | Own both resources, must consume both |
+| $A \,\&\, B$ | with | Today's special: burger **or** salad — your choice | You hold the choice, but can pick only one |
+| $A \oplus B$ | plus | The chef hands you a burger or a salad at random; you don't know which | You get one of them, but don't know which |
+| $A \multimap B$ | linear implication | Trade one $A$ for one $B$; the $A$ is consumed | Resource transformation, not knowledge derivation |
 
-**Why distinguish $\otimes$ and $\&$?** In classical logic, "having $A$ and $B$" has only one way to say it ($A \land B$), because resources can be copied, and "simultaneously possessing" and "having the option to choose" have no distinction. Linear logic removes copying; these two kinds of "possession" must be precisely distinguished.
+**Why distinguish $\otimes$ from $\&$?** In classical logic, "having $A$ and $B$" has only one phrasing ($A \land B$), because resources can be copied: "having both at once" and "being able to choose" are the same thing. Linear logic removed copying, so these two kinds of "having" must be told apart precisely.
 :::
 
+## 16.2.5 Hands-On: Writing a Proof in Linear Logic
 
-### 16.2.5 Hands On: Writing a Proof in Linear Logic
+Let's write a linear-logic proof in sequent calculus style. A sequent has the form $\Gamma \vdash \Delta$, read as: the resource set $\Gamma$ can be transformed into the resource set $\Delta$.
 
-Let us write a proof in linear logic using the format of **sequent calculus**. A sequent takes the form $\Gamma \vdash \Delta$, read as: the resource collection $\Gamma$ can be transformed into the resource collection $\Delta$.
-
-In linear logic's sequent calculus, there is only **one identity axiom**:
+In linear sequent calculus, there is only one identity axiom:
 
 $$\frac{}{A \vdash A}\ (\text{id})$$
 
-But the key difference lies in **context management**: every inference rule states precisely what it consumes and what it produces. There is no weakening (you cannot discard an assumption out of thin air), and no contraction (you cannot copy an assumption).
+But the key difference lies in **context management**: every inference rule states precisely what it consumes and what it produces. No weakening (you can't drop an assumption into thin air), no contraction (you can't copy an assumption).
 
-Here is a complete proof example — proving $A \otimes B \multimap B \otimes A$ ("simultaneously possessing A and B" can be transformed into "simultaneously possessing B and A" — commutativity is not an axiom in linear logic, but a theorem that can be proved):
+Here is a complete proof example — proving $A \otimes B \multimap B \otimes A$ ("having both $A$ and $B$ at once" can transform into "having both $B$ and $A$ at once" — swapping the two isn't an axiom in linear logic; it's a theorem you can prove):
 
 ```
 Proof tree:
 
                 ————— (id)             ————— (id)
                 A ⊢ A                 B ⊢ B
-               ——————————— (⊗R)     ——————————— (⊗R)  
+               ——————————— (⊗R)     ——————————— (⊗R)
                A, B ⊢ A ⊗ B          B, A ⊢ B ⊗ A
-               ————————————— (⊗L, packaging A,B)  
-               A ⊗ B ⊢ A ⊗ B         ——————————————— (exchange? not allowed!)
-               
-Wait — this reveals a problem. In the standard linear sequent calculus, is the exchange rule (reordering the context) an implicit structural rule or an explicit one?
+               ————————————— (⊗L, bundle A and B)
+               A ⊗ B ⊢ A ⊗ B         ——————————————— (exchange? Not allowed!)
+```
 
-The answer: **it depends on which variant of linear logic you are using**. In Classical Linear Logic (CLL), exchange is preserved as a structural rule — you can freely reorder resources in the context. In Non-Commutative Linear Logic (NLL), exchange is removed, and the left-right order of resources carries physical meaning (such as temporal order).
+Wait — a problem just got exposed. In the standard linear sequent calculus, is exchange (reordering the context) an implicit structural rule, or an explicit one?
 
-In the version that preserves exchange, this proof is straightforward:
-1. Start from $A \vdash A$ and $B \vdash B$
-2. Use $\otimes R$ to obtain $A, B \vdash A \otimes B$ and $B, A \vdash B \otimes A$  
-3. Use exchange to reorder the second: $A, B \vdash B \otimes A$
-4. Use $\multimap R$ from $A \otimes B \vdash A \otimes B$ and $A, B \vdash B \otimes A$... Actually, the more direct approach is to use $\otimes L$:
-5. To prove $A \otimes B \vdash B \otimes A$, assume you have $A \otimes B$ (i.e., $A$ and $B$ are bound together), use $\otimes L$ to decompose them, then recombine. Finally, use $\multimap R$.
+The answer: **it depends on which variant of linear logic you're using**. In classical linear logic (CLL), exchange is kept as a structural rule — you may freely reorder the resources in the context. In non-commutative linear logic (NLL), exchange is removed, and the left-right order of resources carries physical meaning (like temporal order).
 
-In the version without exchange, $A \otimes B \vdash B \otimes A$ is **unprovable**! Because the positional information of resources has been incorporated into the logic — you cannot "for free" reorder $A$ and $B$.
+In the version that keeps exchange, the proof is simple:
 
-The significance of this exercise is not in the axiom numbering, but in the first-hand experience: **removing one structural rule changes the entire theorem set of the logic**. This is not fine-tuning; it is a fundamental change.
+1. Start from $A \vdash A$ and $B \vdash B$.
+2. Use $\otimes R$ to get $A, B \vdash A \otimes B$ and $B, A \vdash B \otimes A$.
+3. Use exchange to reorder the second one: $A, B \vdash B \otimes A$.
+4. Use $\multimap R$ to go from $A \otimes B \vdash A \otimes B$ and $A, B \vdash B \otimes A$… no wait — the more direct route is $\otimes L$:
+5. To prove $A \otimes B \vdash B \otimes A$, suppose you have $A \otimes B$ (that is, $A$ and $B$ bundled together), use $\otimes L$ to split them open and recombine them. Finally use $\multimap R$.
+
+In the version without exchange, $A \otimes B \vdash B \otimes A$ is **unprovable**! Because the positional information of resources has been baked into the logic — you can't "freely" rearrange the order of $A$ and $B$.
+
+The point of this exercise isn't the numbering of axioms but the first-hand experience: **remove one structural rule, and the set of theorems of the whole logic changes**. That's not fine-tuning; that's a fundamental change.
 
 ::: info Professor Manul comments
-This proof takes only two steps in the version that preserves exchange; remove exchange, and it becomes unprovable. Most logic courses never let you see this contrast — they treat exchange as air, and you breathe without knowing air exists. One of the jobs of linear logic is to make the air visible.
+In the version that keeps exchange, this proof takes only two steps; remove exchange, and it becomes unprovable. Most logic courses never let you see this contrast — they treat exchange like air; you breathe it without knowing the air exists. One of linear logic's jobs is to make the air visible.
 :::
 
 ::: info Why so many connectives?
 
-Classical logic needs only two basic connectives (e.g., $\neg$ and $\to$) to express everything. Linear logic needs four, which feels redundant. But the reason these four cannot be merged is that they are genuinely different in terms of resource meaning: simultaneously possessing vs. being able to choose — these two things are smoothed over in classical logic by the "contraction" rule — since knowledge can be infinitely copied, "simultaneously possessing" and "being able to choose" have no distinction. Once contraction is removed, this difference must be precisely distinguished, or else the logic will lose information.
+Classical logic needs only two basic connectives (say $\neg$ and $\to$) to express everything. Linear logic needs four, which feels redundant. But the four can't be merged, because they really are different in resource terms: having both at once versus being able to choose — classical logic flattened this difference with the contraction rule. Since knowledge can be copied without limit, "having both" and "being able to choose" don't differ. Once contraction is gone, the difference must be spelled out precisely, or the logic loses information.
 :::
 
 ---
 
-## 16.3 The Exclamation Mark: Resources That Can Be Reused
+## 16.3 The Bang: Resources You Can Reuse
 
-But if all assumptions can only be used once, we cannot talk about genuine knowledge — those facts that can indeed be repeatedly referenced. Linear logic solves this problem with a special symbol: the **exclamation mark** $!A$ (read as "of course $A$").
+But if every assumption can be used only once, we can't talk about genuine knowledge — those facts you can legitimately cite again and again. Linear logic solves this with a special symbol: the bang $!A$ (read "of course $A$").
 
-The meaning of $!A$ is: $A$ is an **infinitely available resource**. Possessing $!A$ means you can take out $A$ from it at any time, as many times as you like, without exhaustion.
+$!A$ means: $A$ is an **unlimited resource**. Owning a $!A$ means you can draw an $A$ out of it any time you like, as many times as you like, with nothing wrung out of it.
 
-Formally, $!A$ satisfies a special set of rules:
+Formally, $!A$ obeys a special set of rules:
 
-- **Weakening**: $!A \vdash \mathbf{1}$ ($!A$ can be discarded — you don't need to use it)
+- **Weakening**: $!A \vdash \mathbf{1}$ ($!A$ can be discarded — you don't have to use it)
 - **Contraction**: $!A \vdash !A \otimes !A$ ($!A$ can be copied — you can use it twice)
-- **Promotion**: if $!A \vdash B$, then $!A \vdash !B$ (conclusions derived from infinite resources are also infinitely available)
+- **Promotion**: if $!A \vdash B$, then $!A \vdash !B$ (a conclusion drawn from an unlimited resource is itself unlimited)
 
-With the exclamation mark, linear logic can restore the simulation of classical reasoning: if all assumptions carry $!$, the entire system degenerates into classical logic. The exclamation mark is the bridge between linear logic and classical logic — it precisely marks which assumptions can be arbitrarily used in the classical sense, and which are genuine disposable resources.
+With the bang in place, linear logic recovers its simulation of classical reasoning: if every assumption carries a $!$, the whole system degenerates into classical logic. The bang is the bridge between linear logic and classical logic — it marks out precisely which assumptions can be used freely in the classical sense, and which are truly one-shot resources.
 
-::: info Professor Pallas's Cat comments
-Many people at this point will say "OK, $!$ just turns resources into knowledge." Hold on — have you realized: in linear logic, "can be reused" is a **privilege** that must be explicitly declared, not a default right? This subversion is more thorough than most people realize. In classical logic, every assumption carries an invisible $!$ by default, and you never knew it.
+::: info Professor Manul comments
+Many people say at this point: "OK, so the bang turns resources into knowledge." Hold on — did you realize that in linear logic, "can be reused" is a **privilege** that must be declared explicitly, not a default right? This subversion is far more thorough than most people realize. In classical logic, every assumption carries an invisible $!$ by default — and you never knew it.
 :::
 
 ---
 
-## 16.4 The Meaning of Implication Has Changed
+## 16.4 Implication Now Means Something Different
 
-After removing contraction, implication $A \to B$ also splits into two meanings that need precise distinction.
+Once contraction is gone, the implication $A \to B$ also splits into two meanings that must be told apart.
 
-Linear implication $A \multimap B$ (read as $A$ linearly implies $B$, or "A transforms into B") means: **consume exactly one copy of $A$, and produce one copy of $B$**.
+Linear implication $A \multimap B$ (read "$A$ linearly implies $B$", or "$A$ transforms into $B$") means: **consume exactly one $A$, produce one $B$**.
 
-This is not the transmission of knowledge, but the **transformation of resources**. Five dollars $\multimap$ one cup of coffee. This is an inference that linear logic can correctly express — after use, that five-dollar bill disappears, replaced by the coffee.
+This isn't the passing along of knowledge — it's the **conversion of resources**. A five-dollar bill $\multimap$ a cup of coffee. This is exactly the kind of inference linear logic can express correctly — afterward, the five-dollar bill is gone, replaced by the coffee.
 
-By contrast, $A \to B$ in classical logic does not consume $A$ — you know $A$, derive $B$, but $A$ is still there and can continue to be used. To express classical implication in linear logic, you need to write $!A \multimap B$: take one copy from the infinitely available $A$, produce one copy of $B$, while $!A$ itself suffers no harm.
+In contrast, classical logic's $A \to B$ doesn't consume $A$: you know $A$, you derive $B$, and $A$ is still there for later use. To express classical implication in linear logic, you'd write $!A \multimap B$: take one copy out of an unlimited $A$, produce a $B$, and the $!A$ itself emerges unharmed.
 
-This distinction reveals the essential difference between "knowledge" and "resource": knowledge is of the $!A$ type — not diminished after use; resources are of the bare $A$ type — consumed after use. Classical logic lacks this distinction because it assumes all premises are knowledge.
+This distinction exposes the essential difference between "knowledge" and "resource": knowledge is of the $!A$ type — it doesn't shrink with use; resources are of the bare $A$ type — they're consumed by use. Classical logic makes no such distinction, because it assumes every premise is knowledge.
 
 ---
 
 ## 16.5 Three Real-World Correspondences
 
-Linear logic is not a pure thought experiment of logicians. It precisely corresponds to three important realities.
+Linear logic isn't a pure thought experiment for logicians. It corresponds precisely to three important realities.
 
-**Memory management.** In program design, memory is a resource: allocate a block of memory, must release it after use, or else it leaks. Classical logic's intuition about memory is wrong — it assumes you "know" a block of memory and can reference it infinitely, but memory, after being freed, no longer exists. The core of linear type systems (such as Rust's ownership system) is precisely linear logic: each variable is owned exactly once; transferring ownership is consuming one copy of an assumption; borrowing is using a temporary view modified by $!$. Linear logic provides the formal semantics for Rust's ownership mechanism.
+**Memory management.** In programming, memory is a resource: allocate a block, and you must free it when you're done, or it leaks. Classical logic's intuition about memory is wrong — it assumes you "know" a memory block and can reference it forever, but a freed block no longer exists. The core of linear type systems (like Rust's ownership system) is exactly linear logic: every variable is owned exactly once, handing over ownership means spending an assumption, and borrowing means using a $!$-decorated temporary view. Linear logic gives the formal semantics of Rust's ownership machinery.
 
-**Quantum computing.** Quantum mechanics has a famous prohibition: the **no-cloning theorem**. An unknown quantum state cannot be perfectly copied. In the language of logic, this is precisely "contraction is not allowed" — quantum bits are linear resources; you cannot produce two copies of $\psi$ from one $\psi$. The computational model of quantum computing naturally lives inside linear logic; quantum circuits are linear inference sequences.
+**Quantum computing.** Quantum mechanics has a famous prohibition: the **no-cloning theorem**. An unknown quantum state cannot be perfectly copied. In the language of logic, this is precisely "contraction not allowed" — a qubit is a linear resource; you can't produce two copies of $\psi$ from one $\psi$. The computational model of quantum computing naturally lives inside linear logic; a quantum circuit is a sequence of linear inferences.
 
-**Concurrent protocols.** Communication protocols between two processes can be precisely encoded as linear logic propositions. The protocol's "one side sends, the other side receives" is exactly linear implication: resources transfer from one side to the other, uncopyable, undiscardable. Session Types are precisely the engineering realization of this correspondence; they allow compilers to verify protocol correctness at the type-checking stage — logic guarantees that the protocol will not deadlock and will not miss messages.
+**Concurrent protocols.** A communication protocol between two processes can be encoded precisely as linear-logic propositions. The protocol's "one side sends, the other receives" is exactly a linear implication: the resource transfers from one side to the other — not copyable, not discardable. Session types are exactly the engineering realization of this correspondence, letting the compiler verify protocol correctness at type-check time — the logic guarantees the protocol won't deadlock, won't lose messages.
 
-### 16.5.5 Hands On: How Rust's Ownership System Is Dual to Linear Logic
+## 16.5.5 Hands-On: How Rust's Ownership System Mirrors Linear Logic
 
-This is not a metaphor. The rules that Rust's type checker enforces at compile time all have precise duals in linear logic. We illustrate this with a concrete Rust program.
+This is not a metaphor. The rules Rust's type checker enforces at compile time all have exact counterparts in linear logic. Here's a concrete Rust program to illustrate.
 
 **Example 1: Move semantics = linear implication**
 
 ```rust
-let x = String::from("hello");  // x owns the string
+let x = String::from("Hello");  // x owns the string
 let y = x;                      // ownership moves from x to y
 // println!("{}", x);           // compile error! x has been "consumed"
 // error[E0382]: use of moved value: `x`
 ```
 
-Corresponding linear logic proposition:
-$$\text{String("hello")} \multimap \text{String@y}$$
+The corresponding linear-logic proposition:
 
-The resource is implicitly moved from x to y; x is no longer available. In linear logic, this is: consume one resource, produce one resource, the original disappears.
+$$\text{String("Hello")} \multimap \text{String@y}$$
+
+The resource is implicitly moved from x to y, and x is no longer usable. In linear logic, that's: consume one resource, produce one resource, and the original disappears.
 
 **Example 2: Immutable borrow = a temporary view of $!A$**
 
 ```rust
-let x = String::from("hello");
+let x = String::from("Hello");
 let r1 = &x;  // immutable borrow — can read, cannot modify
-let r2 = &x;  // multiple immutable borrows can coexist
+let r2 = &x;  // multiple immutable borrows may coexist
 println!("{} {}", r1, r2);  // ✓
 println!("{}", x);          // ✓ x is still valid
 ```
 
-Corresponding linear logic proposition:
+The corresponding linear-logic proposition:
+
 $$!A \vdash A \otimes A \otimes \cdots$$
 
-$!A$ (infinitely available resource) allows multiple read-only views to be taken from it. When the borrow ends, x's ownership is unaffected.
+$!A$ (the unlimited resource) allows multiple read-only views to be taken from it. When the borrow ends, x's ownership is unaffected.
 
 **Example 3: Mutable borrow = exclusive access to a linear resource**
 
 ```rust
-let mut x = String::from("hello");
+let mut x = String::from("Hello");
 let r = &mut x;  // mutable borrow — exclusive access
 r.push_str(", world");
-// let r2 = &x;  // compile error! cannot have a mutable borrow and an immutable borrow simultaneously
+// let r2 = &x;  // compile error! cannot hold a mutable and an immutable borrow at once
 // error[E0502]: cannot borrow `x` as immutable because it is also borrowed as mutable
 ```
 
-Corresponding linear logic: a mutable borrow temporarily "takes away" the exclusive right to modify the resource — unlike a move, the borrowed resource is returned once the borrow ends; unlike an immutable borrow, a mutable borrow is exclusive and cannot have two copies coexisting. This is the border zone between linear logic and affine types (types where resources must be used at least once).
+The corresponding linear logic: a mutable borrow temporarily "takes away" the exclusive modification right to the resource — unlike a move, the borrowed resource returns after the borrow ends; unlike an immutable borrow, a mutable borrow is exclusive, so two of them can't coexist. This is the borderland between linear logic and affine types (types where a resource is used at most once).
 
-**Example 4: Function call = parameter consumption**
+**Example 4: Function call = consuming an argument**
 
 ```rust
 fn consume(s: String) {  // consumes the input String
     println!("{}", s);
     // s is dropped here
 }
-
-let x = String::from("hello");
+let x = String::from("Hello");
 consume(x);               // x is moved into the function parameter
 // println!("{}", x);     // compile error! x has been consumed
 ```
 
-Corresponding linear logic proposition:
-$$\frac{\Gamma \vdash \text{String("hello")} \multimap \mathbf{1}}{\Gamma, \text{String("hello")} \vdash \mathbf{1}}$$
+The corresponding linear-logic proposition:
 
-The function body consumes the resource and produces nothing ($\mathbf{1}$, corresponding to Rust's `()` type); the resource is transferred in the function call; the caller no longer owns it.
+$$\frac{\Gamma \vdash \text{String("Hello")} \multimap \mathbf{1}}{\Gamma, \text{String("Hello")} \vdash \mathbf{1}}$$
 
-**Summary of the four examples**:
+The function body consumes the resource and produces nothing ($\mathbf{1}$, which corresponds to Rust's `()` type); the resource is transferred at the call, and the caller no longer owns it.
+
+**Summary of the four examples:**
 
 | Rust operation | Linear logic | Explanation |
 |-----------|---------|------|
 | Move `let y = x` | $A \multimap B$ | Resource moves from one place to another |
-| Immutable borrow `&x` | $!A \vdash A$ | Take a read-only view from infinite resources |
-| Mutable borrow `&mut x` | Exclusive linear access | Temporarily transfer exclusive modification rights; returned when borrow ends |
-| Function consumption `f(x)` | $\multimap$ elimination | Resource consumed by the function body |
+| Immutable borrow `&x` | $!A \vdash A$ | Take a read-only view from an unlimited resource |
+| Mutable borrow `&mut x` | Exclusive linear access | Temporarily transfer exclusive modification rights; return them when the borrow ends |
+| Function call `f(x)` | $\multimap$ elimination | The resource is consumed by the function body |
 
-This correspondence is not a coincidence. Rust's core type system (ownership, borrowing, lifetimes) is built on top of linear types — the logic that the type checker executes at compile time is precisely the inference rules of linear logic. The Rust compiler did not just "reference" linear logic; it **implements** linear logic.
+This correspondence is no accident. Rust's core type system (ownership, borrowing, lifetimes) is built on linear types — the logic its type checker performs at compile time is exactly the inference rules of linear logic. The Rust compiler didn't "take inspiration from" linear logic; it **implements** linear logic.
 
 ::: info An extension of the Curry-Howard correspondence
 
-Chapter 14 mentioned that proofs and programs are structurally isomorphic (this correspondence will be formally unfolded in Chapter 22). Linear logic pushes this correspondence one step further: linear proofs correspond to **linear programs** — programs where each variable is used exactly once. This is not an accidental coincidence, but because linear logic was designed precisely to capture the intuition that "computation is a process of consuming resources." Girard initially discovered linear logic while analyzing the proof structure of System F (polymorphic λ-calculus) — he found traces of resources in the depths of logic.
+Chapter 14 mentioned that proofs and programs are structurally isomorphic (that correspondence unfolds formally in Chapter 22). Linear logic carries that correspondence one step further: linear proofs correspond to **linear programs** — programs in which every variable is used exactly once. This is not an accidental coincidence; it's because linear logic was designed from the start to capture the intuition that "computation is a process that consumes resources." Girard originally discovered linear logic while analyzing the proof structure of System F (the polymorphic λ-calculus) — he found traces of resources at the depths of logic.
 :::
 
 ---
 
-## 16.6 Two Kinds of Truth: Possession and Choice
+## 16.6 Two Kinds of Truth: Possessing and Choosing
 
-Linear logic also prompts a more fundamental philosophical shift: **"truth" no longer has only one meaning**.
+Linear logic also leads to a more fundamental philosophical shift: **"true" no longer has a single meaning**.
 
-In classical logic, $A$ being true is $A$ being true — just this one situation.
+In classical logic, if $A$ is true, it's true — one case, done.
 
-In linear logic, "possessing $A$" can be two different things:
+In linear logic, "having $A$" can be two different things:
 
-- **Tensor-style possession**: $A \otimes B$ — you simultaneously possess $A$ and $B$ as two independent resources.
-- **Additive-style possession**: $A \,\&\, B$ — you possess two options and can decide which one to use.
+- **Tensor-style possession**: $A \otimes B$ — you have both $A$ and $B$, two independent resources.
+- **Additive-style possession**: $A \,\&\, B$ — you have two options and can pick which one to use.
 
-These two kinds of "possession" have completely different values in resource economics. I have one apple and one pear — this is not equal to my having "the ability to choose apple or pear" — the former is two resources, the latter is one resource plus a right to choose.
+These two kinds of "having" have completely different value in resource economics. Having an apple and a pear is not the same as having "the choice between apple and pear" — the former is two resources; the latter is one resource plus a right of choice.
 
-Classical logic conflates these two situations, because at the level of truth values, "$A$ and $B$ are both true" is equivalent to "$A$ is true, or $B$ is true, and both are true anyway" — it is saying the same thing. But once resources have counts, these two things become sharply different.
+Classical logic lumps them together, because at the level of truth values, "$A$ and $B$ are both true" is equivalent to "$A$ is true or $B$ is true, and both are true" — the same thing said differently. But once resources have a count, the two things are sharply different.
 
-This distinction will reappear in Chapter 17 in a completely unexpected way: when truth values themselves become a continuous interval $[0,1]$, the difference between "simultaneously possessing" and "being able to choose" becomes the difference between the multiplication rule of probability and two different modes of Bayesian updating.
+This distinction will reappear in Chapter 17 in a completely unexpected way: when truth value itself becomes a continuous interval $[0, 1]$, the difference between "having both" and "choosing one" turns into two different modes of probability — the multiplication rule and Bayesian updating.
 
 ---
 
-## 16.7 Transition: Before Truth Values Become Continuous — Three-Valued Logic as Warm-up
+## 16.7 Transition: Before Truth Values Go Continuous — Three-Valued Logic as a Warm-Up
 
-Chapter 17 is going to do something radical: expand truth values from $\{0, 1\}$ to $[0, 1]$. Before that, let's do a small experiment: if truth values have three values instead of two, what happens?
+Chapter 17 will do something radical: expand truth values from $\{0, 1\}$ to $[0, 1]$. Before that, let's run a small experiment: what if truth values took three values instead of two?
 
-The Polish logician Łukasiewicz proposed three-valued logic in 1920. The truth value set is $\{0, \frac{1}{2}, 1\}$, where $\frac{1}{2}$ means "uncertain." The rules for the connectives are as follows:
+The Polish logician Łukasiewicz proposed three-valued logic in 1920. The truth-value set is $\{0, \frac{1}{2}, 1\}$, where $\frac{1}{2}$ means "undetermined." The connectives are:
 
 **Negation**: $\neg 0 = 1$, $\neg \frac{1}{2} = \frac{1}{2}$, $\neg 1 = 0$
 
@@ -315,77 +402,75 @@ The Polish logician Łukasiewicz proposed three-valued logic in 1920. The truth 
 
 **Disjunction**: $a \lor b = \max(a, b)$
 
-**Implication**: $a \to b = \min(1,\ 1 - a + b)$
+**Implication**: $a \to b = \min(1, 1 - a + b)$
 
-(The rule for implication is the most counter-intuitive part of three-valued logic; look at it a few more times. When $a = 1, b = 0$, it yields $0$ — consistent with classical logic; when $a = \frac{1}{2}, b = 0$, it yields $\frac{1}{2}$ — "from uncertainty derive false; the conclusion is also uncertain.")
+(The implication rule is the most counterintuitive piece of three-valued logic, so stare at it for a while. When $a = 1, b = 0$ you get $0$ — consistent with classical logic; when $a = \frac{1}{2}, b = 0$ you get $\frac{1}{2}$ — "deriving false from uncertainty leaves the conclusion uncertain.")
 
----
-
-**Exercise:** Using the rules above, compute the values of the following propositions under all three truth-value assignment combinations. Let $P = \frac{1}{2}$ (uncertain), $Q = 0$ (false).
+**Exercise:** Using the rules above, compute the value of each proposition below under this truth-value assignment: $P = \frac{1}{2}$ (undetermined), $Q = 0$ (false).
 
 1. $P \to Q$
-2. $\neg Q \to \neg P$ (the contrapositive)
-3. $P \lor \neg P$ (the law of excluded middle)
+2. $\neg Q \to \neg P$ (contrapositive)
+3. $P \lor \neg P$ (law of excluded middle)
 
-The third question is the most interesting: in classical logic, $P \lor \neg P$ is a tautology, forever true. In three-valued logic, when $P = \frac{1}{2}$, $\neg P = \frac{1}{2}$, so $P \lor \neg P = \max(\frac{1}{2}, \frac{1}{2}) = \frac{1}{2}$.
+The third one is the most interesting: in classical logic, $P \lor \neg P$ is a tautology, always true. In three-valued logic, when $P = \frac{1}{2}$, then $\neg P = \frac{1}{2}$, so $P \lor \neg P = \max(\frac{1}{2}, \frac{1}{2}) = \frac{1}{2}$.
 
-**The law of excluded middle, in three-valued logic, is no longer a tautology.**
+**The law of excluded middle — in three-valued logic, no longer a tautology.**
 
-This is not a technical detail. It means: when you expand "truth values," you are implicitly modifying the inference rules you are willing to accept. Three-valued logic rejects the law of excluded middle; classical logic accepts it. This is not about which one is more "correct," but about two different choices corresponding to different understandings of the legality of inference.
+This is not a technical detail. It means: when you expand "truth value," you are implicitly revising the inference rules you're willing to accept. Three-valued logic rejects excluded middle; classical logic accepts it. Neither is more "correct" — they're two different choices, two different notions of what makes an inference legitimate.
 
-Returning to the disposable kitchen game, what this chapter really changes is not the names of recipes, but the physical laws of the kitchen. The kitchen of classical logic defaults to ingredients being infinitely copyable; linear logic turns ingredients back into things that are consumed; three-valued logic further hints that even binary judgments like "cooked/not cooked" can be interrupted by a third state. Each change to the state space changes the legal actions.
+Back to the one-shot kitchen game: what really changed in this chapter isn't the recipe names — it's the kitchen's laws of physics. Classical logic's kitchen assumes ingredients can be copied endlessly; linear logic turns ingredients back into consumables; three-valued logic goes further, suggesting that even a binary judgment like "cooked or not cooked" can be interrupted by a third state. Every change to the state space changes the set of legal moves.
 
-What Chapter 17 is going to do is push this direction to the extreme: truth values are not three points, but a continuous interval over $[0, 1]$. At that point, what will the inference rules become?
+What Chapter 17 does is push this direction to the limit: truth values won't be three points, but a continuous interval $[0, 1]$. What will the inference rules become then?
 
 ---
 
-## Unresolved
+## Open Questions
 
-**What is "truth" in linear logic?** In classical logic, semantics is very clear: a proposition is either true or false; truth tables give everything. In linear logic, what is the "semantics" of resources? How does one define a model such that "$A$ is true" means some concrete resource possession? The answer to this question is phase semantics and coherence spaces, but they all point in the same direction: truth values are no longer $\{0,1\}$, but some richer structure.
+**What is "true" in linear logic?** In classical logic, the semantics is clear: a proposition is either true or false, and truth tables give you everything. In linear logic, what is the "semantics" of a resource? How do you define a model such that "$A$ is true" means some concrete resource possession? The answers are phase semantics and coherence spaces, but they point the same way: truth value is no longer $\{0, 1\}$ but some richer structure.
 
-**To what extent is "resource" a precise mathematical concept?** Linear logic gives us a formal framework, but "resource" itself remains an intuitive word. What is one copy of a resource? When is the copying of resources legal? These questions have different answers in different application domains, and linear logic provides a framework that can accommodate these different answers, not a single answer.
+**To what extent is "resource" a precise mathematical concept?** Linear logic gives us a formal framework, but "resource" itself remains an intuitive word. What is one unit of a resource? When is copying a resource legal? These questions get different answers in different application domains; what linear logic provides is a framework that can hold those different answers — not one single answer.
 
-**What happens if we remove the exchange rule?** Chapter 14 listed three structural rules: weakening, contraction, exchange. Linear logic removes contraction (and sometimes also weakening). If we further remove the exchange rule — making the order of assumptions matter — we obtain **ordered logic**, which corresponds to resource use with temporal ordering, such as communication protocols where messages must be sent and received in order. This direction is still unfolding.
+**What happens if the exchange rule is removed too?** Chapter 14 listed three structural rules: weakening, contraction, exchange. Linear logic removes contraction (and sometimes weakening). Remove exchange as well — making the order of assumptions matter — and you get **ordered logic**, which corresponds to resource use with a temporal order, such as communication protocols where messages must be sent and received in sequence. This direction is still unfolding.
 
-**If "truth" itself is a degree, how should inference rules change?** Linear logic, through resource counting, opens up one dimension of the $\{0,1\}$ truth values — assumptions have "copy count" distinctions, but each copy is still determinately true or false. But there is another direction: truth values are not "1 copy or 2 copies," but "0.3 or 0.7." This direction is no longer a problem of resources, but a problem of uncertainty. The generalization of inference rules under uncertainty is precisely the protagonist of Chapter 17.
+**If "true" itself is a matter of degree, how should inference rules change?** Linear logic stretched $\{0, 1\}$ truth values open along one dimension by counting resources — assumptions differ in "number of copies," but each copy is still a determinate truth or falsity. There's another direction, though: truth as "0.3 or 0.7" rather than "1 copy or 2." That direction is no longer about resources — it's about uncertainty. The generalization of inference rules under uncertainty is exactly what Chapter 17 is about.
 
 ---
 
 ## Exercises
 
-**★ Warm-up**
+**★ Warm-Up**
 
-Using the resource intuition of linear logic, judge whether the following inferences hold. No need to write formal proofs; just use resource examples like "five dollars buys coffee" to explain clearly why each is correct or wrong.
+Using the resource intuition of linear logic, judge whether each of the following inferences holds. No formal proof required — just use a resource example like the "five-dollar bill buys coffee" one to say clearly why it's right or wrong.
 
-1. $A \otimes B \vdash A$ (simultaneously possessing $A$ and $B$, can one separately derive $A$?)
-2. $A \,\&\, B \vdash A$ (possessing "the right to choose $A$ or $B$," can one derive $A$?)
-3. $!A \vdash A$ (infinitely available $A$, can one take out one copy of $A$?)
-4. $A \vdash !A$ (one copy of $A$, can it become infinitely available $A$?)
+1. $A \otimes B \vdash A$ (having both $A$ and $B$ — can you derive $A$ by itself?)
+2. $A \,\&\, B \vdash A$ (holding "the choice between $A$ and $B$" — can you derive $A$?)
+3. $!A \vdash A$ (unlimited $A$ — can you take one $A$ out of it?)
+4. $A \vdash !A$ (one $A$ — can it become unlimited $A$?)
 
-The contrast between 1 and 2 is the most important distinction in this chapter. 4 is the inference that directly fails once the contraction rule is removed.
+The contrast between items 1 and 2 is this chapter's most important distinction. Item 4 is an inference that fails outright once the contraction rule is removed.
 
 ---
 
 **★★ Derivation**
 
-Consider the following three inferences. Judge whether they hold in linear logic, and write out the reasons.
+Consider these three inferences. Judge whether each holds in linear logic, and write out your reason.
 
-1. $A \multimap B,\ A \multimap B \vdash A \multimap B$ (two copies of the ability "$A$ becomes $B$," can they be merged into one?)
-2. $!(A \multimap B),\ !A \vdash !B$ (infinitely available transformation rule, plus infinitely available input, can produce infinitely available output?)
-3. $A \otimes B \multimap C \vdash A \multimap (B \multimap C)$ (consuming $A$ and $B$ to produce $C$, is it equivalent to first consuming $A$, then consuming $B$ to produce $C$?)
+1. $A \multimap B,\ A \multimap B \vdash A \multimap B$ (two copies of the "A becomes B" ability — can they merge into one?)
+2. $!(A \multimap B),\ !A \vdash !B$ (an unlimited transformation rule plus unlimited input — can it yield unlimited output?)
+3. $A \otimes B \multimap C \vdash A \multimap (B \multimap C)$ (consuming $A$ and $B$ to produce $C$ — equivalent to consuming $A$ first, then consuming $B$ to produce $C$?)
 
-The first involves contraction. The second involves the promotion rule of the exclamation mark. The third is the linear logic version of currying — think about whether it genuinely holds in terms of resources.
+Item 1 involves contraction. Item 2 involves the promotion rule for the bang. Item 3 is the linear-logic version of currying — think about whether it really holds in resource terms.
 
 ---
 
 **★★★ Challenge**
 
-Rust's ownership system implements linear types: each value has exactly one owner; transferring ownership is consuming one copy of an assumption; borrowing corresponds to using a temporary view modified by $!$.
+Rust's ownership system implements linear types: every value has exactly one owner, transferring ownership means spending an assumption, and borrowing corresponds to using a $!$-decorated temporary view.
 
-Try using the symbols of linear logic to write, for each of the following Rust operations, a corresponding linear logic inference formula:
+Try to express each of these Rust operations as a corresponding linear-logic inference:
 
-- Moving ownership of variable `x` to function `f` (move semantics)
-- Passing an immutable reference of variable `x` to function `g` (immutable borrow)
-- Function returning a value (consuming input, producing output)
+- Moving the ownership of variable `x` to function `f` (move semantics)
+- Passing an immutable reference to `x` to function `g` (immutable borrow)
+- A function's return value (consumes input, produces output)
 
-Complete precision is not required, but clearly state: which operations correspond to consumptive inference (linear implication $\multimap$), and which operations correspond to reusable views (exclamation mark $!$). The purpose of this exercise is to translate the intuitions of language design into the language of logic — in the process of translation, you will discover where correspondences hold and where they do not.
+It doesn't have to be perfectly precise — but be clear about this: which operations correspond to consumptive inference (linear implication $\multimap$), and which correspond to reusable views (the bang $!$)? The purpose of this exercise is to translate the intuition of language design into the language of logic — and while translating, you'll discover which parts match up and which don't.

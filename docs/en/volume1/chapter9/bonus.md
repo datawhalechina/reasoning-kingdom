@@ -1,12 +1,12 @@
-# Bonus Chapter: Attention Is Causality — An Interpretation Even Transformers Didn't See Coming
+# Bonus Chapter: Attention Is Causality — A Reading Even the Transformer Didn't Expect
 
-> The self-attention mechanism has two identities. Both are true.
+> Self-attention has two identities, and both are real.
 >
-> First identity: It is the modern version of Hopfield associative memory — an integral operator performing normalized retrieval in feature space, existing since 1982, merely rediscovered under a new name.
+> The first: it is the modern version of the Hopfield associative memory — an integral operator that does normalized retrieval in feature space. It already existed in 1982; it was just rediscovered under a new name.
 >
-> Second identity: If you derive it from the perspective of causal modeling, you get exactly the same mathematics — the attention matrix is a soft causal adjacency matrix over the sequence, and softmax is the posterior distribution over candidate causes.
+> The second: if you derive it from causal modeling, you get exactly the same math — the attention matrix is a soft causal adjacency matrix over the sequence, and softmax is the posterior distribution over candidate causes.
 >
-> These two identities are not contradictory. They point to the same thing, but each illuminates different corners — and the same wall.
+> The two identities don't contradict each other. They point at the same thing, but each lights up a different corner — and the same wall.
 
 <div class="center">
 
@@ -14,15 +14,15 @@
 
 </div>
 
-## Zero. From Hopfield to Transformer: A Forgotten Genealogy
+## 0. From Hopfield to Transformer: A Forgotten Lineage
 
-In 1982, Hopfield published a 23-page paper in *Proceedings of the National Academy of Sciences*. What he set out to do was extraordinarily simple: **let the network memorize some patterns, and then retrieve the complete pattern given a partial input.**
+In 1982, Hopfield published a 23-page paper in the *Proceedings of the National Academy of Sciences* (PNAS). What he wanted to do was extremely simple: **make a network memorize some patterns, then retrieve the full pattern when given a partial input.**
 
-This is associative memory. Not classification, not regression — it is **retrieval**.
+This is associative memory — a memory that returns a stored pattern from a partial cue. Not classification, not regression — **retrieval**.
 
-### 0.1 Classical Hopfield: Energy Minimization
+### 0.1 Classic Hopfield: Energy Minimization
 
-The classical update rule drives the network state $\xi$ toward an energy minimum:
+The classic update rule drives the network state $\xi$ toward an energy minimum:
 
 $$E = -\frac{1}{2} \xi^\top W \xi$$
 
@@ -44,7 +44,7 @@ Taking the gradient of the energy with respect to the state and setting it to ze
 
 $$\xi^{\text{new}} = X \cdot \text{softmax}(\beta X^\top \xi)$$
 
-Pause and look at this formula. It says: **the new state = a weighted average of stored patterns, with weights given by softmax competitive normalization.**
+Stop and look at this formula. It says: **the new state = a weighted average of stored patterns, with weights given by softmax competitive normalization.**
 
 Isn't this just self-attention?
 
@@ -56,7 +56,7 @@ $$\text{Attention}(Q, K, V) = \text{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\r
 
 This is not a metaphor; it is mathematical equivalence. Every forward pass of a Transformer is performing one step of Hopfield energy minimization — it just does **one step** (rather than iterating to convergence).
 
-### 0.3 What Softmax Is: Normalized Competition, i.e. the Discrete Version of Prefix Integration
+### 0.3 What Softmax Is: Normalized Competition, the Discrete Form of a Prefix Integral
 
 Now a deeper question: what role does softmax play here?
 
@@ -76,7 +76,7 @@ This is the discretization of the denominator of the Hopfield energy function. T
 
 **The softmax of self-attention is the partition-function normalization of Hopfield associative memory over discrete sequences.**
 
-### 0.4 Linear Attention: Removing Softmax, Reducing via Associativity
+### 0.4 Linear Attention: Drop Softmax, Reduce with Associativity
 
 Now perform a surgical operation: remove the softmax.
 
@@ -110,11 +110,11 @@ This is not merely linear attention — this is the integral core of state space
 
 ### 0.5 Three Frameworks, One Integral Operator
 
-Now the entire genealogy becomes visible:
+Now the whole lineage is visible:
 
 | Framework | Operation | Normalization Form | Time Complexity |
 |------|------|-----------|-----------|
-| Classical Hopfield | Energy-minimization iteration | Hebbian binary competition | $O(N^2)$ per step |
+| Classic Hopfield | Energy-minimization iteration | Hebbian binary competition | $O(N^2)$ per step |
 | Modern Hopfield / Self-Attention | Softmax weighted average (one step) | Partition-function normalization (global sum) | $O(T^2)$ |
 | Linear Attention / SSM | Kernel feature outer product (prefix sum) | Incremental normalization (prefix sum) | $O(T)$ |
 
@@ -130,7 +130,7 @@ This trade-off is not an engineering compromise — it is a **fundamental tensio
 
 You cannot have both exact partition-function normalization and linear complexity. This is an **irreducible computational constraint**, not an implementation detail.
 
-### 0.6 Why the do-Operator Has Not Yet Appeared
+### 0.6 Why the Do Operator Hasn't Shown Up Yet
 
 Now return to the perspective of causal inference and answer that question: **why is the do-operator absent from this framework?**
 
@@ -146,7 +146,7 @@ What is the chasm between these two?
 
 **The do-operator is active**: I cut all incoming edges of $X$, force $X = x$, and then ask "what is the distribution of $Y$?" It requires knowledge of the causal graph structure, not just statistical correlation.
 
-The genealogy from Hopfield to modern attention has developed increasingly sophisticated **associative retrieval operators** — from discrete competition to continuous integration, from $O(T^2)$ to $O(T)$. But no matter how optimized, it always performs **conditional expectation**: $\mathbb{E}[V \mid Q]$, not $P(V \mid \text{do}(Q))$.
+The lineage from Hopfield to modern attention has developed increasingly sophisticated **associative retrieval operators** — from discrete competition to continuous integration, from $O(T^2)$ to $O(T)$. But no matter how optimized, it always performs **conditional expectation**: $\mathbb{E}[V \mid Q]$, not $P(V \mid \text{do}(Q))$.
 
 **The absence of the do-operator is not an omission in implementation; it is a difference at the ontological level.**
 
@@ -161,13 +161,13 @@ These two questions — current Transformer architectures can only answer the fi
 
 </div>
 
-Now change the direction of derivation. Start not from Hopfield, but from causal modeling — and see whether, at the end of the road, we arrive at the same place.
+Now let's walk the other direction of the derivation. Not from Hopfield — from causal modeling — and see whether, at the end of the road, we land in the same place.
 
-## One. Two Interpretations, One Mathematics
+## 1. Two Readings, One Math
 
-The self-attention mechanism has a standard interpretation, drawn from the original paper's analogy:
+Self-attention has a standard reading, coming from the analogy in the original paper:
 
-> Query is the query, Key is the index, Value is the content. The attention score is "how well this query matches this key."
+> Query is a query, Key is an index, Value is the content. The attention score is "how well this query matches this key."
 
 This is an **information retrieval** analogy. It works, but it is engineering intuition, not mathematical necessity.
 
@@ -181,9 +181,9 @@ This is a thought experiment.
 
 </div>
 
-## Two. From Causal Assumptions to Outer Product
+## 2. From Causal Assumptions to the Outer Product
 
-Suppose we want to model causal relationships in continuous space.
+Suppose we want to model cause and effect in continuous space.
 
 For any pair of positions $i$ (effect) and $j$ (cause) in a sequence, we want to model this hypothesis: **"$j$ is a cause of $i$ — with what strength?"**
 
@@ -209,7 +209,7 @@ This is a rank-1 matrix. Each element $(\mathcal{C}_{ij})_{ab} = (q_i)_a \cdot (
 
 </div>
 
-## Three. Einstein Summation: The Natural Collapse of the Outer Product
+## 3. Einstein Summation: The Natural Collapse of the Outer Product
 
 Now, if we perform Einstein summation on this $d_k \times d_k$ causal hypothesis matrix — contracting over the shared dimension (i.e., taking the trace) — what we obtain is a scalar:
 
@@ -233,15 +233,15 @@ Two roads, one destination. Mathematically equivalent, semantically worlds apart
 
 </div>
 
-## Four. A New Semantics for Asymmetry
+## 4. The New Meaning of Asymmetry
 
-The original interpretation has no good explanation for the fact that $W_Q \neq W_K$ — it can only say "it is learned."
+The original reading has no good story for the fact that $W_Q \neq W_K$ — it can only say "that's what training learned."
 
-The causal interpretation gives a direct answer: **causal relationships are inherently asymmetric.**
+The causal reading gives the answer directly: **cause and effect are asymmetric by nature.**
 
 $q_i \cdot k_j \neq q_j \cdot k_i$, because "$j$ is a cause of $i$" and "$i$ is a cause of $j$" are two different things. The row projection and column projection use different weight matrices $W_Q$ and $W_K$, precisely encoding this asymmetry.
 
-| | Original Interpretation (Information Retrieval) | Causal Interpretation (Outer Product Modeling) |
+| | Original Reading (Information Retrieval) | Causal Reading (Outer-Product Modeling) |
 |---|---|---|
 | $W_Q$ | Query matrix | Effect-space projection |
 | $W_K$ | Key matrix | Cause-space projection |
@@ -255,11 +255,11 @@ $q_i \cdot k_j \neq q_j \cdot k_i$, because "$j$ is a cause of $i$" and "$i$ is 
 
 </div>
 
-## Five. Softmax Is Causal Inference, Not Normalization
+## 5. Softmax Is Causal Inference, Not Normalization
 
-In the original interpretation, softmax is "competitive attention" — attention weights across all positions sum to 1. This is an engineering description.
+In the original reading, softmax is "competing attention" — attention weights across all positions sum to 1. This is an engineering description.
 
-In the causal interpretation, what is softmax doing?
+In the causal reading, what is softmax doing?
 
 **It performs a soft Bayesian update over all possible "cause candidates" $j$.**
 
@@ -273,19 +273,19 @@ This connects to Pearl's do-operator from Chapter 6 — but the connection requi
 
 </div>
 
-## Six. BERT vs GPT: Two Causal Hypotheses
+## 6. BERT vs GPT: Two Causal Assumptions
 
-BERT uses bidirectional attention — no mask, all positions "see" each other.
+BERT is bidirectional attention — no mask, every position "sees" every other.
 
-GPT uses unidirectional causal masking — only the past can "see" the present.
+GPT is a one-way causal mask — only the past can "see" the present.
 
-Within the causal interpretation framework:
+In the frame of the causal reading:
 
-- **BERT** models an **undirected causal graph**: there may exist causal relationships between any two positions, with direction to be determined by the data. Suited for "understanding" tasks — given complete context, infer which words influence which other words.
+- **BERT** models an **undirected causal graph**: a causal relation may exist between any two positions, with the direction undecided and left to the data. Suits "understanding" tasks — given the complete context, infer which words affect which.
 
-- **GPT** models a **directed causal graph (DAG)** : time is the only permitted causal direction. Suited for "generation" tasks — given only the history, predict the next step.
+- **GPT** models a **directed causal graph (DAG)**: time is the only allowed causal direction. Suits "generation" tasks — knowing only the history, predict the next step.
 
-This is not a deliberate choice by the architecture designers, but two different causal hypotheses encoded into the mask matrix.
+This wasn't a deliberate choice by the architecture designers. It's two different causal assumptions encoded into the mask matrix.
 
 BERT asks: **in this sentence, what influences what?**
 
@@ -297,29 +297,29 @@ GPT asks: **how did the past influence the present?**
 
 </div>
 
-## Seven. Experimental Validation: Directionality of the Attention Matrix
+## 7. Experiment: The Directionality of Attention Matrices
 
-If the attention matrix is indeed performing causal modeling, there is an observable prediction:
+If the attention matrix is truly doing causal modeling, there is an observable prediction:
 
-**On texts with clear causal direction, the attention matrix should exhibit directional asymmetry.**
+**On text with an explicit causal direction, the attention matrix should show directional asymmetry.**
 
-Concrete prediction: given sentences like "Because A, therefore B," the Query at the "B" position should primarily align with the Key of "A" (effect looks at cause); the Query at the "A" position should assign low weight to the Key of "B" (cause does not look back at effect).
+The specific prediction: given a sentence like "because A, so B", the Q at the position of "B" should mainly lock onto the K of "A" (the effect looks at the cause); the Q at "A" against the K of "B" should carry low weight (the cause doesn't look back at the effect).
 
-Extracting attention from GPT-2 on the sentence *"Because the storm intensified, the ship finally sank."*, the DAG score (last layer average) = **0.810**, significantly higher than the random baseline of 0.5.
+We extracted attention from GPT-2 on the sentence *"Because the storm intensified, the ship finally sank."* The DAG score (last-layer average) = **0.810**, far above the random baseline of 0.5.
 
 <figure>
 <p><img src="/figures/ch09_causal_fig1_attention_asymmetry.png" alt="Attention Heatmap and Asymmetry Matrix" /></p>
-<figcaption>Figure 1. Left: GPT-2 last-layer average attention heatmap — effect positions (rows) assign higher attention weights to cause positions (columns), consistent with causal direction. Right: Asymmetry matrix A − Aᵀ, red indicates forward causal flow (row->col) dominates, blue indicates reverse flow.</figcaption>
+<figcaption>Figure 1. Left: the average attention heatmap of GPT-2's last layer — effect positions (rows) give more attention weight to cause positions (columns), consistent with the causal direction. Right: the asymmetry matrix A − Aᵀ; red means forward causal flow (row->column) dominates, blue means reverse flow.</figcaption>
 </figure>
 
 <figure>
 <p><img src="/figures/ch09_causal_fig2_outer_product.png" alt="Outer Product Decomposition" /></p>
-<figcaption>Figure 2. Left: Heatmap of the outer product matrix q_i ⊗ k_j (d_k × d_k), whose trace equals the dot product, i.e., the raw attention score. Right: Attention matrix obtained from the outer product trace via softmax, reinterpreted as causal posterior probability P(j is a cause of i | context), with values annotated in the cells.</figcaption>
+<figcaption>Figure 2. Left: the heatmap of the outer-product matrix q_i ⊗ k_j (d_k × d_k), whose trace equals the dot product — i.e. the raw attention score. Right: the attention matrix obtained from the outer-product trace via softmax, reinterpreted as the causal posterior probability P(j is a cause of i | context), with the numbers annotated in the cells.</figcaption>
 </figure>
 
 <figure>
 <p><img src="/figures/ch09_causal_fig3_dag.png" alt="Causal DAG from Attention" /></p>
-<figcaption>Figure 3. Left: Bar chart of DAG scores for each attention head in the last layer — all heads are above the random baseline of 0.5, consistent with the forward-in-time causal flow of GPT's unidirectional causal mask. Right: Causal directed acyclic graph inferred from attention weights, with edge width proportional to attention weight; overall DAG score = 0.810.</figcaption>
+<figcaption>Figure 3. Left: the DAG score of each attention head in the last layer — all heads are above the random baseline 0.5, consistent with the forward-in-time flow of GPT's one-way causal mask. Right: the directed acyclic graph inferred from the attention weights, edge width proportional to attention weight; overall DAG score = 0.810.</figcaption>
 </figure>
 
 The complete code is as follows:
@@ -358,7 +358,7 @@ CMAP_ASYM = "RdBu_r"
 
 CAUSAL_SENTENCE = "Because the storm intensified , the ship finally sank ."
 
-# ── 1. Obtain attention matrices ────────────────────────────────────────────────
+# ── 1. obtain the attention matrices ─────────────────────────────────────────────────────────
 
 def get_attention_real(sentence):
     tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
@@ -390,7 +390,7 @@ def get_attention_synthetic(sentence):
                   for _ in range(4)]
     return words, attentions
 
-# ── 2. Analysis functions ───────────────────────────────────────────────────────
+# ── 2. analysis functions ───────────────────────────────────────────────────────────────
 
 def average_attention(attentions, layer_idx=-1):
     return attentions[layer_idx].mean(axis=0)
@@ -401,29 +401,29 @@ def asymmetry_matrix(A):
 def dag_score(A):
     return np.tril(A, k=-1).sum() / (A.sum() + 1e-9)
 
-# ── 3. Core outer-product theory ────────────────────────────────────────────────
+# ── 3. core of the outer-product theory ───────────────────────────────────────────────────────────
 
 def outer_product_demo(d_k=8, T=6, seed=0):
-    """Verify that tr(q ⊗ k) == q·k, and generate the causal posterior attention matrix."""
+    """Verify tr(q ⊗ k) == q·k and generate a causal posterior attention matrix."""
     rng = np.random.default_rng(seed)
     Q = rng.standard_normal((T, d_k))
     K = rng.standard_normal((T, d_k))
     scores = (Q @ K.T) / np.sqrt(d_k)
     attn = np.exp(scores)
     attn /= attn.sum(axis=-1, keepdims=True)
-    # Verify the identity
+    # verify the identity
     for i in range(T):
         for j in range(T):
             assert abs(np.trace(np.outer(Q[i], K[j])) - Q[i] @ K[j]) < 1e-5
     return Q, K, scores, attn
 
-# ── 4. do-operator intervention ─────────────────────────────────────────────────
+# ── 4. do-operator intervention ────────────────────────────────────────────────────────────
 
 def do_intervene(attn_matrix, intervene_row, force_col):
     """
     Hard intervention: do(cause=force_col -> effect=intervene_row)
-    Collapse the intervene_row row into a one-hot pointing at force_col.
-    Equivalent to Pearl's hard do operation: cut all other incoming edges.
+    Collapse the intervene_row row to a one-hot vector pointing at force_col.
+    Equivalent to Pearl's hard do operation: cut off all other incoming edges.
     """
     result = attn_matrix.copy()
     result[intervene_row, :] = 0.0
@@ -432,8 +432,8 @@ def do_intervene(attn_matrix, intervene_row, force_col):
 
 def soft_do_intervene(attn_matrix, intervene_row, boost_col, strength=3.0):
     """
-    Soft intervention: boost a specific causal path without completely cutting others.
-    Corresponds to the standard Transformer's soft attention.
+    Soft intervention: boost a specific causal path without fully cutting the others.
+    Corresponds to the soft attention of a standard Transformer.
     """
     result = attn_matrix.copy()
     logits = np.log(result[intervene_row] + 1e-9)
@@ -443,7 +443,7 @@ def soft_do_intervene(attn_matrix, intervene_row, boost_col, strength=3.0):
     result[intervene_row] /= result[intervene_row].sum()
     return result
 
-# ── 5. Visualization ────────────────────────────────────────────────────────────
+# ── 5. visualization ─────────────────────────────────────────────────────────────────
 
 def plot_all(tokens, attentions):
     T = len(tokens)
@@ -459,7 +459,7 @@ def plot_all(tokens, attentions):
     outer_ex = np.outer(Q[i_ex], K[j_ex])
     tr_val   = np.trace(outer_ex)
 
-    # Fig 1: Attention heatmap + asymmetry matrix
+    # Fig 1: attention heatmap + asymmetry matrix
     fig1, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 5))
     fig1.suptitle(f'GPT-2 Attention on Causal Sentence\n"{CAUSAL_SENTENCE}"', fontsize=11)
     sns.heatmap(avg_attn, ax=ax1, cmap=CMAP_ATTN, xticklabels=labels,
@@ -479,7 +479,7 @@ def plot_all(tokens, attentions):
     fig1.tight_layout()
     fig1.savefig(OUT_DIR / "ch09_causal_fig1_attention_asymmetry.png", dpi=150, bbox_inches="tight")
 
-    # Fig 2: Outer-product decomposition + causal posterior
+    # Fig 2: outer-product decomposition + causal posterior
     fig2, (ax3, ax4) = plt.subplots(1, 2, figsize=(13, 5))
     fig2.suptitle(r"Outer-Product Decomposition: $A_{ij}=\mathrm{softmax}_j(\mathrm{tr}(q_i\otimes k_j)/\sqrt{d_k})$", fontsize=11)
     sns.heatmap(outer_ex, ax=ax3, cmap="coolwarm", center=0, square=True, cbar_kws={"shrink": 0.8})
@@ -498,7 +498,7 @@ def plot_all(tokens, attentions):
     fig2.tight_layout()
     fig2.savefig(OUT_DIR / "ch09_causal_fig2_outer_product.png", dpi=150, bbox_inches="tight")
 
-    # Fig 3: DAG score + causal DAG diagram
+    # Fig 3: DAG score + inferred causal DAG
     fig3, (ax5, ax6) = plt.subplots(1, 2, figsize=(13, 5))
     fig3.suptitle("Causal DAG Structure in Attention Heads", fontsize=11)
     last_layer = attentions[-1]
@@ -563,7 +563,7 @@ def plot_do_intervention(avg_attn, labels, intervene_row, force_col):
     print(f"[✓] Saved: {p}")
     plt.show()
 
-# ── 6. Main ─────────────────────────────────────────────────────────────────────
+# ── 6. Main ───────────────────────────────────────────────────────────────────
 
 def main():
     print(f"Sentence: {CAUSAL_SENTENCE}\n")
@@ -580,7 +580,7 @@ def main():
     # do-intervention example: force "sank" (effect) to point at "storm" (cause)
     sank_idx  = labels.index("sank") if "sank" in labels else 7
     storm_idx = labels.index("storm") if "storm" in labels else 2
-    print(f"\nApplying do-intervention: row={sank_idx}({labels[sank_idx]}) ← col={storm_idx}({labels[storm_idx]})")
+    print(f"\nApplying do-intervention: row={sank_idx} ({labels[sank_idx]}) ← col={storm_idx}({labels[storm_idx]})")
     plot_do_intervention(avg_attn, labels, sank_idx, storm_idx)
 
     print("\n── Theoretical check ─────────────────────────────")
@@ -600,7 +600,7 @@ if __name__ == "__main__":
 
 </div>
 
-## Eight. Implementing the do-Operator in Attention Space
+## 8. Implementing the Do Operator in Attention Space
 
 Now let us rigorously bring in Pearl's do-operator.
 
@@ -610,7 +610,7 @@ Now translate this operation into attention space.
 
 ### 8.1 The Attention Matrix Is an Implicit Causal Adjacency Matrix
 
-Under the causal interpretation, $\alpha_{ij}$ is the posterior probability that "$j$ is a cause of $i$." The entire attention matrix $\mathbf{A} \in \mathbb{R}^{T \times T}$ is a **soft causal adjacency matrix** over the sequence.
+Under the causal reading, $\alpha_{ij}$ is the posterior probability that "$j$ is a cause of $i$." The entire attention matrix $\mathbf{A} \in \mathbb{R}^{T \times T}$ is a **soft causal adjacency matrix** over the sequence.
 
 The normal forward pass is:
 
@@ -618,7 +618,7 @@ $$v_i = \sum_j \alpha_{ij} \cdot V x_j$$
 
 This is an **observational** operation — given the current context, take a weighted average over all possible causes. It corresponds to the first rung of Pearl's causal ladder: **seeing**.
 
-### 8.2 Hard Intervention: Cutting All Incoming Edges
+### 8.2 Hard Intervention: Cut All Incoming Edges
 
 Pearl's hard do operation corresponds, in attention space, to:
 
@@ -628,7 +628,7 @@ Collapse the attention row of position $i$ (effect) into a one-hot vector, forci
 
 This is equivalent to executing $\text{do}(\text{cause}_i = j^*)$ on the causal graph for position $i$.
 
-### 8.3 Soft Intervention: Boosting Specific Paths
+### 8.3 Soft Intervention: Boost a Specific Path
 
 The standard Transformer's soft attention corresponds to **soft intervention** — not completely cutting other paths, only adjusting the relative weights of each path:
 
@@ -651,12 +651,12 @@ On the sentence *"Because the storm intensified, the ship finally sank."*, apply
 
 <figure>
 <p><img src="/figures/ch09_causal_fig4_do_intervention.png" alt="do-Operator Intervention on Attention Matrix" /></p>
-<figcaption>Figure 4. Causal intervention comparison in attention space. Left: Original soft causal posterior (normal attention). Middle: Soft do intervention (λ=3.0, boosting the storm->sank path, preserving remaining causal paths). Right: Hard do intervention (one-hot collapse, all other causal paths cut, corresponding to Pearl's exact do operation). The blue rectangle highlights the intervened row position.</figcaption>
+<figcaption>Figure 4. Causal interventions in attention space, compared. Left: the original soft causal posterior (normal attention). Middle: soft do (λ=3.0, boosting the storm->sank path, keeping the other causal paths). Right: hard do (one-hot collapse; every other causal path is cut, matching Pearl's exact do). The blue box marks the intervened row.</figcaption>
 </figure>
 
 The hard intervention visualization directly corresponds to the "cut incoming edges" surgery in Pearl's causal diagram: the row for position "sank" collapses from a dispersed causal posterior into a fully determined pointer — its sole cause is "storm." All other possible causal paths are zeroed out.
 
-### 8.5 The Causal Mask Is a Global do Operation
+### 8.5 The Causal Mask Is a Global Do Operation
 
 GPT's unidirectional causal mask acquires a precise causal semantics within this framework:
 
@@ -678,33 +678,33 @@ This is not an engineering trick, but a causal hypothesis hardcoded into the mod
 
 </div>
 
-## Nine. Unresolved Questions
+## 9. Open Questions
 
-This framework is currently a thought experiment. It is mathematically self-consistent and has preliminary experimental support (DAG score = 0.810), but several questions remain unanswered:
+So far, this framework is a thought experiment. It is mathematically self-consistent, has preliminary experimental support (DAG score = 0.810), but a few questions remain unanswered:
 
-**1. Identifiability of the Causal Graph**
+**1. Identifiability of the causal graph**
 
-Is a high $\alpha_{ij}$ a genuine causal relationship, or merely statistical co-occurrence? The attention mechanism cannot, by itself, distinguish between the two. This is the fundamental difficulty of causal inference, re-surfacing in attention space.
+High $\alpha_{ij}$: real causation, or statistical co-occurrence? The attention mechanism cannot tell the difference by itself. This is the fundamental difficulty of causal inference, reappearing in attention space.
 
-**2. The Semantic Position of the do-Operator**
+**2. The semantic position of the do operator**
 
-Pearl's do-operator operates on a Structural Causal Model (SCM) — a graph with explicit variables and functional relationships. Is the attention matrix an SCM? Or is it merely a soft approximation of one? If the latter, which causal semantics are lost in the soft approximation?
+Pearl's do operator acts on a structural causal model (SCM) — a graph with explicit variables and functional relations. Is the attention matrix an SCM? Or just a soft approximation of one? If the latter, which causal semantics are lost in the approximation?
 
-**3. Causal Division of Labor Across Heads**
+**3. The division of causal labor among heads**
 
-Multi-head attention has $H$ heads, each with different $W_Q^h, W_K^h$. Experiments show that different heads have different DAG scores. This implies: is each head modeling a different set of causal hypotheses, or are they projecting the same causal graph from different angles?
+Multi-head attention has $H$ heads, each with its own $W_Q^h, W_K^h$. Experiments show different heads get different DAG scores. Does that mean each head models a different set of causal hypotheses, or that each head projects the same causal graph from a different angle?
 
-**4. Training Dynamics and Causal Learning**
+**4. Training dynamics and causal learning**
 
-If the attention matrix is a softened causal graph, what is gradient descent optimizing? Is it converging toward the true causal structure, or is it fitting statistical proxies that maximize predictive accuracy? These two objectives coincide on i.i.d. training data, but diverge under distribution shift.
+If the attention matrix is a softened causal graph, then what is gradient descent optimizing? Is it converging toward the true causal structure, or fitting a statistical proxy that maximizes prediction accuracy? The two goals agree on i.i.d. training data, but they diverge under distribution shift.
 
-**5. Counterfactual Reasoning Capacity**
+**5. Counterfactual reasoning ability**
 
-The third rung of Pearl's causal ladder is counterfactuals: *If it hadn't been the storm, would the ship still have sunk?* In the attention framework, this corresponds to modifying $W_Q, W_K$ and then re-inferring — this is not something that can be done at inference time; it requires changing model parameters. This means Transformer architectures are bounded at the second rung of the causal ladder and cannot perform strict counterfactual reasoning.
+The third rung of Pearl's causal ladder is counterfactual: if there had been no storm, would the ship still have sunk? In the attention frame, that corresponds to modifying $W_Q, W_K$ and re-deriving — something you can't do at inference time, because it requires changing model parameters. This means the Transformer is architecturally limited to the second rung of the causal ladder; strict counterfactual reasoning is closed to it.
 
-These questions currently have no answers. But they point in a direction:
+These questions have no answers yet. But they point in one direction:
 
-**The Transformer is not merely a powerful function approximator — it may be an implicit causal inference machine, locked between the first and second rungs of the causal ladder, with the third rung forever closed to it.**
+**The Transformer isn't just a powerful function fitter — it may be an implicit causal-inference machine, locked between the first and second rungs of the causal ladder, with the third rung permanently closed.**
 
 <div class="center">
 
@@ -712,11 +712,11 @@ These questions currently have no answers. But they point in a direction:
 
 </div>
 
-## A Note to the Reader: Disappointment — And Then What?
+## A Word to the Reader: Disappointed? Now What?
 
-If, having read this far, your first thought is "That's it? It's all just weighted averages?" — that disappointment is reasonable, even necessary.
+If you've read this far, and the first thought in your head is "that's it? All weighted averages?" — that disappointment is reasonable, even necessary.
 
-Let me say it plainly: **self-attention, modern Hopfield networks, and linear attention are, at bottom, different packaging of the same thing — normalized associative retrieval.** From Hopfield's Hebbian memory in 1982, to the Transformer's softmax weighting in 2017, to linear attention's prefix integration in 2020, what this genealogy has been doing has never changed: given a query, find the most relevant content in a memory bank, and return it weighted.
+Let me say it straight: **self-attention, modern Hopfield networks, and linear attention are, at bottom, different packaging of the same thing — normalized associative retrieval.** From Hopfield's Hebbian memory in 1982, to the Transformer's softmax weighting in 2017, to linear attention's prefix integration in 2020, what this lineage has been doing has never changed: given a query, find the most relevant content in the memory storage, and return it weighted.
 
 It is a giant integral operator, continually rediscovered by engineers under new names.
 
@@ -732,7 +732,7 @@ This is not because they copied each other. **It is because this structure was a
 
 The same thing has happened many times in physics. Maxwell's equations unified electricity, magnetism, and light — three seemingly unrelated phenomena. Every time such a unification occurs, the first reaction is "That's it? That simple?" Only later does it slowly dawn: **simplicity is not poverty; simplicity is depth.**
 
-The Hopfield integral operator is to machine learning, perhaps, what Maxwell's equations are to electromagnetism — not "the only one," but "this one is deep enough to grow everything you thought was different."
+The Hopfield integral operator is to machine learning what Maxwell's equations are to electromagnetism — not "there is only this one", but "this one is deep enough to grow everything you thought was different."
 
 ---
 
@@ -760,7 +760,7 @@ Your disappointment points here — to a genuine frontier. **This is not a bad t
 
 ## Further Reading
 
-**The Hopfield Genealogy**
+**The Hopfield Lineage**
 - Hopfield, J.J. (1982). *Neural networks and physical systems with emergent collective computational abilities* — The original paper: energy function and associative memory
 - Ramsauer, H. et al. (2020). *Hopfield Networks is All You Need* `-> [arXiv:2008.02217]` — Mathematical equivalence proof between modern Hopfield networks and self-attention
 - Katharopoulos, A. et al. (2020). *Transformers are RNNs: Fast Autoregressive Transformers with Linear Attention* `-> [arXiv:2006.16236]` — Kernel derivation and prefix-sum reduction for linear attention

@@ -1,6 +1,6 @@
 # Chapter 3: From Symbols to Vectors — The First Liberation of Representation Space
 
-> Subtract "man" from "king," add "woman," and you get "queen." Is this reasoning or arithmetic?
+> Subtract "man" from "king", add "woman", and you get "queen". Is that reasoning — or arithmetic?
 
 <div class="center">
 
@@ -8,25 +8,25 @@
 
 </div>
 
-## I. That Sentence
+## 1. That One Sentence
 
-In 2013, Tomas Mikolov wrote down an equation in a paper — an equation that would later be cited more frequently than perhaps any NLP paper of that era:
+In 2013, Tomas Mikolov wrote an equation in a paper that went on to be cited more often than just about any NLP paper of its era:
 
 $$
 \vec{\text{King}} - \vec{\text{Man}} + \vec{\text{Woman}} \approx \vec{\text{Queen}}
 $$
 
-What it means: if you take the word vector for "king," subtract the word vector for "man," and add the word vector for "woman," the nearest neighbor word vector is "queen."
+It means: take the word vector for "king", subtract the vector for "man", add the vector for "woman" — and the nearest neighbor is "queen".
 
-This was not a carefully crafted example — this emerged from the experimental results. The algorithm learned this relationship; nobody told it that "king is to man as queen is to woman."
+This was not a carefully designed example. It fell straight out of an experiment. The algorithm learned the relationship on its own; nobody told it "king is to man as queen is to woman".
 
-At this moment, the AI research community collectively gasped.
+At that moment, the AI research community collectively gasped.
 
-Why? Because it looked like the machine was doing **analogical reasoning**. Not rule-based reasoning, not logical deduction, but something closer to human intuition: grasping the essence of a relationship and then transferring it to a new object.
+Why? Because it looked like the machine was doing **analogical reasoning**. Not rule-based reasoning, not logical deduction, but something closer to human intuition: it grasped the essence of a relationship, then carried that relationship over to new objects.
 
-And then the question arose: is it really reasoning?
+And then the question arrived: is it really reasoning?
 
-This chapter is about exactly this — what vector representations are, why they are more powerful than symbols, and where that power comes from, and where it stops.
+That question is what this chapter is about — what vector representations are, why they are more powerful than symbols, where their power comes from, and where it runs out.
 
 <div class="center">
 
@@ -34,28 +34,28 @@ This chapter is about exactly this — what vector representations are, why they
 
 </div>
 
-## II. The Problem with Symbols, Revisited
+## 2. The Problem with Symbols, Again
 
-In the previous chapter, we saw the core dilemma of symbolic AI: knowledge must be explicitly written out, and the world's knowledge can never be fully written.
+In the last chapter, we saw the core trouble with symbolic AI: knowledge has to be written out explicitly, and there is no end to the knowledge of the world.
 
-But there is another problem I didn't emphasize, which is that **the semantics of symbols are external**.
+But there is another problem I didn't stress back then: **a symbol's meaning is bolted on from the outside**.
 
-In an expert system, the string `"is mammal"` is, to the machine, just a token — an atom that cannot be further decomposed. It doesn't know the relationship between "mammal" and "animal," doesn't know how close "mammal" is to "reptile," doesn't know that "cat" is more of a typical mammal than "whale."
+In an expert system, the string `"is a mammal"` is just a token to the machine — an atom that cannot be broken down any further. It doesn't know how "mammal" relates to "animal", doesn't know how close "mammal" is to "reptile", doesn't know that "cat" is a more typical mammal than "whale".
 
-All these relationships need to be explicitly written into rules.
+All of these relationships have to be written into rules explicitly.
 
-    IF  is mammal
-    THEN is animal  [R_base_1]
+    IF  is a mammal
+    THEN is an animal  [R_base_1]
 
-    IF  is mammal
-    AND is not cetacean
+    IF  is a mammal
+    AND is not a whale
     THEN usually has legs  [R_mammal_legs]
 
-Every relationship must correspond to a rule. And relationships are infinite; rules can never be fully written.
+Every relationship needs its own rule. And relationships are endless, so the rules never run out to write.
 
-The root of this problem is: **symbolic systems use discrete tokens to represent concepts, but the relationships between concepts are continuous, graded, and nested**. The distance between "cat" and "dog" cannot be captured by discrete If-Then rules — you can only say "cat is a mammal, dog is a mammal," but you cannot say "cat is closer to dog than to snake."
+The root of the problem: **symbolic systems represent concepts with discrete tokens, while the relationships between concepts are continuous, graded, and nested**. The distance between "cat" and "dog" can't be captured by discrete If-Then rules — you can state "a cat is a mammal, a dog is a mammal", but you can't say "a cat is closer to a dog than a snake is".
 
-Vector representations solved this problem. Not completely, but they solved the core part.
+Vector representations solved this problem. Not completely, but solved the core of it.
 
 <div class="center">
 
@@ -63,30 +63,30 @@ Vector representations solved this problem. Not completely, but they solved the 
 
 </div>
 
-## III. The Distributional Hypothesis: Meaning Hides in Neighbors
+## 3. The Distributional Hypothesis: Meaning Hides in the Neighbors
 
-The idea of vector representations can be traced back to something linguist J.R. Firth said in 1957:
+The idea behind vector representations goes back to a line the linguist J.R. Firth wrote in 1957:
 
 > "You shall know a word by the company it keeps."
 
-This intuition is called the **Distributional Hypothesis**: the meaning of a word is determined by its contextual distribution within a corpus.
+This intuition is called the **distributional hypothesis**: a word's meaning is determined by the distribution of contexts it appears in.
 
-Words that appear in similar contexts have similar meanings. "Cat" and "dog" both frequently appear in contexts like "I have a \_\_\_ as a pet," "feed it," "it barked/meowed" — so they are semantic neighbors.
+Words that appear in similar contexts mean similar things. "Cat" and "dog" both show up often in contexts like "I keep a \_\_\_", "feed it", "it meowed" — so they are semantic neighbors.
 
-This intuition can be mechanized. You build a matrix where rows are words, columns are context words (or documents), and each cell records the co-occurrence count (or its transform). Then, each row is a vector representation of that word. Words with similar meanings have corresponding vectors that are close to each other in high-dimensional space.
+The intuition can be mechanized. Build a matrix: rows are words, columns are context words (or documents), and each cell records how often the two co-occur (or some transformation of that count). Then each row is a vector representation of a word. Words with similar meanings end up close to each other in high-dimensional space.
 
-This is the original version of vector representations, called **Distributional Semantic Models** (DSM), which have existed since the 1990s. It works, but has two problems: the dimensionality is too high (potentially hundreds of thousands of dimensions), and the vectors are very sparse (most cells are zero).
+That's the original version of vector representations, called **distributional semantic models** (DSMs), around since the 1990s. It works, but it has two problems: the dimension is too high (up to hundreds of thousands), and the vectors are extremely sparse (most cells are zero).
 
-:::details Distributional Semantic Models (DSM): Word meaning hides in the co-occurrence matrix
-**Distributional Semantic Models** are a class of methods that represent word meaning as vectors. The core idea is: build a large "word × context" table, record which words each word frequently co-occurs with, and then treat each row of this table as the vector for that word.
+:::details Distributional semantic models (DSM): Word meanings hidden in a co-occurrence matrix
+A **distributional semantic model** is a family of methods that represent word meanings as vectors. The core idea: build a big "word × context" table recording which words appear together with which, then treat each row of the table as that word's vector.
 
 - **High-dimensional**: if the corpus has 100,000 different words, the matrix has 100,000 columns, and each word's vector is 100,000-dimensional — very long
-- **Sparse**: most word pairs rarely or never co-occur, so most of the matrix is zeros, making storage extremely wasteful
+- **Sparse**: most word pairs rarely or never co-occur, so most of the matrix is 0 — extremely wasteful to store
 
-Word2Vec (Mikolov 2013) solved this problem: instead of directly building the matrix, it trains a neural network to **implicitly** compress this co-occurrence information into 100-300-dimensional dense vectors.
+Word2Vec (Mikolov 2013) solved this: instead of building the matrix directly, it trains a neural network to **implicitly** compress that co-occurrence information into dense 100–300 dimensional vectors.
 :::
 
-Mikolov's 2013 paper did something more radical.
+Mikolov's 2013 paper went further.
 
 <div class="center">
 
@@ -94,32 +94,32 @@ Mikolov's 2013 paper did something more radical.
 
 </div>
 
-## IV. Word2Vec: Compressing Semantics Through Prediction
+## 4. Word2Vec: Compression Through Prediction
 
-Word2Vec does not build a co-occurrence matrix. It trains a neural network with the task: **given a word, predict its context words** (Skip-gram), or **given context words, predict the center word** (CBOW).
+Word2Vec doesn't build a co-occurrence matrix. It trains a neural network with one job: **given a word, predict its context words** (Skip-gram), or **given the context words, predict the center word** (CBOW).
 
 :::details Skip-gram and CBOW: The two training modes of Word2Vec
-Word2Vec has two variants, differing in the direction of the prediction task:
+Word2Vec has two variants, which differ only in the direction of the prediction task:
 
-- **Skip-gram**: input the center word, predict the surrounding words. For example, in the sentence "I like to eat apples," input "eat," predict "like" and "apples." Better for small datasets, handles low-frequency words better.
-- **CBOW (Continuous Bag of Words)**: input the surrounding words, predict the center word. Input "like" and "apples," predict "eat." Faster training, better for large datasets.
+- **Skip-gram**: feed in the center word, predict the words around it. Example: in the sentence "I like eating apples", feed in "eat" and predict "like" and "apples". Works well on small datasets and does better on rare words.
+- **CBOW (Continuous Bag of Words)**: feed in the surrounding words, predict the center word. Feed in "like" and "apples", predict "eat". Trains faster and suits large datasets.
 
-Both approaches are just **means**; the real goal is to learn the word vector representations (embeddings). After training is complete, the prediction head is discarded, and only the word embedding matrix is kept.
+Both are just means to an end; the real goal is the word vectors (embeddings). After training, the prediction head is thrown away and only the embedding matrix is kept.
 :::
 
-This sounds mundane. But the byproduct is the point.
+It sounds ordinary. But the by-product is the point.
 
-When you train this network, you map each word to a low-dimensional vector (typically 100 to 300 dimensions). For the prediction task to be done well, these vectors must encode something essential about the words — because only by understanding the relationships between words can you accurately predict which words will co-occur.
+While you train this network, every word gets mapped to a low-dimensional vector (usually 100 to 300 dimensions). For the prediction task to do well, those vectors have to encode something essential about each word — because only by understanding the relationships between words can you predict which words will co-occur.
 
-After the network training is complete, you throw away the prediction head and keep only the word embedding matrix. These are your word vectors.
+Once training is done, you throw away the prediction head and keep only the embedding matrix. That's your word vectors.
 
-There is something profound here worth pausing to think about:
+There is something deep here worth stopping on:
 
-**You didn't teach the network the relationship between "king" and "queen." You didn't tell it any semantic rules. You just let it predict text sequences. Then, after it learned to predict, you discovered that relationships like "king - man + woman ≈ queen" spontaneously emerged.**
+**You never taught the network the relationship between "king" and "queen". You gave it no semantic rules. You just made it predict text sequences. And then, once it had learned to predict, you discovered that relationships like "king − man + woman ≈ queen" had emerged on their own.**
 
-Why does this happen? Because in natural language, the places where "king" appears are also where "queen" appears in some parallel way — just in the corresponding feminine contexts. For the network to predict accurately, it must encode this parallel relationship into the vectors. "Royalty" is one contextual axis; "gender" is another contextual axis. These two axes correspond to two directions in the vector space. Subtracting the vector for "man" and adding the vector for "woman" is performing a shift along the gender axis.
+Why? Because in natural language, wherever "king" shows up, "queen" shows up in a parallel way — just in the corresponding feminine contexts. To predict accurately, the network must encode that parallelism into the vectors. "Royalty" is one axis of context; "gender" is another. Those two axes correspond to two directions in vector space. Subtracting the "man" vector and adding the "woman" vector is a shift along the gender axis.
 
-Semantics emerged from distribution.
+Meaning emerged from the distribution.
 
 <div class="center">
 
@@ -127,25 +127,23 @@ Semantics emerged from distribution.
 
 </div>
 
-## V. Shallow Logic in Geometry
+## 5. The Shallow Logic in Geometry
 
-Let us look more closely at this analogy equation.
+Let's look at the analogy equation more carefully.
 
 $$
 \vec{A} - \vec{B} + \vec{C} \approx \vec{D}
 $$
 
-King - Man + Woman ≈ Queen
-Paris - France + Japan ≈ Tokyo
-Walk - Walked + Swam ≈ Swim (past tense relationships are also encoded)
+king − man + woman ≈ queen, paris − france + japan ≈ tokyo, walk − walked + swim ≈ swam (the past-tense relationship is encoded too).
 
-Every analogy corresponds to a **translation** in the vector space. The difference between "man->king" and "woman->queen" is a fixed vector direction, representing "movement along the gender dimension."
+Each analogy corresponds to a **translation** in vector space. The shift from "man" to "woman" and the shift from "king" to "queen" are one and the same vector direction — a movement along the gender dimension.
 
-This is a very clean geometric structure. Semantic relationships become directions.
+That's a very clean geometric structure. Semantic relationships become directions.
 
 ![image](/figures/ch03_fig4_similarity_heatmap.png)
 
-*Figure 4: Pairwise cosine similarity matrix for 12 words. Green = high similarity, red = low/negative similarity. White lines demarcate the boundaries of four semantic clusters (royalty, gender, profession, animal). Observe: intra-cluster similarity is significantly higher than cross-cluster; the animal cluster has almost no overlap with the other three clusters. This is exactly the visual proof that "semantically similar words are neighbors in the vector space."*
+*Figure 4: Pairwise cosine similarity matrix for 12 words. Green = high similarity, red = low/negative similarity. The white lines mark the boundaries of four semantic clusters (royalty, gender, occupation, animal). Observation: similarities within the same cluster are far higher than across clusters; the animal cluster barely overlaps the other three. That is precisely a visual proof that "semantically similar words sit next to each other in vector space".*
 
 <div class="center">
 
@@ -153,27 +151,21 @@ This is a very clean geometric structure. Semantic relationships become directio
 
 </div>
 
-<div class="center">
+## 6. The Bias in Vectors: The Corpus Is the Worldview
 
-------------------------------------------------------------------------
+What Word2Vec learns is not the truth about language, but the statistics of a corpus. And a corpus is written by people — it carries human bias, historical bias, cultural bias.
 
-</div>
+This is not a fringe problem. It is the core cost of the distributional hypothesis.
 
-## VI. The Bias of Vectors: Corpus as Worldview
+**The Bolukbasi et al. (2016) experiment**
 
-What Word2Vec learns is not the truth of language, but the statistical regularities of the corpus. And the corpus is a product of human writing — it carries human biases, historical biases, cultural biases.
-
-This is not a marginal problem; it is the core cost of the Distributional Hypothesis.
-
-**The Experiment of Bolukbasi et al. (2016)**
-
-They found that in Word2Vec trained on Google News:
+They found that in the Word2Vec trained on Google News:
 
 $$
 \vec{\text{man}} - \vec{\text{woman}} \approx \vec{\text{doctor}} - \vec{\text{nurse}}
 $$
 
-"Man is to doctor as woman is to nurse" — this analogy holds in the vector space because it holds statistically in the training corpus.
+"Man is to doctor as woman is to nurse" — this analogy holds in vector space because it statistically holds in the training corpus.
 
 A more direct test:
 
@@ -181,32 +173,37 @@ $$
 \vec{\text{father}} - \vec{\text{mother}} + \vec{\text{programmer}} \approx \vec{\text{homemaker}}
 $$
 
-Not "female programmer," but "homemaker."
+Not "female programmer" — "homemaker".
 
-This is not a bug in the algorithm; this is the algorithm correctly learning the statistical regularities in the corpus. The bug is: **we mistook statistical regularities for semantic truth**.
+That's not a bug in the algorithm. The algorithm correctly learned the statistics of the corpus. The bug is ours: **we mistake statistical regularities for semantic truth**.
 
-**Where does the bias come from?**
+**Where do the biases come from?**
 
-The Distributional Hypothesis says: a word's meaning hides in its neighbors. But if the neighbors' distribution itself is biased —
+The distributional hypothesis says a word's meaning hides in its neighbors. But if the neighbors' distribution is itself biased —
 
-- In news reports, the neighbor words of "CEO" are more often "his decision" rather than "her decision"
+- In news articles, the neighbors of "CEO" are more often "his decision" than "her decision"
 - In historical texts, "scientist" co-occurs more often with male names
-- In novels, the gender distribution of emotion words is uneven
+- In novels, emotion words are distributed unevenly across genders
 
-Word2Vec faithfully learns these regularities. It is a mirror, reflecting the corpus, not the world.
+Word2Vec faithfully learned all of these. It is a mirror — it reflects the corpus, not the world.
 
-**This reveals a fundamental limitation of the Distributional Hypothesis**:
+This exposes a fundamental limit of the distributional hypothesis:
 
-What vector space learns are **descriptive** statistical regularities, but reasoning requires **normative** truth values. "In the corpus, X and Y frequently co-occur" does not equal "X and Y have a causal relationship in the world," nor does it equal "this co-occurrence is correct."
+Vector spaces learn **descriptive** statistical regularities, while reasoning needs **normative** truth. "'X and Y often co-occur in the corpus' does not equal 'X and Y are causally related in the world'", and it doesn't equal "this co-occurrence is right".
 
-You can apply debiasing to word vectors (Bolukbasi's paper proposed a linear projection method), but this is treating the symptom rather than the cause. The fundamental problem is: **starting from statistical correlation, you cannot reach semantic truth**.
+You can debias word vectors (Bolukbasi's paper proposes a linear projection method), but that's a band-aid — it treats the symptom, not the cause. The root problem: **starting from statistical correlation, you can never reach semantic truth**.
 
-This limitation still exists in the era of Transformers and large language models. Larger corpora, larger biases, broader coverage — but the underlying logic of the Distributional Hypothesis hasn't changed.
+This limit still exists in the Transformer and large language model (LLM) era — a large language model is a model trained on vast amounts of text to predict the next word. Bigger corpora, bigger and wider biases — but the underlying logic of the distributional hypothesis hasn't changed.
 
+<div class="center">
 
-## VII. The Illusion of Analogy
+------------------------------------------------------------------------
 
-Let me return to that equation:
+</div>
+
+## 7. The Illusion of Analogies
+
+Let me come back to that equation:
 
 $$
 \vec{\text{King}} - \vec{\text{Man}} + \vec{\text{Woman}} \approx \vec{\text{Queen}}
@@ -214,41 +211,41 @@ $$
 
 Is this really reasoning?
 
-Let's take it apart and think.
+Let's take it apart.
 
-For this equation to hold, it means that in the word vector space, the vector difference between "king" and "man" is approximately equal to the vector difference between "queen" and "woman."
+For the equation to hold, the difference between the "king" and "man" vectors must be approximately the same as the difference between the "queen" and "woman" vectors.
 
 $$
 \vec{\text{King}} - \vec{\text{Man}} \approx \vec{\text{Queen}} - \vec{\text{Woman}}
 $$
 
-What is this? It is a statement about the **consistency of vector offset directions**. It is geometric regularity, not logical reasoning.
+What is that? It's a statement about **matching shift directions**. A geometric regularity — not logical reasoning.
 
 ![image](/figures/ch03_fig2_analogy_arithmetic.png)
 
-*Figure 2: Geometric visualization of vector analogy. Four words form an approximate parallelogram in PCA 2D space — man->king and woman->queen are two approximately parallel sides, and man->woman and king->queen are another pair of approximately parallel sides. This is what "the gender shift vector remains consistent across royalty word pairs" means. The cosine similarity of King − Man + Woman to Queen approaches 0.995.*
+*Figure 2: A geometric view of the vector analogy. The four words form an approximate parallelogram in 2D PCA space — man→king and woman→queen are two nearly parallel edges, while man→woman and king→queen are another such pair. That's what "the gender shift vector stays consistent across the royal word pair" means. The cosine similarity of King − Man + Woman comes out near 0.995.*
 
-In logic, reasoning requires **rules + facts -> conclusion**. "All kings are men" plus "Elizabeth is a queen" leads to "Elizabeth is not a king" — this is reasoning, because there is transitivity, variable binding, quantifiers.
+In logic, reasoning needs **rule + facts → conclusion**. "All kings are men" plus "Elizabeth is a queen" gives you "Elizabeth is not a king" — that is reasoning, because there is transitivity, variable binding, and quantifiers in play.
 
-Vector arithmetic has none of these. It is merely saying: the relative positions of these words in the semantic space exhibit some kind of parallel structure.
+Vector arithmetic has none of that. It only says: these words' relative positions in semantic space display some parallel structure.
 
-More importantly, this equation **does not hold** in many cases.
+More importantly, this equation fails in plenty of cases.
 
-Fournier et al. (2020) systematically analyzed the limitations of analogy tests and found: the so-called "analogy equations" heavily depend on a convenient evaluation trick — excluding the input words themselves from the answers, when the nearest neighbor is often one of the input words. After changing the evaluation method, the statistical results of much "analogy ability" dropped significantly `-> [Fournier et al., 2020, arXiv:2010.03446]`.
+Fournier et al. (2020) systematically analyzed the limits of analogy tests and found that the celebrated "analogy equations" lean heavily on a convenient evaluation scheme — the input words themselves are excluded from the candidate answers, while the nearest neighbor is often one of the input words. After changing the evaluation, a large number of reported "analogy capabilities" drop significantly `-> [Fournier et al., 2020, arXiv:2010.03446]`.
 
 There is an even more direct example. Try this analogy:
 
-    Doctor - Man + Woman ≈ ?
+    doctor - man + woman ≈ ?
 
-On certain training corpora, what you get is not "female doctor," but "nurse."
+On some training corpora, what you get is not "female doctor", but "nurse".
 
-Because in those corpora, "doctor" co-occurs more frequently with male contexts, and "nurse" co-occurs more frequently with female contexts. What the model learned is not the neutral meaning of the profession "doctor," but its **statistical bias** in the specific corpus.
+Because in those corpora, "doctor" co-occurs more often with masculine contexts, and "nurse" more often with feminine ones. What the model learned is not the neutral meaning of the profession "doctor", but its **statistical bias** in that particular corpus.
 
-Vector representations do not capture truth. They capture the statistical distribution of the corpus. If the corpus has bias, the vectors have bias. This is not a bug; it is how it works.
+Vector representations don't capture truth. They capture the statistical distribution of a corpus. If the corpus has biases, the vectors have biases. This is not a bug — it's how the thing works.
 
 ![image](/figures/ch03_fig3_analogy_bias.png)
 
-*Figure 3: Left panel, the royalty analogy succeeds — the result vector of King − Man + Woman is highly close to Queen (cosine ≈ 0.995), with a clear parallelogram structure. Right panel, the profession analogy fails — Doctor − Man + Woman does not point to "female doctor" but to Nurse (cosine ≈ 0.865). This is because in the training corpus, Doctor is biased toward male contexts, and Nurse toward female contexts. Same arithmetic, different bias outcomes.*
+*Figure 3: Left, the royal analogy succeeds — the result vector of King − Man + Woman lands very close to Queen (cosine ≈ 0.995), with a clean parallelogram structure. Right, the occupational analogy fails — Doctor − Man + Woman points not to "female doctor" but to Nurse (cosine ≈ 0.865). The reason: in the training corpus, Doctor leans toward masculine contexts and Nurse toward feminine ones. Same arithmetic, different biased outcomes.*
 
 <div class="center">
 
@@ -256,25 +253,25 @@ Vector representations do not capture truth. They capture the statistical distri
 
 </div>
 
-## VIII. The Upper Bound of the Distributional Hypothesis
+## 8. The Limit of the Distributional Hypothesis
 
-Let us think more deeply about where the boundary of the Distributional Hypothesis lies.
+Let's think harder about where the boundary of the distributional hypothesis lies.
 
-The Distributional Hypothesis says: meaning is determined by contextual distribution. This is correct in many cases. But it implies: **if two words have exactly the same contextual distribution in text, the model will consider them to have the same meaning.**
+The hypothesis says meaning is determined by contextual distribution. In most cases that's true. But it implies: **if two words have exactly the same contextual distribution in a text, the model will treat them as having the same meaning**.
 
-"I like cats" and "I like dogs" — these two sentences are structurally completely symmetric, so "cat" and "dog" are highly similar in distribution. Indeed, they are semantically close; the model is right.
+"I like cats" and "I like dogs" — these two sentences are perfectly symmetric, so "cat" and "dog" look highly similar in distribution. And yes, they are semantically close; the model is right.
 
 But:
 
-"The Earth revolves around the Sun" and "The Sun revolves around the Earth"
+"The earth orbits the sun" and "the sun orbits the earth"
 
-For these two sentences, if you only look at word distribution, "Earth" and "Sun" will appear in very similar contexts — they frequently appear in sentences about astronomy, gravity, and revolution. But of these two sentences, one is true and one is false.
+If you look only at word distributions, "earth" and "sun" appear in very similar contexts — they both occur often in sentences about astronomy, gravity, and orbital motion. Yet of these two sentences, one is true and one is false.
 
-Distributional semantic models have no concept of **truth value**. They don't know which propositions are true and which are false. What they know is which words appear in which contexts — this is a statistical regularity, not a causal model of the world.
+Distributional semantic models have no concept of **truth value**. They don't know which propositions are true and which are false. What they know is which words appear in which contexts — a statistical regularity, not a causal model of the world.
 
-This is why vector representations, despite performing well on many tasks, have not solved the reasoning problem. What they solved is the **representation** problem: using a richer, more continuous way to represent concepts, so that similar concepts are geometrically close. But "close" does not equal "logically related," and "statistical co-occurrence" does not equal "causal correlation."
+This is why vector representations, though they perform well on many tasks, haven't solved reasoning. They solve the **representation** problem: representing concepts in a richer, more continuous way so that similar concepts sit close geometrically. But "close" is not "logically related", and "statistical co-occurrence" is not "causal correlation".
 
-Wittgenstein said something that resonates here: **the meaning of language is its use**. The Distributional Hypothesis captures part of this intuition — a word's meaning is indeed embodied in its use. But use is statistical, and is understanding also statistical? This is an unresolved question.
+Wittgenstein once said something that fits remarkably well here: **the meaning of language is its use**. The distributional hypothesis captures part of that intuition — a word's meaning does show up in its use. But use is statistical. Is understanding also statistical? That is an open question.
 
 <div class="center">
 
@@ -282,56 +279,32 @@ Wittgenstein said something that resonates here: **the meaning of language is it
 
 </div>
 
-## IX. From Word Vectors to Sentences: The Accumulation of Cost
+## 9. From Word Vectors to Sentences: The Costs Mount Up
 
-Word2Vec produces **static word vectors** — each word corresponds to a fixed vector, regardless of what context it appears in.
+Word2Vec gives you **static word vectors** — one fixed vector per word, no matter what context it appears in.
 
-The word "bank," in "I went to the bank to withdraw money" and "wildflowers grew on the river bank," has the same static word vector. This is one of its fundamental limitations.
+The word "bank" gets the same static vector in "I went to the bank to withdraw money" and in "wildflowers grew all over the river bank". That is one of its core limitations.
 
-ELMo (2018) and later BERT (2018) introduced **contextualized word vectors** — the same word has different vector representations in different contexts. This is a major advance. But it brings another cost: you no longer have a concise, offline-lookup word vector; you need to run the entire network every time.
+ELMo (2018) and later BERT (2018) introduced **contextualized word vectors** — the same word gets different vectors in different contexts. A major step forward. But it brought another cost: you no longer have a tidy, offline, look-up table of word vectors; you must run the whole network every time.
 
 :::details ELMo and BERT: What are contextualized word vectors?
-**Static word vectors** (like Word2Vec): each word has only one vector, regardless of where it appears. "Apple" whether referring to the fruit or the company, the vector is the same.
+**Static word vectors** (like Word2Vec): one vector per word, wherever it appears. Whether "apple" means the fruit or Apple the company, the vector is the same.
 
-**Contextualized word vectors** (ELMo, BERT): the same word has different vectors in different sentences, because the entire sentence is fed into the network, and the word's representation is influenced by context.
+**Contextualized word vectors** (ELMo, BERT): the same word gets a different vector in different sentences, because the whole sentence goes into the network, and each word's representation is shaped by its context.
 
-- **ELMo** (2018, Allen AI): uses bidirectional LSTM to generate context-sensitive word vectors, used as features for downstream tasks
-- **BERT** (2018, Google): uses Transformer Encoder for bidirectional language model pre-training, fine-tuned to downstream tasks
+- **ELMo** (2018, Allen AI): uses a bidirectional LSTM to produce context-sensitive word vectors, serving them as features to downstream tasks
+- **BERT** (2018, Google): pretrains a bidirectional language model with a Transformer Encoder, then fine-tunes it on downstream tasks
 
-Cost: you can no longer look up a table; every inference requires running the full network, significantly increasing computation. This is the eternal trade-off between precision and efficiency.
+The cost: no more look-up; every inference must run the entire network, greatly increasing the compute. That's the eternal trade-off between accuracy and efficiency.
 :::
 
-A more fundamental problem is: **the meaning of a sentence is not equal to the simple combination of word vectors.**
+The deeper problem: **the meaning of a sentence is not the simple combination of its word vectors**.
 
-"Cat bites dog" and "Dog bites cat" — if you average the word vectors, you get almost the same sentence vector — because the same three words are used. But these two sentences describe completely opposite events.
+"Cat bites dog" and "dog bites cat" — average the word vectors, and you get almost identical sentence vectors, because the same three words were used. But these sentences describe opposite events.
 
-Word meanings can be encoded by vectors, but sentence meaning depends on **structure** — who is the subject, who is the object, the argument relations of the verb. Pure vector operations do not capture structure.
+Word meanings can be encoded in vectors, but sentence meaning depends on **structure** — who is the subject, who is the object, and the argument roles of the verb. Pure vector arithmetic captures none of that structure.
 
-This problem drove the invention of the Transformer — using attention mechanisms to dynamically process relationships between words, rather than simply stacking them. But that is the story of Chapter 9.
-
-<div class="center">
-
-------------------------------------------------------------------------
-
-</div>
-
-## X. A Small Pause
-
-Let me sort things out.
-
-From symbols to vectors — this is a genuine paradigm shift. It solved a core problem of symbolic AI: **the representation of semantics**. Concepts are no longer meaningless atoms; they have positions, distances, and directions in the vector space. Similar concepts are close to each other; relationships are encoded as directional offsets.
-
-This brought real capabilities: semantic retrieval, analogical reasoning (of a certain form), semantic clustering, the foundation of transfer learning.
-
-But it did not solve the reasoning problem, for three reasons:
-
-First, **it captures statistical regularities, not causal structure**. If the corpus has bias, the vectors have bias. If the corpus has correlations, the vectors have correlations. But correlation is not causation; distribution is not truth.
-
-Second, **it lacks compositionality**. Simple linear combinations of word vectors cannot capture the structural semantics of sentences. "Cat bites dog" and "Dog bites cat" are identical to a bag-of-words model — this is a fundamental defect.
-
-Third, **analogy equations look like reasoning, but are not reasoning**. They are geometric parallel structures, not logical transitive derivations. When they fail (such as analogies with social biases), they silently give wrong answers, without any warning.
-
-Vector representation is one of the prerequisites for reasoning, but it is not reasoning itself.
+This problem pushed toward the invention of the Transformer — using attention to dynamically handle word-to-word relations rather than simply stacking them. But that's the story of Chapter 9.
 
 <div class="center">
 
@@ -339,41 +312,46 @@ Vector representation is one of the prerequisites for reasoning, but it is not r
 
 </div>
 
-## XI. And One Deeper Problem
+## 10. A Small Pause
 
-The deep presupposition of the Distributional Hypothesis is: **language can carry meaning**, and meaning can be extracted from patterns of language use.
+Let me take stock.
 
-This is a presupposition that can be questioned.
+From symbols to vectors: a genuine paradigm shift. It solved one of symbolic AI's core problems: **the representation of meaning**. Concepts are no longer meaningless atoms; they now have positions, distances, and directions in vector space. Similar concepts draw close, and relationships are encoded as directional shifts.
 
-John Searle's Chinese Room thought experiment (1980) is the most famous attack in this direction. Imagine: a person who does not understand Chinese at all is locked in a room, holding a thick rule book that tells him what Chinese character symbols to output given what Chinese character symbols he sees. From the outside, he appears to understand Chinese, able to answer Chinese questions — but he completely does not know the meaning of those symbols; he is merely mechanically executing rules.
+That delivered real capabilities: semantic search, analogy reasoning (of a sort), semantic clustering, and the foundation for transfer learning.
+
+But it did not solve reasoning — for three reasons:
+
+First, **it captures statistical regularities, not causal structure**. The corpus has biases, so the vectors have biases. The corpus has correlations, so the vectors have correlations. But correlation is not causality, and distribution is not truth.
+
+Second, **it has no compositionality**. Simple linear combinations of word vectors cannot capture the structural meaning of a sentence. "Cat bites dog" and "dog bites cat" are identical under a bag-of-words view — a fundamental flaw.
+
+Third, **the analogy equation looks like reasoning, but it is not**. It's a parallel structure in geometry, not a transitive derivation in logic. When it breaks down (say, with socially biased analogies), it quietly hands you a wrong answer, with no warning at all.
+
+Vector representation is one prerequisite for reasoning — but it is not reasoning itself.
+
+<div class="center">
+
+------------------------------------------------------------------------
+
+</div>
+
+## 11. One Deeper Question Still
+
+The deep assumption behind the distributional hypothesis is: **language can carry meaning, and that meaning can be extracted from patterns of language use**.
+
+That's an assumption worth questioning.
+
+John Searle's Chinese Room thought experiment (1980) is the most famous attack in this direction. Picture a person who knows no Chinese shut in a room with a thick rule book: for every Chinese symbol that comes in, it tells him which Chinese symbol to send out. From the outside, he seems to understand Chinese and can answer questions in Chinese — but he has no idea what any of the symbols mean. He is just mechanically executing rules.
 
 :::info
-**Professor Pallas's Cat's Comment**  
-This thought experiment is like a mirror, reflecting the awkward truth of symbolic manipulation: you can perfectly imitate understanding while understanding nothing at all. What word vector models do is, in a certain sense, very much like this Chinese Room — they extract extremely fine-grained statistical patterns from vast amounts of text, and these patterns produce correct behavior on many tasks. But do they "understand" the meaning of those words? This question has no simple answer, because we first need to define what "understanding" means.
+**Professor Pallas says**
+This thought experiment is a mirror showing the awkward truth about symbol manipulation: you can imitate understanding perfectly while understanding nothing. What word-vector models do is, in a sense, very much like this Chinese Room — they extract extremely fine-grained statistical patterns from vast text, and those patterns produce correct behavior on many tasks. But do they "understand" the meanings of the words? There is no simple answer, because first we would have to define what "understanding" means.
 :::
 
-But there is a more practical test: **distribution shift**. If you put the model outside its training distribution, let it handle combinations never seen in the training corpus, what will its behavior be? If its performance collapses, you have reason to suspect that it merely memorized the distribution, rather than truly understanding language.
+But there is a more practical test: **distribution shift**. Put the model outside its training distribution and make it handle combinations never seen in the training corpus — what happens? If its performance collapses, you have good reason to suspect it only memorized the distribution instead of truly understanding language.
 
-This is the core question of Chapter 5. For now, keep this suspense in mind.
-
-<div class="center">
-
-------------------------------------------------------------------------
-
-</div>
-
-
-> Vectors capture similarity, but not causality. In the next chapter, we will enter the geometry of high-dimensional spaces — the manifold hypothesis reveals why data is not randomly distributed.
-
-## Unresolved
-
-- Is the analogy equation `vec(King) - vec(Man) + vec(Woman) ≈ vec(Queen)` evidence of reasoning, or a statistical coincidence? It holds for some analogies and fails for others — what does this inconsistency tell us?
-
-- Where is the boundary of the Distributional Hypothesis? Are there meanings that cannot be learned from text distribution? Color? Pain? Bodily sensation?
-
-- Word vectors capture social biases — is this their defect, or their function? Do debiased word vectors also lose some real structure of the world?
-
-- If you train word2vec on purely random noise text, what would you get? What does this thought experiment illustrate?
+That is the core question of Chapter 5. For now, just hold onto the cliffhanger.
 
 <div class="center">
 
@@ -381,11 +359,18 @@ This is the core question of Chapter 5. For now, keep this suspense in mind.
 
 </div>
 
-## Hands-On: Using Vector Arithmetic to Puncture the Illusion of Analogy
 
-This chapter said an important thing: analogy equations look like reasoning, but they are only geometric parallel structures. You need to personally verify this distinction — not just understand it intellectually, but feel the moment it collapses.
+> Vectors capture similarity, but not causality. In the next chapter, we enter the geometry of high-dimensional space — the manifold hypothesis reveals why data is not randomly distributed.
 
-You need access to a pre-trained word vector model. The simplest option: use Python's `gensim` library to load the word2vec model released by Google, or use `fasttext` pre-trained vectors.
+## Open Questions
+
+- Is the analogy equation `vec(King) - vec(Man) + vec(Woman) ≈ vec(Queen)` evidence of reasoning, or a statistical coincidence? It succeeds for some analogies and fails for others — what does that inconsistency tell us?
+
+- Where is the boundary of the distributional hypothesis? Are there meanings that could never be learned from textual distributions? Color? Pain? Bodily sensation?
+
+- Word vectors capture social bias — is that a defect, or a feature? If you delete the bias from word vectors, do you also destroy some real structure of the world?
+
+- What would you get if you trained word2vec on pure noise text? What does this thought experiment reveal?
 
 <div class="center">
 
@@ -393,7 +378,19 @@ You need access to a pre-trained word vector model. The simplest option: use Pyt
 
 </div>
 
-### Step 1: Verify That Famous Equation
+## Try It Yourself: Pierce the Illusion of Analogies with Vector Arithmetic
+
+This chapter made a big claim: the analogy equation looks like reasoning, but it's only a parallel geometric structure. You need to verify this distinction with your own hands — not to read it, but to feel the moment it collapses.
+
+You need access to a pretrained word-vector model. The simplest option: load Google's publicly released word2vec model with Python's `gensim` library, or use `fasttext`'s pretrained vectors.
+
+<div class="center">
+
+------------------------------------------------------------------------
+
+</div>
+
+### Step 1: Verify the Famous Equation
 
 Start with the most classic analogy:
 
@@ -401,32 +398,32 @@ $$
 \vec{\text{King}} - \vec{\text{Man}} + \vec{\text{Woman}} \approx ?
 $$
 
-Implement using the logic given in Section V of this chapter:
+Implement the logic from Section 5:
 
 ```python
 import numpy as np
 
-# Assume model is an already-loaded gensim KeyedVectors object
-# Example loading method:
+# Assume model is a loaded gensim KeyedVectors object
+# Example of loading it:
 #   from gensim.models import KeyedVectors
 #   model = KeyedVectors.load_word2vec_format('GoogleNews-vectors-negative300.bin', binary=True)
 
 def analogy_query(model, positive_word, minus_word, plus_word, topn=5):
     """
-    Perform vector analogy query: vec(positive_word) - vec(minus_word) + vec(plus_word)
-    model: gensim KeyedVectors object
-    Returns: list of nearest neighbor words and their cosine similarity scores
+    Perform a vector analogy query: vec(positive_word) - vec(minus_word) + vec(plus_word)
+    model: a gensim KeyedVectors object
+    Returns: a list of nearest neighbor words with their cosine similarity scores
     """
     # Compute the target vector: vec("king") - vec("man") + vec("woman")
     target_vector = (model[positive_word]
                      - model[minus_word]
                      + model[plus_word])
 
-    # Find words in the vocabulary with highest cosine similarity to the target vector
-    # gensim's similar_by_vector automatically excludes input words (controlled via negative parameter)
+    # Find the words in the vocabulary with the highest cosine similarity to the target vector
+    # gensim's similar_by_vector can automatically exclude the input words (via the negative parameter)
     results = model.similar_by_vector(
         target_vector,
-        topn=topn + 3  # take a few extra, to manually filter out input words
+        topn=topn + 3  # fetch a few extra, so the input words can be filtered out manually
     )
 
     # Exclude positive_word, minus_word, plus_word themselves
@@ -441,36 +438,14 @@ def analogy_query(model, positive_word, minus_word, plus_word, topn=5):
 results = analogy_query(model, "king", "man", "woman")
 
 print("Analogy query: king - man + woman ≈ ?")
-print("─" * 35)
+print("-" * 35)
 for rank, (word, score) in enumerate(results, 1):
     print(f"  Rank {rank}: {word:15s}  cosine similarity = {score:.4f}")
 ```
 
-You should get "queen," with cosine similarity close to 0.7 to 0.9.
+You should get "queen", with a cosine similarity near 0.7 to 0.9.
 
-**Your first question:** Does this result surprise you? Record your intuition: does this look "like reasoning" or "like arithmetic"? Before you answer, don't read ahead.
-
-<div class="center">
-
-------------------------------------------------------------------------
-
-</div>
-
-### Step 2: Systematically Verify, Then Find Counterexamples
-
-From the following four categories of analogy, pick 3 pairs from each and test sequentially:
-
-**Category 1: Gender analogies** - man -> woman analogy applied to: king, doctor, professor, nurse, engineer…
-
-**Category 2: Capital relations** - France -> Paris, analogy applied to: China, Japan, Germany, United States…
-
-**Category 3: Tense transformations** - go -> went analogy applied to: run, swim, eat, think…
-
-**Category 4: Antonyms** - good -> bad analogy applied to: big, hot, fast, happy…
-
-For each test case, record: - What the expected answer is - What the actual top 5 nearest neighbors are - What the cosine similarity is
-
-**Your second question:** Which category of analogy has the highest success rate? Which is the lowest? Can you speculate why — is it a problem with the training corpus, or is this kind of relationship fundamentally unsuitable for encoding via linear offsets?
+**Your first question:** Does this result surprise you? Write down your intuition before continuing: does this look "like reasoning" or "like arithmetic"? Don't read past this point until you've answered.
 
 <div class="center">
 
@@ -478,17 +453,21 @@ For each test case, record: - What the expected answer is - What the actual top 
 
 </div>
 
-### Step 3: Personally Reproduce the Occupational Bias Experiment
+### Step 2: Test Systematically, Then Look for Counterexamples
 
-Test the failure case described in Section VII of this chapter:
+Pick 3 pairs from each of the four categories below and test them in turn:
 
-    Doctor - Man + Woman ≈ ?
+**Category 1: gender** - the man -> woman analogy applied to: king, doctor, professor, nurse, engineer……
 
-Then extend the test: - Engineer - Man + Woman ≈ ? - Nurse - Woman + Man ≈ ? - CEO - Man + Woman ≈ ? - Janitor - Woman + Man ≈ ?
+**Category 2: capitals** - france -> paris applied to: china, japan, germany, usa……
 
-Record each result.
+**Category 3: tense** - the go -> went analogy applied to: run, swim, eat, think……
 
-**Your third question:** For word pairs where the output results show clear bias, what is your explanation? Are these biases bugs in the word vector system, or faithful reflections of the true statistical structure of the training corpus? If the latter, what does "debiasing" mean?
+**Category 4: antonyms** - the good -> bad analogy applied to: big, hot, fast, happy……
+
+For each test case, record: - what you expected - the top 5 nearest neighbors actually returned - the cosine similarity scores
+
+**Your second question:** Which category has the highest success rate? Which the lowest? Can you guess why — is it a problem with the training corpus, or is this kind of relationship not suited to being encoded as a linear shift in the first place?
 
 <div class="center">
 
@@ -496,11 +475,29 @@ Record each result.
 
 </div>
 
-### Step 4: Find the Geometric Conditions for Analogy Equations
+### Step 3: Reproduce the Occupational Bias Experiment Yourself
 
-Do a more precise test: when do analogy equations hold precisely, and when do they fail severely?
+Test the failure case described in Section 7:
 
-Construct the following experiment:
+    doctor - man + woman ≈ ?
+
+Then extend the test: - engineer - man + woman ≈ ? - nurse - woman + man ≈ ? - CEO - man + woman ≈ ? - janitor - woman + man ≈ ?
+
+Record every result.
+
+**Your third question:** For the word pairs whose output is visibly biased, what is your explanation? Are these biases a bug in the word-vector system, or an honest reflection of the true statistical structure of the training corpus? If the latter, what does "debiasing" even mean?
+
+<div class="center">
+
+------------------------------------------------------------------------
+
+</div>
+
+### Step 4: Find the Geometric Conditions of the Analogy Equation
+
+Do a more precise test: when does the analogy equation hold exactly, and when does it fail badly?
+
+Set up the following experiment:
 
 For a set of analogy pairs you choose, compute two quantities:
 
@@ -513,9 +510,9 @@ def cosine_similarity(v1, v2):
 
 def analogy_precision(model, analogies):
     """
-    Batch-measure analogy precision.
-    analogies: list, each item is (A, B, C, D), representing the analogical relationship A:B :: C:D.
-    Returns: detailed measurement results for each analogy.
+    Measure analogy precision in bulk.
+    analogies: a list of (A, B, C, D) tuples, each encoding an analogy of the form A:B :: C:D.
+    Returns: detailed measurements for each analogy.
     """
     results = []
 
@@ -523,41 +520,41 @@ def analogy_precision(model, analogies):
         # Compute the predicted vector: vec(B) - vec(A) + vec(C)
         predicted_vector = model[B] - model[A] + model[C]
 
-        # Get the entire vocabulary sorted by similarity (exclude input words)
+        # Get the whole vocabulary ranked by similarity (input words excluded after filtering)
         exclude = {A.lower(), B.lower(), C.lower()}
         neighbors = model.similar_by_vector(predicted_vector, topn=len(model.key_to_index))
-        # Filter out input words, obtaining a ranked word list
+        # Filter out the input words to get a ranked word list
         filtered_neighbors = [(word, score) for word, score in neighbors
                                if word.lower() not in exclude]
 
-        # Actual nearest neighbor rank: the position of D after sorting the vocabulary by similarity
+        # Actual nearest neighbor rank: the position of D in the similarity ranking
         rank_of_D = None
         for idx, (word, score) in enumerate(filtered_neighbors, 1):
             if word.lower() == D.lower():
                 rank_of_D = idx
                 break
 
-        # Compute offset vector consistency: cosine similarity between vec(B) - vec(A) and vec(D) - vec(C)
-        # This directly measures whether the "relationship direction" between the two word pairs is consistent
+        # Compute offset consistency: the cosine similarity of vec(B) - vec(A) and vec(D) - vec(C)
+        # This directly measures whether the two pairs have the same "relationship direction"
         offset_AB = model[B] - model[A]
         offset_CD = model[D] - model[C]
         offset_consistency = cosine_similarity(offset_AB, offset_CD)
 
         results.append({
             "analogy": f"{A}:{B} :: {C}:{D}",
-            "top1_hit": rank_of_D == 1,           # whether D appears in the top 1 (exact hit)
+            "top1_hit": rank_of_D == 1,           # whether D ranks first (exact hit)
             "top5_hit": rank_of_D is not None and rank_of_D <= 5,  # whether D appears in the top 5
             "rank_of_D": rank_of_D,
-            "offset_consistency": offset_consistency,  # offset vector consistency (geometric-level measurement)
+            "offset_consistency": offset_consistency,  # offset consistency (a geometric measure)
         })
 
     return results
 
 
-# ── Example test ────────────────────────────────────────────────────
+# ── Example test suite ────────────────────────────────────────────────────
 test_analogies = [
-    ("man",    "king",    "woman",  "queen"),    # gender × royalty
-    ("france", "paris",   "japan",  "tokyo"),    # country × capital
+    ("man",    "king",    "woman",  "queen"),    # gender x royalty
+    ("france", "paris",   "japan",  "tokyo"),    # country x capital
     ("go",     "went",    "run",    "ran"),      # verb tense
     ("good",   "bad",     "big",    "small"),    # antonyms
     ("man",    "doctor",  "woman",  "nurse"),    # occupational bias case
@@ -565,8 +562,8 @@ test_analogies = [
 
 precision_results = analogy_precision(model, test_analogies)
 
-print(f"{'Analogy':30s} {'Exact Hit':^8s} {'Top5 Hit':^8s} {'Rank':^6s} {'Offset Consistency':^10s}")
-print("─" * 70)
+print(f"{'Analogy':30s} {'Top-1 hit':^8s} {'Top-5 hit':^8s} {'Rank':^6s} {'Offset consistency':^10s}")
+print("-" * 70)
 for r in precision_results:
     print(f"{r['analogy']:30s} "
           f"{'✓' if r['top1_hit'] else '✗':^8s} "
@@ -575,7 +572,7 @@ for r in precision_results:
           f"{r['offset_consistency']:^10.4f}")
 ```
 
-**Your fourth question (the core question):** When an analogy fails, is the "offset vector consistency" score high or low? That is, does the geometric structure (same offset direction) hold, but the nearest neighbor retrieval fails? If so, is the failure in the geometry, or in the retrieval method? Which argument of Section VII does this illustrate?
+**Your fourth question (the core question):** When an analogy fails, is the "offset consistency" score high or low? That is, does the geometric structure (same shift direction) hold, while the nearest-neighbor retrieval still fails? If so, does the failure lie in the geometry, or in the retrieval method? Which claim from Section 7 does this illustrate?
 
 <div class="center">
 
@@ -583,45 +580,45 @@ for r in precision_results:
 
 </div>
 
-### Step 5: Construct an Example Where Cosine Similarity Lies
+### Step 5: Build an Example Where Cosine Similarity Lies
 
-Cosine similarity measures direction, not magnitude. Find two words whose cosine similarity is high, but your intuition tells you their semantic gap is large — or conversely, cosine similarity is low, but you think they should be semantically close.
+Cosine similarity measures direction, not length. Find two words whose cosine similarity is very high but that you feel are semantically far apart — or the reverse: low cosine similarity, but you feel they should be semantically close.
 
 ```python
 def find_counterintuitive_similarities(model, word, topn=20, low_threshold=0.3):
     """
     For a given word W:
-    1. Find the topn words with highest cosine similarity, look for "counterintuitive" words
-    2. Find words with cosine similarity below low_threshold, check for semantically related but geometrically distant words
-    model: gensim KeyedVectors object
+    1. Find the topn words with the highest cosine similarity, and look for any that feel out of place
+    2. Find words with cosine similarity below low_threshold, and check whether any are semantically related yet geometrically distant
+    model: a gensim KeyedVectors object
     """
     print(f"=== Cosine similarity analysis for word '{word}' ===\n")
 
-    # Find topn words with highest cosine similarity
+    # Find the topn words with the highest cosine similarity
     top_neighbors = model.most_similar(word, topn=topn)
-    print(f"Top {topn} words by cosine similarity (look for words that feel counterintuitive):")
+    print(f"Top {topn} words by cosine similarity (look for any that feel out of place):")
     for w, score in top_neighbors:
         print(f"  {w:20s}  similarity = {score:.4f}")
 
     print()
 
-    # Among words with lower cosine similarity, check for semantically related but geometrically distant words
-    # Method: directly compute similarity for a set of candidate words
+    # Check whether any low-similarity words still seem semantically related to you
+    # Method: compute the similarity directly for a set of candidate words
     candidate_words = ["science", "art", "mathematics", "philosophy",
                        "literature", "music", "history", "biology"]
-    print(f"Cosine similarity of candidate words (similarity below {low_threshold} but you think they are semantically related?):")
+    print(f"Cosine similarity of candidate words (below {low_threshold} but semantically related?):")
     for candidate in candidate_words:
         if candidate in model:
             sim = model.similarity(word, candidate)
-            flag = " ← semantically related but distant?" if sim < low_threshold else ""
+            flag = "  <- semantically related but distant?" if sim < low_threshold else ""
             print(f"  {candidate:20s}  similarity = {sim:.4f}{flag}")
 
 
-# ── Example run ────────────────────────────────────────────────────
+# ── Example run ───────────────────────────────────────────────────────────
 find_counterintuitive_similarities(model, word="physics", topn=20, low_threshold=0.3)
 ```
 
-**Your fifth question:** What type of semantic relationships does cosine similarity fail to capture? How does this connect to Section VIII's "Upper Bound of the Distributional Hypothesis"?
+**Your fifth question:** What type of semantic relationship is cosine similarity failing to capture? How does this connect to Section 8, "The Limit of the Distributional Hypothesis"?
 
 <div class="center">
 
@@ -629,17 +626,17 @@ find_counterintuitive_similarities(model, word="physics", topn=20, low_threshold
 
 </div>
 
-### Verification Criteria
+### Checklist
 
-After completing this exercise, you should have the following three things:
+When you finish this exercise, you should have three things:
 
-1.  A table: all the analogies you tested, successes/failures, and your explanations
+1.  A table: every analogy you tested, success/failure, and your explanation
 
-2.  A bias case: a personally reproduced result that made you uncomfortable, and your position on that result
+2.  A bias case: a result you reproduced yourself that made you uncomfortable, and your position on it
 
-3.  A counterintuitive cosine similarity case: a real crack between vector geometry and linguistic intuition
+3.  A counterintuitive cosine-similarity case: a real gap between vector geometry and linguistic intuition
 
-The third item is the most important. This crack is the distance between vector representation and true reasoning.
+The third one matters most. That gap is the distance between vector representations and true reasoning.
 
 <div class="center">
 
@@ -649,14 +646,14 @@ The third item is the most important. This crack is the distance between vector 
 
 ## Further Reading
 
-- Mikolov et al. (2013). *Efficient Estimation of Word Representations in Vector Space* — the original word2vec paper, CBOW and Skip-gram architectures, `-> [arXiv:1301.3781]`
+- Mikolov et al. (2013). *Efficient Estimation of Word Representations in Vector Space* — the original word2vec paper: the CBOW and Skip-gram architectures, `-> [arXiv:1301.3781]`
 
-- Mikolov et al. (2013). *Distributed Representations of Words and Phrases and their Compositionality* — negative sampling, phrase vectors and compositionality, `-> [arXiv:1310.4546]`
+- Mikolov et al. (2013). *Distributed Representations of Words and Phrases and their Compositionality* — negative sampling, phrase vectors, and compositionality, `-> [arXiv:1310.4546]`
 
-- Fournier, Dupoux & Dunbar (2020). *Analogies minus analogy test* — a critical analysis of analogy testing, demonstrating flaws in standard evaluation, `-> [arXiv:2010.03446]`
+- Fournier, Dupoux & Dunbar (2020). *Analogies minus analogy test* — a critical analysis of analogy tests, showing the standard evaluation is flawed, `-> [arXiv:2010.03446]`
 
-- Firth, J.R. (1957). *A synopsis of linguistic theory 1930-55* — the philosophical starting point of the Distributional Hypothesis, "You shall know a word by the company it keeps"
+- Firth, J.R. (1957). *A synopsis of linguistic theory 1930-55* — the philosophical starting point of the distributional hypothesis: "You shall know a word by the company it keeps"
 
-- Searle, J. (1980). *Minds, Brains, and Programs* — the Chinese Room thought experiment, a philosophical attack on whether symbolic manipulation can produce understanding
+- Searle, J. (1980). *Minds, Brains, and Programs* — the Chinese Room thought experiment, a philosophical attack on whether symbol manipulation can produce understanding
 
-- Bolukbasi et al. (2016). *Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings* — the classic empirical study of the word vector bias problem
+- Bolukbasi et al. (2016). *Man is to Computer Programmer as Woman is to Homemaker? Debiasing Word Embeddings* — the classic empirical study of bias in word embeddings

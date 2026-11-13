@@ -24,8 +24,8 @@ features:
     details: Introduction to reasoning science for general readers — from Boolean logic to Transformer
   - title: Volume I (Ch1–13)
     details: Historical narratives of reasoning — symbols, statistics, Transformer, search, and causality
-  - title: Volume II (Ch14–25)
-    details: Formal deduction — consistency, linear logic, probability, causality, complexity, self-reference, category theory, unification of boundaries
+  - title: Volume II (Ch14–23)
+    details: Formal deduction — consistency, linear logic, probability, causality, complexity, self-reference, and Yonglin convergence, closing with Chapter 23
   - title: Open Source
     details: All content is open source, hosted on GitHub. Contributions welcome.
 ---
