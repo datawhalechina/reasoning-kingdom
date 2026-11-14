@@ -154,7 +154,6 @@ export default defineConfig({
             { text: 'Ch12: Implicit Reasoning: The Internal Monologue of a Neural Network', link: '/volume1/chapter12/' },
             { text: 'Ch13: The Boundaries of Reasoning — and Why We Must Accept Them', link: '/volume1/chapter13/' },
             { text: '↳ Bonus: The Hidden Thread', link: '/volume1/chapter13/bonus' },
-            { text: 'Bonus (Extended): CocDo — Neural Causal Operators', link: '/volume1/chapterbonous/' },
             { text: 'Dictionary', link: '/dictionary' },
           ]
         }

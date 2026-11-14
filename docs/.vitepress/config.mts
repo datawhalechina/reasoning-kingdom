@@ -186,7 +186,6 @@ export default defineConfig({
                 { text: '第12章：隐式推理——神经网络的内部独白', link: '/volume1/chapter12/' },
                 { text: '第13章：推理的边界——以及我们为什么必须接受它', link: '/volume1/chapter13/' },
                 { text: '↳ 番外篇：暗线', link: '/volume1/chapter13/bonus' },
-                { text: '因果推理番外篇（扩展）：CocDo 神经因果算子', link: '/volume1/chapterbonous/' },
                 { text: '兔狲教授小词典', link: '/dictionary' },
               ]
             }
@@ -326,7 +325,6 @@ export default defineConfig({
                 { text: "Ch12: Implicit Reasoning: The Internal Monologue of a Neural Network", link: '/en/volume1/chapter12/' },
                 { text: 'Ch13: The Boundaries of Reasoning — and Why We Must Accept Them', link: '/en/volume1/chapter13/' },
                 { text: '↳ Bonus: The Hidden Thread', link: '/en/volume1/chapter13/bonus' },
-                { text: 'Bonus (Extended): CocDo — Neural Causal Operators', link: '/en/volume1/chapterbonous/' },
                 { text: 'Dictionary', link: '/dictionary' },
               ]
             }

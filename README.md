@@ -148,7 +148,6 @@
 | [第12章：隐式推理](https://datawhalechina.github.io/reasoning-kingdom/volume1/chapter12/) | 神经网络的内部独白 | ✅ |
 | [第13章：推理的边界](https://datawhalechina.github.io/reasoning-kingdom/volume1/chapter13/) | 哥德尔极限的计算版本 | ✅ |
 | &nbsp;&nbsp;↳ [番外：暗线](https://datawhalechina.github.io/reasoning-kingdom/volume1/chapter13/bonus) | 上卷十三章的隐藏因果逻辑链 | ✅ |
-| [因果推理番外：从理论到代码 -- 神经因果算子的实现](https://datawhalechina.github.io/reasoning-kingdom/volume1/chapterbonous/) | CocDo 神经因果算子——上卷理论的可运行实现 | ✅ |
 
 ### 下卷：《推理的形式化重建》（12章 + 附录）
 
