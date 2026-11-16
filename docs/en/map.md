@@ -125,7 +125,7 @@ The Reasoning Kingdom is now a complete trilogy:
 | Chapter | Goal | Key Idea | Methods |
 |---------|------|----------|---------|
 | **Ch22** Self-Reference and Emergence | Exploring the meta-layer of reasoning | When reasoning systems reason about themselves | Curry-Howard correspondence, fixed-point theorems |
-| **Ch23** The Yonglin–Lyapunov Correspondence | Describing the dynamics of reasoning systems | Reasoning as a dynamical system | Stability analysis, convergence boundaries |
+| **Ch23** The Yonglin Corollary | Turning the convergence rate into computable log curves | Information-theoretic energy surface + Banach completeness | Tangent Hessian, spectral analysis, scaling exponents |
 
 ---
 
@@ -173,7 +173,7 @@ The Reasoning Kingdom is now a complete trilogy:
 This book's narrative is built around 6 original research contributions:
 
 1. **QMCB / OpenXOR** (Ch7): Phase diagram of NP problems in continuous space
-2. **Yonglin Formula** (Ch12, Ch13): The essential incompleteness of AI reasoning
+2. **Yonglin Formula** (Ch12, Ch13, Ch23): The essential incompleteness of AI reasoning; its convergence rate is given by the Yonglin Corollary
 3. **ADS** (Ch8, Ch10): Information-theoretic formulation of heuristic weights
 4. **Collins Optimizer** (Ch11): Touching the physical limits of compression
 5. **Attention Causal Topology** (Ch9): Transformer as an implicit causal inference machine

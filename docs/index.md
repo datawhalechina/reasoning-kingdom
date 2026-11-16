@@ -29,7 +29,7 @@ features:
   - title: 上卷（第1–13章）
     details: 从熵增到边界，沿历史线索追问推理的本质——符号主义、统计学派、Transformer、搜索与因果
   - title: 下卷（第14–23章）
-    details: 从形式系统出发，用逻辑演绎重建推理王国——一致性、线性逻辑、概率、因果、复杂度、自指、永霖收敛，最终在第23章收束
+    details: 从形式系统出发，用逻辑演绎重建推理王国——一致性、线性逻辑、概率、因果、复杂度、自指、永霖收敛与永霖推论，最终在第23章收束
   - title: 开源免费
     details: 全部内容开源，源文件托管在 GitHub，欢迎贡献与反馈
 ---
@@ -40,11 +40,11 @@ import { VPTeamMembers } from 'vitepress/theme'
 
 const members = [
   {
-    avatar: 'https://www.github.com/lizixi-0x2F.png',
+    avatar: 'https://www.github.com/zixi-reasoning.png',
     name: '李籽溪（兔狲）',
     title: '项目负责人/笔者',
     links: [
-      { icon: 'github', link: 'https://github.com/lizixi-0x2F' },
+      { icon: 'github', link: 'https://github.com/zixi-reasoning' },
     ]
   },
 ]

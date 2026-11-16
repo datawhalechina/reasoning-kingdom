@@ -116,7 +116,7 @@ ch19 Complexity theory               ← the geometry of computation: reasoning 
 ch20 Heuristic contracts             ← promises under cost: the exact meaning of "roughly right"
 ch21 Learning theory                 ← inverse inference: inferring laws from observations
 ch22 Self-reference and emergence    ← what happens when a system reasons about itself
-ch23 Stability of reasoning systems  ← from Yonglin's convergence to a Lyapunov function
+ch23 The Yonglin Corollary           ← from the Hessian spectrum to emergence and the log curve
 ```
 
 If you can read only three chapters: read Chapters 14, 15, 19. Together they form the most central line of Volume 2: reasoning gets formalized, then hits a boundary it cannot cross, and then that boundary is measured precisely.

@@ -411,7 +411,7 @@ If the orbit does converge, there must be some quantity decreasing monotonically
 
 The traditional approach is to hand-guess an energy function and verify that it decreases. But if we have already observed the system converging to some prior anchor $A$, can we go the other way — derive the energy function from the convergence behavior, rather than guessing it?
 
-These three questions are the entrance to Chapter 23.
+Of these three questions, the first two already have rigorous answers in Chapter 12: the Yonglin theorem pins the direction of convergence to the prior anchor $A$, the energy surface is the KL divergence on the tangent space, and the contraction mapping guarantees decrease. The third — deriving the energy function from the convergence behavior — is the inverse-problem formulation; here we do not need to invert, because the training objective already supplies the energy surface. The genuinely remaining question is quantitative: at what rate does the system return to $A$, and can that rate explain emergence? This is the entrance to Chapter 23.
 
 ::: info Professor Pallas says
 The MP game is the ferry between logic and dynamics. On the logic shore, we ask "does a proof exist?"; on the dynamics shore, we ask "where does the system go?". The fixed point is the landmark shared by both shores — in logic it is the end of a proof; in dynamics it is the attractor. Cross over, and you will find that the attractor has a name: the Yonglin limit.
@@ -427,7 +427,7 @@ The MP game is the ferry between logic and dynamics. On the logic shore, we ask 
 
 **The capability boundary of self-referential reasoning**: when an AI system reasons about its own reasoning process, what true propositions about itself can it discover, and which boundaries must it inevitably fail to see from inside? This is not just a philosophical question, but a practical question about AI safety and interpretability — under what circumstances will a system that cannot reason about its own limits substitute confident error for honest uncertainty?
 
-**The dynamical gap left by the MP game**: if a proof sequence is an orbit, then a fixed point is only the name for "stopping", not a guarantee of "stopping in the right place". What kind of energy function can constrain this orbit? Does this energy come from the training data, from the prior anchor, or from the system's own structure? This question already goes beyond the logical language of this chapter and must be handed to Chapter 23.
+**The dynamical gap left by the MP game**: if a proof sequence is an orbit, then a fixed point is only the name for "stopping", not a guarantee of "stopping in the right place". Chapter 12 answers "what is the energy, and why does it decrease" with the KL energy surface and the contraction mapping; Chapter 23 goes on to answer "how fast does it converge, and how does that rate change with scale". The language of logic ends here; dynamics takes over.
 
 ---
 

@@ -190,7 +190,7 @@ Chapter 21 treats learning as inverse inference: given the observed theorems, wo
 
 Chapter 22: when a reasoning system is powerful enough, it starts reasoning about propositions about itself. Curry-Howard correspondence, fixed-point theorems — this is where no one has an answer yet, and where it is still worth walking on.
 
-Chapter 23 uses a different angle: if we turn reasoning into a dynamical system, can its behavior be described and characterized?
+Chapter 23 returns to Yonglin convergence and computes how fast it happens. The engine is still Banach's fixed-point theorem and the energy surface is still the KL divergence — but now we read off the engine's power. The tangent Hessian has two endpoint eigenvalues, and from them comes the exact contraction rate $\rho^*=(\kappa_T-1)/(\kappa_T+1)$: the slope of the semi-log error curve, the number of steps needed to reach a given accuracy, and a criterion for telling real emergence from a change of readout. This is the [Yonglin Corollary](/en/volume2/chapter23/).
 
 Chapter 9's bonus chapter made one attempt: reading the attention matrix as a soft causal adjacency matrix — the softmax is the posterior distribution over candidate causes, and attention is a causal edge. That reading translates the do operator of Chapter 18 from "a matrix operation" into "a causal intervention," and it puts out a prediction you can test numerically: intervene on an attention path, and the model's output should change along the causal path. This is one exploratory construction by Zixi Li (Professor Pallas).
 
