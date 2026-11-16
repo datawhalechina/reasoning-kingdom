@@ -107,7 +107,13 @@ $$
 \frac{\partial L}{\partial z}=p-\mathbf{1}_y;
 $$
 
-对数据分布取期望，就是 $p-A$。这不是另一个方向。softmax 的雅可比是 $\operatorname{diag}(p)-pp^\top$，它在切空间上正好是 Fisher 度量的逆，作用在 $-A/p$ 上就得到 $p-A$。换句话说，反向传播走的是自然梯度，前向推理走的是欧氏投影梯度；两条路共用同一个能量面，只是脚下的尺子不同。
+对数据分布取期望，就是 $p-A$。这不是另一个方向，而是同一个梯度换了一组坐标：softmax 把 logits 映到单纯形，链式法则把 $-A/p$ 变成 $p-A$。写开就是
+
+$$
+\bigl(\operatorname{diag}(p)-pp^\top\bigr)\left(-\frac{A}{p}\right)=p-A.
+$$
+
+反向传播与前向推理共用同一个能量面，也都落在同一个切空间。本章的尺子从头到尾只有一把：切空间上的欧氏范数。
 
 “经验单纯形”就是所有可能输出分布的集合：训练数据给它一个点 $A$，模型输出给它另一个点 $p$。训练把这个点往 $A$ 拖，推理在证据到来时把它推离 $A$，然后又让它落回 $A$。两者都在同一个单纯形上走。约束 $\sum_i p_i=1$ 意味着“所有分量同时加同一个数”这个方向没有意义——给 logits 加常数不改变 softmax，$P_T$ 也把这个法向分量删掉。所以真正能走的是切空间
 
@@ -133,7 +139,7 @@ $$
 
 这就是永霖推论。它不只是“推理时会多快回到先验”，也是“训练最后一段会多快贴住标签分布”。训练把 $A$ 造出来，推理回到 $A$；两边接近 $A$ 的最后一段，由同一对谱端点定价。
 
-有一条边界必须说清楚：$\rho^*$ 的精确推导是在输出单纯形上做欧氏投影梯度；真实训练更接近 KL 镜像下降，尺子是 Fisher 度量。是否存在一个 Bregman 版本、仍然只依赖两个端点的谱公式，仍是开放问题，也是本章“悬而未决”里的第一条。所以现在能严格说的是：能量面相同、切空间相同、两个端点的机制相同；精确标量在欧氏版本里成立，镜像版本需要另证。真实训练还有非凸、随机、有限样本和参数化这些事，局部二次图景只是“最后一段”的定理，不是全局训练理论。
+这里说的是输出分布上的局部动力学：它描述的是训练最后一段在单纯形上的切向运动。真实训练还有非凸、随机、有限样本和参数化这些事，局部二次图景只是“最后一段”的定理，不是全局训练理论。这个边界不需要另一套理论来补：本章只用切空间上的欧氏范数，KL 只做能量面，不做距离。
 
 但“最后一段”已经足够解释本章要解释的事。训练造出锚点，推理回到锚点；同一个条件数，给两段路定价。
 
@@ -651,7 +657,7 @@ $$
 
 ## 悬而未决
 
-**镜像下降的精确速率是什么？** 本章的压缩率建立在欧氏投影梯度上。真实模型更接近 KL 镜像下降，而 KL 不是度量，不能直接套巴拿赫。是否存在一个 Bregman 版本的谱半径公式？如果有，它是否仍然只依赖两个端点？这是开放的。
+**离开锚点邻域之后，速率怎么估？** 本章的 $\rho^*$ 是 $A$ 附近线性化的精确速率。真实轨道在进入这个小邻域之前会有高阶项；开头的表里第一步的比值明显小于 $\rho^*$，就是这种“提前量”的影子。能不能只用切空间谱，给出一个有限步的、非渐近的误差界？如果初始误差的大分量恰好落在快方向上，实际窗口会比 $\rho^*$ 预测的更短——这个差值能不能精确算出来？这是开放的。
 
 **能不能在大规模模型上直接测 $\mu_T$ 和 $\theta_{\max}$？** 本章的谱是在 $K=3$ 到 $2048$ 的显式分布上算的。真实 LLM 的词表很大，Hessian 无法显式存储。随机迹估计、Lanczos、隐式微分能不能给出可靠的端点估计？这会把“涌现诊断”从理论变成实验。
 
@@ -678,7 +684,7 @@ $$
 
 1. 对 $K=3$，把久期方程写成 $3s_3\lambda^2-2s_2\lambda+1=0$，并验证它与[第12章](/volume1/chapter12/)的二次方程一致。
 2. 设计一个实验，只通过测量 $\rho^*$ 随规模的变化，区分“读出效应”和“谱分岔”。说明每种情况下你会看到什么，以及如何排除混淆变量。
-3. 尝试构造一个反例，说明在 KL 镜像下降下，欧氏压缩率 $\rho^*$ 不再是精确速率；再说明需要加什么条件才能恢复一个精确的速率公式。
+3. 尝试构造一个反例，说明离开锚点邻域、二阶项不可忽略时，欧氏线性化速率 $\rho^*$ 不再是精确速率；再说明需要加什么条件才能恢复一个精确的速率公式。
 
 ---
 
@@ -736,11 +742,10 @@ print(rate([0.35, 0.25, 0.15, 0.12, 0.08, 0.05]))
 - Banach, Stefan (1922). “Sur les opérations dans les ensembles abstraits et leur application aux équations intégrales.” *Fundamenta Mathematicae* 3(1), 133–181. DOI: 10.4064/fm-3-1-133-181.——压缩映射原理的原始文献
 - Schaeffer, Rylan; Miranda, Brando; and Koyejo, Sanmi (2023). “Are Emergent Abilities of Large Language Models a Mirage?” arXiv:2304.15004.——涌现的度量伪影
 - Wei, Jason; Tay, Yi; Bommasani, Rishi; Raffel, Colin; Zoph, Barret; Borgeaud, Sebastian; Yogatama, Dani; Bosma, Maarten; Zhou, Denny; Metzler, Donald; Chi, Ed H.; Hashimoto, Tatsunori; Vinyals, Oriol; Liang, Percy; Dean, Jeff; and Fedus, William (2022). “Emergent Abilities of Large Language Models.” arXiv:2206.07682.——涌现现象的系统描述
-- Amari, Shun-ichi (2016). *Information Geometry and Its Applications*. Applied Mathematical Sciences 194. Springer Japan. DOI: 10.1007/978-4-431-55978-8.——Bregman 几何、Fisher 信息与自然梯度
 - Nesterov, Yurii (2018). *Lectures on Convex Optimization*, 2nd edition. Springer Optimization and Its Applications 137. Springer. DOI: 10.1007/978-3-319-91578-4.——强凸、光滑、步长与条件数
 - Boyd, Stephen; and Vandenberghe, Lieven (2004). *Convex Optimization*. Cambridge University Press. DOI: 10.1017/CBO9780511804441.——投影的非扩张性与收敛率
 - 本书[第12章](/volume1/chapter12/)，永霖公式——永霖定理的全局版本、切空间谱界与直接证据
 
 ---
 
-正文到这里结束。后面是写给读者的[跋文](/volume2/afterword)。
+正文到这里结束。

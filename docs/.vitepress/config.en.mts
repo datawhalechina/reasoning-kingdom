@@ -77,7 +77,6 @@ export default defineConfig({
       { text: 'Prequel: Intro to Reasoning Science', link: '/dear-reasoner/preface' },
       { text: 'Volume I: Reasoning Narratives', link: '/volume1/preface/' },
       { text: 'Volume II: Formal Deduction', link: '/volume2/preface/' },
-      { text: 'Pallas Academy', link: '/dear-reasoner/academy/' },
       { text: 'Dictionary', link: '/dictionary' },
     ],
     search: {

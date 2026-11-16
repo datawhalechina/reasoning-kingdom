@@ -55,8 +55,6 @@
 - 探索推理的本质：区分"概率预测"与"逻辑推理"
 - 培养科学思考习惯：像科学家一样拆解复杂问题
 
-**新增兔狲学院**：面向即将上大学的高中生（AP学生/准大学生）的维基百科式词条教学，包含数学基础综合、AI数学基础、微积分、线性代数、哲学、Python编程六个章节，每个词条包含官方解释+兔狲老师解释+动手题+动脑题。
-
 ### 上卷：《推理的历史演变》（问题驱动，直觉先行）
 
 从对抗熵增的生存策略出发，沿历史脉络走过符号主义、表示学习、因果推断、复杂度理论，直到现代 Transformer 架构和推理边界。问题驱动，直觉先行。适合对 AI 有基本了解、想理解"为什么"的读者。
@@ -89,7 +87,7 @@
 
 ## 目录
 
-### 前传：《致未来的推理科学家》（18章 + 兔狲学院）
+### 前传：《致未来的推理科学家》（18章）
 
 **全书共18章，分四部分**：确定性的宇宙（7章）→ 跨越逻辑的断裂带（2章）→ 神经网络的涌现（6章）→ 通往推理王国（3章）
 
@@ -118,13 +116,6 @@
 | [第16章：什么是真正的推理？（LLM迷思）](https://datawhalechina.github.io/reasoning-kingdom/dear-reasoner/volume4/chapter16/) | 区分"概率预测"与"逻辑推理" | ✅ |
 | [第17章：推理科学家的工具箱](https://datawhalechina.github.io/reasoning-kingdom/dear-reasoner/volume4/chapter17/) | 整合算法思维、神经网络思维与推理思维 | ✅ |
 | [第18章：致20岁后的你：作为科学的推理](https://datawhalechina.github.io/reasoning-kingdom/dear-reasoner/volume4/chapter18/) | 未来推理科学的研究方向与挑战 | ✅ |
-| **兔狲学院：给还没有上大学的小伙伴** | **六个学科章节** | **6章** |
-| [数学基础综合：从自然数到不动点理论](https://datawhalechina.github.io/reasoning-kingdom/dear-reasoner/academy/math-core/) | 7章完整知识链，从自然数、集合论、逻辑、函数、数列极限到ZFC和不动点理论 | ✅ |
-| [AI数学基础：概率统计到线性模型](https://datawhalechina.github.io/reasoning-kingdom/dear-reasoner/academy/ai-mathematics/) | 5章完整知识链，概率论、统计学、优化理论、信息论、线性模型 | ✅ |
-| [微积分：从函数到微分方程](https://datawhalechina.github.io/reasoning-kingdom/dear-reasoner/academy/calculus/) | 12个词条完整知识链，从函数讲到ODE | ✅ |
-| [线性代数：从向量到雅可比矩阵](https://datawhalechina.github.io/reasoning-kingdom/dear-reasoner/academy/linear-algebra/) | 12个词条完整知识链，从向量讲到雅可比矩阵 | ✅ |
-| [哲学：从古希腊到1840年](https://datawhalechina.github.io/reasoning-kingdom/dear-reasoner/academy/philosophy/) | 25个词条，5个历史时期，1840年批判视角 | ✅ |
-| [Python编程：从语法到数据结构](https://datawhalechina.github.io/reasoning-kingdom/dear-reasoner/academy/python/) | 10个词条，4个部分，重点实现四种基础数据结构 | ✅ |
 
 > **状态说明**：📝 编写中 | ✅ 已完成 | 🚧 修订中
 

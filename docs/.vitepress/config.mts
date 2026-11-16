@@ -55,7 +55,6 @@ export default defineConfig({
           { text: '前传：推理科学入门', link: '/dear-reasoner/preface' },
           { text: '上卷：推理叙事', link: '/volume1/preface/' },
           { text: '下卷：形式演绎', link: '/volume2/preface/' },
-          { text: '兔狲学院', link: '/dear-reasoner/academy/' },
           { text: '兔狲教授小词典', link: '/dictionary' },
           { text: 'English →', link: '/en/' },
         ],
@@ -109,59 +108,6 @@ export default defineConfig({
                     { text: '第17章：推理科学家的工具箱', link: '/dear-reasoner/volume4/chapter17/' },
                     { text: '第18章：致20岁后的你：作为科学的推理', link: '/dear-reasoner/volume4/chapter18/' },
                   ]
-                },
-                {
-                  text: '兔狲学院',
-                  items: [
-                    { text: '学院主页：推理科学家的思维实验室', link: '/dear-reasoner/academy/' },
-                    {
-                      text: '数学基础综合：从自然数到不动点理论',
-                      link: '/dear-reasoner/academy/math-core/',
-                      items: [
-                        { text: '自然数与公理系统', link: '/dear-reasoner/academy/math-core/sections/natural-numbers.md' },
-                        { text: '集合论基础', link: '/dear-reasoner/academy/math-core/sections/set-theory.md' },
-                        { text: '逻辑与证明方法', link: '/dear-reasoner/academy/math-core/sections/logic.md' },
-                        { text: '函数与关系', link: '/dear-reasoner/academy/math-core/sections/functions.md' },
-                        { text: '数列与极限', link: '/dear-reasoner/academy/math-core/sections/sequences.md' },
-                        { text: 'ZFC集合论', link: '/dear-reasoner/academy/math-core/sections/zfc.md' },
-                        { text: '不动点理论', link: '/dear-reasoner/academy/math-core/sections/fixed-points.md' },
-                      ]
-                    },
-                    {
-                      text: 'AI数学基础：概率统计到线性模型',
-                      link: '/dear-reasoner/academy/ai-mathematics/',
-                      items: [
-                        { text: '概率论基础', link: '/dear-reasoner/academy/ai-mathematics/sections/probability' },
-                        { text: '统计学基础', link: '/dear-reasoner/academy/ai-mathematics/sections/statistics' },
-                        { text: '优化理论', link: '/dear-reasoner/academy/ai-mathematics/sections/optimization' },
-                        { text: '信息论', link: '/dear-reasoner/academy/ai-mathematics/sections/information-theory' },
-                        { text: '线性模型', link: '/dear-reasoner/academy/ai-mathematics/sections/linear-models' },
-                      ]
-                    },
-                    {
-                      text: '哲学：从古希腊到1840年',
-                      link: '/dear-reasoner/academy/philosophy/',
-                      items: [
-                        { text: '古希腊哲学', link: '/dear-reasoner/academy/philosophy/sections/ancient-greek.md' },
-                        { text: '文艺复兴哲学', link: '/dear-reasoner/academy/philosophy/sections/renaissance.md' },
-                        { text: '德国古典哲学', link: '/dear-reasoner/academy/philosophy/sections/german-idealism.md' },
-                        { text: '马克思与恩格斯', link: '/dear-reasoner/academy/philosophy/sections/marx-engels.md' },
-                        { text: '企望新哲学', link: '/dear-reasoner/academy/philosophy/sections/future.md' },
-                      ]
-                    },
-                    {
-                      text: 'Python编程：从语法到数据结构',
-                      link: '/dear-reasoner/academy/python/',
-                      items: [
-                        { text: 'Python基础语法', link: '/dear-reasoner/academy/python/sections/basics.md' },
-                        { text: '数据结构', link: '/dear-reasoner/academy/python/sections/data_structures.md' },
-                        { text: '算法设计', link: '/dear-reasoner/academy/python/sections/algorithms.md' },
-                        { text: '高级应用', link: '/dear-reasoner/academy/python/sections/advanced.md' },
-                      ]
-                    },
-                    { text: '微积分：从函数到微分方程', link: '/dear-reasoner/academy/calculus/' },
-                    { text: '线性代数：从向量到雅可比矩阵', link: '/dear-reasoner/academy/linear-algebra/' },
-                  ]
                 }
               ]
             }
@@ -205,7 +151,6 @@ export default defineConfig({
                 { text: '第21章：学习作为逆推断——泛化是压缩的另一种说法', link: '/volume2/chapter21/' },
                 { text: '第22章：自指与涌现——当推理系统开始推理关于自身', link: '/volume2/chapter22/' },
                 { text: '第23章：永霖推论——智能与涌现的对数曲线', link: '/volume2/chapter23/' },
-                { text: '跋文', link: '/volume2/afterword' },
                 { text: '兔狲教授小词典', link: '/dictionary' },
                 { text: '附录：下卷思考题参考提示', link: '/appendix-thinking-questions' },
               ]

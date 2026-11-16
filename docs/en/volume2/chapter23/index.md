@@ -107,7 +107,13 @@ $$
 \frac{\partial L}{\partial z}=p-\mathbf{1}_y;
 $$
 
-taking the expectation over the data distribution gives $p-A$. This is not a different direction. The softmax Jacobian is $\operatorname{diag}(p)-pp^\top$, which on the tangent space is exactly the inverse of the Fisher metric; applied to $-A/p$, it gives $p-A$. In other words, backpropagation takes the natural gradient, while forward inference takes the Euclidean projected gradient; the two share one energy surface and differ only in the ruler underfoot.
+taking the expectation over the data distribution gives $p-A$. This is not a different direction; it is the same gradient in another set of coordinates. Softmax maps logits to the simplex, and the chain rule turns $-A/p$ into $p-A$:
+
+$$
+\bigl(\operatorname{diag}(p)-pp^\top\bigr)\left(-\frac{A}{p}\right)=p-A.
+$$
+
+Backpropagation and forward inference share one energy surface, and both land in the same tangent space. The chapter uses one ruler throughout: the Euclidean norm on the tangent space.
 
 The “empirical simplex” is the set of all possible output distributions: the training data contributes one point $A$, the model output another point $p$. Training drags the point toward $A$; inference, when evidence arrives, pushes it away from $A$ and then lets it fall back. Both move on the same simplex. The constraint $\sum_i p_i=1$ makes the direction “add the same number to every component” meaningless — adding a constant to logits does not change the softmax, and $P_T$ deletes that normal component. So the directions that actually exist are the tangent space
 
@@ -133,7 +139,7 @@ $$
 
 This is the Yonglin Corollary. It is not only “how fast inference returns to the prior”; it is also “how fast the last stretch of training sticks to the label distribution.” Training builds $A$; inference returns to $A$; the last stretch of both approaches is priced by the same pair of spectral endpoints.
 
-One boundary must be stated plainly: the exact derivation of $\rho^*$ uses Euclidean projected gradient on the output simplex; real training is closer to KL mirror descent, whose ruler is the Fisher metric. Whether a Bregman version exists that still depends only on two endpoints is open — it is the first open question at the end of this chapter. What can be said rigorously now is that the energy surface is the same, the tangent space is the same, and the two-endpoint mechanism is the same; the exact scalar holds in the Euclidean version and needs a separate proof in the mirror version. Real training also involves non-convexity, stochasticity, finite samples, and parameterization; the local quadratic picture is a theorem about the last stretch, not a global theory of training.
+What is described here is the local dynamics on the output distribution: the tangential motion of the last stretch of training on the simplex. Real training also involves non-convexity, stochasticity, finite samples, and parameterization; the local quadratic picture is a theorem about the last stretch, not a global theory of training. This boundary needs no second theory to state: the chapter uses only the Euclidean norm on the tangent space, and KL serves only as the energy surface, never as a distance.
 
 But the last stretch is enough for what this chapter explains. Training builds the anchor; inference returns to it; one condition number prices both roads.
 
@@ -651,7 +657,7 @@ The whole chain has only three links:
 
 ## Open Questions
 
-**What is the exact rate for mirror descent?** The contraction rate here is built on Euclidean projected gradient descent. Real models are closer to KL mirror descent, and KL is not a metric, so Banach does not apply directly. Is there a Bregman version of the spectral-radius formula? If so, does it still depend only on two endpoints? This is open.
+**How should the rate be estimated away from the anchor's neighborhood?** The $\rho^*$ here is the exact rate of the linearization near $A$. A real trajectory carries higher-order terms before it enters that small neighborhood; the first ratio in the opening table being noticeably smaller than $\rho^*$ is a shadow of this “head start.” Can the tangent spectrum alone give a finite-step, non-asymptotic error bound? If the large components of the initial error happen to lie in fast directions, the actual window will be shorter than $\rho^*$ predicts — can that gap be computed exactly? This is open.
 
 **Can $\mu_T$ and $\theta_{\max}$ be measured directly on large models?** The spectra here are computed on explicit distributions with $K=3$ to $2048$. A real LLM has a huge vocabulary, and the Hessian cannot be stored explicitly. Can stochastic trace estimation, Lanczos, or implicit differentiation give reliable endpoint estimates? That would turn “emergence diagnosis” from theory into experiment.
 
@@ -678,7 +684,7 @@ The whole chain has only three links:
 
 1. For $K=3$, write the secular equation as $3s_3\lambda^2-2s_2\lambda+1=0$, and verify that it matches the quadratic in [Chapter 12](/en/volume1/chapter12/).
 2. Design an experiment that uses only the change of $\rho^*$ with scale to distinguish a “readout effect” from a “spectral bifurcation.” State what you would see in each case and how to rule out confounders.
-3. Try to construct a counterexample showing that under KL mirror descent the Euclidean contraction rate $\rho^*$ is no longer the exact rate; then state what extra condition would restore an exact rate formula.
+3. Try to construct a counterexample showing that away from the anchor's neighborhood, where second-order terms cannot be ignored, the Euclidean linearized rate $\rho^*$ is no longer the exact rate; then state what extra condition would restore an exact rate formula.
 
 ---
 
@@ -736,7 +742,6 @@ print(rate([0.35, 0.25, 0.15, 0.12, 0.08, 0.05]))
 - Banach, Stefan (1922). “Sur les opérations dans les ensembles abstraits et leur application aux équations intégrales.” *Fundamenta Mathematicae* 3(1), 133–181. DOI: 10.4064/fm-3-1-133-181. — the original paper on the contraction mapping principle
 - Schaeffer, Rylan; Miranda, Brando; and Koyejo, Sanmi (2023). “Are Emergent Abilities of Large Language Models a Mirage?” arXiv:2304.15004. — emergent abilities as a metric artifact
 - Wei, Jason; Tay, Yi; Bommasani, Rishi; Raffel, Colin; Zoph, Barret; Borgeaud, Sebastian; Yogatama, Dani; Bosma, Maarten; Zhou, Denny; Metzler, Donald; Chi, Ed H.; Hashimoto, Tatsunori; Vinyals, Oriol; Liang, Percy; Dean, Jeff; and Fedus, William (2022). “Emergent Abilities of Large Language Models.” arXiv:2206.07682. — a systematic description of emergent phenomena
-- Amari, Shun-ichi (2016). *Information Geometry and Its Applications*. Applied Mathematical Sciences 194. Springer Japan. DOI: 10.1007/978-4-431-55978-8. — Bregman geometry, Fisher information, and natural gradient
 - Nesterov, Yurii (2018). *Lectures on Convex Optimization*, 2nd edition. Springer Optimization and Its Applications 137. Springer. DOI: 10.1007/978-3-319-91578-4. — strong convexity, smoothness, step size, and condition number
 - Boyd, Stephen; and Vandenberghe, Lieven (2004). *Convex Optimization*. Cambridge University Press. DOI: 10.1017/CBO9780511804441. — nonexpansiveness of projection and convergence rates
 - [Chapter 12](/en/volume1/chapter12/), Yonglin's Formula — the global version of the Yonglin theorem, tangent spectral bounds, and direct evidence
