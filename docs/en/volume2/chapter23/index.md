@@ -823,6 +823,10 @@ C4's $0.711$–$0.754$ lies above $\rho^*=0.355$ and corresponds to a widened le
 
 This also bounds what the experiment can say. C4's rate is above $\rho^*$, and the legal interval widens on both sides, so the rate alone cannot tell the slow solution from the fast one. C3's rate below $\rho^*$ means the orbit is near the lower bound, not that the step is illegal. Pinning both the step and the bounds requires a longer, finer window.
 
+**Reading the two tasks together.** Taken separately, C3's measured rate is below its own $\rho^*$ and C4's is above its own, which looks like two small errors in opposite directions. Side by side, a structure appears: C4's $\rho^*=0.355$ is the lower edge, C3's $\rho^*=0.792$ is the upper edge, and all six orbits' rates, $0.610$–$0.754$, fall between them. C3 samples below its own optimum, C4 above its own; the two optima, one low and one high, bracket the whole measured band. This is not two errors canceling by accident. The optimal rate moves with the task: the two tasks give the two ends of that range, and the samples fall in between.
+
+What linearized theory guarantees is that each orbit lies in its own $[m(\eta),\rho(\eta)]$; it does not guarantee that six orbits line up in a band, let alone that the two tasks' $\rho^*$ bracket that band. The structure is read off the experiment. So DeepSeek gives a width rather than a point: the upper end is C3's $0.792$, the lower end is C4's $0.355$, and the measurements sit in between. A measured rate wider than a single $\rho^*$ is what the squeeze permits, not a failure; if all six orbits landed exactly on their own $\rho^*$, that would look more like fitting than measurement.
+
 This is the experiment's value: it verifies the geometry and the fixed point, and it measures how far the model sits from the optimal step.
 
 - **Geometry verified.** All six orbits contract in tangent space, semi-log is close to straight, the fixed point is the evidence-consistent posterior, and the tail diameter falls.
