@@ -118,7 +118,7 @@ from typing import Dict, FrozenSet, Iterator, List, Optional, Tuple
 # of the formal language the same way.
 CHARSET = "".join(
     dict.fromkeys(
-        "P\u2192\u00acQ" + string.ascii_letters + string.digits
+        "P→¬Q" + string.ascii_letters + string.digits
         + " (){}[]:;,'\"+-*/<>=!._%" + "\\" + "\n" + "\t"
     )
 )
@@ -220,24 +220,24 @@ def parse_formula(text: str):
 
 def _parse_implication(text: str, i: int):
     left, i = _parse_negation(text, i)
-    if i < len(text) and text[i] == "\u2192":
+    if i < len(text) and text[i] == "→":
         right, i = _parse_implication(text, i + 1)
-        return ("\u2192", left, right), i
+        return ("→", left, right), i
     return left, i
 
 
 def _parse_negation(text: str, i: int):
-    if i < len(text) and text[i] == "\u00ac":
+    if i < len(text) and text[i] == "¬":
         inner, i = _parse_negation(text, i + 1)
-        return ("\u00ac", inner), i
+        return ("¬", inner), i
     if i < len(text) and text[i] == "(":
         left, i = _parse_implication(text, i + 1)
-        if i >= len(text) or text[i] != "\u2192":
-            raise ValueError("expected '\u2192' inside parentheses")
+        if i >= len(text) or text[i] != "→":
+            raise ValueError("expected '→' inside parentheses")
         right, i = _parse_implication(text, i + 1)
         if i >= len(text) or text[i] != ")":
             raise ValueError("expected ')'")
-        return ("\u2192", left, right), i + 1
+        return ("→", left, right), i + 1
     if i < len(text) and text[i] in ("P", "Q"):
         return text[i], i + 1
     raise ValueError(f"cannot parse at position {i}: {text[i:]!r}")
@@ -247,15 +247,15 @@ def show(formula) -> str:
     """Canonical, fully parenthesized symbol string of a formula tuple."""
     if isinstance(formula, str):
         return formula
-    if formula[0] == "\u00ac":
-        return "\u00ac" + show(formula[1])
-    return "(" + show(formula[1]) + "\u2192" + show(formula[2]) + ")"
+    if formula[0] == "¬":
+        return "¬" + show(formula[1])
+    return "(" + show(formula[1]) + "→" + show(formula[2]) + ")"
 
 
 def complexity(formula) -> int:
     if isinstance(formula, str):
         return 0
-    if formula[0] == "\u00ac":
+    if formula[0] == "¬":
         return 1 + complexity(formula[1])
     return 1 + complexity(formula[1]) + complexity(formula[2])
 
@@ -263,7 +263,7 @@ def complexity(formula) -> int:
 def variables(formula) -> FrozenSet[str]:
     if isinstance(formula, str):
         return frozenset({formula})
-    if formula[0] == "\u00ac":
+    if formula[0] == "¬":
         return variables(formula[1])
     return variables(formula[1]) | variables(formula[2])
 
@@ -271,7 +271,7 @@ def variables(formula) -> FrozenSet[str]:
 def subformulas(formula) -> FrozenSet:
     if isinstance(formula, str):
         return frozenset({formula})
-    if formula[0] == "\u00ac":
+    if formula[0] == "¬":
         return subformulas(formula[1]) | {formula}
     return subformulas(formula[1]) | subformulas(formula[2]) | {formula}
 
@@ -279,7 +279,7 @@ def subformulas(formula) -> FrozenSet:
 def evaluate(formula, assignment: Dict[str, bool]) -> bool:
     if isinstance(formula, str):
         return assignment[formula]
-    if formula[0] == "\u00ac":
+    if formula[0] == "¬":
         return not evaluate(formula[1], assignment)
     return (not evaluate(formula[1], assignment)) or evaluate(formula[2], assignment)
 
@@ -307,17 +307,17 @@ def axiom_instances(subfs: FrozenSet, max_complexity: int = 8) -> List:
     out: List = []
     for x in subfs:
         for y in subfs:
-            a1 = ("\u2192", x, ("\u2192", y, x))
+            a1 = ("→", x, ("→", y, x))
             if complexity(a1) <= max_complexity:
                 out.append(a1)
-            a3 = ("\u2192", ("\u2192", ("\u00ac", x), ("\u00ac", y)),
-                  ("\u2192", y, x))
+            a3 = ("→", ("→", ("¬", x), ("¬", y)),
+                  ("→", y, x))
             if complexity(a3) <= max_complexity:
                 out.append(a3)
             for z in subfs:
-                a2 = ("\u2192",
-                      ("\u2192", x, ("\u2192", y, z)),
-                      ("\u2192", ("\u2192", x, y), ("\u2192", x, z)))
+                a2 = ("→",
+                      ("→", x, ("→", y, z)),
+                      ("→", ("→", x, y), ("→", x, z)))
                 if complexity(a2) <= max_complexity:
                     out.append(a2)
     return out
@@ -340,7 +340,7 @@ def _bfs_closure(candidates: FrozenSet, start: List, max_rounds: int = 24):
     formula to None (axiom) or (a, b) (MP on a and b)."""
     implications: Dict = {}
     for c in candidates:
-        if isinstance(c, tuple) and c[0] == "\u2192":
+        if isinstance(c, tuple) and c[0] == "→":
             implications.setdefault(c[1], []).append(c)
     parent: Dict = {}
     order: List = []
@@ -444,11 +444,11 @@ def _forms_at(c: int):
     """All formulas of exactly complexity c over {P, Q}."""
     if c == 0:
         return ("P", "Q")
-    out = [("\u00ac", f) for f in _forms_at(c - 1)]
+    out = [("¬", f) for f in _forms_at(c - 1)]
     for i in range(c):
         for f in _forms_at(i):
             for g in _forms_at(c - 1 - i):
-                out.append(("\u2192", f, g))
+                out.append(("→", f, g))
     return tuple(out)
 
 
@@ -491,17 +491,17 @@ def demo() -> None:
     # Part 1
     print("\nPART 1 -- NUMBERING (the book's scheme, run for real)")
     print("  scheme: P->1, ->->2, not->3  (this machine adds Q->4)")
-    book_number = encode_symbols("\u00acP\u2192\u00ac\u00acP")
+    book_number = encode_symbols("¬P→¬¬P")
     expected = 2 ** 3 * 3 ** 1 * 5 ** 2 * 7 ** 3 * 11 ** 3 * 13 ** 1
     assert book_number == expected, "book example mismatch"
-    print(f"  encode(\"\u00acP\u2192\u00ac\u00acP\") = {book_number}")
+    print(f"  encode(\"¬P→¬¬P\") = {book_number}")
     print("    = 2^3 * 3^1 * 5^2 * 7^3 * 11^3 * 13^1   (matches Sec. 15.0.5)")
     print(f'  decode({book_number}) = "{decode_number(book_number)}"')
     print(f'  decode(32) = "{decode_number(32)}" -- not a formula: some')
     print("    numbers name no formula at all (as the book promises)")
     print('  encode("") = 1, decode(1) = ""  (the empty string lives at 1)')
-    proof_number = encode_proof(("P", "Q", "\u00acP"))
-    print(f"  proof level: encode_proof((P, Q, \u00acP)) = {proof_number}")
+    proof_number = encode_proof(("P", "Q", "¬P"))
+    print(f"  proof level: encode_proof((P, Q, ¬P)) = {proof_number}")
     print(f"    decode_proof -> {decode_proof(proof_number)}")
     print("  honest note: encoding the real 5-step proof below would need a")
     print("    number with ~10^160 digits. Nobody ever multiplies it out --")
@@ -510,11 +510,11 @@ def demo() -> None:
     # Part 2
     print("\nPART 2 -- REFERENCING (a real toy formal system)")
     print("  system: Lukasiewicz's A1/A2/A3 schemas + modus ponens, over {P, Q}.")
-    goal = parse_formula("P\u2192P")
+    goal = parse_formula("P→P")
     proof = search_proof(goal)
     assert proof is not None
-    n_pp = encode_symbols("P\u2192P")
-    print(f"  Prov(\u2308P\u2192P\u2309) = Prov({n_pp}) = True. The machine's actual proof:")
+    n_pp = encode_symbols("P→P")
+    print(f"  Prov(⌈P→P⌉) = Prov({n_pp}) = True. The machine's actual proof:")
     parent, _ = _bfs_closure(
         _candidate_space(goal, 8), axiom_instances(subformulas(goal), 8), 24
     )
@@ -524,7 +524,7 @@ def demo() -> None:
         how = "axiom" if src is None else f"MP: {index[src[0]]}, {index[src[1]]}"
         print(f"    {i}. {show(f):<42} [{how}]")
     n_p = encode_symbols("P")
-    print(f"  Prov(\u2308P\u2309) = Prov({n_p}) = False: the search closed with no")
+    print(f"  Prov(⌈P⌉) = Prov({n_p}) = False: the search closed with no")
     print("    derivation (and P is not a tautology).")
     sweep = _completeness_sweep()
     islands, derived = sweep["islands"], sweep["derived"]

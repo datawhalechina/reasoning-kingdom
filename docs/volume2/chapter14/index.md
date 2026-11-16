@@ -79,8 +79,8 @@ def show(f):
     if isinstance(f, str):
         return f
     if f[0] == "not":
-        return "\u00ac" + show(f[1])
-    return "(" + show(f[1]) + "\u2192" + show(f[2]) + ")"
+        return "¬" + show(f[1])
+    return "(" + show(f[1]) + "→" + show(f[2]) + ")"
 
 
 def is_axiom(f):
@@ -90,14 +90,14 @@ def is_axiom(f):
     A2:  (X -> (Y -> Z)) -> ((X -> Y) -> (X -> Z))
     A3:  (not X -> not Y) -> (Y -> X)
     """
-    if not (isinstance(f, tuple) and f[0] == "\u2192"):
+    if not (isinstance(f, tuple) and f[0] == "→"):
         return False
     # A1:  X -> (Y -> X)
-    if isinstance(f[2], tuple) and f[2][0] == "\u2192" and f[2][2] == f[1]:
+    if isinstance(f[2], tuple) and f[2][0] == "→" and f[2][2] == f[1]:
         return True
     # A3:  (not X -> not Y) -> (Y -> X)
-    if isinstance(f[1], tuple) and f[1][0] == "\u2192" \
-            and isinstance(f[2], tuple) and f[2][0] == "\u2192":
+    if isinstance(f[1], tuple) and f[1][0] == "→" \
+            and isinstance(f[2], tuple) and f[2][0] == "→":
         nx, ny = f[1][1], f[1][2]
         if isinstance(nx, tuple) and nx[0] == "not" \
                 and isinstance(ny, tuple) and ny[0] == "not" \
@@ -106,9 +106,9 @@ def is_axiom(f):
         # A2:  (X -> (Y -> Z)) -> ((X -> Y) -> (X -> Z))
         x, yz = f[1][1], f[1][2]
         xy, xz = f[2][1], f[2][2]
-        if isinstance(yz, tuple) and yz[0] == "\u2192" \
-                and isinstance(xy, tuple) and xy[0] == "\u2192" and xy[1] == x \
-                and isinstance(xz, tuple) and xz[0] == "\u2192" and xz[1] == x \
+        if isinstance(yz, tuple) and yz[0] == "→" \
+                and isinstance(xy, tuple) and xy[0] == "→" and xy[1] == x \
+                and isinstance(xz, tuple) and xz[0] == "→" and xz[1] == x \
                 and xy[2] == yz[1] and xz[2] == yz[2]:
             return True
     return False
@@ -141,7 +141,7 @@ def check_proof(lines):
             ok = (
                 b is not None
                 and isinstance(b, tuple)
-                and b[0] == "\u2192"
+                and b[0] == "→"
                 and b[1] == a
             )
             note = f"MP from lines {i},{j}" if ok else "rejected: illegal MP"
@@ -156,18 +156,18 @@ def check_proof(lines):
 # A legal five-line proof of P -> P (the stamp record, line by line).
 P = "P"
 LEGAL_PROOF = [
-    (("\u2192", P, ("\u2192", P, P)), None),  # 1  A1
-    (("\u2192", P, ("\u2192", ("\u2192", P, P), P)), None),  # 2  A1
+    (("→", P, ("→", P, P)), None),  # 1  A1
+    (("→", P, ("→", ("→", P, P), P)), None),  # 2  A1
     (
         (
-            "\u2192",
-            ("\u2192", P, ("\u2192", ("\u2192", P, P), P)),
-            ("\u2192", ("\u2192", P, ("\u2192", P, P)), ("\u2192", P, P)),
+            "→",
+            ("→", P, ("→", ("→", P, P), P)),
+            ("→", ("→", P, ("→", P, P)), ("→", P, P)),
         ),
         None,  # 3  A2
     ),
-    (("\u2192", ("\u2192", P, ("\u2192", P, P)), ("\u2192", P, P)), (2, 3)),  # 4  MP
-    (("\u2192", P, P), (1, 4)),  # 5  MP
+    (("→", ("→", P, ("→", P, P)), ("→", P, P)), (2, 3)),  # 4  MP
+    (("→", P, P), (1, 4)),  # 5  MP
 ]
 
 
@@ -183,9 +183,9 @@ def demo():
     assert all(ok for _, ok, _ in check_proof(LEGAL_PROOF))
     print("\nNow the illegal moves -- watch the rule sheet refuse:")
     attempts = [
-        (("\u2192", "P", "Q"), None, "I stamp P -> Q"),
-        (("\u2192", "P", "P"), (1, 1), "MP of line 1 with itself"),
-        (("\u2192", "P", "P"), "it is obviously true", "the real world says so"),
+        (("→", "P", "Q"), None, "I stamp P -> Q"),
+        (("→", "P", "P"), (1, 1), "MP of line 1 with itself"),
+        (("→", "P", "P"), "it is obviously true", "the real world says so"),
         (("P",), None, "P is true, so stamp it"),
     ]
     for f, why, story in attempts:
