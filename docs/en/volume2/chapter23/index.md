@@ -738,7 +738,7 @@ $$
 A_{\mathrm{obs}}=(0.1500,\ 0.7000,\ 0.1500).
 $$
 
-Why these two? They share one geometry but pull the condition number apart: C3 has $\kappa_T=8.60$, $\rho^*=0.792$; C4 has $\kappa_T=2.10$, $\rho^*=0.355$. If the model's step is near optimal, C3 should be visibly slower than C4; if the measured rates are about the same, the model is not using $\eta^*$ but a conservative step that does not adapt to the task. This contrast diagnoses the model's step size; $\rho^*$ was proved in 23.3.
+Why these two? They share one geometry but pull the condition number apart: C3 has $\kappa_T=8.60$, $\rho^*=0.792$; C4 has $\kappa_T=2.10$, $\rho^*=0.355$. If the model's step is near optimal, C3 should be visibly slower than C4; if the measured rates are about the same, the model is not using $\eta^*$ but a step that does not adapt to the task. This contrast diagnoses the model's step size; $\rho^*$ was proved in 23.3.
 
 Each task starts from three points:
 
@@ -771,7 +771,7 @@ Figure 23.8 has four panels.
 
 **(a) Tangent plane: is there a common fixed point?** The axes are $x_1$ and $x_2$; each polyline is one orbit, the hollow point is its start, and the black star is $A_{\mathrm{obs}}$. The three starts of a task approach the same star; C3 and C4 have different stars because the evidence differs. This panel answers “is there a fixed point,” not “how fast.”
 
-**(b) Semi-log: is convergence geometric?** The vertical axis is $\log_{10}d_E$ and the horizontal axis is step $t$. If every step multiplies by the same $\rho$, this is a straight line with slope $\log_{10}\rho$. Each orbit is drawn only until it falls below the two-decimal readout floor ($10^{-2}$); beyond that the last digit jitters, and plotting it adds only noise. C3's fitted rates are $0.61$–$0.75$, slightly below the theoretical $\rho^*=0.792$; C4's theoretical $\rho^*=0.355$ calls for a much steeper slope, and the model's orbits do not follow it.
+**(b) Semi-log: is convergence geometric?** The vertical axis is $\log_{10}d_E$ and the horizontal axis is step $t$. If every step multiplies by the same $\rho$, this is a straight line with slope $\log_{10}\rho$. Each orbit is drawn only until it falls below the two-decimal readout floor ($10^{-2}$); beyond that the last digit jitters, and plotting it adds only noise. C3's fitted rates are $0.61$–$0.75$, below the theoretical $\rho^*=0.792$; the reason is the squeeze argument below. C4's theoretical $\rho^*=0.355$ calls for a much steeper slope, and the model's orbits do not follow it.
 
 **(c) Log-log: is it a power law?** The axes are $\log_{10}(t+1)$ and $\log_{10}d_E$. A power law $d\propto t^{-\alpha}$ would be a straight line here. The same data bend downward; the fitted exponent drifts from $-3.3$ to $-1.8$ with the start. A genuine power law does not drift like that. Semi-log $R^2$ is $0.83$–$0.98$, log-log $R^2$ is $0.82$–$0.93$; the log-log problem is not merely a slightly lower $R^2$, but an exponent that moves with the start. Geometry is the better description. These panels are also drawn only above the readout floor.
 
@@ -784,13 +784,50 @@ Now the most interesting part. C3's three rates run from $0.610$ to $0.753$, all
 - $\rho^*$ is the optimal rate that Theorem 23.2 gives at the **optimal step** $\eta^*$, namely $\rho^*=\min_{\eta>0}\rho(\eta)$. It is the ideal projected-gradient operator's smallest compression factor and the fastest convergence theory allows.
 - $\rho_{\mathrm{emp}}$ is the rate the model walks under the “one small adjustment” prompt. The step size is the model's own choice.
 
-C4's gap has one explanation: the model's effective step is smaller than $\eta^*$. $\rho^*$ is not wrong; the model does not walk at the optimum. Theory says C3 should be much slower than C4 ($0.792$ versus $0.355$); the measurements put both tasks in the same band, C3 at $0.610$–$0.753$ and C4 at $0.711$–$0.754$. The model uses a conservative step that does not adapt to the task. Both tasks contract geometrically; the step is not $\eta^*$.
+C4's gap shows that the model does not sit at $\eta^*$. $\rho^*$ is not wrong; the model does not walk at the optimum. Theory says C3 should be much slower than C4 ($0.792$ versus $0.355$); the measurements put both tasks in the same band, C3 at $0.610$–$0.753$ and C4 at $0.711$–$0.754$. The model uses its own step, not the theoretical optimum. This is not anomalous: every step in the stability window is legal, and $\rho^*$ is only the fastest point in it.
+
+:::details Why the step need not sit at $\eta^*$: reading the squeeze theorem
+Squeeze theorem: if $a_n\le b_n\le c_n$ and $\lim a_n=\lim c_n=L$, then $\lim b_n=L$. It pins down the quantity in the middle, not either endpoint.
+
+What is pinned here is the error at every step. Fix $\eta$; the linearized matrix $J_T=I-\eta H_T$ has eigenvalues $1-\eta\lambda_i$. Let
+
+$$
+m(\eta)=\min_i|1-\eta\lambda_i|,\qquad
+\rho(\eta)=\max_i|1-\eta\lambda_i|.
+$$
+
+For any error vector $v$,
+
+$$
+m(\eta)\|v\|_2\le\|J_Tv\|_2\le \rho(\eta)\|v\|_2.
+$$
+
+After $t$ steps,
+
+$$
+m(\eta)^t\|v_0\|_2\le\|v_t\|_2\le \rho(\eta)^t\|v_0\|_2.
+$$
+
+The error is squeezed between two exponential curves. As long as $\rho(\eta)<1$, both bounds go to zero and the orbit converges; how fast it goes is legal anywhere in $[m(\eta),\rho(\eta)]$.
+
+The optimal step $\eta^*$ is special because it collapses this interval to a point:
+
+$$
+m(\eta^*)=\rho(\eta^*)=\rho^*.
+$$
+
+So $\eta^*$ gives the narrowest squeeze interval, not a legality threshold. Away from $\eta^*$ the bounds separate and the interval widens. A measured rate inside that interval is still a rate a legal step can produce.
+
+C4's $0.711$–$0.754$ lies above $\rho^*=0.355$ and corresponds to a widened legal interval; there is a step on each side of $\eta^*$ that can produce it. C3's $0.610$–$0.753$ lies below $\rho^*$, in a band with $m(\eta)<\rho^*<\rho(\eta)$: this orbit runs mostly on the mode that happens to be near-optimal for that step, not on the worst mode. The squeeze pins the interval, not its midpoint; the measured rate need not equal $\rho^*$.
+:::
+
+This also bounds what the experiment can say. C4's rate is above $\rho^*$, and the legal interval widens on both sides, so the rate alone cannot tell the slow solution from the fast one. C3's rate below $\rho^*$ means the orbit is near the lower bound, not that the step is illegal. Pinning both the step and the bounds requires a longer, finer window.
 
 This is the experiment's value: it verifies the geometry and the fixed point, and it measures how far the model sits from the optimal step.
 
 - **Geometry verified.** All six orbits contract in tangent space, semi-log is close to straight, the fixed point is the evidence-consistent posterior, and the tail diameter falls.
 - **Fixed point verified.** C3 and C4 land on their own posteriors; different starts, same landing point.
-- **Step size measured.** C4's measured rate is $0.711$–$0.754$ while $\eta^*$ gives $0.355$. The model walks its own small step. $\rho^*$ measures the ideal operator; $\rho_{\mathrm{emp}}$ measures the model.
+- **Step size measured.** C4's measured rate is $0.711$–$0.754$ while $\eta^*$ gives $0.355$. The model walks its own legal step, not the optimum. $\rho^*$ measures the ideal operator; $\rho_{\mathrm{emp}}$ measures the model.
 
 Two technical details. First, across the six orbits $d_H$ and $d_E$ differ by at most $0.03$ in rate; the two norms give the same contraction picture. Second, some orbits have not reached $\varepsilon=0.01$ within twelve steps; a longer window is the next experiment.
 
@@ -1032,7 +1069,7 @@ Intelligence and emergence look like miracles mainly when we stare at a single r
 
 **When does $\rho^*$ change with scale?** This chapter gives the criterion but not a model for $\rho^*(N)$. If the appearance of a slow mode has a critical scale, what determines that critical point? This is what the other half of the scaling curve really needs to answer.
 
-**Are twelve steps and two decimals enough?** The Cauchy certificate in 23.6 covers one finite window; the two-decimal readout floor is around $10^{-2}$. Can longer orbits and a finer readout estimate $\rho_{\mathrm{emp}}$ more stably? Does its gap from $\rho^*$ come from the model's conservative step, the readout precision, or a map that is not projected gradient? These are experimental questions, not algebraic ones.
+**Are twelve steps and two decimals enough?** The Cauchy certificate in 23.6 covers one finite window; the two-decimal readout floor is around $10^{-2}$. Can longer orbits and a finer readout estimate $\rho_{\mathrm{emp}}$ more stably? Does its gap from $\rho^*$ come from the model's step not being $\eta^*$, the readout precision, or a map that is not projected gradient? These are experimental questions, not algebraic ones.
 
 **Why does the fixed point move when the interface changes?** The “small adjustment” map in 23.6 converges to the evidence-consistent posterior; the earlier “answer immediately” map converged to a prior-dominated point. Which map is the model's real inference dynamics? This requires treating the interface, the prompt, and the readout as variables, not mistaking one readout for the whole model.
 
