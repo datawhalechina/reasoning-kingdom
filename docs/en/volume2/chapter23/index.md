@@ -398,6 +398,8 @@ These are the 0.183 and 0.45 in the table. Here $a=0.1256$ and $b=0.3344$, and t
 
 **The spectral harmonic step.** Given local curvature bounds $\mu\le\lambda\le L$: set $a=1/L$, $b=1/\mu$, take $\eta=2ab/(a+b)=2/(\mu+L)$, then check $\eta<2/L$ (not automatic once $\mu,L$ are estimates) and confirm the spectral bounds still hold at the current point. In the ideal Euclidean projected-gradient model this is exact; in a general nonlinear network $\mu,L$ are local bounds, the curvature moves, and each step needs a re-estimate.
 
+The same algebra appears in ADS's entropy control in Chapter 8: read the barrier $\alpha$ as the curvature, and $\eta(\alpha)=\eta_0/(1+\alpha)$ is closed under harmonic averaging — the harmonic mean of two steps is the step at the arithmetic mean of the barriers. There the entropy landscape is regulated; here the spectral endpoints are balanced; the coordinate changes, not the structure.
+
 > **One sentence:** the optimal step size is not the fastest step; it is the step that lets the slowest and the fastest arrive together.
 
 ---

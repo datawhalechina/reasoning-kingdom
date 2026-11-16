@@ -950,6 +950,20 @@ ADS's logarithmic barrier $\alpha = -\log(1 - B_s)$ is deforming that triangle d
 
 The barrier isn't "tuning parameters" — it's **reshaping the geometry of the search space by local uncertainty**.
 
+**ADS's step is a harmonic-mean family.** Read the logarithmic barrier as a barrier on the step — $\eta(\alpha)=\eta_0/(1+\alpha)$, the natural dynamical reading of ADS — and it is closed under harmonic averaging:
+
+$$
+\operatorname{HM}(\eta(\alpha_1),\eta(\alpha_2))
+=\frac{2\eta(\alpha_1)\eta(\alpha_2)}{\eta(\alpha_1)+\eta(\alpha_2)}
+=\eta\!\left(\frac{\alpha_1+\alpha_2}{2}\right).
+$$
+
+The harmonic mean of two steps is the step at the arithmetic mean of their barriers. Chapter 23's optimal step is the same algebra: there $\eta=1/\lambda$, and $\operatorname{HM}(1/\lambda_{\max},1/\lambda_{\min})=2/(\lambda_{\min}+\lambda_{\max})$. The barrier $\alpha$ plays the role of the curvature $\lambda$.
+
+This structure explains why a discrete search can search by regulating its own entropy landscape. The entropy quotient $B=H/H_{\max}$ is the only control; $\alpha$ translates it into a step; and the harmonic mean is dominated by the smaller end — the high-entropy end (large $\alpha$, small step) pulls the average toward itself, while the low-entropy end (small $\alpha$, large step) can only raise it a little. No external abstract parameter is needed: the search reads its own entropy and moves $\alpha$ along this harmonic-mean family, shifting continuously between exploration and exploitation.
+
+**One boundary.** This does not say $\eta(\alpha)$ is the harmonic mean of $\eta(0)$ and $\eta(\infty)$ — that mean is $0$. Closure is a relation between any two finite barriers; $\alpha\to\infty$ is the degenerate endpoint, where the step itself goes to zero.
+
 ---
 
 That "search is convergence" intuition is a geometric story in the heuristic setting.
