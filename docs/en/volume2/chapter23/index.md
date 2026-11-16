@@ -43,14 +43,13 @@ This chapter does one thing: **compute this number, then measure it on a real mo
 
 Another famous curve appears here: scaling law. Put loss on log-log axes with scale on the horizontal axis, and it is a straight line. This chapter uses the three-answer simplex for something more basic: first compute $\rho^*$, then measure the semi-log slope, the fixed point, and the Cauchy tail on a real model's reported beliefs; finally show that semi-log and log-log straight lines are two different laws and cannot impersonate each other.
 
-## The Chapter in Six Steps
+## The Chapter in Five Steps
 
 1. **23.1–23.3:** compress “how fast” into one number, $\rho^*$;
 2. **23.4:** show that this number depends only on two endpoints, and where those endpoints come from;
 3. **23.5:** draw $\rho^*$ as a semi-log line and compute the window;
 4. **23.6:** measure a Cauchy sequence on a real model;
-5. **23.7:** change the search ruler: one harmonic decision function walks a maze;
-6. **23.8:** close.
+5. **23.7:** close.
 
 If you are short on time, read 23.1, 23.3, 23.5, and 23.6. Sections 23.2 and 23.4 answer “why.”
 
@@ -1073,128 +1072,7 @@ It is a window of twelve steps and two decimals, one model, two tasks. That is a
 
 ---
 
-## 23.7 Harmonic Search: One Decision Function Walks a Maze
-
-Section 23.6 measured $\rho^*$. Looking back at the proof of Theorem 23.2, the most useful thing was not the number but the **balancing move**: make the two endpoints' relative deviations equal, and the point you get is the harmonic mean. This section turns the same move into a decision function for search.
-
-### The decision function
-
-A search node carries two numbers: the cost already paid, $g(n)$, and the estimated cost remaining, $h(n)$. A* orders by
-
-$$
-f(n)=g(n)+h(n).
-$$
-
-That is the balancing point in the sense of **absolute deviation**: $g+h$ is twice the arithmetic mean of $g$ and $h$ — it assumes the two halves of the path are measured with the same ruler.
-
-But the two halves are not at the same place. Near the start, one more step is negligible; near the goal, one more step is everything that remains. What should be balanced is the **relative deviation**:
-
-$$
-\left|1-\frac{x}{g}\right|=\left|1-\frac{x}{h}\right|.
-$$
-
-Solving gives
-
-$$
-\boxed{\ H(n)=\frac{2g(n)h(n)}{g(n)+h(n)}\ }
-$$
-
-That is the whole of harmonic search: **expand the node with the smallest $H$.** One function, and both of its inputs are quantities the search already computes. No second heuristic, no sampling, no averaging over paths.
-
-### Why this one
-
-**Theorem 23.4 (the balancing point of relative deviation).** Let $g,h>0$. Then
-
-$$
-H=\frac{2gh}{g+h}=\arg\min_{x>0}\ \max\left(\left|1-\frac{x}{g}\right|,\ \left|1-\frac{x}{h}\right|\right),
-$$
-
-and at $H$ both relative deviations equal $\dfrac{|g-h|}{g+h}$.
-
-:::details Proof
-
-Assume $g<h$ without loss. On $x\in[g,h]$, $\left|1-x/g\right|=x/g-1$ increases while $\left|1-x/h\right|=1-x/h$ decreases; they are equal when $x/g+x/h=2$, that is $x=2gh/(g+h)=H$. Outside the interval at least one deviation exceeds $\lvert g-h\rvert/(g+h)$, so $H$ is the global minimax point. $\square$
-
-:::
-
-This is Theorem 23.2 with a different pair of endpoints: there one balances $\lvert1-\eta/\kappa\rvert$ with $\kappa=1/\lambda$ the curvature radius; here one balances $\lvert1-x/g\rvert$ against $\lvert1-x/h\rvert$. Same harmonic mean, same move — make the two ends' worst relative errors equal.
-
-### It shifts gear on its own
-
-Take two limits and two familiar algorithms appear:
-
-$$
-h\gg g:\quad H\to 2g,
-\qquad
-g\gg h:\quad H\to 2h.
-$$
-
-Far from the goal ($h$ large), $H$ follows $g$, and the ordering degenerates into Dijkstra — spreading the nearby nodes uniformly. Near the goal ($g$ large), $H$ follows $h$, and the ordering degenerates into greedy best-first — chasing only what remains.
-
-So harmonic search is not a third algorithm. It is a **continuous interpolation**: Dijkstra at the far end, greedy at the near end, with the transition in between, no switch, no tunable weight. A* is a straight line on the absolute ruler, $H$ a curve on the relative ruler; the two orderings agree at $g=h$, the midpoint of the path, where $H$ equals $(g+h)/2$.
-
-### Walking the maze
-
-A $15\times15$ corridor maze, start $S$ upper left, goal $G$ lower right.
-
-![Figure 23.9: Harmonic search walks the corridor — greedy detours, A* floods, harmonic shifts gear](/figures/ch23_harmonic_maze.svg)
-
-Three algorithms, one maze:
-
-| Algorithm | Path length | Cells expanded | Ordering key | Optimality guarantee |
-| --- | --- | --- | --- | --- |
-| Greedy best-first | 36 | 37 | $h$ | none |
-| A* | 28 | 64 | $g+h$ | yes |
-| Harmonic search | 28 | 43 | $2gh/(g+h)$ | none |
-
-Greedy dives into the first plausible direction and detours for 36 steps. A* finds the right path but expands 64 cells: in a corridor, Manhattan distance is nearly flat, so too many nodes share the same $f$. Harmonic search shifts gear — steady as Dijkstra far away, decisive as greedy up close — and finishes in 43 expansions.
-
-In the figure, green is the harmonic path (identical to A*'s), the orange dashed line is greedy's detour, and the light blue and light green cells are the ones A* and harmonic search expanded.
-
-The algorithm itself is a single decision line:
-
-```python
-def harmonic_search(grid, start, goal):
-    open_ = [(0.0, start)]
-    best = {start: 0}
-    while open_:
-        _, node = heapq.heappop(open_)
-        if node == goal:
-            return reconstruct(node)
-        for nb in neighbors(grid, node):
-            g = best[node] + 1
-            if g < best.get(nb, float("inf")):
-                best[nb] = g
-                parent[nb] = node
-                h = manhattan(nb, goal)
-                heapq.heappush(open_, (2 * g * h / (g + h), nb))
-```
-
-### What it does not guarantee
-
-$H$ is not a lower bound, and it stands in no A*-style relation to the true total cost, so A*'s optimality proof does not apply. **The 28 steps in the figure are a fact about this maze, not a theorem.** On another maze it may take a path one step longer.
-
-The mechanism is clear too: the closer to the goal, the more $H$ resembles $h$, and $h$ underestimates — so the search can hit the goal before optimality has been proved. That is the price of shifting gear: the more decisive the near end, the more it may miss.
-
-### Feeding back into A*: put $H$ in the tie-break
-
-$H$ need not be the primary key. A*'s primary key $f=g+h$ must stay — optimality rests on it; but **the order among equal $f$ is free**.
-
-**Theorem 23.5 (ties do not break optimality).** Let $h$ be consistent and let A* expand in increasing $f=g+h$. Expanding nodes with equal $f$ in any order still returns an optimal path.
-
-:::details Proof
-
-With a consistent heuristic, a node's $g$ is already optimal when it is popped. Every node with $f<C^*$ must be expanded regardless of order; among nodes with $f=C^*$, the optimal path to the goal is completed during the expansion, and the order of ties changes only the expansion count, not which optimal path is reachable. $\square$
-
-:::
-
-So use it like this: keep $f$ as the primary key, order ties by $H$. On the same maze, A*'s 64 expansions become 51, with the path length unchanged. $g$ and $h$ are already on every node; A* uses only their sum. Their ratio was left unused all along.
-
-> **One sentence:** harmonic search adds no information; it only changes the ruler — balancing the relative deviations of $g$ and $h$.
-
----
-
-## 23.8 Conclusion: Intelligence, Emergence, and the Ordinary Equation
+## 23.7 Conclusion: Intelligence, Emergence, and the Ordinary Equation
 
 Back to the opening: three answers, initial error $0.648$, three steps to $0.1$, each step multiplying by about $0.45$.
 

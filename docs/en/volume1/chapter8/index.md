@@ -430,8 +430,6 @@ Greedy changes the choice made on a given set. ADS changes the set itself.
 
 **Put together.** A\* proves that on a fixed topology, a good selection function can cut the search cost without sacrificing optimality — that's **the wisdom of choice**. MCTS proves that on a fixed topology, random sampling plus statistical backpropagation can approach optimality with no heuristic at all — that's **the wisdom of statistics**. ADS proves that if you give up the fixed-topology assumption and reshape the search space dynamically with information-theoretic quantities, you get a search strategy of a completely different kind — that's **the wisdom of geometry**. Reading ADS as greed misses its most important insight: **the shape of the search space itself is a variable you can optimize.**
 
-**One step further.** A\* orders by $g+h$ — the arithmetic sum of the cost paid and the cost remaining — assuming the two halves of the path are measured with one ruler. Chapter 23 switches to a relative ruler: make $|1-x/g|$ equal $|1-x/h|$, and the solution is a single decision function, $H=2gh/(g+h)$. No sampling, no greed, no second heuristic; it walks a maze directly: on the same corridor it covers in 43 expansions what A\* covers in 64, behaving like Dijkstra far from the goal and like greedy near it. To see how it feeds back into A\*'s tie-break, go to [Chapter 23, Section 23.7](/en/volume2/chapter23/).
-
 <div class="center">
 
 ------------------------------------------------------------------------
