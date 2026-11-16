@@ -111,7 +111,12 @@ import functools
 import itertools
 import math
 import string
+import sys
 from typing import Dict, FrozenSet, Iterator, List, Optional, Tuple
+
+# Python 3.11+ caps int-to-string conversion; Part 3 prints a 7000-digit number.
+if hasattr(sys, "set_int_max_str_digits"):
+    sys.set_int_max_str_digits(0)
 
 # The book's scheme (P=1, ->=2, not=3) extended to Q and plain ASCII so
 # Part 3 can quote sentences; real Goedel numbering covers every symbol
