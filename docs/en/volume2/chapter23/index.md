@@ -833,7 +833,9 @@ Put the two tasks side by side: C4's $\rho^*=0.355$ below, C3's $\rho^*=0.792$ a
 
 **What this step proves.** It is an existence proof for these two tasks, six starts, and a twelve-step window. The $72$ readouts are not $72$ independent experiments but time points of six orbits; nor is this a universal claim about all prompts and temperatures. Changing prompts, changing temperature, adding tasks is the next step from "exists in these two" to "exists on a wider range". The optimal orbit itself can be written down: at $\eta^*$, $m(\eta^*)=\rho(\eta^*)=\rho^*$; it is a mathematically constructible orbit. The model need not walk it; the real orbit only has to fall inside the range it licenses.
 
-This is the experiment's value: it verifies the geometry and the fixed point, and it measures how far the model sits from the optimal step.
+**Top models live in the interval too.** This is not "DeepSeek happened to pass"; it is the construction doing its job: as long as a model makes small Bayesian updates on the simplex, its legal rate lies in $[m(\eta),\rho(\eta)]$; for these two tasks, the two optimal lines pin the range to $[0.355,0.792]$. DeepSeek's six orbits are $0.610$–$0.754$, all inside, none pressed against the endpoints. The measured behavior of this top model is inside the constructed interval—the resident is not a paper construction; a real large model lives in it. Whether every top model does the same needs more models; the construction itself does not favor any model.
+
+This is the experiment's value: it verifies the geometry and the fixed point, measures how far the model sits from the optimal step, and confirms that the constructed interval is not empty.
 
 - **Geometry verified.** All six orbits contract in tangent space, semi-log is close to straight, the fixed point is the evidence-consistent posterior, and the tail diameter falls.
 - **Fixed point verified.** C3 and C4 land on their own posteriors; different starts, same landing point.
