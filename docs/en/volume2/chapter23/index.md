@@ -248,6 +248,16 @@ Figure 23.1 draws compression on the probability simplex. The orbit starts at $p
 
 **Don't confuse it with the step size $\eta$.** $\eta$ is how big a step you take; $\rho$ is how much error is left after that step. A larger step is not always better: past $\eta^*$ it overshoots and $\rho$ rises again. The “optimal” in $\rho^*$ means **the smallest retention ratio**, not the largest rate.
 
+**This is also a ledger of learning efficiency.** Treat one update as one purchase: the step size $\eta$ is what you pay—computation, sampling, the risk of overshoot—and the error cleared, $1-\rho$, is what you get back. The larger $\rho$ is, the less each step buys. To push the error from $d_0$ to $\varepsilon$ you need roughly
+
+$$
+N(\varepsilon)\approx\frac{\ln(d_0/\varepsilon)}{-\ln\rho}
+$$
+
+steps; a larger $\rho$ makes the denominator smaller, the step count larger, and the total cost higher. So $\rho$ is a cost-side parameter: it measures not “how fast it learns” but “how much is still owed after each step.”
+
+The per-step input–output ratio can be written $(1-\rho)/\eta$—error cleared per unit of step. But watching only this ratio misses the total bill: on the linearized branch $\eta\le\eta^*$, $\rho=1-\eta\lambda_{\min}$, so this ratio is exactly the constant $\lambda_{\min}$; single-step efficiency cannot tell step sizes apart, and the difference shows up in how many steps you must pay for. Nor is a larger step always a better deal—past $\eta^*$, $\rho$ rises again and both the step count and the overshoot risk climb. $\rho^*$ is the optimum of this ledger: it minimizes the worst-case retention per step, hence the upper bound on the number of steps needed. Section 23.5 turns this ledger into a step-count formula you can compute.
+
 > **One sentence:** the contraction rate is the retention ratio of the slowest direction; after each step the error is at most $\rho$ times what it was, and this “at most” is attainable.
 
 ---
