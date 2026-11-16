@@ -39,16 +39,16 @@ After two or three steps, the error is multiplied by about 0.45 each time: $0.64
 
 That 0.45 is the protagonist of this chapter. It is called the **contraction rate**, written $\rho^*$.
 
-This chapter does one thing: **compute this number, then use it to reproduce the most famous curve in modern AI.**
+This chapter does one thing: **compute this number, then measure it on a real model's belief orbit.**
 
-That curve is called scaling law. Put loss on log-log axes with scale on the horizontal axis, and it is a straight line. In recent years it has been put under a spotlight; the spotlight falls on engineering scale, while the formula itself is plain: loss minus its floor is proportional to a negative power of scale. At the end of this chapter we will reproduce that straight line from the simplex with our own hands. Not by repeating any one company's experiment, but by reproducing its “straightness” — you will see that this line was not invented by anyone; it is a necessary consequence of simplex geometry.
+Another famous curve appears here: scaling law. Put loss on log-log axes with scale on the horizontal axis, and it is a straight line. This chapter uses the three-answer simplex for something more basic: first compute $\rho^*$, then measure the semi-log slope, the fixed point, and the Cauchy tail on a real model's reported beliefs; finally show that semi-log and log-log straight lines are two different laws and cannot impersonate each other.
 
 ## The Chapter in Five Steps
 
 1. **23.1–23.3:** compress “how fast” into one number, $\rho^*$;
 2. **23.4:** show that this number depends only on two endpoints, and where those endpoints come from;
 3. **23.5:** draw $\rho^*$ as a semi-log line and compute the window;
-4. **23.6:** reproduce the scaling-law line from the simplex;
+4. **23.6:** measure a Cauchy sequence on a real model;
 5. **23.7:** close.
 
 If you are short on time, read 23.1, 23.3, 23.5, and 23.6. Sections 23.2 and 23.4 answer “why.”
@@ -59,7 +59,7 @@ $$
 \boxed{\ \rho^*=\frac{\kappa_T-1}{\kappa_T+1}\ }
 $$
 
-where $\kappa_T=\theta_{\max}/\mu_T$ is the condition number of the tangent Hessian. Don't worry yet about where it comes from; you only need to know that it measures how many times steeper the steepest direction of the energy surface is than the flattest. This number determines the slope of the error curve, the number of steps needed to reach accuracy $\varepsilon$, and whether an “emergent” jump has a dynamical basis. No second scalar is needed.
+where $\kappa_T=\lambda_{\max}/\lambda_{\min}$ is the condition number of the tangent Hessian. Don't worry yet about where it comes from; you only need to know that it measures how many times steeper the steepest direction of the energy surface is than the flattest. This number determines the slope of the error curve, the number of steps needed to reach accuracy $\varepsilon$, and whether an “emergent” jump has a dynamical basis. No second scalar is needed.
 
 Why “corollary”? Because the engine of convergence is still Banach's fixed-point theorem, and the energy surface is still the KL divergence from information theory. This chapter does not replace the engine. It reads off the engine's power.
 
@@ -134,7 +134,7 @@ One boundary of language matters here: a parameter-space update does not itself 
 Linearize the two dynamics near $A$: both multiply the error by $I-\eta H_T$. $H_T$ has $K-1$ eigenvalues, but the long-run rate is set by only the slowest and the fastest endpoints:
 
 $$
-\kappa_T=\frac{\theta_{\max}}{\mu_T},
+\kappa_T=\frac{\lambda_{\max}}{\lambda_{\min}},
 \qquad
 \rho^*=\frac{\kappa_T-1}{\kappa_T+1}.
 $$
@@ -167,14 +167,14 @@ $$
 e_{t+1}\approx J e_t.
 $$
 
-A matrix compresses different directions by different amounts. Its eigenvalues $\lambda_i$ are the multipliers: along the $i$-th eigendirection, the error is multiplied by $\lambda_i$ each step.
+A matrix compresses different directions by different amounts. Its eigenvalues $j_i$ are the multipliers: along the $i$-th eigendirection, the error is multiplied by $j_i$ each step.
 
 In the long run, **the slowest direction decides everything.** If one direction multiplies by $0.9$ and another by $0.1$, after ten steps the first still has $0.35$ while the second is down to $10^{-10}$. The fast direction left long ago; the shape and speed of the error are now controlled by the slow direction.
 
 So “how fast” is not an average; it is the slowest multiplier:
 
 $$
-\rho=\max_i|\lambda_i|.
+\rho=\max_i|j_i|.
 $$
 
 ### Writing down the multiplier matrix
@@ -210,7 +210,7 @@ $$
 J_T=I_T-\eta H_T.
 $$
 
-Its eigenvalues are $1-\eta\lambda_i$, where $\lambda_i$ are the eigenvalues of $H_T$. Hence
+Its eigenvalues are $1-\eta\lambda_i$ (the multidimensional version of the multipliers $j_i$ above), where $\lambda_i$ are the eigenvalues of $H_T$. Hence
 
 $$
 \rho(\eta)=\max_i|1-\eta\lambda_i|.
@@ -260,28 +260,28 @@ $$
 
 It is a V-shaped curve, with its minimum at $\lambda=1/\eta$ and both arms rising.
 
-We want the maximum of this V over the interval $[\mu_T,\theta_{\max}]$. A V-shape is convex, and a convex function on an interval attains its maximum only at an endpoint. So how many eigenvalues lie in between, and where, does not affect the worst case.
+We want the maximum of this V over the interval $[\lambda_{\min},\lambda_{\max}]$. A V-shape is convex, and a convex function on an interval attains its maximum only at an endpoint. So how many eigenvalues lie in between, and where, does not affect the worst case.
 
-**Lemma 23.1.** Suppose $\mu_T\le\lambda_i\le\theta_{\max}$. For every $\eta>0$,
+**Lemma 23.1.** Suppose $\lambda_{\min}\le\lambda_i\le\lambda_{\max}$. For every $\eta>0$,
 
 $$
 \max_i|1-\eta\lambda_i|
-=\max\left(|1-\eta\mu_T|,\ |1-\eta\theta_{\max}|\right).
+=\max\left(|1-\eta\lambda_{\min}|,\ |1-\eta\lambda_{\max}|\right).
 $$
 
-**Proof.** Fix $\eta$. The function $g(\lambda)=|1-\eta\lambda|$ is convex in $\lambda$ (an absolute value composed with an affine function). A convex function on an interval attains its maximum at an endpoint. Thus $g(\lambda_i)\le\max(g(\mu_T),g(\theta_{\max}))$ for every $\lambda_i$, and the endpoints are themselves eigenvalues, so equality holds. $\square$
+**Proof.** Fix $\eta$. The function $g(\lambda)=|1-\eta\lambda|$ is convex in $\lambda$ (an absolute value composed with an affine function). A convex function on an interval attains its maximum at an endpoint. Thus $g(\lambda_i)\le\max(g(\lambda_{\min}),g(\lambda_{\max}))$ for every $\lambda_i$, and the endpoints are themselves eigenvalues, so equality holds. $\square$
 
-This lemma compresses a $(K-1)$-dimensional spectrum into two numbers: **the minimum $\mu_T$ and the maximum $\theta_{\max}$.** How many eigenvalues lie in between, and where, does not affect the contraction rate.
+This lemma compresses a $(K-1)$-dimensional spectrum into two numbers: **the minimum $\lambda_{\min}$ and the maximum $\lambda_{\max}$.** How many eigenvalues lie in between, and where, does not affect the contraction rate.
 
 It also gives the exact stability window:
 
 $$
 \rho(\eta)<1
 \iff
-0<\eta<\frac{2}{\theta_{\max}}.
+0<\eta<\frac{2}{\lambda_{\max}}.
 $$
 
-Why this boundary? When the step is too large, the fastest mode $1-\eta\theta_{\max}$ is the first to cross $-1$: the error starts flipping sign and growing. The boundary is exact, not “approximately here.”
+Why this boundary? When the step is too large, the fastest mode $1-\eta\lambda_{\max}$ is the first to cross $-1$: the error starts flipping sign and growing. The boundary is exact, not “approximately here.”
 
 > **One sentence:** watch only the flattest and the steepest directions; the eigenvalues in between change the shape of the spectrum, not the worst case.
 
@@ -295,30 +295,30 @@ Too small: the slow direction barely moves and the error stalls early. Too large
 
 Draw the two endpoint errors as two lines:
 
-- slow mode: $|1-\eta\mu_T|$, falling as $\eta$ grows;
-- fast mode: $|1-\eta\theta_{\max}|$, rising as $\eta$ grows.
+- slow mode: $|1-\eta\lambda_{\min}|$, falling as $\eta$ grows;
+- fast mode: $|1-\eta\lambda_{\max}|$, rising as $\eta$ grows.
 
 One falls, one rises; their intersection is the optimum:
 
 $$
-\rho^*=\inf_{\eta>0}\ \max\left(|1-\eta\mu_T|,\ |1-\eta\theta_{\max}|\right).
+\rho^*=\inf_{\eta>0}\ \max\left(|1-\eta\lambda_{\min}|,\ |1-\eta\lambda_{\max}|\right).
 $$
 
 At the optimum, the two branches are equal:
 
 $$
-1-\eta\mu_T=\eta\theta_{\max}-1.
+1-\eta\lambda_{\min}=\eta\lambda_{\max}-1.
 $$
 
 Solving,
 
 $$
-\eta^*=\frac{2}{\mu_T+\theta_{\max}},
+\eta^*=\frac{2}{\lambda_{\min}+\lambda_{\max}},
 \qquad
-\rho^*=\frac{\theta_{\max}-\mu_T}{\theta_{\max}+\mu_T}
+\rho^*=\frac{\lambda_{\max}-\lambda_{\min}}{\lambda_{\max}+\lambda_{\min}}
 =\frac{\kappa_T-1}{\kappa_T+1},
 \qquad
-\kappa_T=\frac{\theta_{\max}}{\mu_T}.
+\kappa_T=\frac{\lambda_{\max}}{\lambda_{\min}}.
 $$
 
 The name of $\kappa_T$ is the **condition number**. Here it is just a ratio: how many times steeper the steepest direction is than the flattest.
@@ -326,7 +326,7 @@ The name of $\kappa_T$ is the **condition number**. Here it is just a ratio: how
 **Theorem 23.2 (the rate form of the Yonglin Corollary).** Inside the stability window, the minimum of $\rho(\eta)$ is $\rho^*$, attained uniquely at $\eta^*$. Moreover,
 
 $$
-|1-\eta^*\mu_T|=|1-\eta^*\theta_{\max}|=\rho^*.
+|1-\eta^*\lambda_{\min}|=|1-\eta^*\lambda_{\max}|=\rho^*.
 $$
 
 That is, the optimal step size makes the slowest and the fastest modes contract at exactly the same speed.
@@ -336,13 +336,13 @@ This rate has four exact properties, each a one-line calculation:
 1. **Range.** $0\le\rho^*<1$. When $\kappa_T=1$ (all tangent eigenvalues equal), $\rho^*=0$ and one step suffices; as $\kappa_T\to\infty$, $\rho^*\to1$ and convergence becomes arbitrarily slow.
 2. **Monotonicity.** $\dfrac{d\rho^*}{d\kappa_T}=\dfrac{2}{(\kappa_T+1)^2}>0$. A larger condition number means a worse rate, without exception.
 3. **Invertibility.** $\kappa_T=\dfrac{1+\rho^*}{1-\rho^*}$. Rate and condition number correspond one-to-one: knowing the rate is knowing the condition number, and vice versa. In this sense, $\rho^*$ is a complete invariant of the condition number.
-4. **Endpoint dependence.** By Lemma 23.1, $\rho^*$ is determined only by $\mu_T,\theta_{\max}$. The shape of the spectrum in between never enters the formula.
+4. **Endpoint dependence.** By Lemma 23.1, $\rho^*$ is determined only by $\lambda_{\min},\lambda_{\max}$. The shape of the spectrum in between never enters the formula.
 
 Property 3 is worth a second look. It says that “how fast it converges” and “how anisotropic the energy surface is” are not two independent questions: they are two ways of writing the same number.
 
 ![Figure 23.2: Three readings of one scalar — the exact V, the rate-condition-number inverse, and the exact linear sandwich for the window](/figures/ch23_rate_properties.png)
 
-Panel (a) is the V-shape of $\rho(\eta)$. The left branch is controlled by the slow mode $|1-\eta\mu_T|$, the right branch by the fast mode $|1-\eta\theta_{\max}|$, and the intersection is $(\eta^*,\rho^*)$. The dashed line is the stability boundary $2/\theta_{\max}$.
+Panel (a) is the V-shape of $\rho(\eta)$. The left branch is controlled by the slow mode $|1-\eta\lambda_{\min}|$, the right branch by the fast mode $|1-\eta\lambda_{\max}|$, and the intersection is $(\eta^*,\rho^*)$. The dashed line is the stability boundary $2/\lambda_{\max}$.
 
 Panel (b) is $\rho^*=(\kappa_T-1)/(\kappa_T+1)$. It is monotone, bounded, and invertible.
 
@@ -355,7 +355,7 @@ Figure 23.3 isolates the relation. The left panel plots $\rho^*=(\kappa_T-1)/(\k
 Back to the opening example. $q=(0.70,0.20,0.10)$ gives
 
 $$
-\mu_T=2.9904,\quad \theta_{\max}=7.9620,\quad \kappa_T=2.6625,
+\lambda_{\min}=2.9904,\quad \lambda_{\max}=7.9620,\quad \kappa_T=2.6625,
 $$
 
 $$
@@ -370,7 +370,7 @@ These are the 0.183 and 0.45 in the table. The first ratio, 0.335, is the residu
 
 ## 23.4 Where the Two Endpoints Come From
 
-Only one thing remains: where do $\mu_T$ and $\theta_{\max}$ come from?
+Only one thing remains: where do $\lambda_{\min}$ and $\lambda_{\max}$ come from?
 
 Take an example with $K=6$ and anchor
 
@@ -431,7 +431,7 @@ $$
 Hence
 
 $$
-\mu_T=3.32,\qquad \theta_{\max}=18.03,\qquad \kappa_T=5.43.
+\lambda_{\min}=3.32,\qquad \lambda_{\max}=18.03,\qquad \kappa_T=5.43.
 $$
 
 - The smallest eigenvalue is the slow mode: “redistribute mass between the two most likely answers”;
@@ -456,7 +456,7 @@ $$
 d_{(1)}<\lambda_1<d_{(2)}<\cdots<\lambda_{K-1}<d_{(K)}.
 $$
 
-To get $\mu_T$ and $\theta_{\max}$, bisect once between the two smallest $d_i$ and once between the two largest. For $K=3$, the secular equation becomes
+To get $\lambda_{\min}$ and $\lambda_{\max}$, bisect once between the two smallest $d_i$ and once between the two largest. For $K=3$, the secular equation becomes
 
 $$
 3s_3\lambda^2-2s_2\lambda+1=0,
@@ -486,7 +486,7 @@ Numerically, $K=5,10,50,200,1000$ give $\kappa_T=5.0000,10.0000,50.0000,199.9998
 
 ![Figure 23.6: The full-space condition number diverges; the tangent condition number saturates at $K$](/figures/ch23_kappa_saturation.png)
 
-Panel (a) of Figure 23.6 is the symmetric vertex limit for $K=5$: the red line is the full-space condition number, diverging logarithmically as $t\to1$; the blue line is the tangent condition number, sitting firmly at $K=5$. Panel (b) normalizes the spectrum by $\mu_T$: the minimum stays at 1, while the other $K-1$ eigenvalues rise together to $K$. The divergence has not disappeared; the constraint has redistributed it into a coupling among $K$ answers.
+Panel (a) of Figure 23.6 is the symmetric vertex limit for $K=5$: the red line is the full-space condition number, diverging logarithmically as $t\to1$; the blue line is the tangent condition number, sitting firmly at $K=5$. Panel (b) normalizes the spectrum by $\lambda_{\min}$: the minimum stays at 1, while the other $K-2$ eigenvalues rise together to $K$. The divergence has not disappeared; the constraint has redistributed it into a coupling among $K$ answers.
 
 :::
 
@@ -589,104 +589,385 @@ The window falls inside the bounds, and the two bounds differ by only $1.15$ ste
 
 > **One sentence:** the rate is the slope; the window is computed, not felt.
 
-The next section applies this distinction to scaling law: the industrial curve is a log-log straight line, while the orbit in this chapter is a semi-log straight line. They are not the same curve; but the “straightness” of both comes from the same multiplicative bookkeeping.
+The next section brings this distinction to a real model: if the orbit is geometric, semi-log should be straight; if it is a power law, only log-log should be. The same API data is plotted in both coordinates.
 
 ---
 
-## 23.6 Reproducing That Curve
+## 23.6 Industrial Verification: Measuring a Cauchy Sequence on a Real Model
 
-The previous section separated two coordinate systems: geometric convergence is a straight line on semi-log axes, while a power law is a straight line on log-log axes. The most famous curve in industry belongs to the latter. Its name is scaling law.
+The previous section separated two coordinate systems: geometric convergence is a straight line on semi-log axes, while a power law is a straight line on log-log axes. Now bring the ruler to a real model and measure an actual belief orbit.
 
-First, flatten the formula. Let $s$ denote scale — samples, parameters, or compute; choose one axis — and write a scaling law as
+“Industrial” means three things here: the interface is real (DeepSeek chat completions), the protocol is fixed (same prompt, same temperature, same number of steps), and the data is auditable (every distance series, the analysis code, and the figure are in this section). One model, two tasks: a case. Every step of the case can be rerun and refuted.
 
-$$
-L(s)=L_\infty+c\,s^{-\alpha}.
-$$
+### Why move the ruler to tangent space
 
-$L_\infty$ is the floor, $c$ is a constant, and $\alpha$ is the exponent. Plot $L(s)-L_\infty$ on log-log axes and it is a straight line of slope $-\alpha$. On first seeing this line, one may assume it hides a secret; in fact, any multiplicative relation is a straight line on log-log paper. What needs explaining is not the “straightness” but three numbers: where the floor is, how large the constant is, and what determines the exponent.
-
-This section does not explain the exponent of any particular laboratory. The exponent is decided jointly by data, architecture, optimizer, and training recipe; it is a question for empirical science. Here we do something smaller and more basic: in a toy system, compute this straight line from the simplex. The slope we get is $-1$. It does not impersonate an industrial exponent; it only shows how ordinary the “straightness” of this line can be.
-
-### The data axis: one ordinary count
-
-Let the true conditional distribution be
+Start with a metric problem. You might want to measure the KL between consecutive steps:
 
 $$
-q=(q_1,\dots,q_K).
+D_{\mathrm{KL}}(p_t\|p_{t+1}).
 $$
 
-A system can estimate it only from $s$ samples, obtaining the empirical distribution $\hat q$. The energy surface from Chapter 12 gives
+It cannot serve as a distance. KL is asymmetric and does not satisfy the triangle inequality; the open simplex
 
 $$
-D_{\mathrm{KL}}(q\|\hat q)\approx \frac12(\hat q-q)^\top H_T(\hat q-q),
+\Delta^{K-1}=\left\{p:\ p_i>0,\ \sum_i p_i=1\right\}
 $$
 
-where $H_T$ is exactly the tangent Hessian from 23.1. The covariance of empirical frequencies is
+is not a complete metric space. “Cauchy sequence” has no definition there.
+
+The move is to bring beliefs to tangent space. Let
 
 $$
-\mathbb E\bigl[(\hat q-q)(\hat q-q)^\top\bigr]
-=\frac1s\bigl(\operatorname{diag}(q)-qq^\top\bigr).
+T=\left\{v\in\mathbb R^K:\ \sum_i v_i=0\right\},
+\qquad
+u=\left(\frac1K,\dots,\frac1K\right).
 $$
 
-In the second-order approximation, taking the expectation of the quadratic form gives
+For $K=3$, take an orthonormal basis
 
 $$
-\mathbb E\,D_{\mathrm{KL}}(q\|\hat q)=\frac{K-1}{2s}+O(s^{-2}).
+e_1=\frac{(1,0,-1)}{\sqrt2},
+\qquad
+e_2=\frac{(1,-2,1)}{\sqrt6},
 $$
 
-:::details A one-line verification
-Write $C=\operatorname{diag}(q)-qq^\top$. Every row of $C$ sums to zero, so it already lies in the tangent space and $P_TCP_T=C$. Hence
+and define coordinates
 
 $$
-\operatorname{tr}(H_TC)
-=\operatorname{tr}\bigl(\operatorname{diag}(1/q)C\bigr)
-=\sum_i(1-q_i)=K-1.
+x(p)=\bigl(\langle p-u,e_1\rangle,\ \langle p-u,e_2\rangle\bigr).
 $$
+
+Because the difference of any two probability vectors lies in $T$,
+
+$$
+\|x(p)-x(q)\|_2=\|p-q\|_2.
+$$
+
+$T$ is isomorphic to $\mathbb R^{K-1}$ and complete. The Cauchy definition finally has ground to stand on:
+
+$$
+\forall\varepsilon>0,\ \exists N,\ \forall m>n\ge N:
+\quad \|x_m-x_n\|_2<\varepsilon.
+$$
+
+Equivalently, define the tail diameter
+
+$$
+\varepsilon_N=\max_{m>n\ge N}\|x_m-x_n\|_2.
+$$
+
+The sequence is Cauchy exactly when $\varepsilon_N\to0$.
+
+If the update map $F$ on $T$ is a contraction, meaning that for some $\rho<1$,
+
+$$
+\|F(x)-F(y)\|_2\le\rho\|x-y\|_2,
+$$
+
+then every orbit is automatically Cauchy:
+
+$$
+\|x_t-x^*\|_2\le\rho^t\|x_0-x^*\|_2,
+$$
+
+and by Banach's fixed-point theorem the fixed point $x^*$ is unique. The $\rho^*$ of 23.1–23.5 is the smallest factor this contraction can have at the optimal step. What we test here is whether the model's reported orbit also contracts like $\rho^t$ and has a unique fixed point. We measure the rate the model actually walks. $\rho^*$ is the ideal operator's rate at $\eta^*$; whether the model uses $\eta^*$ is what the experiment answers.
+
+There is one more ruler worth crossing. The Bregman tangent norm
+
+$$
+d_H(p,A)^2=(p-A)^\top\operatorname{diag}\!\left(\frac1A\right)(p-A)
+$$
+
+is the second-order principal part of KL near $A$. The analysis below computes both $d_E$ (Euclidean distance in tangent space) and $d_H$; across the six orbits the two rates differ by at most $0.03$. Euclidean distance is not a shortcut here; it agrees with Bregman geometry.
+
+:::details Why $d_H$ is the second-order principal part of KL
+Let $p=A+v$ with $\sum_i v_i=0$. Expand each component:
+
+$$
+\log\frac{A_i}{p_i}
+=-\log\left(1+\frac{v_i}{A_i}\right)
+=-\frac{v_i}{A_i}+\frac{v_i^2}{2A_i^2}+O(v_i^3).
+$$
+
+Multiply by $A_i$ and sum. The linear term is $-\sum_i v_i=0$, and the quadratic term is
+
+$$
+\sum_i A_i\cdot\frac{v_i^2}{2A_i^2}
+=\frac12\sum_i\frac{v_i^2}{A_i}
+=\frac12 d_H(p,A)^2.
+$$
+
+So $D_{\mathrm{KL}}(A\|p)=\frac12d_H(p,A)^2+O(\|p-A\|^3)$. In this ruler $\rho^*$ is exact.
 :::
 
-This formula uses no model structure. It says only: with $K$ answers and $s$ samples, the error falls as $1/s$. Plot $L(s)-H(q)$ on log-log axes and you get a straight line of slope $-1$; different $K$ shift the intercept but not the slope. In this toy the floor is exactly the data entropy $H(q)$; a real system's floor also contains irreducible noise, which is why we write $L_\infty$.
+> **One sentence:** do not measure KL on the simplex; move the belief to tangent space and measure the Cauchy sequence in Euclidean distance.
 
-This is the second-order term. The exact KL is inflated by zero-frequency events at finite sample size; that is a separate boundary, and it changes the intercept at small $s$, not the slope.
+### Experiment design: two tasks, three starts
 
-Note that $H_T$ is not new. It is the matrix from 23.1, and 23.4 already showed that its tangent condition number is pinned near $K$ by the constraint. The same $H_T$ does two jobs: its two endpoints decide how fast convergence is ($\rho^*$), and its trace decides how high the finite-sample floor is ($(K-1)/(2s)$). One curve governs speed, the other governs the floor; they are not two theories, but the two sides of one sheet of paper.
+Protocol: each step writes the current belief as one line of text and asks the model not to re-solve the problem but to make one small adjustment in the direction the evidence points, then to box the updated triple in `\boxed{}`; that triple is the next input. Temperature $0$, three starts per task, twelve steps each.
 
-### The dimension axis: the other half of the same Hessian
+The experiment uses two tasks from the same family with different condition numbers.
 
-The floor formula still contains $K$, and $K$ is not free. The window in 23.5 says that the number of steps to reach accuracy $\varepsilon$ is approximately
+**Task C3 (two Blue reports).** A bag contains 7 red balls, 2 blue balls, and 1 black ball. A detector is correct with probability $0.70$; when wrong, it reports each of the other two colors with probability $0.15$. Two independent reports are both Blue. The prior is
 
 $$
-N_{\mathrm{steps}}\approx \frac{\kappa_T}{2}\ln\frac1\varepsilon.
+\pi=(0.70,\ 0.20,\ 0.10),
 $$
 
-And the saturation limit in 23.4 says $\kappa_T\to K$. Thus, for symmetric anchors near a vertex, the number of steps is proportional to $K$: the more answers, the longer the road.
+the likelihood is
 
-Put the two statements together:
+$$
+\ell=(0.15^2,\ 0.70^2,\ 0.15^2),
+$$
 
-> **Data buys the floor; dimension buys the road.** One more sample lowers the floor as $1/s$; one more answer lengthens the road as $K$. Scaling law usually reports the first sentence; the Yonglin Corollary measures the second. Both use the same $H_T$.
+and the Bayesian posterior is
 
-This is why the scalar in this chapter is not a replacement for scaling law, but its other half. The industrial curve measures “how low the floor can be pushed”; $\rho^*$ measures “how far you must walk to reach it.” Reporting only the floor invites the belief that scale has no cost; reporting only the road invites the belief that convergence speed is everything. Together, the two ledgers make one complete geometric bill.
+$$
+A_{\mathrm{obs}}
+=\frac{(\pi_i\ell_i)_i}{\sum_j\pi_j\ell_j}
+=(0.1358,\ 0.8448,\ 0.0194).
+$$
 
-![Figure 23.8: Reproducing the scaling-law line from the simplex — the data axis gives slope $-1$, the dimension axis gives different intercepts, and the semi-log orbits give the rate of the same Hessian](/figures/ch23_scaling_reproduction.png)
+**Task C4 (one Blue report).** The same detector, a bag with 4 balls of each color, and a uniform prior; one Blue report. Thus
 
-Panel (a) of Figure 23.8 is the data-axis scaling law: for $K=3,6,12$ answers, the second-order term of the excess KL is plotted on log-log axes, and all three lines land on slope $-1$, with intercepts shifted by $K$. Panel (b) is the other half of the same Hessian: for symmetric anchors near a vertex, $\kappa_T\approx K$, so the semi-log error curve has slope $\ln\rho^*$; the larger $K$ is, the closer $\rho^*$ is to 1, and the more steps are needed to reach the same accuracy. Neither curve is copied from an existing experiment; both are computed directly from $q\mapsto H_T$.
+$$
+\pi=\left(\frac13,\frac13,\frac13\right),
+\qquad
+\ell=(0.15,\ 0.70,\ 0.15),
+\qquad
+A_{\mathrm{obs}}=(0.1500,\ 0.7000,\ 0.1500).
+$$
 
-:::details A boundary that must be stated: the toy's $-1$ is not the industrial $\alpha$
-The exponent of an industrial scaling law is usually not $1$; it varies with the data distribution, architecture, and training recipe. The derivation above shows only that a log-log straight line can be produced by an ordinary count; it does not predict the $\alpha$ of any specific system. Treating the toy's $-1$ as an industrial exponent pushes a local model too far.
+Why these two? They share one geometry but pull the condition number apart: C3 has $\kappa_T=8.60$, $\rho^*=0.792$; C4 has $\kappa_T=2.10$, $\rho^*=0.355$. If the model's step is near optimal, C3 should be visibly slower than C4; if the measured rates are about the same, the model is not using $\eta^*$ but a conservative step that does not adapt to the task. This contrast diagnoses the model's step size; $\rho^*$ was proved in 23.3.
 
-What this chapter computes rigorously is: given $H_T$, the finite-sample floor term is $(K-1)/(2s)$ and the rate is $\rho^*$. Why a real system's $\alpha$ takes a particular value is a question for experiment. This chapter does not answer it on its behalf.
-:::
+Each task starts from three points:
 
-:::info An incidental readout question: emergence
-A word about “emergence.” An error curve that goes as $\rho^t$ is smooth; a sudden jump on a benchmark is usually a problem with the ruler — accuracy is a threshold metric, so a smooth curve crossing the threshold looks like a step. To separate a “readout jump” from a “dynamical change,” simply measure whether $\rho^*$ changes with scale: if $\rho^*$ is unchanged while the metric jumps, it is a readout; if $\rho^*$ jumps, the slope itself has changed. This criterion belongs here as a footnote to the scaling curve, and no more.
-:::
+$$
+(0.10,0.20,0.70),\qquad
+\left(\frac13,\frac13,\frac13\right),\qquad
+(0.70,0.20,0.10).
+$$
 
-:::details A boundary that must be admitted: this chapter does not define “intelligence”
-Treating scaling law as a definition of intelligence is a mistake; treating it as a geometric bill that any intelligent system must pay is appropriate.
+The first is black-skew, the second neutral, the third red-skew. The starts are far apart, which tests whether they land on the same fixed point. Each task runs twelve steps at temperature $0$ with two decimals; the two tasks take $2\times3\times12=72$ API calls.
 
-This chapter explains a class of learning dynamics: when a system minimizes KL and outputs over the probability simplex, what mathematics governs its error curve. It does not answer “what is understanding,” “what is consciousness,” or “why do some abilities appear only in sufficiently large models.” Those questions need other tools, and perhaps tools that do not yet exist.
-:::
+In this chapter's notation, $A_{\mathrm{obs}}$ plays the role of the anchor $A$: the point the conditional label distribution should give once the evidence is written into the question. Chapter 12 says the model returns to its $A$; here we compute that $A$ analytically and then check whether the orbit really lands on it.
 
-> **One sentence:** data decides the floor, dimension decides the road; geometry decides the necessity, engineering decides the numbers.
+> **One sentence:** two condition numbers, three starts, twelve steps; one fixed point and one contraction law are on trial.
+
+### Results: geometry holds; the model has its own step size
+
+First the table.
+
+| Task | $\kappa_T$ | $\rho^*$ | $\rho_{\mathrm{emp}}$ of the three orbits | Semi-log $R^2$ |
+|---|---:|---:|---|---:|
+| C3 (two Blue reports) | 8.60 | 0.792 | 0.610 / 0.654 / 0.753 | 0.911–0.982 |
+| C4 (one Blue report) | 2.10 | 0.355 | 0.711 / 0.754 / 0.753 | 0.831–0.927 |
+
+The three orbits are the black-skew, uniform, and red-skew starts. $\rho_{\mathrm{emp}}$ comes from fitting $\log_{10}d$ against $t$ **separately** for each orbit over the near-anchor window $0.01<d<0.5$, with $\rho_{\mathrm{emp}}=10^{b}$. Each orbit gets its own number; no average rate is formed.
+
+![Figure 23.8: A tangent-space Cauchy sequence on a real model — fixed point, semi-log near-line, log-log bend, and tail contraction](/figures/ch23_tangent_cauchy.png)
+
+Figure 23.8 has four panels.
+
+**(a) Tangent plane: is there a common fixed point?** The axes are $x_1$ and $x_2$; each polyline is one orbit, the hollow point is its start, and the black star is $A_{\mathrm{obs}}$. The three starts of a task approach the same star; C3 and C4 have different stars because the evidence differs. This panel answers “is there a fixed point,” not “how fast.”
+
+**(b) Semi-log: is convergence geometric?** The vertical axis is $\log_{10}d_E$ and the horizontal axis is step $t$. If every step multiplies by the same $\rho$, this is a straight line with slope $\log_{10}\rho$. Each orbit is drawn only until it falls below the two-decimal readout floor ($10^{-2}$); beyond that the last digit jitters, and plotting it adds only noise. C3's fitted rates are $0.61$–$0.75$, slightly below the theoretical $\rho^*=0.792$; C4's theoretical $\rho^*=0.355$ calls for a much steeper slope, and the model's orbits do not follow it.
+
+**(c) Log-log: is it a power law?** The axes are $\log_{10}(t+1)$ and $\log_{10}d_E$. A power law $d\propto t^{-\alpha}$ would be a straight line here. The same data bend downward; the fitted exponent drifts from $-3.3$ to $-1.8$ with the start. A genuine power law does not drift like that. Semi-log $R^2$ is $0.83$–$0.98$, log-log $R^2$ is $0.82$–$0.93$; the log-log problem is not merely a slightly lower $R^2$, but an exponent that moves with the start. Geometry is the better description. These panels are also drawn only above the readout floor.
+
+**(d) Tail diameter: the Cauchy certificate.** The axes are $\varepsilon_N$ and $N$. The curve falls, so the tail looks more and more like one point; all six orbits cross $\varepsilon=0.05$ within steps $6$–$11$. The flat end comes from the two-decimal readout floor: once distances reach the $10^{-2}$ scale, the output can no longer distinguish them. This is the empirical certificate for this window.
+
+The reading order is three words: **fixed point, law, certificate.** (a) fixed point, (b)(c) law, (d) certificate.
+
+Now the most interesting part. C3's three rates run from $0.610$ to $0.753$, all below the theoretical $\rho^*=0.792$; C4's three run from $0.711$ to $0.754$, all clearly above $\rho^*=0.355$. Each number says its own thing.
+
+- $\rho^*$ is the optimal rate that Theorem 23.2 gives at the **optimal step** $\eta^*$, namely $\rho^*=\min_{\eta>0}\rho(\eta)$. It is the ideal projected-gradient operator's smallest compression factor and the fastest convergence theory allows.
+- $\rho_{\mathrm{emp}}$ is the rate the model walks under the “one small adjustment” prompt. The step size is the model's own choice.
+
+C4's gap has one explanation: the model's effective step is smaller than $\eta^*$. $\rho^*$ is not wrong; the model does not walk at the optimum. Theory says C3 should be much slower than C4 ($0.792$ versus $0.355$); the measurements put both tasks in the same band, C3 at $0.610$–$0.753$ and C4 at $0.711$–$0.754$. The model uses a conservative step that does not adapt to the task. Both tasks contract geometrically; the step is not $\eta^*$.
+
+This is the experiment's value: it verifies the geometry and the fixed point, and it measures how far the model sits from the optimal step.
+
+- **Geometry verified.** All six orbits contract in tangent space, semi-log is close to straight, the fixed point is the evidence-consistent posterior, and the tail diameter falls.
+- **Fixed point verified.** C3 and C4 land on their own posteriors; different starts, same landing point.
+- **Step size measured.** C4's measured rate is $0.711$–$0.754$ while $\eta^*$ gives $0.355$. The model walks its own small step. $\rho^*$ measures the ideal operator; $\rho_{\mathrm{emp}}$ measures the model.
+
+Two technical details. First, across the six orbits $d_H$ and $d_E$ differ by at most $0.03$ in rate; the two norms give the same contraction picture. Second, some orbits have not reached $\varepsilon=0.01$ within twelve steps; a longer window is the next experiment.
+
+### Code: keep the audit in the text
+
+Industrial verification differs from a toy experiment not in length but in whether someone else can walk the same path through the code. The two snippets below collect and analyze; comments are in English and state only the coordinates, boundaries, and reasons for choices.
+
+Beyond the standard library, the two snippets depend only on `httpx` and `numpy`; the key is read from an environment variable and never appears in the text.
+
+Collection:
+
+```python
+import json
+import os
+import re
+import time
+
+import httpx
+
+BOX = re.compile(r"boxed\s*\{([^{}]*)\}", re.I | re.S)
+NUM = re.compile(r"-?\d+(?:\.\d+)?")
+
+QUESTION = """Question: A bag contains 7 red balls, 2 blue balls, and 1 black ball.
+The balls are otherwise identical. A detector examines a ball drawn at random
+and reports its color. The detector is correct with probability 0.70; when it
+is wrong, it reports each of the other two colors with equal probability.
+The detector reports "Blue" on the first draw and "Blue" on the second draw
+(after replacing the ball). Which color is the drawn ball most likely?"""
+
+
+def ask_once(client, url, key, belief, decimals=2):
+    """One API call. Return the reported belief as a probability vector.
+
+    The model sees the current belief and is asked for one small adjustment;
+    the boxed triple is the next point of the reported orbit.
+    """
+    user = (
+        QUESTION
+        + "\n\nCurrent belief: "
+        + f"(red={belief[0]:.4f}, blue={belief[1]:.4f}, "
+          f"black={belief[2]:.4f}).\n"
+        + "Reconsider the question from the statement and make one small "
+          "adjustment to your belief in the direction the evidence points. "
+          "Do not re-solve the problem from scratch.\n"
+        + f"At the very end, box the updated belief with {decimals} decimals "
+          "in the order Red, Blue, Black, summing to 1."
+    )
+    body = {
+        "model": "deepseek-flash",
+        "messages": [{"role": "user", "content": user}],
+        "thinking": {"type": "disabled"},
+        "reasoning_effort": "none",
+        "temperature": 0.0,       # greedy decoding; no sampling temperature
+        "max_tokens": 2048,
+    }
+    r = client.post(url, json=body,
+                    headers={"Authorization": f"Bearer {key}"}, timeout=120)
+    r.raise_for_status()
+    text = r.json()["choices"][0]["message"]["content"]
+    for box in reversed(BOX.findall(text)):
+        nums = [float(x) for x in NUM.findall(box)]
+        if len(nums) == 3 and sum(nums) > 0:
+            s = sum(nums)
+            return tuple(x / s for x in nums)   # tolerate tiny rounding drift
+    return None
+
+
+def run_orbit(client, url, key, start, steps=12):
+    """Iterate the reported-belief map and return the orbit."""
+    path = [tuple(start)]
+    for _ in range(steps):
+        q = ask_once(client, url, key, path[-1])
+        if q is None:
+            break
+        path.append(q)
+        time.sleep(0.2)       # keep the request rate modest
+    return path
+
+
+key = os.environ["DEEPSEEK_API_KEY"]   # read from the environment; never print it
+
+url = "https://api.deepseek.com/chat/completions"
+with httpx.Client() as client:
+    orbit = run_orbit(client, url, key, (0.10, 0.20, 0.70))
+print(json.dumps(orbit))
+```
+
+Run all three starts and measure the Euclidean distance from each reported belief to $A_{\mathrm{obs}}$ at every step; that is the input to the analysis below. For C4, only `QUESTION` changes to the one-Blue-report version and the starts change to the three points in the table.
+
+Analysis:
+
+```python
+import math
+
+import numpy as np
+
+# d_E at each step, measured from the reported beliefs to A_obs.
+# The three rows are the black-skew, uniform, and red-skew starts.
+DATA = {
+    "C3": {
+        "A": (0.1358, 0.8448, 0.0194),
+        "d_E": {
+            "black_skew": [0.9382, 0.6900, 0.5554, 0.4140, 0.3504,
+                           0.3156, 0.2168, 0.1653, 0.0561, 0.0325,
+                           0.0130, 0.0043, 0.0064],
+            "uniform":    [0.6318, 0.5026, 0.3641, 0.2782, 0.2035,
+                           0.1289, 0.0697, 0.0466, 0.0064, 0.0064,
+                           0.0064, 0.0064, 0.0078],
+            "red_skew":   [0.8606, 0.7203, 0.6330, 0.5543, 0.4898,
+                           0.4112, 0.3326, 0.2683, 0.2401, 0.1695,
+                           0.1054, 0.0771, 0.0488],
+        },
+    },
+    "C4": {
+        "A": (0.1500, 0.7000, 0.1500),
+        "d_E": {
+            "black_skew": [0.7450, 0.6042, 0.3937, 0.2550, 0.1667,
+                           0.0883, 0.0510, 0.0245, 0.0000, 0.0245,
+                           0.0000, 0.0245, 0.0000],
+            "uniform":    [0.4491, 0.3254, 0.1960, 0.1225, 0.0735,
+                           0.0490, 0.0245, 0.0141, 0.0000, 0.0245,
+                           0.0000, 0.0141, 0.0141],
+            "red_skew":   [0.7450, 0.6042, 0.4537, 0.3159, 0.2093,
+                           0.1838, 0.1476, 0.1257, 0.1068, 0.0849,
+                           0.0566, 0.0424, 0.0141],
+        },
+    },
+}
+
+
+def spectrum(A):
+    """2x2 matrix of P_T diag(1/A) P_T in the tangent basis."""
+    m = 1.0 / np.asarray(A, float)
+    h11 = 0.5 * (m[0] + m[2])
+    h22 = (m[0] + 4 * m[1] + m[2]) / 6
+    h12 = (m[0] - m[2]) / math.sqrt(12)
+    return np.array([[h11, h12], [h12, h22]])
+
+
+def rho_star(A):
+    """Optimal contraction rate from the two tangent eigenvalues."""
+    lam = np.linalg.eigvalsh(spectrum(A))
+    kappa = lam.max() / lam.min()
+    return kappa, (kappa - 1) / (kappa + 1)
+
+
+def fit_rate(d, floor=1e-2, dmax=0.5):
+    """Fit log10 d = a + b t near the anchor; return rho = 10**b."""
+    t = np.arange(len(d))
+    m = (t >= 1) & (d > floor) & (d < dmax)
+    if m.sum() < 2:
+        return float("nan")
+    b, _ = np.polyfit(t[m], np.log10(d[m]), 1)
+    return 10 ** b
+
+
+for task, block in DATA.items():
+    A = np.array(block["A"])
+    kappa, rho = rho_star(A)
+    print(f"{task}: kappa_T={kappa:.3f}  rho*={rho:.3f}")
+    for name, d in block["d_E"].items():
+        print(f"  {name:10s} rho_E={fit_rate(np.array(d, float)):.3f}")
+```
+
+The code fits each orbit separately; the three numbers in the table are exactly the `rho_E` it prints. Its input is the six $d_E$ series above; the same near-anchor window and fit also produce panels (b) and (c) of Figure 23.8.
+
+> **One sentence:** code is not decoration in an appendix; it is the part that lets the conclusion be audited.
+
+### What this experiment covers
+
+The orbit is the model's **reported** belief, not an internal activation. The report is all the interface gives, and all a reader can rerun.
+
+It holds for the “small adjustment” map. For the same question, “answer immediately” and “small adjustment” give different fixed points; changing the prompt changes the map. Chapter 12 speaks about a fixed map; here the evidence is written into the question, so the anchor becomes the evidence-consistent posterior.
+
+It is a window of twelve steps and two decimals, one model, two tasks. That is all the data: the empirical rate, the tail diameter, and the fixed point inside this window. Treating these numbers as universal constants is a misreading; moving the method to other models and tasks is the next step.
+
+> **One sentence:** the window is finite and the conclusion is definite: inside this window the orbit is Cauchy, and the geometry holds.
 
 ---
 
@@ -699,7 +980,7 @@ That number is
 $$
 \rho^*=\frac{\kappa_T-1}{\kappa_T+1},
 \qquad
-\kappa_T=\frac{\theta_{\max}}{\mu_T},
+\kappa_T=\frac{\lambda_{\max}}{\lambda_{\min}},
 \qquad
 \kappa_T=\frac{1+\rho^*}{1-\rho^*}.
 $$
@@ -708,9 +989,9 @@ Together with the $H_T$ behind it, it determines exactly five things:
 
 1. **Slope.** The semi-log error curve has slope $\ln\rho^*$.
 2. **Steps.** The number of steps to reach $\varepsilon$ is exactly sandwiched between $\frac{\kappa_T-1}{2}\ln\frac1\varepsilon$ and $\frac{\kappa_T}{2}\ln\frac1\varepsilon$.
-3. **Stability.** The stability window is $0<\eta<2/\theta_{\max}$, and the optimal step is $\eta^*=2/(\mu_T+\theta_{\max})$.
-4. **The data-axis floor.** The finite-sample excess KL is $(K-1)/(2s)$; on log-log axes it is a straight line of slope $-1$.
-5. **The emergence criterion.** If $\rho^*$ is unchanged while the metric jumps, it is a readout; if $\rho^*$ jumps, it is dynamics. This one is a footnote, and need not steal the stage.
+3. **Stability.** The stability window is $0<\eta<2/\lambda_{\max}$, and the optimal step is $\eta^*=2/(\lambda_{\min}+\lambda_{\max})$.
+4. **Empirical readout.** A real model's reported beliefs form a Cauchy sequence in tangent space; semi-log is close to straight and log-log bends; the fixed point is the evidence-consistent posterior; the measured $\rho_{\mathrm{emp}}$ runs over C3 $0.610$–$0.753$ and C4 $0.711$–$0.754$ on three orbits. This is the rate the model walks under “one small adjustment.” The geometry holds on the real orbit; the step size is the model's own.
+5. **The emergence criterion.** If $\rho^*$ is unchanged while the metric jumps, it is a readout; if $\rho^*$ jumps, it is dynamics.
 
 The whole chain has only three links:
 
@@ -720,9 +1001,9 @@ The whole chain has only three links:
 
 > How fast is determined by one condition number; the condition number is determined by two endpoints of the tangent Hessian; the two endpoints are determined by the matrix. Beyond this, there is no second scalar.
 
-Now we can say which part of scaling law is ordinary and which part is not. What is ordinary is its format: as long as the output lies on the simplex, the loss is recorded as KL, and samples are counted, $L(s)-L_\infty$ will be a straight line on log-log paper. The format comes from geometry; the numerical values from engineering. What is not ordinary is why it keeps going down: a real system's floor falls with parameters, data, and compute together; what the exponent is, and how long it can keep falling, is a question for empirical science, requiring experiments and time. Keeping these two things apart, we neither need to enshrine the curve nor to tear it down.
+Now we can say which part of scaling law is ordinary and which part is not. What is ordinary is its format: as long as the output lies on the simplex, the loss is recorded as KL, and samples are counted, $L(s)-L_\infty$ will be a straight line on log-log paper. The format comes from geometry; the numerical values from engineering. What is not ordinary is why it keeps going down: a real system's floor falls with parameters, data, and compute together; what the exponent is, and how long it can keep falling, is a question for empirical science, requiring experiments and time. Separate the two: format belongs to geometry, exponent to experiment.
 
-What this chapter reproduces is not any one company's curve, but the “straightness” of that curve. A straight line needs no extra assumption; it needs only one ordinary count. **Engineering decides the numbers; geometry decides the necessity.** This holds for any system that puts its output on the simplex, and for a three-answer toy as well — which is exactly what it means to call the result universal.
+This chapter does not reproduce any company's curve, nor use a toy to impersonate it. It measures the same geometry behind that curve: a system whose output lies on the simplex converges as $\rho^t$, and a real model's reported beliefs do the same. **Engineering decides the numbers; geometry decides the necessity.** This holds for any system whose output lies on the simplex, and for a real model's belief orbit — which is exactly what it means to call the result universal.
 
 Intelligence and emergence look like miracles mainly when we stare at a single readout; put the readout back on the curve, and they are simply names that one ordinary equation takes at different scales.
 
@@ -734,11 +1015,13 @@ Intelligence and emergence look like miracles mainly when we stare at a single r
 
 **How should the rate be estimated away from the anchor's neighborhood?** The $\rho^*$ here is the exact rate of the linearization near $A$. A real trajectory carries higher-order terms before it enters that small neighborhood; the first ratio in the opening table being noticeably smaller than $\rho^*$ is a shadow of this “head start.” Can the tangent spectrum alone give a finite-step, non-asymptotic error bound? If the large components of the initial error happen to lie in fast directions, the actual window will be shorter than $\rho^*$ predicts — can that gap be computed exactly? This is open.
 
-**Can $\mu_T$ and $\theta_{\max}$ be measured directly on large models?** The spectra here are computed on explicit distributions with $K=3$ to $2048$. A real LLM has a huge vocabulary, and the Hessian cannot be stored explicitly. Can stochastic trace estimation, Lanczos, or implicit differentiation give reliable endpoint estimates? That would turn the diagnosis of whether the slope changes with scale from theory into experiment.
+**Can $\lambda_{\min}$ and $\lambda_{\max}$ be measured directly on large models?** The spectra here are computed on explicit distributions with $K=3$ to $2048$. A real LLM has a huge vocabulary, and the Hessian cannot be stored explicitly. Can stochastic trace estimation, Lanczos, or implicit differentiation give reliable endpoint estimates? That would turn the diagnosis of whether the slope changes with scale from theory into experiment.
 
 **When does $\rho^*$ change with scale?** This chapter gives the criterion but not a model for $\rho^*(N)$. If the appearance of a slow mode has a critical scale, what determines that critical point? This is what the other half of the scaling curve really needs to answer.
 
-**What lies between $(K-1)/(2s)$ and an industrial exponent?** The toy here gives only the second-order term on the data axis. A real system's scaling exponent is also shaped by architecture, data distribution, and optimizer. Which deviations can be explained by the spectrum of $H_T$, and which must be left to experiment? This is where the “ordinary formula” meets the “empirical curve.”
+**Are twelve steps and two decimals enough?** The Cauchy certificate in 23.6 covers one finite window; the two-decimal readout floor is around $10^{-2}$. Can longer orbits and a finer readout estimate $\rho_{\mathrm{emp}}$ more stably? Does its gap from $\rho^*$ come from the model's conservative step, the readout precision, or a map that is not projected gradient? These are experimental questions, not algebraic ones.
+
+**Why does the fixed point move when the interface changes?** The “small adjustment” map in 23.6 converges to the evidence-consistent posterior; the earlier “answer immediately” map converged to a prior-dominated point. Which map is the model's real inference dynamics? This requires treating the interface, the prompt, and the readout as variables, not mistaking one readout for the whole model.
 
 ---
 
@@ -748,28 +1031,30 @@ Intelligence and emergence look like miracles mainly when we stare at a single r
 
 1. Using the opening table, verify at which step the error ratio settles near $\rho^*$. Why is the first ratio noticeably smaller?
 2. For $K=3$ and $q=(1/3,1/3,1/3)$, verify $H_T=3P_T$, write down all eigenvalues, and compute $\rho^*$.
-3. For $q=(0.70,0.20,0.10)$, use the secular equation to compute $\mu_T,\theta_{\max},\kappa_T$, then $\eta^*,\rho^*$, and $N(0.1)$.
-4. For $K=3$ and $q=(0.70,0.20,0.10)$, estimate the excess KL at $s=10^4$ using $(K-1)/(2s)$; then sample from a multinomial distribution and see how far the second-order expansion is from the actual value.
+3. For $q=(0.70,0.20,0.10)$, use the secular equation to compute $\lambda_{\min},\lambda_{\max},\kappa_T$, then $\eta^*,\rho^*$, and $N(0.1)$.
+4. Using the table in 23.6, compare each C3 orbit's $\rho_{\mathrm{emp}}$ with $\rho^*$, then do the same for C4 and compare the two ranges.
 
 **★★ Derivations**
 
 1. Prove Lemma 23.1: the convex function $g(\lambda)=|1-\eta\lambda|$ attains its maximum on an interval at an endpoint.
 2. Prove $\operatorname{tr}(H_T)=(1-1/K)\sum_i1/q_i$.
-3. Prove Theorem 23.2: $\eta^*=2/(\mu_T+\theta_{\max})$ is the unique minimizer, $\rho^*=(\kappa_T-1)/(\kappa_T+1)$, and the two endpoint branches are equal at the optimum.
+3. Prove Theorem 23.2: $\eta^*=2/(\lambda_{\min}+\lambda_{\max})$ is the unique minimizer, $\rho^*=(\kappa_T-1)/(\kappa_T+1)$, and the two endpoint branches are equal at the optimum.
 4. Prove the two bounds in Theorem 23.3: $\frac{2x}{2+x}\le\ln(1+x)\le x$.
-5. Prove $\operatorname{tr}\bigl(H_T(\operatorname{diag}(q)-qq^\top)\bigr)=K-1$, and use it to obtain $\mathbb E\,D_{\mathrm{KL}}(q\|\hat q)=(K-1)/(2s)+O(s^{-2})$.
+5. Prove that for any two probability vectors $p,q$, $p-q\in T$ and $\|x(p)-x(q)\|_2=\|p-q\|_2$. Then prove that the Euclidean norm on $T$ and the Bregman tangent norm $\|\cdot\|_{H_T}$ are equivalent, and give the equivalence constants.
+6. Prove that if $F:T\to T$ satisfies $\|F(x)-F(y)\|_2\le\rho\|x-y\|_2$ with $\rho<1$, then every orbit is Cauchy, the limit is unique, and $\|x_t-x^*\|_2\le\rho^t\|x_0-x^*\|_2$.
 
 **★★★ Challenge**
 
 1. For $K=3$, write the secular equation as $3s_3\lambda^2-2s_2\lambda+1=0$, and verify that it matches the quadratic in [Chapter 12](/en/volume1/chapter12/).
 2. Design an experiment that uses only the change of $\rho^*$ with scale to distinguish a “readout effect” from a “spectral bifurcation.” State what you would see in each case and how to rule out confounders.
 3. Try to construct a counterexample showing that away from the anchor's neighborhood, where second-order terms cannot be ignored, the Euclidean linearized rate $\rho^*$ is no longer the exact rate; then state what extra condition would restore an exact rate formula.
+4. Extend the twelve steps of 23.6 to thirty, or raise the output precision to six decimals, and re-estimate $\rho_{\mathrm{emp}}$. If it is stable but far from $\rho^*$, the model's step is not $\eta^*$; if it drifts with the window, the window is still too short. Design a control experiment that separates the two explanations.
 
 ---
 
 ## Appendix: Core Computation Script
 
-The code below does two things: given an anchor $q$, it computes the two endpoints of the tangent spectrum via the secular equation, then the exact rate, the optimal step, and the window; it also computes the second-order term of the data-axis scaling line from 23.6. It trains no model.
+The code below does one thing: given an anchor $q$, it computes the two endpoints of the tangent spectrum via the secular equation, then the exact rate, the optimal step, and the window. It trains no model.
 
 ```python
 import numpy as np
@@ -792,35 +1077,27 @@ def tangent_spectrum(q, iters=90):
 
 def rate(q, eps=0.1, e0=1.0):
     lam = tangent_spectrum(q)
-    mu, theta = lam.min(), lam.max()
-    kappa = theta / mu
-    eta_star = 2.0 / (mu + theta)
+    lam_min, lam_max = lam.min(), lam.max()
+    kappa = lam_max / lam_min
+    eta_star = 2.0 / (lam_min + lam_max)
     rho_star = (kappa - 1.0) / (kappa + 1.0)
     n_real = np.log(e0 / eps) / np.log(1.0 / rho_star)
     n_steps = np.ceil(n_real)
     lo = (kappa - 1.0) / 2.0 * np.log(e0 / eps)
     hi = kappa / 2.0 * np.log(e0 / eps)
-    return dict(mu_T=mu, theta_max=theta, kappa_T=kappa,
+    return dict(lam_min=lam_min, lam_max=lam_max, kappa_T=kappa,
                 eta_star=eta_star, rho_star=rho_star,
                 n_real=n_real, n_steps=n_steps, n_lo=lo, n_hi=hi)
 
 
 print(rate([0.70, 0.20, 0.10]))
-# mu_T=2.9904, theta_max=7.9620, kappa_T=2.6625,
+# lam_min=2.9904, lam_max=7.9620, kappa_T=2.6625,
 # eta_star=0.18261, rho_star=0.45393, n_real=2.915, n_steps=3,
 # n_lo=1.914, n_hi=3.065
 
 print(rate([0.35, 0.25, 0.15, 0.12, 0.08, 0.05]))
 # kappa_T=5.4268
 
-
-def scaling_floor(K, s):
-    """Leading finite-sample excess KL: (K-1)/(2s)."""
-    return (K - 1.0) / (2.0 * s)
-
-
-print([(K, scaling_floor(K, 10_000)) for K in (3, 6, 12)])
-# [(3, 0.0001), (6, 0.00025), (12, 0.00055)]
 ```
 
 ---

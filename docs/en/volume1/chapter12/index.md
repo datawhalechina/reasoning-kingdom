@@ -250,7 +250,7 @@ Any sufficiently powerful reasoning system meets a meta-level break:
 
 This is not a problem of model scale. Even GPT-4o with 200B parameters still converges — it's just that the convergence point may sit closer to the real distribution (the prior anchor $A$ is closer to $A^*$), never exactly on it.
 
-The value of CoT is that it pushes $t_{\text{eff}}$ forward along the direction of $\rho$: the smaller $\rho$, the faster the compression and the longer the window — but it cannot change the endpoint $A$.
+The value of CoT is that it pushes $t_{\text{eff}}$ forward by reducing $\gamma$: the smaller $\gamma$, the faster the compression and the longer the window — but it cannot change the endpoint $A$.
 
 Seen this way, implicit reasoning (the internal computation in the hidden layers) and explicit reasoning (CoT's token generation) are the same thing in essence: both try to get as close as possible to the right answer within a finite depth of computation.
 
@@ -475,8 +475,10 @@ Three choices behind this setup, and their reasons:
 **Theorem**: suppose on $\mathcal{X}$ the tangent-space Hessian has a uniform spectral bound $\mu I_T \preccurlyeq P_T \nabla^2 E(p) P_T \preccurlyeq L I_T$ ($\mu, L > 0$). Take a step size $\eta \in (0, 2\mu/L^2)$. Then $F$ is a contraction mapping on $(\mathcal{X}, \|\cdot\|_2)$, with contraction factor
 
 $$
-\rho = \sqrt{1 - 2\eta\mu + \eta^2 L^2} < 1.
+\gamma = \sqrt{1 - 2\eta\mu + \eta^2 L^2} < 1.
 $$
+
+(Chapter 23 computes the same contraction factor exactly in the tangent space at the optimal step size; the $\gamma$ here is the conservative version under a uniform spectral bound.)
 
 **Proof**:
 
@@ -504,11 +506,11 @@ $$
 \begin{aligned}
 \|F(p_1) - F(p_2)\|_2^2 &\leq \|p_1-p_2\|_2^2 - 2\eta\langle P_T(\nabla E(p_1) - \nabla E(p_2)),\ p_1-p_2\rangle \\
 &\quad + \eta^2\|P_T(\nabla E(p_1) - \nabla E(p_2))\|_2^2 \\
-&\leq (1 - 2\eta\mu + \eta^2L^2)\|p_1-p_2\|_2^2 = \rho^2\|p_1-p_2\|_2^2.
+&\leq (1 - 2\eta\mu + \eta^2L^2)\|p_1-p_2\|_2^2 = \gamma^2\|p_1-p_2\|_2^2.
 \end{aligned}
 $$
 
-That is where $2\mu - \eta L^2$ comes from: strong convexity contributes the positive $2\mu$, smoothness contributes the negative $\eta L^2$, and their difference decides how much each step contracts. The step-size upper bound $\eta < 2\mu/L^2$ is exactly the condition that makes $\rho < 1$ ($\rho^2 \geq 1 - \mu^2/L^2 \geq 0$; nonnegativity follows from $\mu \leq L$).
+That is where $2\mu - \eta L^2$ comes from: strong convexity contributes the positive $2\mu$, smoothness contributes the negative $\eta L^2$, and their difference decides how much each step contracts. The step-size upper bound $\eta < 2\mu/L^2$ is exactly the condition that makes $\gamma < 1$ ($\gamma^2 \geq 1 - \mu^2/L^2 \geq 0$; nonnegativity follows from $\mu \leq L$).
 
 **QED.**
 
@@ -526,11 +528,11 @@ The energy surface in this chapter comes from information theory; completeness c
 
 Now apply the Banach fixed-point theorem:
 
-Since $F$ is a contraction mapping ($\rho < 1$), and $(\mathcal{X}, \|\cdot\|_2)$ is a closed subset of $\mathbb{R}^n$ that is complete under the Euclidean metric (the setup of Step 7), then:
+Since $F$ is a contraction mapping ($\gamma < 1$), and $(\mathcal{X}, \|\cdot\|_2)$ is a closed subset of $\mathbb{R}^n$ that is complete under the Euclidean metric (the setup of Step 7), then:
 
 1. There exists a unique fixed point $A \in \mathcal{X}$ with $F(A) = A$
 2. For any initial $p_0 \in \mathcal{X}$, the iteration $p_{t+1} = F(p_t)$ converges to $A$
-3. Rate of convergence: $\|p_t - A\|_2 \leq \rho^t \|p_0 - A\|_2$
+3. Rate of convergence: $\|p_t - A\|_2 \leq \gamma^t \|p_0 - A\|_2$
 
 Note that the metric is the Euclidean norm, not KL. The role of KL divergence here is the energy function — it decides where $F$ goes, and (through the Hessian) how big a step it may take.
 
@@ -572,14 +574,14 @@ The Yonglin theorem (strict version): suppose a reasoning system satisfies:
 
 Then:
 
-1. $F$ is a contraction mapping on $(\mathcal{X}, \|\cdot\|_2)$, with contraction factor $\rho = \sqrt{1 - 2\eta\mu + \eta^2L^2} < 1$
+1. $F$ is a contraction mapping on $(\mathcal{X}, \|\cdot\|_2)$, with contraction factor $\gamma = \sqrt{1 - 2\eta\mu + \eta^2L^2} < 1$
 2. $A$ is the unique fixed point of $F$
 3. For any initial belief $p_0 \in \mathcal{X}$, $\lim_{t\to\infty} p_t = A$
-4. Convergence exponent: $\|p_t - A\|_2 \leq \rho^t \|p_0 - A\|_2$, and $D_{\text{KL}}(A\|p_t) \leq \kappa\rho^{2t} D_{\text{KL}}(A\|p_0)$, with $\kappa = L/\mu$
+4. Convergence exponent: $\|p_t - A\|_2 \leq \gamma^t \|p_0 - A\|_2$, and $D_{\text{KL}}(A\|p_t) \leq \kappa\gamma^{2t} D_{\text{KL}}(A\|p_0)$, with $\kappa = L/\mu$
 
 If the true answer $A^* \neq A$, then no matter how many reasoning steps the system takes, it can never reach $A^*$.
 
-**Remark (a route that does not even need Banach)**: if for some $\gamma \in (0, 1)$ we have $E(F(p)) \leq \gamma E(p)$ for every $p \in \mathcal{X}$, then the fixed point is unique and $p_t \to A$ without Banach at all: the iteration gives $E(p_t) \leq \gamma^t E(p_0)$; a fixed point $q$ satisfies $E(q) = E(F(q)) \leq \gamma E(q)$, and $\gamma < 1$ forces $E(q) = 0$, i.e. $q = A$; Pinsker's inequality $D_{\text{KL}}(A\|p_t) \geq \frac{1}{2}\|p_t - A\|_1^2$ gives $\|p_t - A\|_1 \leq \sqrt{2\gamma^t E(p_0)} \to 0$. When $\kappa\rho^2 < 1$, this theorem satisfies the assumption directly (take $\gamma = \kappa\rho^2$).
+**Remark (a route that does not even need Banach)**: if for some $\nu \in (0, 1)$ we have $E(F(p)) \leq \nu E(p)$ for every $p \in \mathcal{X}$, then the fixed point is unique and $p_t \to A$ without Banach at all: the iteration gives $E(p_t) \leq \nu^t E(p_0)$; a fixed point $q$ satisfies $E(q) = E(F(q)) \leq \nu E(q)$, and $\nu < 1$ forces $E(q) = 0$, i.e. $q = A$; Pinsker's inequality $D_{\text{KL}}(A\|p_t) \geq \frac{1}{2}\|p_t - A\|_1^2$ gives $\|p_t - A\|_1 \leq \sqrt{2\nu^t E(p_0)} \to 0$. When $\kappa\gamma^2 < 1$, this theorem satisfies the assumption directly (take $\nu = \kappa\gamma^2$).
 
 ### 10.7 Forward Pass = Reasoning: Euler Steps + Simplex Projection
 
@@ -777,7 +779,7 @@ The intuitive answer is: no. Here the meta-level break shows up as: the model ca
 2. **Concretization**: the belief space $\mathcal{P}$ and the inference operator $F$
 3. **Structural assumption**: $F$ is a discretization of gradient descent (Euler iteration)
 4. **Division of labor**: KL divergence handles energy and curvature (Bregman geometry); the metric for Banach is the Euclidean norm on the tangent space
-5. **Proof of contractiveness**: tangent-space Hessian spectral bound + non-expansive Euclidean projection $\Rightarrow$ $\|F(p_1) - F(p_2)\|_2 \leq \rho\|p_1 - p_2\|_2$; the KL energy decays exponentially as $\kappa\rho^{2t}$
+5. **Proof of contractiveness**: tangent-space Hessian spectral bound + non-expansive Euclidean projection $\Rightarrow$ $\|F(p_1) - F(p_2)\|_2 \leq \gamma\|p_1 - p_2\|_2$; the KL energy decays exponentially as $\kappa\gamma^{2t}$
 6. **Applying the theorem**: the Banach fixed-point theorem guarantees existence, uniqueness, and convergence
 7. **Physical meaning**: the fixed point $A$ is the statistics of the training data; the convergence speed is decided by the problem's curvature
 
@@ -809,17 +811,17 @@ Step 7's contractiveness proof gave us the Yonglin limit; this section supplies 
 
 **(c) The closed-form landscape of $\eta_{\max}$.** A logarithmic color map of $\eta_{\max}(p) = 2\min_i p_i^2/\max_i p_i$ on the simplex (log color scale from $10^{-6}$ to $10^{-1}$): in the center you may walk with big steps; the closer to the edge, the smaller the steps must be. "The terrain dictates the pace" is not rhetoric — it is this picture.
 
-**(d) Stability boundary: the closed form predicts the numerics exactly.** The numerical instability threshold $\eta^*$ of the local perturbation dynamics (asymptotic criterion, below) versus the closed form $2/\theta_{\max}$ (tangent-space spectrum, below): across 30 random target distributions, $R^2 = 0.9978$ with median error 2.16% — the blue points all cling to the diagonal. The pink triangles are the numerical thresholds of a global scan starting from the uniform prior, sitting always above the conservative bound $2/(L\kappa)$.
+**(d) Stability boundary: the closed form predicts the numerics exactly.** The numerical instability threshold $\eta^*$ of the local perturbation dynamics (asymptotic criterion, below) versus the closed form $2/\lambda_{\max}$ (tangent-space spectrum, below): across 30 random target distributions, $R^2 = 0.9978$ with median error 2.16% — the blue points all cling to the diagonal. The pink triangles are the numerical thresholds of a global scan starting from the uniform prior, sitting always above the conservative bound $2/(L\kappa)$.
 
 Two improvements this experiment made along the way:
 
-**First: the exact local stability bound is the tangent-space spectrum, not the full-space one.** The projection confines the dynamics to the tangent space $\{v: \sum v_i = 0\}$, so the exact instability condition is $\eta < 2/\theta_{\max}$, where $\theta_{\max}$ is the largest eigenvalue of $\operatorname{diag}(1/q_i)$ restricted to the tangent space. For $K = 3$, $\theta_{\max}$ has an analytic expression: it is the largest root of
+**First: the exact local stability bound is the tangent-space spectrum, not the full-space one.** The projection confines the dynamics to the tangent space $\{v: \sum v_i = 0\}$, so the exact instability condition is $\eta < 2/\lambda_{\max}$, where $\lambda_{\max}$ is the largest eigenvalue of $\operatorname{diag}(1/q_i)$ restricted to the tangent space. For $K = 3$, $\lambda_{\max}$ has an analytic expression: it is the largest root of
 
 $$
-3q_0q_1q_2\theta^2 - 2(q_0q_1 + q_0q_2 + q_1q_2)\theta + 1 = 0
+3q_0q_1q_2\lambda^2 - 2(q_0q_1 + q_0q_2 + q_1q_2)\lambda + 1 = 0
 $$
 
-Step 10's $\eta_{\max} = 2/(L\kappa)$ is still correct, but it is a conservative bound ($\theta_{\max} \leq L$, so $2/\theta_{\max} \geq 2/L = \kappa \cdot \eta_{\max}$). Both families of bounds are visible in one figure: the exact bound (points on the line) and the conservative bound (points always above it).
+Step 10's $\eta_{\max} = 2/(L\kappa)$ is still correct, but it is a conservative bound ($\lambda_{\max} \leq L$, so $2/\lambda_{\max} \geq 2/L = \kappa \cdot \eta_{\max}$). Both families of bounds are visible in one figure: the exact bound (points on the line) and the conservative bound (points always above it).
 
 **Second: the stability criterion must use the asymptotic endpoint, not the maximum over the whole run.** Whether the dynamics are stable is judged by $\|p_T - p^*\| / \|p_0 - p^*\| < 1$ (the asymptotic endpoint distance ratio), not the maximum over the whole process — at moderate step sizes, the nonlinear transient grows first and contracts later, so the full-trajectory maximum misjudges a linearly stable region as unstable (the measured value is a spurious ratio of 0.79; with the asymptotic criterion it is 1.000, matching the closed form).
 
@@ -846,9 +848,9 @@ Closed-form facts under study (true at the fixed point p = p*):
 
 On the tangent space {v: sum v_i = 0} (the subspace preserved by the
 projection) the exact local stability boundary is
-    eta_crit = 2 / theta_max,  theta_max = largest eigenvalue of
+    eta_crit = 2 / lambda_max,  lambda_max = largest eigenvalue of
     diag(1/q_i) restricted to the tangent space;
-    for K = 3, theta_max solves  3 q0 q1 q2 th^2 - 2 (q0q1+q0q2+q1q2) th + 1 = 0.
+    for K = 3, lambda_max solves  3 q0 q1 q2 lam^2 - 2 (q0q1+q0q2+q1q2) lam + 1 = 0.
 """
 import numpy as np
 import matplotlib
@@ -1029,21 +1031,21 @@ ax.set_aspect("equal"); ax.axis("off")
 ax = axes[1, 1]
 
 
-def theta_max_tangent(q):
+def lambda_max_tangent(q):
     """Largest eigenvalue of diag(q_i^{-1}) restricted to the tangent space {v: sum v_i = 0}.
-    K = 3: analytic root of  3 q0 q1 q2 th^2 - 2 (q0q1+q0q2+q1q2) th + 1 = 0."""
+    K = 3: analytic root of  3 q0 q1 q2 lam^2 - 2 (q0q1+q0q2+q1q2) lam + 1 = 0."""
     q0, q1, q2 = q
     a = 3 * q0 * q1 * q2
     b = -2 * (q0 * q1 + q0 * q2 + q1 * q2)
     c = 1.0
     disc = b * b - 4 * a * c
-    th = (-b + np.sqrt(disc)) / (2 * a)
-    return th
+    lam = (-b + np.sqrt(disc)) / (2 * a)
+    return lam
 
 
 def eta_crit_tangent_closed(q):
     """Exact local stability boundary: eta_safe < 2 / lambda_max of Hessian on the tangent space."""
-    return 2.0 / theta_max_tangent(q)
+    return 2.0 / lambda_max_tangent(q)
 
 
 # ---------- (d) closed form vs numerical stability boundary ----------
@@ -1141,9 +1143,9 @@ The numerical experiment in the previous section verified the formula's internal
 
 For $d = 0.90$ it decreases monotonically (final median 0.02 — almost exactly Bayesian); for $d = 0.70$ it sits closer to the $d' = 0.9$ fake posterior from step 2 onward; for $d = 0.55$, the distance to the $d' = 0.9$ fake posterior is about 8× better than to the true posterior. The model treats the prompt's evidence reliability as an approximately fixed $d' \approx 0.9$: weak evidence is systematically amplified, strong evidence is followed precisely. This runs opposite to human conservatism (Edwards 1968) — an LLM's evidence-strength ceiling is about 0.9: weak evidence always means "don't trust the prompt, use it at maximum strength".
 
-**Result 4: compression and memory — the phase-difference half-life is about 2 steps.** Same world, same tail of reports (reports 2–6 identical); the only difference between the two trajectories is whether the first report is red or blue. The initial branching distance is $d_1 \equiv 1.414 = \sqrt{2}$ (between two vertices; all 36 cells without exception); from $d_2$ onward the median distance is 0; single-step compression median 0.07–0.20; half-life 2.0–2.5 steps. The effective reasoning window defined by the compression factor $\rho$, $t_{\text{eff}}(\varepsilon)=\ln(1/\varepsilon)/\ln(1/\rho)$ ($\varepsilon = 0.1$), predicts about 2.3 steps — consistent with the measurement. Notes: (a) occasional re-branching: 1 of 12 cells still held a distance >0.1 at $t = 6$, and the maximum over the whole run can be $\sqrt{2}$ — a mirror image of the previous section's panel (d) "transient grows first, contracts later" (here it contracts first, then re-grows): even a deterministic model contains chaotic re-splitting; (b) at temperature 0, the part of the $d_t = 0$ "coincidence" is a deterministic artifact; statistically, only this reading counts: "one unit of phase difference no longer influences the next step's choices after two steps".
+**Result 4: compression and memory — the phase-difference half-life is about 2 steps.** Same world, same tail of reports (reports 2–6 identical); the only difference between the two trajectories is whether the first report is red or blue. The initial branching distance is $d_1 \equiv 1.414 = \sqrt{2}$ (between two vertices; all 36 cells without exception); from $d_2$ onward the median distance is 0; single-step compression median 0.07–0.20; half-life 2.0–2.5 steps. The effective reasoning window defined by the compression factor $\gamma$, $t_{\text{eff}}(\varepsilon)=\ln(1/\varepsilon)/\ln(1/\gamma)$ ($\varepsilon = 0.1$), predicts about 2.3 steps — consistent with the measurement. Notes: (a) occasional re-branching: 1 of 12 cells still held a distance >0.1 at $t = 6$, and the maximum over the whole run can be $\sqrt{2}$ — a mirror image of the previous section's panel (d) "transient grows first, contracts later" (here it contracts first, then re-grows): even a deterministic model contains chaotic re-splitting; (b) at temperature 0, the part of the $d_t = 0$ "coincidence" is a deterministic artifact; statistically, only this reading counts: "one unit of phase difference no longer influences the next step's choices after two steps".
 
-Four-row cross-check against the theory: anchor = the measurement of Step 9's prior anchor $A$ ($A \neq$ uniform, $\kappa_A = 1.285$); spikiness = the energy basin near the vertex (the reasoning trajectory moves in vertex country); weak-evidence overreaction = asymmetric evidence absorption (the $d' \approx 0.9$ ceiling); phase-difference half-life $\approx 2$ steps = the measured constant of Section 6's effective reasoning window, the same order of magnitude as the closed-form compression bound. One honest caveat: closed-form quantities such as $\eta_{\max}$ and $\theta_{\max}$ describe safe step sizes of continuous dynamics; a real LLM's "step size" is a function of evidence strength (weak evidence also carries an effective $d' \approx 0.9$), and its motion looks more like "big steps, short window, jumps between vertices".
+Four-row cross-check against the theory: anchor = the measurement of Step 9's prior anchor $A$ ($A \neq$ uniform, $\kappa_A = 1.285$); spikiness = the energy basin near the vertex (the reasoning trajectory moves in vertex country); weak-evidence overreaction = asymmetric evidence absorption (the $d' \approx 0.9$ ceiling); phase-difference half-life $\approx 2$ steps = the measured constant of Section 6's effective reasoning window, the same order of magnitude as the closed-form compression bound. One honest caveat: closed-form quantities such as $\eta_{\max}$ and $\lambda_{\max}$ describe safe step sizes of continuous dynamics; a real LLM's "step size" is a function of evidence strength (weak evidence also carries an effective $d' \approx 0.9$), and its motion looks more like "big steps, short window, jumps between vertices".
 
 *Figure 12.2 and source code: Zixi Li (Professor Pallas), 2026. The experiment is presented in Section 10.1 (the script's API version is not expanded in the book).*
 
@@ -1546,7 +1548,7 @@ Run the script and you will see (excerpts from a real run – the numbers below 
 
 ## Physical Intuition: Bowls, Slopes, and Step Sizes
 
-The four key parameters of the formal derivation, $(\mu, L, \eta, \rho)$, have a straightforward physical meaning:
+The four key parameters of the formal derivation, $(\mu, L, \eta, \gamma)$, have a straightforward physical meaning:
 
 ### 1. Convexity (the bowl's shape)
 
@@ -1572,11 +1574,11 @@ The four key parameters of the formal derivation, $(\mu, L, \eta, \rho)$, have a
 - Too small: dawdling; convergence is slow
 - Just right: $\eta < \frac{2\mu}{L^2}$ (the safe-downhill formula)
 
-### 5. Contraction factor $\rho = \sqrt{1 - 2\eta\mu + \eta^2L^2}$
+### 5. Contraction factor $\gamma = \sqrt{1 - 2\eta\mu + \eta^2L^2}$
 
-- $\mu$ large (steep bowl) -> $\rho$ small -> fast convergence
-- $L$ large (rugged) -> $\rho$ large -> slow convergence
-- $\eta$ just right -> $\rho$ minimal -> optimal convergence
+- $\mu$ large (steep bowl) -> $\gamma$ small -> fast convergence
+- $L$ large (rugged) -> $\gamma$ large -> slow convergence
+- $\eta$ just right -> $\gamma$ minimal -> optimal convergence
 
 ### Analogy: Learning to Ride a Bicycle
 
@@ -1584,17 +1586,17 @@ The four key parameters of the formal derivation, $(\mu, L, \eta, \rho)$, have a
 - $\mu$: the pull of home (distance and gravity)
 - $L$: how even the road surface is
 - $\eta$: how hard each pedal stroke is
-- $\rho$: how fast you get there
+- $\gamma$: how fast you get there
 
 ### What This Looks Like in AI Reasoning
 
 1. Data quality -> $\mu$: diverse data creates a "deep bowl"
 2. Model architecture -> $L$: smooth design creates "gentle terrain"
 3. Reasoning design -> $\eta$: the right step size balances exploration and exploitation
-4. All three together -> $\rho$: it decides the length of the effective reasoning window
+4. All three together -> $\gamma$: it decides the length of the effective reasoning window
 
-Good system: $\mu$ large + $L$ small -> big $\eta$ allowed -> $\rho$ small -> fast convergence
-Bad system: $\mu$ small + $L$ large -> must be small $\eta$ -> $\rho$ large -> slow convergence
+Good system: $\mu$ large + $L$ small -> big $\eta$ allowed -> $\gamma$ small -> fast convergence
+Bad system: $\mu$ small + $L$ large -> must be small $\eta$ -> $\gamma$ large -> slow convergence
 
 That is why different models and different tasks have different "effective reasoning windows" — their $(\mu, L, \eta)$ combos differ, so their convergence speeds differ.
 
@@ -1639,14 +1641,14 @@ Here we need the "safe-downhill formula": $\eta < \frac{2\mu}{L^2}$
 
 When $\mu$ is large (steep bowl) and $L$ small (smooth road), we can use a big step size $\eta$!
 
-**Act 4: The contraction factor $\rho$**
+**Act 4: The contraction factor $\gamma$**
 
-With each step, the distance to the summit gets multiplied by $\rho = \sqrt{1 - 2\eta\mu + \eta^2L^2}$
+With each step, the distance to the summit gets multiplied by $\gamma = \sqrt{1 - 2\eta\mu + \eta^2L^2}$
 
-- If $\rho = 0.9$: after 10 steps, the distance is $(0.9)^{10} \approx 0.35$
-- If $\rho = 0.5$: after 10 steps, the distance is $(0.5)^{10} \approx 0.001$
+- If $\gamma = 0.9$: after 10 steps, the distance is $(0.9)^{10} \approx 0.35$
+- If $\gamma = 0.5$: after 10 steps, the distance is $(0.5)^{10} \approx 0.001$
 
-When the $(\mu, L, \eta)$ combo is good, $\rho$ is small, and you get close to the summit quickly!
+When the $(\mu, L, \eta)$ combo is good, $\gamma$ is small, and you get close to the summit quickly!
 
 **Act 5: The Yonglin observation**
 

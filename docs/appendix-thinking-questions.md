@@ -594,7 +594,7 @@ Cox 定理第一条前提：信念可用实数线性序表示。
 
 **提示：**
 1. 均匀锚点 $q=(1/3,1/3,1/3)$ 时，$d_i=1/q_i=3$。切空间 Hessian 为 $H_T=3P_T$，特征值是 $0$（法向）与 $3$（切向，二重）。切向特征向量是 $(1,-1,0)/\sqrt2$ 与 $(1,1,-2)/\sqrt6$。
-2. 对 $q=(0.70,0.20,0.10)$，久期方程给出 $\lambda=(2.9904,7.9620)$，所以 $\kappa_T=2.6625$，$\eta^*=2/(\mu_T+\theta_{\max})=0.18261$，$\rho^*=(\kappa_T-1)/(\kappa_T+1)=0.45393$。窗口 $=\ln 10/\ln(1/\rho^*)=2.92$。
+2. 对 $q=(0.70,0.20,0.10)$，久期方程给出 $\lambda=(2.9904,7.9620)$，所以 $\kappa_T=2.6625$，$\eta^*=2/(\lambda_{\min}+\lambda_{\max})=0.18261$，$\rho^*=(\kappa_T-1)/(\kappa_T+1)=0.45393$。窗口 $=\ln 10/\ln(1/\rho^*)=2.92$。
 
 **关键点：** 先算谱，再代公式；不要反过来先猜速率。
 
@@ -605,7 +605,7 @@ Cox 定理第一条前提：信念可用实数线性序表示。
 **提示：**
 1. 久期方程：设 $H_Tx=\lambda x$，$x\in T$。由 $H_T=P_TDP_T$ 与 $P_Tx=x$，得 $P_TDx=\lambda x$，即 $Dx-\lambda x=c\mathbf1$。于是 $x_i=c/(d_i-\lambda)$；再用 $\sum_i x_i=0$ 得 $\sum_i 1/(d_i-\lambda)=0$。交错性由函数 $f(\lambda)=\sum_i1/(d_i-\lambda)$ 在每个区间 $(d_{(j)},d_{(j+1)})$ 上单调、两端异号得到。
 2. 迹：$\operatorname{tr}(P_TDP_T)=\operatorname{tr}(DP_T^2)=\operatorname{tr}(DP_T)=\sum_i d_i(1-1/K)$。
-3. 最优步长：$\rho(\eta)=\max_i|1-\eta\lambda_i|$ 在最优点由两个活动分支相等给出：$1-\eta\mu_T=\eta\theta_{\max}-1$，解出 $\eta^*=2/(\mu_T+\theta_{\max})$，代回得 $\rho^*=(\theta_{\max}-\mu_T)/(\theta_{\max}+\mu_T)$。
+3. 最优步长：$\rho(\eta)=\max_i|1-\eta\lambda_i|$ 在最优点由两个活动分支相等给出：$1-\eta\lambda_{\min}=\eta\lambda_{\max}-1$，解出 $\eta^*=2/(\lambda_{\min}+\lambda_{\max})$，代回得 $\rho^*=(\lambda_{\max}-\lambda_{\min})/(\lambda_{\max}+\lambda_{\min})$。
 
 **关键洞察：** 这三个结论都不需要显式特征分解，只需要久期方程与秩一投影的代数。
 
@@ -615,7 +615,7 @@ Cox 定理第一条前提：信念可用实数线性序表示。
 
 **提示：**
 1. **Dirichlet 极值**：令 $G_i\sim\operatorname{Gamma}(\alpha,1)$ 独立，$q_i=G_i/\sum_jG_j$。由 $\Pr(G<\epsilon)\sim\epsilon^\alpha/\Gamma(\alpha+1)$，最小值的尺度是 $K^{-1/\alpha}$；归一化分母 $\sum_jG_j\approx K$，所以 $q_{\min}\sim K^{-1-1/\alpha}$。最大值满足 $\Pr(G>t)\approx e^{-t}t^{\alpha-1}/\Gamma(\alpha)$；令 $K\Pr(G>t)\sim1$，得 $t\sim\log K$，所以 $q_{\max}\sim\log K/(\alpha K)$。于是 $\kappa\sim K^{1/\alpha}\log K$，有效指数为 $1/\alpha+\log\log K/\log K$。
-2. **三种涌现的判据**：读出效应——$\mu_T,\theta_{\max},E_{\min}$ 随规模平滑，只有非线性指标跳变；谱分岔——$\kappa_T$ 的谱序交换或出现新的慢模式；容量穿墙——$E_{\min}$ 不连续下降。实验上要控制数据、tokenizer、评测 prompt 与指标阈值，否则三种效应会混在一起。
+2. **三种涌现的判据**：读出效应——$\lambda_{\min},\lambda_{\max},E_{\min}$ 随规模平滑，只有非线性指标跳变；谱分岔——$\kappa_T$ 的谱序交换或出现新的慢模式；容量穿墙——$E_{\min}$ 不连续下降。实验上要控制数据、tokenizer、评测 prompt 与指标阈值，否则三种效应会混在一起。
 3. **镜像下降反例**：在 KL 镜像下降下，更新是乘性的，KL 本身不满足三角不等式，不能直接构造柯西列。要恢复压缩性，需要额外的相对光滑/相对强凸条件，或者改用一个对称化的度量（如 Fisher–Rao）并在局部紧区域上工作。这个方向仍是开放的。
 
 **关键洞察：** 标度指数不是拟合出来的神秘数字，而是锚点分布尾部的直接函数；涌现也不是一个形容词，而是一个可以测量的谱事件。

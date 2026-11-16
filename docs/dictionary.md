@@ -3781,12 +3781,12 @@ $E(p)$ 沿投影梯度递减，就是系统向先验锚点的回归。KL 的不�
 **标签**：原创理论 | 原创
 
 #### 官方解释
-在第12章永霖定理的基础上，把切空间 Hessian 的谱压缩成两个端点 $\mu_T$ 与 $\theta_{\max}$，得到最优压缩率
+在第12章永霖定理的基础上，把切空间 Hessian 的谱压缩成两个端点 $\lambda_{\min}$ 与 $\lambda_{\max}$，得到最优压缩率
 
 $$
 \rho^*=\frac{\kappa_T-1}{\kappa_T+1},
 \qquad
-\kappa_T=\frac{\theta_{\max}}{\mu_T}.
+\kappa_T=\frac{\lambda_{\max}}{\lambda_{\min}}.
 $$
 
 它给出误差曲线的半对数斜率、到达精度 $\varepsilon$ 的步数窗口，以及数据轴上 $(K-1)/(2s)$ 的 scaling 地板；区分“读数跳变”与“真实涌现”，只是它的脚注。
