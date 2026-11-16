@@ -787,7 +787,7 @@ Figure 23.8 has four panels.
 
 **(a) Tangent plane: is there a common fixed point?** The axes are $x_1$ and $x_2$; each polyline is one orbit, the hollow point is its start, and the black star is $A_{\mathrm{obs}}$. The three starts of a task approach the same star; C3 and C4 have different stars because the evidence differs. This panel answers “is there a fixed point,” not “how fast.”
 
-**(b) Semi-log: is convergence geometric?** The vertical axis is $\log_{10}d_E$ and the horizontal axis is step $t$. If every step multiplies by the same $\rho$, this is a straight line with slope $\log_{10}\rho$. Each orbit is drawn only until it falls below the two-decimal readout floor ($10^{-2}$); beyond that the last digit jitters, and plotting it adds only noise. C3's fitted rates are $0.61$–$0.75$, below the theoretical $\rho^*=0.792$; the reason is the squeeze argument below. C4's theoretical $\rho^*=0.355$ calls for a much steeper slope, and the model's orbits do not follow it.
+**(b) Semi-log: is convergence geometric?** The vertical axis is $\log_{10}d_E$ and the horizontal axis is step $t$. If every step multiplies by the same $\rho$, this is a straight line with slope $\log_{10}\rho$. Each orbit is drawn only until it falls below the two-decimal readout floor ($10^{-2}$); beyond that the last digit jitters, and plotting it adds only noise. C3's fitted rates are $0.61$–$0.75$, below the theoretical $\rho^*=0.792$; the reason is the economics interval below. C4's theoretical $\rho^*=0.355$ calls for a much steeper slope, and the model's orbits do not follow it.
 
 **(c) Log-log: is it a power law?** The axes are $\log_{10}(t+1)$ and $\log_{10}d_E$. A power law $d\propto t^{-\alpha}$ would be a straight line here. The same data bend downward; the fitted exponent drifts from $-3.3$ to $-1.8$ with the start. A genuine power law does not drift like that. Semi-log $R^2$ is $0.83$–$0.98$, log-log $R^2$ is $0.82$–$0.93$; the log-log problem is not merely a slightly lower $R^2$, but an exponent that moves with the start. Geometry is the better description. These panels are also drawn only above the readout floor.
 
@@ -800,66 +800,60 @@ Now the most interesting part. C3's three rates run from $0.610$ to $0.753$, all
 - $\rho^*$ is the optimal rate that Theorem 23.2 gives at the **optimal step** $\eta^*$, namely $\rho^*=\min_{\eta>0}\rho(\eta)$. It is the ideal projected-gradient operator's smallest compression factor and the fastest convergence theory allows.
 - $\rho_{\mathrm{emp}}$ is the rate the model walks under the “one small adjustment” prompt. The step size is the model's own choice.
 
-C4's gap shows that the model does not sit at $\eta^*$. $\rho^*$ is not wrong; the model does not walk at the optimum. Theory says C3 should be much slower than C4 ($0.792$ versus $0.355$); the measurements put both tasks in the same band, C3 at $0.610$–$0.753$ and C4 at $0.711$–$0.754$. The model uses its own step, not the theoretical optimum. This is not anomalous: every step in the stability window is legal, and $\rho^*$ is only the fastest point in it.
+C4's gap shows that the model does not sit at $\eta^*$. $\rho^*$ is not wrong; the model does not walk at the optimum. Theory says C3 should be much slower than C4 ($0.792$ versus $0.355$); the measurements put both tasks in almost the same stretch, C3 at $0.610$–$0.753$ and C4 at $0.711$–$0.754$. The model uses its own step, not the theoretical optimum. This is not anomalous: every step in the stability window is legal, and $\rho^*$ is only the fastest point in it.
 
-:::details Why the step need not sit at $\eta^*$: reading the squeeze theorem
-Squeeze theorem: if $a_n\le b_n\le c_n$ and $\lim a_n=\lim c_n=L$, then $\lim b_n=L$. It pins down the quantity in the middle, not either endpoint.
-
-What is pinned here is the error at every step. Fix $\eta$; the linearized matrix $J_T=I-\eta H_T$ has eigenvalues $1-\eta\lambda_i$. Let
+**The two experiments' $m$ and $\rho$: two residents at once.** Draw each task's own band directly. Fix an effective step $\eta$; the linearized matrix $J_T=I-\eta H_T$ has eigenvalues $1-\eta\lambda_i$. Let
 
 $$
 m(\eta)=\min_i|1-\eta\lambda_i|,\qquad
 \rho(\eta)=\max_i|1-\eta\lambda_i|.
 $$
 
-For any error vector $v$,
+After this step the error retains at least $m(\eta)$ times what it had and at most $\rho(\eta)$ times; so every step size yields a legal-rate band $[m(\eta),\rho(\eta)]$. The endpoint $m$ is where the most is reclaimed, $\rho$ where the least is; the width $\rho-m$ is the spread between modes at that step, and the cost end is $\rho$. At $\eta=\eta^*$ the band collapses to a point, $m(\eta^*)=\rho(\eta^*)=\rho^*$; away from $\eta^*$ it widens.
+
+The model's step is not written directly in its output. The experiment is designed to test whether it is a step that does not adapt to the task; call that common effective step $\eta$ and ask whether the data support it. The spectral endpoints are C3's $\lambda_{\min}=4.1737$, $\lambda_{\max}=35.8959$ and C4's $\lambda_{\min}=3.1746$, $\lambda_{\max}=6.6667$.
+
+Require every orbit in both experiments to land in its own band. The two tightest constraints are: C4's lowest rate requires $\eta\ge(1-0.711)/6.6667\approx0.0434$; C3's lowest rate requires $\eta\le(1+0.610)/35.8959\approx0.0449$ (C4's $\eta$ is still left of $1/\lambda_{\max}$; C3 has crossed it). Their intersection gives
 
 $$
-m(\eta)\|v\|_2\le\|J_Tv\|_2\le \rho(\eta)\|v\|_2.
+0.0434\le\eta\le0.0448
 $$
 
-After $t$ steps,
+(the upper end rounded down conservatively). Take $\eta=0.044$, substitute the two spectra into the definitions, and the table follows:
 
-$$
-m(\eta)^t\|v_0\|_2\le\|v_t\|_2\le \rho(\eta)^t\|v_0\|_2.
-$$
+| Experiment | $m(\eta)$ | $\rho(\eta)$ | Width | Three orbits' $\rho_{\mathrm{emp}}$ |
+|---|---:|---:|---:|---|
+| C3 | 0.58 | 0.82 | 0.24 | 0.610 / 0.653 / 0.753 |
+| C4 | 0.71 | 0.86 | 0.15 | 0.711 / 0.754 / 0.753 |
 
-The error is squeezed between two exponential curves. As long as $\rho(\eta)<1$, both bounds go to zero and the orbit converges; how fast it goes is legal anywhere in $[m(\eta),\rho(\eta)]$.
+All three C3 orbits lie in their own $[0.58,0.82]$; all three C4 orbits lie in their own $[0.71,0.86]$. It is not one large interval holding six orbits; it is **two bands existing at once, each experiment succeeding on its own**. C3's band is wider and sits lower; C4's is narrower and sits higher. They overlap near $[0.71,0.82]$, but they are two residents, not one. Each orbit goes back to its own band.
 
-The optimal step $\eta^*$ is special because it collapses this interval to a point:
+This also makes “economics” concrete: the width is not an error bar but the spread of retention ratios left by different modes at one step. $m$ is the optimistic end, $\rho$ the cost end; the step count is set by $\rho$, while the width tells you how much the step's performance depends on which mode dominates. C3's width is $0.24$ and C4's is $0.15$: C3's spectral span is larger, so its modes are spread further apart. But width is not cost; cost is read at $\rho$. At this common step, C4's $\rho=0.86$ is higher than C3's $0.82$: the cost end of both bands falls on $1-\eta\lambda_{\min}$, and C4 has the smaller $\lambda_{\min}$ and sits farther from its own $\rho^*=0.355$; so C4's worst case is actually slower. A wider band is not a more expensive one; look at the $\rho$ end.
 
-$$
-m(\eta^*)=\rho(\eta^*)=\rho^*.
-$$
+This also bounds what the experiment can say. A single task's rate cannot pin the step; put both tasks at one common effective step, and two bands each contain their own samples, narrowing the step to $0.0434$–$0.0448$. C3's readings are below its own $\rho^*$, C4's above its own; both are legal inside their own bands. Pinning the step more finely requires a longer, finer window.
 
-So $\eta^*$ gives the narrowest squeeze interval, not a legality threshold. Away from $\eta^*$ the bounds separate and the interval widens. A measured rate inside that interval is still a rate a legal step can produce.
+**Two existence claims.** At a fixed step, a task's legal rate is not a line but a band: $m(\eta)\le \rho\le \rho(\eta)$. Now there are two tasks and two bands: C3's $[0.58,0.82]$ and C4's $[0.71,0.86]$. Each task's three orbits lie in its own band. It is not one large interval holding every sample; it is two residents existing at once—each experiment has its own construction, and both succeed.
 
-C4's $0.711$–$0.754$ lies above $\rho^*=0.355$ and corresponds to a widened legal interval; there is a step on each side of $\eta^*$ that can produce it. C3's $0.610$–$0.753$ lies below $\rho^*$, in a band with $m(\eta)<\rho^*<\rho(\eta)$: this orbit runs mostly on the mode that happens to be near-optimal for that step, not on the worst mode. The squeeze pins the interval, not its midpoint; the measured rate need not equal $\rho^*$.
-:::
+Put the two tasks side by side: C3's band is wider and lower, C4's narrower and higher; they overlap on $[0.71,0.82]$. C3's samples $0.610$–$0.753$ do not press against its lower bound ($0.58$); C4's $0.711$ almost touches its lower bound ($0.71$), and its other two sit inside. One wide and one narrow, one loose and one tight—two experiments, each succeeding on its own.
 
-This also bounds what the experiment can say. C4's rate is above $\rho^*$, and the legal interval widens on both sides, so the rate alone cannot tell the slow solution from the fast one. C3's rate below $\rho^*$ means the orbit is near the lower bound, not that the step is illegal. Pinning both the step and the bounds requires a longer, finer window.
+**A proof, not a precision claim.** Write the proposition as a type: there is a common step $\eta$ such that each task's legal-rate band contains its own orbits. The construction comes from the tangent spectrum and $\eta=0.044$: $m(\eta)$ and $\rho(\eta)$ are computed, not fitted orbit by orbit; C3 gives $[0.58,0.82]$ and C4 gives $[0.71,0.86]$. The check is that six orbits, twelve steps each, $72$ readouts, do lie in their own bands. Because $\eta$ was inferred from these readings, this is a consistency check, not an independent prediction; what it proves is that such a common step and two bands exist, not that the bands were given in advance. Both types are inhabited, and two real residents moved into the model. The direction matters: the samples do not witness the optimum; they only show that they fit inside their own band, and neither band requires a sample to sit on $\rho^*$. The resident is the parent, the samples the children; this time there are two parents and two children, each going home to its own.
 
-**An existence claim.** At a fixed step, a task's legal rate is not a line but a band: $m(\eta)\le \rho\le \rho(\eta)$. How wide it is depends on how far the step sits from $\eta^*$; at $\eta^*$ it collapses to a point, and away from it the band widens. Each task's $\rho^*$ is a precise number, not an estimated interval.
+**The Curry–Howard point.** A proof of an existence proposition is the construction of its resident; now there are two existence propositions, so there are two residents. The experiment does not issue each sample a certificate of optimality; it checks whether each task's readings live inside their own band. This is not witness logic: the samples do not witness the optimum, they only have to show they fit inside. C3's three move into C3's band, C4's three move into C4's band; both constructions hold. Conversely, if every sample landed exactly on its own $\rho^*$, that would look more like fitting than measurement.
 
-Put the two tasks side by side: C4's $\rho^*=0.355$ below, C3's $\rho^*=0.792$ above, with the six fitted rates $0.610$–$0.754$ in between. C3's readings are below its own optimum, C4's above its own; one low and one high, and the measured small interval lands inside the constructed large one. This is not reading off some $\rho^*$ directly; the small interval moves into the large one.
+**What this step proves.** It is two existence proofs for these two tasks, six starts, and a twelve-step window. The $72$ readouts are not $72$ independent experiments but time points of six orbits; nor is this a universal claim about all prompts and temperatures. Changing prompts, changing temperature, adding tasks is the next step from "exists in these two" to "exists on a wider range". The optimal orbit itself can be written down: at $\eta^*$, $m(\eta^*)=\rho(\eta^*)=\rho^*$; it is a mathematically constructible orbit. The model need not walk it; the real orbit only has to fall inside the range it licenses.
 
-**A proof, not a precision claim.** Write the proposition as a type: there exists an optimal legal rate, and the real orbits' rates lie in the interval it licenses. The construction is already given in 23.2–23.3: $\rho^*$ is computed from the tangent spectrum and $\eta^*$, not fitted; the two tasks' optima span the interval $[0.355,0.792]$. The verification comes from the experiment: six orbits, twelve steps each, $72$ readouts; the six rates fitted from them are $0.610$–$0.754$, all inside the constructed interval. The direction matters: it is not that the optimal line lies in the middle of the measured band—the measured band is narrow and both optima lie outside it; it is that the constructed interval contains the measured band, with the two optimal lines bracketing it from above and below. The resident is the large interval, the samples the small one—about $[0.35,0.79]$ against $[0.61,0.75]$. The small interval sits entirely inside, and the resident is constructed successfully.
+**Two lines per resident are enough.** This is an existence construction, not a statistical estimate. Building one task's resident needs only two endpoints: $m(\eta)$ gives the lower bound and $\rho(\eta)$ the upper. At $\eta=0.044$, draw the two lines and the band exists. Each task draws two lines, giving two bands; each band contains its own three orbits, and the two existence propositions are proved. What is proved is the existence of the resident bands, not the optimality of the samples; the samples merely live inside. More tasks, prompts, and temperatures are not necessary for the construction; they ask how far the residents reach, which is robustness, not existence. Mathematically, constructing an object takes one valid construction; repeated sampling is engineering reinforcement, not a logical requirement.
 
-**The Curry–Howard point.** A proof of an existence proposition is the construction of its resident; the experiment does not issue each sample a certificate of optimality, it checks whether the real readings all live inside the resident. This is not witness logic: the samples do not witness the optimum, they only have to show they fit inside. As long as the small band lies inside the large interval, the construction holds; it does not require every point to sit on $\rho^*$. Conversely, if every sample landed exactly on its own $\rho^*$, that would look more like fitting than measurement.
+**A healthy band, not a magic interval.** The resident band is not fitted point by point; given the common step, it is computed directly from the tangent spectrum and does not fit each orbit's rate. The common step itself is inferred from the data and is the only quantity taken from the data; it is chosen so that the two bands contain all six orbits at once. This is a construction, not a data-free prediction. What the band gives is a healthy range, not a pass saying "inside means optimal." Most positions in the band are merely legal, normal, and convergent; only a very thin line near $\rho^*$ is optimal. Being inside means the model has not left the healthy range—it does not mean the model is optimal, still less that it guarantees explosive learning or explosive reasoning. Legality is still judged by the step lying in the stability window and each step's rate lying in its task's $[m(\eta),\rho(\eta)]$; a reading outside the interval is not automatically illegal, it may just come from a slower legal step. Every task, and every model satisfying this geometry, has its own legal band; the model lives in the band, not outside it. Treating any point in the band as "optimal" is the shortcut—and there is no such shortcut here.
 
-**What this step proves.** It is an existence proof for these two tasks, six starts, and a twelve-step window. The $72$ readouts are not $72$ independent experiments but time points of six orbits; nor is this a universal claim about all prompts and temperatures. Changing prompts, changing temperature, adding tasks is the next step from "exists in these two" to "exists on a wider range". The optimal orbit itself can be written down: at $\eta^*$, $m(\eta^*)=\rho(\eta^*)=\rho^*$; it is a mathematically constructible orbit. The model need not walk it; the real orbit only has to fall inside the range it licenses.
+**Top models live in the interval too.** This is not "DeepSeek happened to qualify"; it is the construction doing its job: as long as a model makes small Bayesian updates on the simplex, its legal rate lies in its task's $[m(\eta),\rho(\eta)]$. This time DeepSeek's six orbits land in two bands: C3's $0.610$–$0.753$ in $[0.58,0.82]$, C4's $0.711$–$0.754$ in $[0.71,0.86]$. A real large model moved into both residents. The measured behavior of this top model is inside the healthy band, not on the optimal line. Whether every top model does the same needs more models; the construction itself does not favor any model.
 
-**Two lines are enough.** This is an existence construction, not a statistical estimate. Building the resident interval needs only two endpoints: C4's optimum gives the lower bound, C3's gives the upper. Draw the two lines and the interval exists; the small band sits inside, and the existence proposition is proved. What is proved is the existence of the resident interval, not the optimality of the samples; the samples merely live inside it. More tasks, prompts, and temperatures are not necessary for the construction; they ask how far the resident reaches, which is robustness, not existence. Mathematically, constructing an object takes one valid construction; repeated sampling is engineering reinforcement, not a logical requirement.
-
-**A healthy band, not a magic interval.** The resident interval is not drawn by first reading the data and then widening the standard; it comes before the data, computed from the tangent spectrum and $\eta^*$. But what it gives is a healthy band, not a pass saying "inside means optimal." Most positions in the band are merely legal, normal, and convergent; only a very thin line near $\rho^*$ is optimal. Being inside means the model has not left the healthy range—it does not mean the model is optimal, still less that it guarantees explosive learning or explosive reasoning. Legality is still judged by the step lying in the stability window and each step's rate lying in $[m(\eta),\rho(\eta)]$; a reading outside the interval is not automatically illegal, it may just come from a slower legal step. Every model satisfying this geometry has its own legal band; the model lives in the band, not outside it. Treating any point in the band as "optimal" is the shortcut—and there is no such shortcut here.
-
-**Top models live in the interval too.** This is not "DeepSeek happened to qualify"; it is the construction doing its job: as long as a model makes small Bayesian updates on the simplex, its legal rate lies in $[m(\eta),\rho(\eta)]$; for these two tasks, the two optimal lines pin the range to $[0.355,0.792]$. DeepSeek's six orbits are $0.610$–$0.754$, all inside, none pressed against the endpoints. The measured behavior of this top model is inside the constructed interval—it lives in the healthy band, not on the optimal line. The resident is not a paper construction; a real large model lives in it. Whether every top model does the same needs more models; the construction itself does not favor any model.
-
-This is the experiment's value: it verifies the geometry and the fixed point, measures how far the model sits from the optimal step, and confirms that the constructed interval is not empty.
+This is the experiment's value: it verifies the geometry and the fixed point, measures how far the model sits from the optimal step, and confirms that both residents are non-empty.
 
 - **Geometry verified.** All six orbits contract in tangent space, semi-log is close to straight, the fixed point is the evidence-consistent posterior, and the tail diameter falls.
 - **Fixed point verified.** C3 and C4 land on their own posteriors; different starts, same landing point.
-- **Step size measured.** C4's measured rate is $0.711$–$0.754$ while $\eta^*$ gives $0.355$. The model walks its own legal step, not the optimum. $\rho^*$ measures the ideal operator; $\rho_{\mathrm{emp}}$ measures the model.
+- **Two residents verified.** C3 and C4 each have a band, and all six orbits lie in their own; it is not one large interval barely containing every point, but two bands each holding on its own.
+- **Step size measured.** The two experiments narrow the common effective step to $0.0434$–$0.0448$. The model walks its own legal step, not the optimum. $\rho^*$ measures the ideal operator; $\rho_{\mathrm{emp}}$ measures the model.
 
 Two technical details. First, across the six orbits $d_H$ and $d_E$ differ by at most $0.03$ in rate; the two norms give the same contraction picture. Second, some orbits have not reached $\varepsilon=0.01$ within twelve steps; a longer window is the next experiment.
 
@@ -1032,12 +1026,15 @@ for task in ("c3", "c4"):
     A = np.array(data["A_star"], float)
     kappa, rho = rho_star(A)
     print(f"{task}: kappa_T={kappa:.3f}  rho*={rho:.3f}")
+    # common effective step inferred from the two bands (see text)
+    vals = np.abs(1 - 0.044 * np.linalg.eigvalsh(spectrum(A)))
+    print(f"  band at eta=0.044: m={vals.min():.2f}  rho={vals.max():.2f}")
     for name, P in data["orbits"].items():
         d = distances(np.array(P, float), A)
         print(f"  {name:10s} rho_E={fit_rate(d):.3f}")
 ```
 
-The code fits each orbit separately; the three numbers in the table are exactly the `rho_E` it prints. Its input is `ch23_orbit_c3.json` and `ch23_orbit_c4.json`, written by the collector in the same directory; the same near-anchor window and fit also produce panels (b) and (c) of Figure 23.8.
+The code fits each orbit separately; the three numbers in the table are exactly the `rho_E` it prints. The `band at eta=0.044` line prints each task's $[m,\rho]$; the table's $m$ and $\rho$ come from it, and the width is their difference. Its input is `ch23_orbit_c3.json` and `ch23_orbit_c4.json`, written by the collector in the same directory; the same near-anchor window and fit also produce panels (b) and (c) of Figure 23.8.
 
 > **One sentence:** code is not decoration in an appendix; it is the part that lets the conclusion be audited.
 
