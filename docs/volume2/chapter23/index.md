@@ -581,7 +581,7 @@ $$
 
 上一节把两种坐标分开了：几何收敛在半对数上是直线，幂律在双对数上才是直线。现在把尺子拿到真实模型上，量一条真实的信念轨道。
 
-这里的“工业级”指的是三件事：接口是真的（DeepSeek 的 chat completions），协议是固定的（同一提示、同一温度、同一步数），数据是可审计的（每条距离序列、分析代码、图都写在下面）。一个模型、两个任务，是一个案例；案例的每一步都留在仓库里，可以被重跑、被反驳。
+这里的“工业级”指的是三件事：接口是真的（DeepSeek 的 chat completions），协议是固定的（同一提示、同一温度、同一步数），数据是可审计的（采数代码、分析代码、图都写在下面）。一个模型、两个任务，是一个案例；案例的每一步都留在仓库里，可以被重跑、被反驳。
 
 ### 为什么把尺子搬到切空间
 
@@ -744,7 +744,7 @@ $$
 
 | 任务 | $\kappa_T$ | $\rho^*$ | 三条轨道的 $\rho_{\mathrm{emp}}$ | 半对数 $R^2$ |
 |---|---:|---:|---|---:|
-| C3（两次 Blue） | 8.60 | 0.792 | 0.610 / 0.654 / 0.753 | 0.911–0.982 |
+| C3（两次 Blue） | 8.60 | 0.792 | 0.610 / 0.653 / 0.753 | 0.911–0.982 |
 | C4（一次 Blue） | 2.10 | 0.355 | 0.711 / 0.754 / 0.753 | 0.831–0.927 |
 
 三条轨道是黑球主导、均匀、红球主导三个起点；$\rho_{\mathrm{emp}}$ 是在近锚点窗口 $0.01<d<0.5$ 上对每条轨道**单独**做 $\log_{10}d$ 线性拟合得到的，$\rho_{\mathrm{emp}}=10^{b}$。三条轨道各给一个数，不合成一个平均速率。
@@ -793,6 +793,7 @@ import json
 import os
 import re
 import time
+from pathlib import Path
 
 import httpx
 
@@ -856,55 +857,59 @@ def run_orbit(client, url, key, start, steps=12):
     return path
 
 
+STARTS = {
+    "black_skew": (0.10, 0.20, 0.70),
+    "uniform": (1 / 3, 1 / 3, 1 / 3),
+    "red_skew": (0.70, 0.20, 0.10),
+}
+A_STAR = (0.1358, 0.8448, 0.0194)   # C3 posterior; swap in C4's for task c4
+
+
+def save_orbit(task, A_star, orbits):
+    """Write one experiment file next to this script."""
+    path = Path(".") / f"ch23_orbit_{task}.json"
+    path.write_text(json.dumps({"task": task, "A_star": A_star,
+                                "orbits": orbits}, indent=1),
+                    encoding="utf-8")
+    return path
+
+
 key = os.environ["DEEPSEEK_API_KEY"]   # read from the environment; never print it
 
 url = "https://api.deepseek.com/chat/completions"
 with httpx.Client() as client:
-    orbit = run_orbit(client, url, key, (0.10, 0.20, 0.70))
-print(json.dumps(orbit))
+    orbits = {name: run_orbit(client, url, key, start)
+              for name, start in STARTS.items()}
+print(save_orbit("c3", A_STAR, orbits))
 ```
 
-把三个起点各跑一遍，量出每一步到 $A_{\mathrm{obs}}$ 的欧氏距离，就是下面分析代码的输入。C4 只需把 `QUESTION` 换成一次 Blue 报告的题面，起点换成表里的三个点。
+把三个起点各跑一遍，轨道写进 `ch23_orbit_c3.json`；分析代码从同级目录把它读回来。C4 只需把 `QUESTION` 换成一次 Blue 报告的题面，轨道写进 `ch23_orbit_c4.json`。
 
 分析代码：
 
 ```python
+import json
 import math
+from pathlib import Path
 
 import numpy as np
 
-# d_E at each step, measured from the reported beliefs to A_obs.
-# The three rows are the black-skew, uniform, and red-skew starts.
-DATA = {
-    "C3": {
-        "A": (0.1358, 0.8448, 0.0194),
-        "d_E": {
-            "black_skew": [0.9382, 0.6900, 0.5554, 0.4140, 0.3504,
-                           0.3156, 0.2168, 0.1653, 0.0561, 0.0325,
-                           0.0130, 0.0043, 0.0064],
-            "uniform":    [0.6318, 0.5026, 0.3641, 0.2782, 0.2035,
-                           0.1289, 0.0697, 0.0466, 0.0064, 0.0064,
-                           0.0064, 0.0064, 0.0078],
-            "red_skew":   [0.8606, 0.7203, 0.6330, 0.5543, 0.4898,
-                           0.4112, 0.3326, 0.2683, 0.2401, 0.1695,
-                           0.1054, 0.0771, 0.0488],
-        },
-    },
-    "C4": {
-        "A": (0.1500, 0.7000, 0.1500),
-        "d_E": {
-            "black_skew": [0.7450, 0.6042, 0.3937, 0.2550, 0.1667,
-                           0.0883, 0.0510, 0.0245, 0.0000, 0.0245,
-                           0.0000, 0.0245, 0.0000],
-            "uniform":    [0.4491, 0.3254, 0.1960, 0.1225, 0.0735,
-                           0.0490, 0.0245, 0.0141, 0.0000, 0.0245,
-                           0.0000, 0.0141, 0.0141],
-            "red_skew":   [0.7450, 0.6042, 0.4537, 0.3159, 0.2093,
-                           0.1838, 0.1476, 0.1257, 0.1068, 0.0849,
-                           0.0566, 0.0424, 0.0141],
-        },
-    },
-}
+HERE = Path(".")
+U = np.array([1 / 3, 1 / 3, 1 / 3])
+E = np.array([[1, 0, -1], [1, -2, 1]], float)
+E /= np.linalg.norm(E, axis=1, keepdims=True)
+
+
+def load_orbit(task):
+    """Read the JSON written by the collector from this directory."""
+    path = HERE / f"ch23_orbit_{task}.json"
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def tangent(p):
+    """Coordinates of p - U in the orthonormal basis of T."""
+    return E @ (np.asarray(p, float) - U)
 
 
 def spectrum(A):
@@ -923,6 +928,12 @@ def rho_star(A):
     return kappa, (kappa - 1) / (kappa + 1)
 
 
+def distances(P, A):
+    """Euclidean distance in T; equals ||p - A||_2 because p - A is in T."""
+    X = np.array([tangent(p) for p in P])
+    return np.linalg.norm(X - tangent(A), axis=1)
+
+
 def fit_rate(d, floor=1e-2, dmax=0.5):
     """Fit log10 d = a + b t near the anchor; return rho = 10**b."""
     t = np.arange(len(d))
@@ -933,14 +944,16 @@ def fit_rate(d, floor=1e-2, dmax=0.5):
     return 10 ** b
 
 
-for task, block in DATA.items():
-    A = np.array(block["A"])
+for task in ("c3", "c4"):
+    data = load_orbit(task)
+    A = np.array(data["A_star"], float)
     kappa, rho = rho_star(A)
     print(f"{task}: kappa_T={kappa:.3f}  rho*={rho:.3f}")
-    for name, d in block["d_E"].items():
-        print(f"  {name:10s} rho_E={fit_rate(np.array(d, float)):.3f}")
+    for name, P in data["orbits"].items():
+        d = distances(np.array(P, float), A)
+        print(f"  {name:10s} rho_E={fit_rate(d):.3f}")
 ```
-这段代码对每条轨道单独拟合，正文表里的三个数就是它逐行打印的 `rho_E`。输入就是上面六条 $d_E$ 序列；同样的近锚点窗口和拟合方式，也用于图 23.4 的面板 (b) 和 (c)。
+这段代码对每条轨道单独拟合，正文表里的三个数就是它逐行打印的 `rho_E`。输入是 `ch23_orbit_c3.json` 和 `ch23_orbit_c4.json`，由采数代码写在同级目录；同样的近锚点窗口和拟合方式，也用于图 23.4 的面板 (b) 和 (c)。
 
 > **一句话：** 代码不是附录里的装饰；它是让结论可以被审计的那一部分。
 
