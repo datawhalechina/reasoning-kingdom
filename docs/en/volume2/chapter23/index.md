@@ -829,6 +829,8 @@ Put the two tasks side by side: C4's $\rho^*=0.355$ below, C3's $\rho^*=0.792$ a
 
 The squeeze guarantees the readings lie in the band; unless the step is far below $\eta^*$, the optimal line also lies in the band, and at $\eta^*$ the band degenerates to that line. So the experiment proves an existence claim: inside DeepSeek's sampled band there exists an optimal line, not that every reading equals the optimum. Optimal behavior exists within its sampling range, but it is a thin line, and a sample will almost never land exactly on it. If all six orbits sat exactly on their own $\rho^*$, that would look more like fitting than measurement.
 
+**Construction and its resident.** The order is construction first, experiment second: build an optimal legal rate $\rho^*$ from the tangent spectrum and $\eta^*$, prove it is legal, then look for it in the real model. The experiment finds exactly this line: it lies inside the sampled band, with C3's orbit on the lower side and C4's on the upper side, enclosing it. So the result is a logical proposition: the resident our construction placed there exists in real machine learning, and the construction succeeds. It does not require every sample to sit on $\rho^*$; it requires the band to contain it.
+
 This is the experiment's value: it verifies the geometry and the fixed point, and it measures how far the model sits from the optimal step.
 
 - **Geometry verified.** All six orbits contract in tangent space, semi-log is close to straight, the fixed point is the evidence-consistent posterior, and the tail diameter falls.
