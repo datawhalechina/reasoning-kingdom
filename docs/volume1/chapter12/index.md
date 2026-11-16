@@ -514,6 +514,14 @@ $2\mu - \eta L^2$ 就是从这来的：强凸性贡献正的 $2\mu$，光滑性�
 
 我们在这里得到的是整个区域上的一致 Lipschitz 压缩：对任意两点 $p_1, p_2 \in \mathcal{X}$ 都成立，而不只是“越来越靠近 $A$”。这才是巴拿赫意义上的压缩映射。
 
+:::info 波兰学派：完备性从哪里来
+第七、八步用到的完备性，来自斯特凡·巴拿赫（Stefan Banach）1922 年证明的压缩映射原理。巴拿赫是两次世界大战之间波兰数学学派的核心人物之一；同一个学派里还有乌拉姆、舒德、马祖尔等人。泛函分析里的巴拿赫空间、哈恩–巴拿赫定理、巴拿赫–施坦豪斯定理，都带着这个学派的名字。
+
+这不是一段增加气氛的数学史。它解释了这个证明的方法论选择：**把“收敛”从具体算法里抽出来，放进一个完备空间，只研究算子本身。** 一旦这么做，收敛性就不再依赖你用的是 SGD、Adam 还是别的更新规则，而只依赖算子在不动点处的压缩性。
+
+本章的能量面来自信息论，完备性来自波兰学派。永霖定理就站在这两根柱子上。
+:::
+
 ### 8. 应用巴拿赫不动点定理
 
 现在应用巴拿赫不动点定理：
@@ -1107,11 +1115,11 @@ print(f"panel d: local R^2(log-log) = {logR:.4f}, n = {len(local_ana)}, median e
 print(f"panel d: global: numerically stable region >= eta_max (projection adds stability)")
 ```
 
-*图 1 与源码：李籽溪（兔狲教授），2026。实验脚本 `ch12_energy_terrain.py`（完整代码见第 14 步代码块）。*
+*图 1 与源码：李籽溪（兔狲教授），2026。实验脚本 `ch12_energy_terrain.py`（完整代码见本节代码块）。*
 
-### 14.7 真实 LLM 上的直接证据：信念锚点、证据强度与记忆衰减
+### 10.1 真实 LLM 上的直接证据：信念锚点、证据强度与记忆衰减
 
-第 14 步的数值实验验证了公式的内部自洽性：动力学本来就是按闭式解的欧拉步构造的，当然会跟着它走。本节给出真实 LLM 上的直接证据：用真实模型（DeepSeek-V4-flash，reasoning 类型）实例化第七节的推断算子 $F: \mathcal{P} \to \mathcal{P}$，逐步注入证据、逐步读回信念，逐项核对永霖公式与永霖极限在真实推理中的对应物。图是 `ch12_llm_evidence.png`；实验的完整数据设计如下（实验本身与数字都活在图中——涉及真实模型 API 的脚本不在此重复）。
+上一节的数值实验验证了公式的内部自洽性：动力学本来就是按闭式解的欧拉步构造的，当然会跟着它走。本节给出真实 LLM 上的直接证据：用真实模型（DeepSeek-V4-flash，reasoning 类型）实例化第七节的推断算子 $F: \mathcal{P} \to \mathcal{P}$，逐步注入证据、逐步读回信念，逐项核对永霖公式与永霖极限在真实推理中的对应物。图是 `ch12_llm_evidence.png`；实验的完整数据设计如下（实验本身与数字都活在图中——涉及真实模型 API 的脚本不在此重复）。
 
 **实验设置。** 三色球袋世界，仍在信念单纯形 $\Delta^2$ 上。球袋的球比例 $p^*$ 取三种设定，包括全书基线 $(0.70, 0.20, 0.10)$（$\kappa = 7.00$）；一个已知可靠性的检测器 $d \in \{0.90, 0.70, 0.55\}$ 每步对摸出的球给出一次带噪颜色报告（似然 $P(r|c)$ 完全已知，真实后验 $p^B_t$ 逐步闭式计算）；证据序列就是检测器报告序列，$T = 6$。每一步，模型的输入是“球袋参数 + 前 $t$ 条报告 + 强制一词作答”，信念从最终答案 token 的归一化 top-k logprobs 读出（$K = 3$）。网格：$3 \times 3 \times 4$ 个种子——每个单元一条普通轨迹加两条提示轨迹；锚点测量：3 种选项排列 $\times$ 8 种改写。
 
@@ -1133,15 +1141,15 @@ print(f"panel d: global: numerically stable region >= eta_max (projection adds s
 
 对 $d = 0.90$ 单调下降（最终中位 0.02——几乎精确贝叶斯）；对 $d = 0.70$，从第 2 步起更贴近 $d' = 0.9$ 假后验；对 $d = 0.55$，与 $d' = 0.9$ 假后验的距离比与真实后验近约 8 倍。模型把提示词里的证据可靠性当成一个近似固定的 $d' \approx 0.9$：弱证据被系统性放大，强证据被精确跟随。这与人类的保守主义（Edwards 1968）正好相反——LLM 的证据强度天花板约为 0.9：弱证据永远意味着“别信提示词，按最大强度用”。
 
-**结果 4：压缩与记忆——相位差半衰期约 2 步。** 同一个世界，同一串报告尾部（第 2–6 条报告相同）；两条轨迹唯一的区别是第一条报告是红还是蓝。初始分叉距离 $d_1 \equiv 1.414 = \sqrt{2}$（两个顶点之间；36 个单元无一例外）；从 $d_2$ 起中位距离为 0；单步压缩中位 0.07–0.20；半衰期 2.0–2.5 步。第 10.7 步的窗口公式 $-\ln \varepsilon / \ln k$（$\varepsilon = 0.1$）预测约 2.3 步——与测量一致。注：(a) 偶发再分叉：12 个单元中有 1 个在 $t = 6$ 时仍保持 >0.1 的距离，全程最大值可达 $\sqrt{2}$——这是第 14 步面板 (d)“瞬态先增长后收缩”的镜像（这里是先收缩后重新增长）：即使确定性模型也包含混沌式再分裂；(b) 在 temperature 0 下，$d_t = 0$ 的部分“巧合”是确定性伪影；统计上，只有这一读法成立：“一个单位的相位差，两步之后不再影响下一步的选择”。
+**结果 4：压缩与记忆——相位差半衰期约 2 步。** 同一个世界，同一串报告尾部（第 2–6 条报告相同）；两条轨迹唯一的区别是第一条报告是红还是蓝。初始分叉距离 $d_1 \equiv 1.414 = \sqrt{2}$（两个顶点之间；36 个单元无一例外）；从 $d_2$ 起中位距离为 0；单步压缩中位 0.07–0.20；半衰期 2.0–2.5 步。用压缩因子 $\rho$ 写出的有效推理窗口 $t_{\text{eff}}(\varepsilon)=\ln(1/\varepsilon)/\ln(1/\rho)$（$\varepsilon = 0.1$）预测约 2.3 步——与测量一致。注：(a) 偶发再分叉：12 个单元中有 1 个在 $t = 6$ 时仍保持 >0.1 的距离，全程最大值可达 $\sqrt{2}$——这是上一节面板 (d)“瞬态先增长后收缩”的镜像（这里是先收缩后重新增长）：即使确定性模型也包含混沌式再分裂；(b) 在 temperature 0 下，$d_t = 0$ 的部分“巧合”是确定性伪影；统计上，只有这一读法成立：“一个单位的相位差，两步之后不再影响下一步的选择”。
 
-对理论四行交叉核对：锚点 = 第 9 步先验锚点 $A$ 的测量（$A \neq$ 均匀，$\kappa_A = 1.285$）；尖峰 = 顶点附近的能量盆地（推理轨迹在顶点国度里运动）；弱证据过反应 = 不对称证据吸收（$d' \approx 0.9$ 天花板）；相位差半衰期 $\approx 2$ 步 = 第六节有效推理窗口的实测常数，与闭式压缩界同量级。一个诚实的保留：$\eta_{\max}$、$\theta_{\max}$ 之类闭式量描述的是连续动力学的安全步长；真实 LLM 的“步长”是证据强度的函数（弱证据也带一个有效 $d' \approx 0.9$），它的运动更像“大步、短窗、在顶点间跳跃”。
+对理论四行交叉核对：锚点 = 第 9 步先验锚点 $A$ 的测量（$A \neq$ 均匀，$\kappa_A = 1.285$）；尖峰 = 顶点附近的能量盆地（推理轨迹在顶点国度里运动）；弱证据过反应 = 不对称证据吸收（$d' \approx 0.9$ 天花板）；相位差半衰期 $\approx 2$ 步 = 压缩因子定义的有效推理窗口的实测常数，与闭式压缩界同量级。一个诚实的保留：$\eta_{\max}$、$\theta_{\max}$ 之类闭式量描述的是连续动力学的安全步长；真实 LLM 的“步长”是证据强度的函数（弱证据也带一个有效 $d' \approx 0.9$），它的运动更像“大步、短窗、在顶点间跳跃”。
 
-*图 12.2 与源码：李籽溪（兔狲教授），2026。实验见第 14.7 步（脚本的 API 版本不在书中展开）。*
+*图 12.2 与源码：李籽溪（兔狲教授），2026。实验见 10.1 节（脚本的 API 版本不在书中展开）。*
 
-### 14.8 同一极限，在一台笔记本上：一幅你自己能画的蛛网图
+### 10.2 同一极限，在一台笔记本上：一幅你自己能画的蛛网图
 
-14.7 节测量了大型闭参数模型的信念动力学。那个实验的代价是：读者拿到的是数字，不是实验。本小节把同一个极限做成你能在自己笔记本上跑的形式。模型是 GPT-2，约 1.24 亿参数，开源且小；信念是一维的；得到的图是离散动力系统（第七节，迭代序列 $x_{t+1} = F(x_t)$）的经典蛛网图（cobweb plot）——只不过是从真实模型上画出来的，而不是从公式里画出来的。
+10.1 节测量了大型闭参数模型的信念动力学。那个实验的代价是：读者拿到的是数字，不是实验。本小节把同一个极限做成你能在自己笔记本上跑的形式。模型是 GPT-2，约 1.24 亿参数，开源且小；信念是一维的；得到的图是离散动力系统（第七节，迭代序列 $x_{t+1} = F(x_t)$）的经典蛛网图（cobweb plot）——只不过是从真实模型上画出来的，而不是从公式里画出来的。
 
 **实验设置。** 24 个传递链问题（例如“A 比 B 高。B 比 C 高。A 比 C 高吗？”）。它们全部为真，所以真实答案分布恰好是 $A^* = 1.0$。信念是 $p = P(\text{YES})$：模型给出一个答案词，我们读两个答案 logit，取它们之差的 sigmoid（$P = \sigma(\text{logit}_{YES} - \text{logit}_{NO})$）。模型在 temperature 0 下运行，所以实验是确定性的：每次都是同样的数字。动力学的一步：把当前信念作为一行文本写进提示词（“Confidence so far: P(YES) = 0.437.”），再让模型回答一次，读回下一个信念。映射 $F$ 在 31 个网格点 $x = 0.02 \ldots 0.98$ 上测量，并对 24 个问题取平均；然后从每个问题自己的自然起始信念（完全没有置信度行）出发，跑 128 步递推。
 
@@ -1171,14 +1179,14 @@ print(f"panel d: global: numerically stable region >= eta_max (projection adds s
 Yonglin Cobweb: Belief-Recirculation Dynamics on a Real GPT-2
 ==============================================================
 Companion experiment for The Reasoning Kingdom, Chapter 12
-(Sections 5, 7, 14.7 and 14.8).
+(Sections 5, 7, 10.1 and 10.2).
 
 THE IDEA IN ONE PARAGRAPH
 -------------------------
 Yonglin's formula says: belief dynamics p_{t+1} = F(p_t) converges to the
-prior anchor A, not to the true answer A* (A != A*). Section 14.7 verifies anchors and evidence
+prior anchor A, not to the true answer A* (A != A*). Section 10.1 verifies anchors and evidence
 absorption on a large closed API model, but the reader cannot run it.
-Section 14.8 gives the version you can RUN and PLAY WITH: a small open
+Section 10.2 gives the version you can RUN and PLAY WITH: a small open
 model (GPT-2, ~124M params, runs on a laptop), a one-dimensional belief
 state P(YES), and the belief recirculated through the model itself.
 Each step you read the model's belief from its next-token logits, write
@@ -1722,6 +1730,7 @@ $$
 ## 延伸阅读
 
 - 本书第 12 章，永霖公式——推理不完备性的理论证明：对象层与元层之间的断裂（含推导与脚本）
+- [本书第 23 章，永霖推论](/volume2/chapter23/)——把切空间 Hessian 的谱变成收敛速率与涌现判据
 - Wei et al. (2022). *Chain-of-Thought Prompting Elicits Reasoning in Large Language Models*——CoT 的开创性工作 -> [arXiv:2201.11903]
 - Olsson et al. (2022). *In-context Learning and Induction Heads*——归纳头的发现，隐藏层的工作记忆机制
 - [Hu et al., 2024]——从 Hopfield 视角理解 CoT 推理 -> [arXiv:2410.03595]

@@ -437,7 +437,7 @@ Meta-learning indeed learns a bias over task distributions, making adaptation to
 
 This is fully parallel to Gödel's structure: add $G$ to the axioms -> the new system has its own $G'$ -> it never wins. Make the inductive bias a learning object -> meta-learning has its own meta-bias -> it can never bootstrap itself.
 
-This is the entrance to Chapter 22. Chapter 23 goes on to discuss the convergence boundaries of reasoning systems.
+This is the entrance to Chapter 22. Chapter 23 goes on to turn the convergence rate into the log curves of emergence.
 
 ---
 

@@ -514,6 +514,14 @@ That is where $2\mu - \eta L^2$ comes from: strong convexity contributes the pos
 
 What we get here is a uniform Lipschitz contraction over the whole region: it holds for any two points $p_1, p_2 \in \mathcal{X}$, not just "getting closer and closer to $A$". That is what a contraction mapping means in Banach's sense.
 
+:::info The Polish School: Where Completeness Comes From
+The completeness used in Steps 7 and 8 comes from the contraction-mapping principle proved by Stefan Banach in 1922. Banach was a central figure of the Polish school of mathematics between the two world wars; Ulam, Schauder, and Mazur belonged to the same school. Banach spaces, the Hahn–Banach theorem, and the Banach–Steinhaus theorem all carry its name.
+
+This is not decorative history. It explains a methodological choice in this proof: **take "convergence" out of a particular algorithm, put it in a complete space, and study the operator alone.** Once this is done, convergence no longer depends on whether the update is SGD, Adam, or something else; it depends only on the contractiveness of the operator at the fixed point.
+
+The energy surface in this chapter comes from information theory; completeness comes from the Polish school. The Yonglin theorem stands on these two pillars.
+:::
+
 ### 8. Applying the Banach Fixed-Point Theorem
 
 Now apply the Banach fixed-point theorem:
@@ -1107,11 +1115,11 @@ print(f"panel d: local R^2(log-log) = {logR:.4f}, n = {len(local_ana)}, median e
 print(f"panel d: global: numerically stable region >= eta_max (projection adds stability)")
 ```
 
-*Figure 1 and source code: Zixi Li (Professor Pallas), 2026. Experiment script `ch12_energy_terrain.py` (complete code in the Step 14 code block).*
+*Figure 1 and source code: Zixi Li (Professor Pallas), 2026. Experiment script `ch12_energy_terrain.py` (complete code in this section's code block).*
 
-### 14.7 Direct Evidence on a Real LLM: Belief Anchors, Evidence Strength, and Memory Decay
+### 10.1 Direct Evidence on a Real LLM: Belief Anchors, Evidence Strength, and Memory Decay
 
-The numerical experiment of Step 14 verified the formula's internal self-consistency: the dynamics were constructed from Euler steps of the closed-form solution, so of course they track it. This section gives direct evidence on a real LLM: instantiate the inference operator $F: \mathcal{P} \to \mathcal{P}$ of Section 7 with a real model (DeepSeek-V4-flash, reasoning type), inject evidence step by step, read the belief step by step, and check, item by item, the real-reasoning counterparts of Yonglin's formula and the Yonglin limit. The figure is `ch12_llm_evidence.png`; the experiment's full data design is as follows (the experiment itself and its numbers all live in the figure — the script involving the real model API is not repeated here).
+The numerical experiment in the previous section verified the formula's internal self-consistency: the dynamics were constructed from Euler steps of the closed-form solution, so of course they track it. This section gives direct evidence on a real LLM: instantiate the inference operator $F: \mathcal{P} \to \mathcal{P}$ of Section 7 with a real model (DeepSeek-V4-flash, reasoning type), inject evidence step by step, read the belief step by step, and check, item by item, the real-reasoning counterparts of Yonglin's formula and the Yonglin limit. The figure is `ch12_llm_evidence.png`; the experiment's full data design is as follows (the experiment itself and its numbers all live in the figure — the script involving the real model API is not repeated here).
 
 **Experiment setup.** A three-color bag world, still on the belief simplex $\Delta^2$. The bag's ball proportions $p^*$ take three settings, including the book-wide baseline $(0.70, 0.20, 0.10)$ ($\kappa = 7.00$); a detector of known reliability $d \in \{0.90, 0.70, 0.55\}$ gives one noisy color report per step on the drawn ball (the likelihood $P(r|c)$ is exactly known, and the true posterior $p^B_t$ is computed in closed form step by step); the evidence sequence is the sequence of detector reports, $T = 6$. At each step, the model's input is "bag parameters + the previous $t$ reports + a forced one-word answer", and the belief is read off from the normalized top-k logprobs of the final answer token ($K = 3$). Grid: $3 \times 3 \times 4$ seeds — one ordinary trajectory plus two prompted trajectories per cell; anchor measurement: 3 option arrangements $\times$ 8 rephrasings.
 
@@ -1133,15 +1141,15 @@ The numerical experiment of Step 14 verified the formula's internal self-consist
 
 For $d = 0.90$ it decreases monotonically (final median 0.02 — almost exactly Bayesian); for $d = 0.70$ it sits closer to the $d' = 0.9$ fake posterior from step 2 onward; for $d = 0.55$, the distance to the $d' = 0.9$ fake posterior is about 8× better than to the true posterior. The model treats the prompt's evidence reliability as an approximately fixed $d' \approx 0.9$: weak evidence is systematically amplified, strong evidence is followed precisely. This runs opposite to human conservatism (Edwards 1968) — an LLM's evidence-strength ceiling is about 0.9: weak evidence always means "don't trust the prompt, use it at maximum strength".
 
-**Result 4: compression and memory — the phase-difference half-life is about 2 steps.** Same world, same tail of reports (reports 2–6 identical); the only difference between the two trajectories is whether the first report is red or blue. The initial branching distance is $d_1 \equiv 1.414 = \sqrt{2}$ (between two vertices; all 36 cells without exception); from $d_2$ onward the median distance is 0; single-step compression median 0.07–0.20; half-life 2.0–2.5 steps. The window formula of Step 10.7, $-\ln \varepsilon / \ln k$ ($\varepsilon = 0.1$), predicts about 2.3 steps — consistent with the measurement. Notes: (a) occasional re-branching: 1 of 12 cells still held a distance >0.1 at $t = 6$, and the maximum over the whole run can be $\sqrt{2}$ — a mirror image of Step 14's panel (d) "transient grows first, contracts later" (here it contracts first, then re-grows): even a deterministic model contains chaotic re-splitting; (b) at temperature 0, the part of the $d_t = 0$ "coincidence" is a deterministic artifact; statistically, only this reading counts: "one unit of phase difference no longer influences the next step's choices after two steps".
+**Result 4: compression and memory — the phase-difference half-life is about 2 steps.** Same world, same tail of reports (reports 2–6 identical); the only difference between the two trajectories is whether the first report is red or blue. The initial branching distance is $d_1 \equiv 1.414 = \sqrt{2}$ (between two vertices; all 36 cells without exception); from $d_2$ onward the median distance is 0; single-step compression median 0.07–0.20; half-life 2.0–2.5 steps. The effective reasoning window defined by the compression factor $\rho$, $t_{\text{eff}}(\varepsilon)=\ln(1/\varepsilon)/\ln(1/\rho)$ ($\varepsilon = 0.1$), predicts about 2.3 steps — consistent with the measurement. Notes: (a) occasional re-branching: 1 of 12 cells still held a distance >0.1 at $t = 6$, and the maximum over the whole run can be $\sqrt{2}$ — a mirror image of the previous section's panel (d) "transient grows first, contracts later" (here it contracts first, then re-grows): even a deterministic model contains chaotic re-splitting; (b) at temperature 0, the part of the $d_t = 0$ "coincidence" is a deterministic artifact; statistically, only this reading counts: "one unit of phase difference no longer influences the next step's choices after two steps".
 
 Four-row cross-check against the theory: anchor = the measurement of Step 9's prior anchor $A$ ($A \neq$ uniform, $\kappa_A = 1.285$); spikiness = the energy basin near the vertex (the reasoning trajectory moves in vertex country); weak-evidence overreaction = asymmetric evidence absorption (the $d' \approx 0.9$ ceiling); phase-difference half-life $\approx 2$ steps = the measured constant of Section 6's effective reasoning window, the same order of magnitude as the closed-form compression bound. One honest caveat: closed-form quantities such as $\eta_{\max}$ and $\theta_{\max}$ describe safe step sizes of continuous dynamics; a real LLM's "step size" is a function of evidence strength (weak evidence also carries an effective $d' \approx 0.9$), and its motion looks more like "big steps, short window, jumps between vertices".
 
-*Figure 12.2 and source code: Zixi Li (Professor Pallas), 2026. The experiment is presented in Step 14.7 (the script's API version is not expanded in the book).*
+*Figure 12.2 and source code: Zixi Li (Professor Pallas), 2026. The experiment is presented in Section 10.1 (the script's API version is not expanded in the book).*
 
-### 14.8 The Same Limit on a Laptop: a Cobweb You Can Draw Yourself
+### 10.2 The Same Limit on a Laptop: a Cobweb You Can Draw Yourself
 
-Section 14.7 measured the belief dynamics of a large closed-parameter model. The price of that experiment: the reader gets the numbers, not the experiment. This subsection gives the same limit in a form you can run on your own laptop. The model is GPT-2, about 124M parameters, open and small; the belief is one-dimensional; and the resulting picture is the classic cobweb plot of a discrete dynamical system (Section 7, iterate a sequence $x_{t+1} = F(x_t)$) — drawn from a real model instead of a formula.
+Section 10.1 measured the belief dynamics of a large closed-parameter model. The price of that experiment: the reader gets the numbers, not the experiment. This subsection gives the same limit in a form you can run on your own laptop. The model is GPT-2, about 124M parameters, open and small; the belief is one-dimensional; and the resulting picture is the classic cobweb plot of a discrete dynamical system (Section 7, iterate a sequence $x_{t+1} = F(x_t)$) — drawn from a real model instead of a formula.
 
 **Experiment setup.** Twenty-four transitive-chain questions (e.g. "A is taller than B. B is taller than C. Is A taller than C?"). All of them are TRUE, so the true answer distribution is exactly $A^* = 1.0$. The belief is $p = P(\text{YES})$: the model proposes one answer word, and we read the two answer logits and take the sigmoid of their difference ($P = \sigma(\text{logit}_{YES} - \text{logit}_{NO})$). The model runs at temperature 0, so the experiment is deterministic: the same numbers every time. One step of the dynamics: write the current belief into the prompt as a line of text ("Confidence so far: P(YES) = 0.437."), ask the model to answer again, and read the next belief. The map $F$ is measured on 31 grid points $x = 0.02 \ldots 0.98$ and averaged over the 24 questions; then the recursion is run for 128 steps from each question's own natural start belief (no confidence line at all).
 
@@ -1171,14 +1179,14 @@ One honest caveat. The belief here is a one-dimensional projection of a 124M-par
 Yonglin Cobweb: Belief-Recirculation Dynamics on a Real GPT-2
 ==============================================================
 Companion experiment for The Reasoning Kingdom, Chapter 12
-(Sections 5, 7, 14.7 and 14.8).
+(Sections 5, 7, 10.1 and 10.2).
 
 THE IDEA IN ONE PARAGRAPH
 -------------------------
 Yonglin's formula says: belief dynamics p_{t+1} = F(p_t) converges to the
-prior anchor A, not to the true answer A* (A != A*). Section 14.7 verifies anchors and evidence
+prior anchor A, not to the true answer A* (A != A*). Section 10.1 verifies anchors and evidence
 absorption on a large closed API model, but the reader cannot run it.
-Section 14.8 gives the version you can RUN and PLAY WITH: a small open
+Section 10.2 gives the version you can RUN and PLAY WITH: a small open
 model (GPT-2, ~124M params, runs on a laptop), a one-dimensional belief
 state P(YES), and the belief recirculated through the model itself.
 Each step you read the model's belief from its next-token logits, write
@@ -1722,6 +1730,7 @@ The map of the Reasoning Kingdom is still being drawn. In the next chapter, we w
 ## Further Reading
 
 - Chapter 12 of this book, Yonglin's formula — the theoretical proof of reasoning incompleteness: the break between the object layer and the meta layer (derivation and script included)
+- [Chapter 23 of this book, The Yonglin Corollary](/en/volume2/chapter23/) — turning the tangent Hessian spectrum into a convergence rate and a criterion for emergence
 - Wei et al. (2022). *Chain-of-Thought Prompting Elicits Reasoning in Large Language Models* — the pioneering work on CoT -> [arXiv:2201.11903]
 - Olsson et al. (2022). *In-context Learning and Induction Heads* — the discovery of induction heads, the working-memory mechanism of the hidden layers
 - [Hu et al., 2024] — understanding CoT reasoning from the Hopfield perspective -> [arXiv:2410.03595]

@@ -204,7 +204,7 @@ export default defineConfig({
                 { text: '第20章：启发式的形式合同——"差不多对"的精确数学定义', link: '/volume2/chapter20/' },
                 { text: '第21章：学习作为逆推断——泛化是压缩的另一种说法', link: '/volume2/chapter21/' },
                 { text: '第22章：自指与涌现——当推理系统开始推理关于自身', link: '/volume2/chapter22/' },
-                { text: '第23章：永霖–李雅普诺夫对应——推理系统的稳定性与收敛边界', link: '/volume2/chapter23/' },
+                { text: '第23章：永霖推论——智能与涌现的对数曲线', link: '/volume2/chapter23/' },
                 { text: '跋文', link: '/volume2/afterword' },
                 { text: '兔狲教授小词典', link: '/dictionary' },
                 { text: '附录：下卷思考题参考提示', link: '/appendix-thinking-questions' },
@@ -343,7 +343,7 @@ export default defineConfig({
                 { text: 'Ch20: The Formal Contract of Heuristics — A Precise Mathematical Definition of "Good Enough"', link: '/en/volume2/chapter20/' },
                 { text: 'Ch21: Learning as Inverse Inference — Generalization Is Another Word for Compression', link: '/en/volume2/chapter21/' },
                 { text: 'Ch22: Self-Reference and Emergence — When a Reasoning System Starts Reasoning About Itself', link: '/en/volume2/chapter22/' },
-                { text: 'Ch23: The Yonglin–Lyapunov Correspondence — Stability and Convergence Boundaries of Reasoning Systems', link: '/en/volume2/chapter23/' },
+                { text: 'Ch23: The Yonglin Corollary — Intelligence and the Log Curves of Emergence', link: '/en/volume2/chapter23/' },
                 { text: 'Dictionary', link: '/dictionary' },
               ]
             }

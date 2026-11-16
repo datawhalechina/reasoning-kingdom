@@ -172,7 +172,7 @@ export default defineConfig({
             { text: 'Ch20: The Formal Contract of Heuristics — A Precise Mathematical Definition of "Good Enough"', link: '/volume2/chapter20/' },
             { text: 'Ch21: Learning as Inverse Inference — Generalization Is Another Word for Compression', link: '/volume2/chapter21/' },
             { text: 'Ch22: Self-Reference and Emergence — When a Reasoning System Starts Reasoning About Itself', link: '/volume2/chapter22/' },
-            { text: 'Ch23: The Yonglin–Lyapunov Correspondence — Stability and Convergence Boundaries of Reasoning Systems', link: '/volume2/chapter23/' },
+            { text: 'Ch23: The Yonglin Corollary — Intelligence and the Log Curves of Emergence', link: '/volume2/chapter23/' },
             { text: 'Dictionary', link: '/dictionary' },
           ]
         }
