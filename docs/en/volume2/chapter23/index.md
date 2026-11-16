@@ -242,6 +242,12 @@ $$
 
 Figure 23.1 draws compression on the probability simplex. The orbit starts at $p_0$ and moves toward the anchor $A=q$ at every iteration. Just after entering the anchor's neighborhood the contraction ratio fluctuates briefly; once inside the range where linearization is valid, every step multiplies the error by the same number $\rho^*\approx0.454$. This is what “geometric convergence” means geometrically: not the same distance removed each time, but the same proportion removed each time.
 
+**Which way do the numbers run? Larger $\rho$ means slower.** The “rate” here is the fraction of error **left** after each step, not the amount removed. $\rho=0.5$ halves the error each step; $\rho=0.9$ loses only a tenth: $1\to0.9\to0.81\to0.729$, with $0.35$ left after ten steps. So $\rho$ closer to $1$ is slower; smaller is faster. On a semi-log plot the slope is $\log_{10}\rho$, negative; steeper (more negative) is faster, flatter (closer to zero) is slower.
+
+**Want larger numbers to mean faster?** Use the fraction cleared per step, $1-\rho$, or the continuous decay rate, $-\ln\rho$ (in nats per step). C3's $\rho^*=0.79$: 79% remains per step, 21% is cleared, half-life about 3 steps. C4's $\rho^*=0.35$: 35% remains, 65% is cleared, half-life about 0.67 steps. In $-\ln\rho$, C3 is $0.23$ and C4 is $1.04$—larger is faster.
+
+**Don't confuse it with the step size $\eta$.** $\eta$ is how big a step you take; $\rho$ is how much error is left after that step. A larger step is not always better: past $\eta^*$ it overshoots and $\rho$ rises again. The “optimal” in $\rho^*$ means **the smallest retention ratio**, not the largest rate.
+
 > **One sentence:** the contraction rate is the retention ratio of the slowest direction; after each step the error is at most $\rho$ times what it was, and this “at most” is attainable.
 
 ---
