@@ -1,6 +1,6 @@
-# Chapter 23: The Yonglin Corollary — Intelligence and the Log Curves of Emergence
+# Chapter 23: The Yonglin Corollary — Intelligence, Emergence, and the Ordinary Equation
 
-> How fast a system converges is decided by one number.
+> Intelligence is no exception, and neither is emergence; they are names that one ordinary equation takes at different scales.
 
 ---
 
@@ -39,14 +39,16 @@ After two or three steps, the error is multiplied by about 0.45 each time: $0.64
 
 That 0.45 is the protagonist of this chapter. It is called the **contraction rate**, written $\rho^*$.
 
-This chapter does one thing: **compute this number, and see what follows from it.**
+This chapter does one thing: **compute this number, then use it to reproduce the most famous curve in modern AI.**
+
+That curve is called scaling law. Put loss on log-log axes with scale on the horizontal axis, and it is a straight line. In recent years it has been put under a spotlight; the spotlight falls on engineering scale, while the formula itself is plain: loss minus its floor is proportional to a negative power of scale. At the end of this chapter we will reproduce that straight line from the simplex with our own hands. Not by repeating any one company's experiment, but by reproducing its “straightness” — you will see that this line was not invented by anyone; it is a necessary consequence of simplex geometry.
 
 ## The Chapter in Five Steps
 
 1. **23.1–23.3:** compress “how fast” into one number, $\rho^*$;
 2. **23.4:** show that this number depends only on two endpoints, and where those endpoints come from;
 3. **23.5:** draw $\rho^*$ as a semi-log line and compute the window;
-4. **23.6:** use $\rho^*$ to diagnose “emergence”;
+4. **23.6:** reproduce the scaling-law line from the simplex;
 5. **23.7:** close.
 
 If you are short on time, read 23.1, 23.3, 23.5, and 23.6. Sections 23.2 and 23.4 answer “why.”
@@ -57,7 +59,7 @@ $$
 \boxed{\ \rho^*=\frac{\kappa_T-1}{\kappa_T+1}\ }
 $$
 
-where $\kappa_T=\theta_{\max}/\mu_T$ is the condition number of the tangent Hessian. Don't worry yet about where it comes from; you only need to know that it measures how many times steeper the steepest direction of the energy surface is than the flattest. This number determines the slope of the error curve, the number of steps needed to reach accuracy $\varepsilon$, and whether an “emergent” jump is real. No second scalar is needed.
+where $\kappa_T=\theta_{\max}/\mu_T$ is the condition number of the tangent Hessian. Don't worry yet about where it comes from; you only need to know that it measures how many times steeper the steepest direction of the energy surface is than the flattest. This number determines the slope of the error curve, the number of steps needed to reach accuracy $\varepsilon$, and whether an “emergent” jump has a dynamical basis. No second scalar is needed.
 
 Why “corollary”? Because the engine of convergence is still Banach's fixed-point theorem, and the energy surface is still the KL divergence from information theory. This chapter does not replace the engine. It reads off the engine's power.
 
@@ -79,7 +81,7 @@ F(p)=\Pi_{\mathcal X}\bigl(p-\eta P_T\nabla E(p)\bigr),
 E(p)=D_{\mathrm{KL}}(A\|p).
 $$
 
-The anchor $A$ here is not a prior inserted from outside; it is the label distribution left by the training data. For a fixed prompt, $A$ is the conditional label distribution $P_{\text{train}}(Y\mid X)$; change the prompt and $A$ becomes a different point. This is why the GPT-2 experiment found a different anchor for each question.
+The anchor $A$ here is not a prior inserted from outside; it is the label distribution left by the training data. For a fixed prompt, $A$ is the conditional label distribution $P_{\text{train}}(Y\mid X)$; change the prompt and $A$ becomes a different point. This is why per-question experiments found a different anchor for each question.
 
 The objective of backward training is the cross-entropy
 
@@ -587,42 +589,108 @@ The window falls inside the bounds, and the two bounds differ by only $1.15$ ste
 
 > **One sentence:** the rate is the slope; the window is computed, not felt.
 
+The next section applies this distinction to scaling law: the industrial curve is a log-log straight line, while the orbit in this chapter is a semi-log straight line. They are not the same curve; but the “straightness” of both comes from the same multiplicative bookkeeping.
+
 ---
 
-## 23.6 Emergence: The Rate Changed, or Only the Ruler Did
+## 23.6 Reproducing That Curve
 
-Now bring “emergence” into the picture.
+The previous section separated two coordinate systems: geometric convergence is a straight line on semi-log axes, while a power law is a straight line on log-log axes. The most famous curve in industry belongs to the latter. Its name is scaling law.
 
-An error curve is $\rho^t$. If $\rho$ does not change, the curve is a smooth geometric curve with no kink.
+First, flatten the formula. Let $s$ denote scale — samples, parameters, or compute; choose one axis — and write a scaling law as
 
-So a kink that looks like “it suddenly learned” has only two possible explanations:
+$$
+L(s)=L_\infty+c\,s^{-\alpha}.
+$$
 
-1. **The ruler changed, the rate did not.** The metric is nonlinear. For example, accuracy is $\mathbf{1}[\text{error}<\varepsilon]$; when a smooth error curve crosses a threshold, accuracy looks like a step. Schaeffer et al. (2023) argue systematically that this kind of “emergence” can be manufactured entirely by the choice of metric.
-2. **The rate really changed.** This can happen only through a change in $\mu_T$ or $\theta_{\max}$: a new slow mode enters the low end of the spectrum, or a new fast mode enters the high end. Then $\rho^*$ itself changes, and the error curve really bends.
+$L_\infty$ is the floor, $c$ is a constant, and $\alpha$ is the exponent. Plot $L(s)-L_\infty$ on log-log axes and it is a straight line of slope $-\alpha$. On first seeing this line, one may assume it hides a secret; in fact, any multiplicative relation is a straight line on log-log paper. What needs explaining is not the “straightness” but three numbers: where the floor is, how large the constant is, and what determines the exponent.
 
-With this chapter's scalar, the diagnostic rule is one line:
+This section does not explain the exponent of any particular laboratory. The exponent is decided jointly by data, architecture, optimizer, and training recipe; it is a question for empirical science. Here we do something smaller and more basic: in a toy system, compute this straight line from the simplex. The slope we get is $-1$. It does not impersonate an industrial exponent; it only shows how ordinary the “straightness” of this line can be.
 
-> First measure how $\rho^*$ changes with scale. If $\rho^*$ is unchanged while a benchmark jumps, it is a readout; if $\rho^*$ jumps, it is emergence in the dynamical sense.
+### The data axis: one ordinary count
 
-![Figure 23.8: Two kinds of “emergence” — a readout jump, or a real change of slope](/figures/ch23_emergence.png)
+Let the true conditional distribution be
 
-Figure 23.8 draws the criterion. In panel (a), loss is a straight line on log-log axes and the rate has not changed; but accuracy is a threshold metric, and when the curve crosses the threshold it looks like a step. In panel (b), $\rho^*$ itself drops from $0.82$ to $0.45$, and the slope of the semi-log error curve changes — over the same number of steps, the error differs by orders of magnitude. The first is a readout; the second is dynamics.
+$$
+q=(q_1,\dots,q_K).
+$$
 
-This is harder than “does the curve look emergent?” It turns “emergence” from an adjective into a measurable spectral event. The emergent phenomena described by Wei et al. (2022) are genuine empirical facts; this chapter supplies a criterion for separating the part that comes from the rate from the part that comes from the readout.
+A system can estimate it only from $s$ samples, obtaining the empirical distribution $\hat q$. The energy surface from Chapter 12 gives
 
-:::details A boundary that must be admitted: this chapter does not define “intelligence”
-The title “Intelligence and the Log Curves of Emergence” is easy to read as “this chapter explains intelligence.” It does not.
+$$
+D_{\mathrm{KL}}(q\|\hat q)\approx \frac12(\hat q-q)^\top H_T(\hat q-q),
+$$
 
-This chapter explains a class of learning dynamics: when a system minimizes KL and outputs over the probability simplex, what mathematics governs its error curve. It does not answer “what is understanding,” “what is consciousness,” or “why do some abilities appear only in sufficiently large models.” Those questions need other tools, and perhaps tools that do not yet exist.
+where $H_T$ is exactly the tangent Hessian from 23.1. The covariance of empirical frequencies is
 
-Treating the Yonglin Corollary as a definition of intelligence is a mistake; treating it as a geometric bill that any intelligent system must pay is appropriate.
+$$
+\mathbb E\bigl[(\hat q-q)(\hat q-q)^\top\bigr]
+=\frac1s\bigl(\operatorname{diag}(q)-qq^\top\bigr).
+$$
+
+In the second-order approximation, taking the expectation of the quadratic form gives
+
+$$
+\mathbb E\,D_{\mathrm{KL}}(q\|\hat q)=\frac{K-1}{2s}+O(s^{-2}).
+$$
+
+:::details A one-line verification
+Write $C=\operatorname{diag}(q)-qq^\top$. Every row of $C$ sums to zero, so it already lies in the tangent space and $P_TCP_T=C$. Hence
+
+$$
+\operatorname{tr}(H_TC)
+=\operatorname{tr}\bigl(\operatorname{diag}(1/q)C\bigr)
+=\sum_i(1-q_i)=K-1.
+$$
 :::
 
-> **One sentence:** measure the slope first, then talk about emergence.
+This formula uses no model structure. It says only: with $K$ answers and $s$ samples, the error falls as $1/s$. Plot $L(s)-H(q)$ on log-log axes and you get a straight line of slope $-1$; different $K$ shift the intercept but not the slope. In this toy the floor is exactly the data entropy $H(q)$; a real system's floor also contains irreducible noise, which is why we write $L_\infty$.
+
+This is the second-order term. The exact KL is inflated by zero-frequency events at finite sample size; that is a separate boundary, and it changes the intercept at small $s$, not the slope.
+
+Note that $H_T$ is not new. It is the matrix from 23.1, and 23.4 already showed that its tangent condition number is pinned near $K$ by the constraint. The same $H_T$ does two jobs: its two endpoints decide how fast convergence is ($\rho^*$), and its trace decides how high the finite-sample floor is ($(K-1)/(2s)$). One curve governs speed, the other governs the floor; they are not two theories, but the two sides of one sheet of paper.
+
+### The dimension axis: the other half of the same Hessian
+
+The floor formula still contains $K$, and $K$ is not free. The window in 23.5 says that the number of steps to reach accuracy $\varepsilon$ is approximately
+
+$$
+N_{\mathrm{steps}}\approx \frac{\kappa_T}{2}\ln\frac1\varepsilon.
+$$
+
+And the saturation limit in 23.4 says $\kappa_T\to K$. Thus, for symmetric anchors near a vertex, the number of steps is proportional to $K$: the more answers, the longer the road.
+
+Put the two statements together:
+
+> **Data buys the floor; dimension buys the road.** One more sample lowers the floor as $1/s$; one more answer lengthens the road as $K$. Scaling law usually reports the first sentence; the Yonglin Corollary measures the second. Both use the same $H_T$.
+
+This is why the scalar in this chapter is not a replacement for scaling law, but its other half. The industrial curve measures “how low the floor can be pushed”; $\rho^*$ measures “how far you must walk to reach it.” Reporting only the floor invites the belief that scale has no cost; reporting only the road invites the belief that convergence speed is everything. Together, the two ledgers make one complete geometric bill.
+
+![Figure 23.8: Reproducing the scaling-law line from the simplex — the data axis gives slope $-1$, the dimension axis gives different intercepts, and the semi-log orbits give the rate of the same Hessian](/figures/ch23_scaling_reproduction.png)
+
+Panel (a) of Figure 23.8 is the data-axis scaling law: for $K=3,6,12$ answers, the second-order term of the excess KL is plotted on log-log axes, and all three lines land on slope $-1$, with intercepts shifted by $K$. Panel (b) is the other half of the same Hessian: for symmetric anchors near a vertex, $\kappa_T\approx K$, so the semi-log error curve has slope $\ln\rho^*$; the larger $K$ is, the closer $\rho^*$ is to 1, and the more steps are needed to reach the same accuracy. Neither curve is copied from an existing experiment; both are computed directly from $q\mapsto H_T$.
+
+:::details A boundary that must be stated: the toy's $-1$ is not the industrial $\alpha$
+The exponent of an industrial scaling law is usually not $1$; it varies with the data distribution, architecture, and training recipe. The derivation above shows only that a log-log straight line can be produced by an ordinary count; it does not predict the $\alpha$ of any specific system. Treating the toy's $-1$ as an industrial exponent pushes a local model too far.
+
+What this chapter computes rigorously is: given $H_T$, the finite-sample floor term is $(K-1)/(2s)$ and the rate is $\rho^*$. Why a real system's $\alpha$ takes a particular value is a question for experiment. This chapter does not answer it on its behalf.
+:::
+
+:::info An incidental readout question: emergence
+A word about “emergence.” An error curve that goes as $\rho^t$ is smooth; a sudden jump on a benchmark is usually a problem with the ruler — accuracy is a threshold metric, so a smooth curve crossing the threshold looks like a step. To separate a “readout jump” from a “dynamical change,” simply measure whether $\rho^*$ changes with scale: if $\rho^*$ is unchanged while the metric jumps, it is a readout; if $\rho^*$ jumps, the slope itself has changed. This criterion belongs here as a footnote to the scaling curve, and no more.
+:::
+
+:::details A boundary that must be admitted: this chapter does not define “intelligence”
+Treating scaling law as a definition of intelligence is a mistake; treating it as a geometric bill that any intelligent system must pay is appropriate.
+
+This chapter explains a class of learning dynamics: when a system minimizes KL and outputs over the probability simplex, what mathematics governs its error curve. It does not answer “what is understanding,” “what is consciousness,” or “why do some abilities appear only in sufficiently large models.” Those questions need other tools, and perhaps tools that do not yet exist.
+:::
+
+> **One sentence:** data decides the floor, dimension decides the road; geometry decides the necessity, engineering decides the numbers.
 
 ---
 
-## 23.7 Conclusion: One Number
+## 23.7 Conclusion: Intelligence, Emergence, and the Ordinary Equation
 
 Back to the opening: three answers, initial error $0.648$, three steps to $0.1$, each step multiplying by about $0.45$.
 
@@ -636,12 +704,13 @@ $$
 \kappa_T=\frac{1+\rho^*}{1-\rho^*}.
 $$
 
-It determines exactly four things:
+Together with the $H_T$ behind it, it determines exactly five things:
 
 1. **Slope.** The semi-log error curve has slope $\ln\rho^*$.
 2. **Steps.** The number of steps to reach $\varepsilon$ is exactly sandwiched between $\frac{\kappa_T-1}{2}\ln\frac1\varepsilon$ and $\frac{\kappa_T}{2}\ln\frac1\varepsilon$.
 3. **Stability.** The stability window is $0<\eta<2/\theta_{\max}$, and the optimal step is $\eta^*=2/(\mu_T+\theta_{\max})$.
-4. **The emergence criterion.** If $\rho^*$ is unchanged while the metric jumps, it is a readout; if $\rho^*$ jumps, it is dynamics.
+4. **The data-axis floor.** The finite-sample excess KL is $(K-1)/(2s)$; on log-log axes it is a straight line of slope $-1$.
+5. **The emergence criterion.** If $\rho^*$ is unchanged while the metric jumps, it is a readout; if $\rho^*$ jumps, it is dynamics. This one is a footnote, and need not steal the stage.
 
 The whole chain has only three links:
 
@@ -651,7 +720,13 @@ The whole chain has only three links:
 
 > How fast is determined by one condition number; the condition number is determined by two endpoints of the tangent Hessian; the two endpoints are determined by the matrix. Beyond this, there is no second scalar.
 
-“Scaling laws are not mysticism” can now stand, and it does not need a private model to testify. GPT can push a loss curve down to 2.5, while a small FFN may only reach 9: their numerical floors differ, but they share the same log-log curve. The model is only the tool that probes downward; it is not the inventor of the curve. As long as a system performs simplex projection, moves inside the simplex, and trains with a minimum-entropy (KL) objective, it exhibits this geometric criterion. In other words, **any architecture satisfying these three conditions can present the same “geometric certificate”; the architecture sets the numerical floor on the certificate, not its format.**
+Now we can say which part of scaling law is ordinary and which part is not. What is ordinary is its format: as long as the output lies on the simplex, the loss is recorded as KL, and samples are counted, $L(s)-L_\infty$ will be a straight line on log-log paper. The format comes from geometry; the numerical values from engineering. What is not ordinary is why it keeps going down: a real system's floor falls with parameters, data, and compute together; what the exponent is, and how long it can keep falling, is a question for empirical science, requiring experiments and time. Keeping these two things apart, we neither need to enshrine the curve nor to tear it down.
+
+What this chapter reproduces is not any one company's curve, but the “straightness” of that curve. A straight line needs no extra assumption; it needs only one ordinary count. **Engineering decides the numbers; geometry decides the necessity.** This holds for any system that puts its output on the simplex, and for a three-answer toy as well — which is exactly what it means to call the result universal.
+
+Intelligence and emergence look like miracles mainly when we stare at a single readout; put the readout back on the curve, and they are simply names that one ordinary equation takes at different scales.
+
+> **One sentence:** the curve does not belong to any one company; it belongs to everyone who counts on the simplex.
 
 ---
 
@@ -659,9 +734,11 @@ The whole chain has only three links:
 
 **How should the rate be estimated away from the anchor's neighborhood?** The $\rho^*$ here is the exact rate of the linearization near $A$. A real trajectory carries higher-order terms before it enters that small neighborhood; the first ratio in the opening table being noticeably smaller than $\rho^*$ is a shadow of this “head start.” Can the tangent spectrum alone give a finite-step, non-asymptotic error bound? If the large components of the initial error happen to lie in fast directions, the actual window will be shorter than $\rho^*$ predicts — can that gap be computed exactly? This is open.
 
-**Can $\mu_T$ and $\theta_{\max}$ be measured directly on large models?** The spectra here are computed on explicit distributions with $K=3$ to $2048$. A real LLM has a huge vocabulary, and the Hessian cannot be stored explicitly. Can stochastic trace estimation, Lanczos, or implicit differentiation give reliable endpoint estimates? That would turn “emergence diagnosis” from theory into experiment.
+**Can $\mu_T$ and $\theta_{\max}$ be measured directly on large models?** The spectra here are computed on explicit distributions with $K=3$ to $2048$. A real LLM has a huge vocabulary, and the Hessian cannot be stored explicitly. Can stochastic trace estimation, Lanczos, or implicit differentiation give reliable endpoint estimates? That would turn the diagnosis of whether the slope changes with scale from theory into experiment.
 
-**When does $\rho^*$ change with scale?** This chapter gives the criterion but not a model for $\rho^*(N)$. If the appearance of a slow mode has a critical scale, what determines that critical point? This is the question that “emergence” really needs to answer.
+**When does $\rho^*$ change with scale?** This chapter gives the criterion but not a model for $\rho^*(N)$. If the appearance of a slow mode has a critical scale, what determines that critical point? This is what the other half of the scaling curve really needs to answer.
+
+**What lies between $(K-1)/(2s)$ and an industrial exponent?** The toy here gives only the second-order term on the data axis. A real system's scaling exponent is also shaped by architecture, data distribution, and optimizer. Which deviations can be explained by the spectrum of $H_T$, and which must be left to experiment? This is where the “ordinary formula” meets the “empirical curve.”
 
 ---
 
@@ -672,6 +749,7 @@ The whole chain has only three links:
 1. Using the opening table, verify at which step the error ratio settles near $\rho^*$. Why is the first ratio noticeably smaller?
 2. For $K=3$ and $q=(1/3,1/3,1/3)$, verify $H_T=3P_T$, write down all eigenvalues, and compute $\rho^*$.
 3. For $q=(0.70,0.20,0.10)$, use the secular equation to compute $\mu_T,\theta_{\max},\kappa_T$, then $\eta^*,\rho^*$, and $N(0.1)$.
+4. For $K=3$ and $q=(0.70,0.20,0.10)$, estimate the excess KL at $s=10^4$ using $(K-1)/(2s)$; then sample from a multinomial distribution and see how far the second-order expansion is from the actual value.
 
 **★★ Derivations**
 
@@ -679,6 +757,7 @@ The whole chain has only three links:
 2. Prove $\operatorname{tr}(H_T)=(1-1/K)\sum_i1/q_i$.
 3. Prove Theorem 23.2: $\eta^*=2/(\mu_T+\theta_{\max})$ is the unique minimizer, $\rho^*=(\kappa_T-1)/(\kappa_T+1)$, and the two endpoint branches are equal at the optimum.
 4. Prove the two bounds in Theorem 23.3: $\frac{2x}{2+x}\le\ln(1+x)\le x$.
+5. Prove $\operatorname{tr}\bigl(H_T(\operatorname{diag}(q)-qq^\top)\bigr)=K-1$, and use it to obtain $\mathbb E\,D_{\mathrm{KL}}(q\|\hat q)=(K-1)/(2s)+O(s^{-2})$.
 
 **★★★ Challenge**
 
@@ -690,7 +769,7 @@ The whole chain has only three links:
 
 ## Appendix: Core Computation Script
 
-The code below does one thing: given an anchor $q$, compute the two endpoints of the tangent spectrum via the secular equation, then the exact rate, the optimal step, and the window. It trains no model.
+The code below does two things: given an anchor $q$, it computes the two endpoints of the tangent spectrum via the secular equation, then the exact rate, the optimal step, and the window; it also computes the second-order term of the data-axis scaling line from 23.6. It trains no model.
 
 ```python
 import numpy as np
@@ -733,6 +812,15 @@ print(rate([0.70, 0.20, 0.10]))
 
 print(rate([0.35, 0.25, 0.15, 0.12, 0.08, 0.05]))
 # kappa_T=5.4268
+
+
+def scaling_floor(K, s):
+    """Leading finite-sample excess KL: (K-1)/(2s)."""
+    return (K - 1.0) / (2.0 * s)
+
+
+print([(K, scaling_floor(K, 10_000)) for K in (3, 6, 12)])
+# [(3, 0.0001), (6, 0.00025), (12, 0.00055)]
 ```
 
 ---
@@ -744,6 +832,7 @@ print(rate([0.35, 0.25, 0.15, 0.12, 0.08, 0.05]))
 - Wei, Jason; Tay, Yi; Bommasani, Rishi; Raffel, Colin; Zoph, Barret; Borgeaud, Sebastian; Yogatama, Dani; Bosma, Maarten; Zhou, Denny; Metzler, Donald; Chi, Ed H.; Hashimoto, Tatsunori; Vinyals, Oriol; Liang, Percy; Dean, Jeff; and Fedus, William (2022). “Emergent Abilities of Large Language Models.” arXiv:2206.07682. — a systematic description of emergent phenomena
 - Nesterov, Yurii (2018). *Lectures on Convex Optimization*, 2nd edition. Springer Optimization and Its Applications 137. Springer. DOI: 10.1007/978-3-319-91578-4. — strong convexity, smoothness, step size, and condition number
 - Boyd, Stephen; and Vandenberghe, Lieven (2004). *Convex Optimization*. Cambridge University Press. DOI: 10.1017/CBO9780511804441. — nonexpansiveness of projection and convergence rates
+- Cover, Thomas M.; and Thomas, Joy A. (2006). *Elements of Information Theory*, 2nd edition. Wiley. — the local quadratic expansion of KL and the covariance of empirical distributions
 - [Chapter 12](/en/volume1/chapter12/), Yonglin's Formula — the global version of the Yonglin theorem, tangent spectral bounds, and direct evidence
 
 ---

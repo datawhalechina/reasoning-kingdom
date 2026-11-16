@@ -154,7 +154,7 @@
 | [第20章：启发式的形式合同](https://datawhalechina.github.io/reasoning-kingdom/volume2/chapter20/) | 可采纳性不是工程妥协，是数学承诺 | ✅ |
 | [第21章：学习作为逆推断](https://datawhalechina.github.io/reasoning-kingdom/volume2/chapter21/) | 模型"学到了东西"的形式含义：它找到了更短的描述 | ✅ |
 | [第22章：自指与涌现](https://datawhalechina.github.io/reasoning-kingdom/volume2/chapter22/) | Curry-Howard 对应告诉我们：证明即程序。那么，程序在证明什么？ | ✅ |
-| [第23章：永霖推论](https://datawhalechina.github.io/reasoning-kingdom/volume2/chapter23/) | 从 Hessian 谱到涌现与对数曲线：Scaling Law 不是玄学，而是三张可以分开算的账 | ✅ |
+| [第23章：永霖推论](https://datawhalechina.github.io/reasoning-kingdom/volume2/chapter23/) | 从 Hessian 谱到智能涌现：一条平凡方程如何必然地长出 scaling law 的直线 | ✅ |
 | [附录：下卷思考题参考提示](https://datawhalechina.github.io/reasoning-kingdom/appendix-thinking-questions) | 下卷各章思考题的思考脚手架与关键点提示 | ✅ |
 
 ### 兔狲教授小词典

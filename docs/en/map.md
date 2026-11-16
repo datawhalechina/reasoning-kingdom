@@ -125,7 +125,7 @@ The Reasoning Kingdom is now a complete trilogy:
 | Chapter | Goal | Key Idea | Methods |
 |---------|------|----------|---------|
 | **Ch22** Self-Reference and Emergence | Exploring the meta-layer of reasoning | When reasoning systems reason about themselves | Curry-Howard correspondence, fixed-point theorems |
-| **Ch23** The Yonglin Corollary | Turning the convergence rate into computable log curves | Information-theoretic energy surface + Banach completeness | Tangent Hessian, spectral analysis, scaling exponents |
+| **Ch23** The Yonglin Corollary | Turning the convergence rate into computable log curves and reproducing the straight-line format of scaling laws | Information-theoretic energy surface + Banach completeness | Tangent Hessian, spectral analysis, finite-sample counting |
 
 ---
 
