@@ -337,6 +337,22 @@ $$
 \kappa_T=\frac{\lambda_{\max}}{\lambda_{\min}}.
 $$
 
+**This step is the harmonic mean of two reciprocal curvatures.** Let
+
+$$
+a=\frac{1}{\lambda_{\max}},\qquad b=\frac{1}{\lambda_{\min}}
+$$
+
+be the steps at which the fast and slow modes, taken alone, would hit zero. The optimal step is their harmonic mean:
+
+$$
+\eta^*=\frac{2ab}{a+b}=\frac{2}{\lambda_{\min}+\lambda_{\max}}.
+$$
+
+It lies between $a$ and $b$ but closer to $a$ than the arithmetic midpoint: at $\eta^*$ the fast mode has already crossed zero, the slow mode has not, and their distances to zero are equal (a direct substitution gives $|1-\eta^*/a|=|1-\eta^*/b|=(b-a)/(a+b)$). This is the Chebyshev-style minimax balance. Given the spectral endpoints, one arithmetic step gives the step size; no binary search, no manual tuning—this is the algorithmic reading of Theorem 23.2.
+
+**Do not apply this average to the rates.** $a,b$ are step sizes (reciprocals of curvature), not the two rates in $[m(\eta),\rho(\eta)]$. The harmonic mean of $m,\rho$ has no “optimal step” meaning; the optimal step must be computed from $\lambda_{\min},\lambda_{\max}$, not read back from the compression-rate band. (What 23.6 infers from the band is the model's **actual effective step**, not the optimal one.)
+
 The name of $\kappa_T$ is the **condition number**. Here it is just a ratio: how many times steeper the steepest direction is than the flattest.
 
 **Theorem 23.2 (the rate form of the Yonglin Corollary).** Inside the stability window, the minimum of $\rho(\eta)$ is $\rho^*$, attained uniquely at $\eta^*$. Moreover,
@@ -378,7 +394,9 @@ $$
 \eta^*=0.18261,\quad \rho^*=0.45393.
 $$
 
-These are the 0.183 and 0.45 in the table. The first ratio, 0.335, is the residue of the fast direction; after a few steps the slow direction takes over and the ratio settles near 0.454.
+These are the 0.183 and 0.45 in the table. Here $a=0.1256$ and $b=0.3344$, and their harmonic mean is exactly $0.1826$. The first ratio, 0.335, is the residue of the fast direction; after a few steps the slow direction takes over and the ratio settles near 0.454.
+
+**The spectral harmonic step.** Given local curvature bounds $\mu\le\lambda\le L$: set $a=1/L$, $b=1/\mu$, take $\eta=2ab/(a+b)=2/(\mu+L)$, then check $\eta<2/L$ (not automatic once $\mu,L$ are estimates) and confirm the spectral bounds still hold at the current point. In the ideal Euclidean projected-gradient model this is exact; in a general nonlinear network $\mu,L$ are local bounds, the curvature moves, and each step needs a re-estimate.
 
 > **One sentence:** the optimal step size is not the fastest step; it is the step that lets the slowest and the fastest arrive together.
 
@@ -802,6 +820,8 @@ Now the most interesting part. C3's three rates run from $0.610$ to $0.753$, all
 
 C4's gap shows that the model does not sit at $\eta^*$. $\rho^*$ is not wrong; the model does not walk at the optimum. Theory says C3 should be much slower than C4 ($0.792$ versus $0.355$); the measurements put both tasks in almost the same stretch, C3 at $0.610$–$0.753$ and C4 at $0.711$–$0.754$. The model uses its own step, not the theoretical optimum. This is not anomalous: every step in the stability window is legal, and $\rho^*$ is only the fastest point in it.
 
+Plug in the harmonic mean: C3's $a=1/35.8959$, $b=1/4.1737$ give $\eta^*=2ab/(a+b)=0.0499$; C4's $a=1/6.6667$, $b=1/3.1746$ give $\eta^*=0.2032$. The model's common effective step $0.044$ is close to C3's optimum and far from C4's; this is exactly why C3's measured rate stays near its own $\rho^*$, while C4's sits far above its own $\rho^*$.
+
 **The two experiments' $m$ and $\rho$: two residents at once.** Draw each task's own band directly. Fix an effective step $\eta$; the linearized matrix $J_T=I-\eta H_T$ has eigenvalues $1-\eta\lambda_i$. Let
 
 $$
@@ -809,7 +829,7 @@ m(\eta)=\min_i|1-\eta\lambda_i|,\qquad
 \rho(\eta)=\max_i|1-\eta\lambda_i|.
 $$
 
-After this step the error retains at least $m(\eta)$ times what it had and at most $\rho(\eta)$ times; so every step size yields a legal-rate band $[m(\eta),\rho(\eta)]$. The endpoint $m$ is where the most is reclaimed, $\rho$ where the least is; the width $\rho-m$ is the spread between modes at that step, and the cost end is $\rho$. At $\eta=\eta^*$ the band collapses to a point, $m(\eta^*)=\rho(\eta^*)=\rho^*$; away from $\eta^*$ it widens.
+After this step the error retains at least $m(\eta)$ times what it had and at most $\rho(\eta)$ times; so every step size yields a legal-rate band $[m(\eta),\rho(\eta)]$. The endpoint $m$ is where the most is reclaimed, $\rho$ where the least is; the width $\rho-m$ is the spread between modes at that step, and the cost end is $\rho$. At $\eta=\eta^*$ the band collapses to a point, $m(\eta^*)=\rho(\eta^*)=\rho^*$; away from $\eta^*$ it widens. (Note: $m$ and $\rho$ are rates, not curvature endpoints; the harmonic mean in 23.3 applies to $1/\lambda_{\max}$ and $1/\lambda_{\min}$, not to these two rates.)
 
 The model's step is not written directly in its output. The experiment is designed to test whether it is a step that does not adapt to the task; call that common effective step $\eta$ and ask whether the data support it. The spectral endpoints are C3's $\lambda_{\min}=4.1737$, $\lambda_{\max}=35.8959$ and C4's $\lambda_{\min}=3.1746$, $\lambda_{\max}=6.6667$.
 
