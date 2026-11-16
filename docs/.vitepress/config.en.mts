@@ -60,7 +60,7 @@ export default defineConfig({
             const info = tokens[idx].info.trim()
             const title = info.replace(/^details\s*:?\s*/, '')
             if (title) {
-              return `<div class="details custom-block"><p class="details-summary">${title}</p>\n`
+              return `<div class="details custom-block"><p class="details-summary">${md.renderInline(title)}</p>\n`
             }
             return '<div class="details custom-block">\n'
           } else {

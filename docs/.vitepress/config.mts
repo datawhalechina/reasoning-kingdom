@@ -29,7 +29,7 @@ const mdConfig = (md: any) => {
       if (tokens[idx].nesting === 1) {
         const title = tokens[idx].info.trim().replace(/^details\s*:?\s*/, '')
         return title
-          ? `<div class="details custom-block"><p class="details-summary">${title}</p>\n`
+          ? `<div class="details custom-block"><p class="details-summary">${md.renderInline(title)}</p>\n`
           : '<div class="details custom-block">\n'
       }
       return '</div>\n'

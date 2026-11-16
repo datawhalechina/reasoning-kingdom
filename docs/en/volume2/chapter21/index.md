@@ -389,7 +389,7 @@ Let me rewrite it — a correct example matters more:
 
 Sequence: $0, 1, 2, 3, 4, 5, \ldots$
 - **Learner A**: $f(n) = n$ (the natural numbers)
-- **Learner B**: $f(n) = $ "the $n$-th non-negative integer" (the same as A)
+- **Learner B**: $f(n) =$ "the $n$-th non-negative integer" (the same as A)
 - **Learner C**: $f(n) = n$ for $n \leq 1000$, and $f(n) = n + 1000$ after that
 
 For the first 5 elements (0,1,2,3,4), the three learners agree exactly. You cannot tell them apart from the data. But the prediction for element 1001: A and B predict 1000, C predicts 2000.
