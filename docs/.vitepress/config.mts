@@ -152,7 +152,6 @@ export default defineConfig({
                 { text: '第22章：自指与涌现——当推理系统开始推理关于自身', link: '/volume2/chapter22/' },
                 { text: '第23章：永霖推论——智能涌现与平凡方程', link: '/volume2/chapter23/' },
                 { text: '兔狲教授小词典', link: '/dictionary' },
-                { text: '附录：下卷思考题参考提示', link: '/appendix-thinking-questions' },
               ]
             }
           ],

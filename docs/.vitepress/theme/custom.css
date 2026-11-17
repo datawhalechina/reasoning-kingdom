@@ -678,6 +678,40 @@ div[class*='language-'] pre {
   *::before,
   *::after {
     animation: none !important;
+    transition: none !important;
+    text-shadow: none !important;
+  }
+
+  /* --- 去掉阴影和渐变叠层：Chrome 打印 PDF 时 box-shadow 会变成半透明“毛玻璃”伪影 --- */
+  .vp-doc *,
+  .custom-block,
+  .custom-block::before,
+  .custom-block::after {
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .custom-block.info,
+  .custom-block.detail,
+  .custom-block.details {
+    background-image: none !important;
+  }
+
+  /* --- 强制落在动画终态：即使打印时动画未被完全禁用，也不会抓到半透明的中间帧 --- */
+  .vp-doc p,
+  .vp-doc h1,
+  .vp-doc h2,
+  .vp-doc h3,
+  .vp-doc h4,
+  .vp-doc ul,
+  .vp-doc ol,
+  .vp-doc blockquote,
+  .vp-doc pre,
+  .vp-doc table,
+  .vp-doc .custom-block {
+    opacity: 1 !important;
+    transform: none !important;
   }
 
   /* --- 自定义块：不断开 + 强制保留背景色 --- */
