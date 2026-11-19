@@ -151,6 +151,7 @@ export default defineConfig({
                 { text: '第21章：学习作为逆推断——泛化是压缩的另一种说法', link: '/volume2/chapter21/' },
                 { text: '第22章：自指与涌现——当推理系统开始推理关于自身', link: '/volume2/chapter22/' },
                 { text: '第23章：永霖推论——智能涌现与平凡方程', link: '/volume2/chapter23/' },
+                { text: '第24章：NP 问题的探讨——LIT 定理', link: '/volume2/chapter24/' },
                 { text: '兔狲教授小词典', link: '/dictionary' },
               ]
             }

@@ -1147,7 +1147,3 @@ $$
 - Boyd, Stephen; and Vandenberghe, Lieven (2004). *Convex Optimization*. Cambridge University Press. DOI: 10.1017/CBO9780511804441.——投影的非扩张性与收敛率
 - Cover, Thomas M.; and Thomas, Joy A. (2006). *Elements of Information Theory*, 2nd edition. Wiley.——KL 的局部二次展开与经验分布的协方差
 - 本书[第12章](/volume1/chapter12/)，永霖公式——永霖定理的全局版本、切空间谱界与直接证据
-
----
-
-正文到这里结束。祝你好运！
