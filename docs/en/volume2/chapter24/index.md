@@ -86,7 +86,7 @@ Take $L=2$: $A_2:=A_L|_{L=2}$, made of 4 states and 3 operators, 7 in all:
 
 For the 2-SAT case take $D=\{0,1\}^2$; $X_2:=A_2^D$ is the complete space: see 1.4 for the distance, 1.5 for completeness.
 
-$L=2$: 2-SAT, $\in\mathrm P$; $L=3$: 3-SAT, $\in\mathrm{NP}$ (Cook–Levin).
+$L=2$: 2-SAT, $\in\mathrm P$; $L=3$: 3-SAT, $\mathrm{NP}$-complete (Cook–Levin).
 
 ### 1.3.1 Not filling in a 3-bit/2-bit table, but iterating the whole solution space along the time axis
 
@@ -402,13 +402,13 @@ That is, the limit of the Cauchy sequence is a concrete point $a^*$ in $X$.
 $L_{\mathrm{SAT}}$: every clause has exactly $L$ literals.
 
 - $L=2$: 2-SAT, $\in\mathrm P$;
-- $L=3$: 3-SAT, $\in\mathrm{NP}$ (Cook–Levin).
+- $L=3$: 3-SAT, $\mathrm{NP}$-complete (Cook–Levin).
 
 The chain has to be made clear. 3-SAT is NP-hard, and that is not something we constructed. To be precise, it is NP-complete: it lies in NP and is NP-hard. This conclusion is older than this book: Cook (and Levin) proved that every problem in NP has a polynomial-time reduction to SAT; from SAT to 3-SAT only two mechanical things happen — long clauses are split into clauses of three literals (adding auxiliary variables where needed), and short clauses are padded with repeated literals. Join the two stretches, and every problem in NP reduces to 3-SAT. Someone else welded the chain; 3-SAT is tied at its end, and NP-hardness is a property the chain gives it, not a property our step gives it.
 
 What we construct here is the space and the residents, not NP-hardness. Constructing is not the problem: to prove existence, giving a construction is a proof. The point is to say which stretch is borrowed. The reduction chain is borrowed from Cook–Levin; the space, the iteration sequence, and the P resident are ours. Seeing “construct 3-SAT” should not suggest that the act of construction automatically produces NP-hardness — the hardness comes with the old chain, not with the new construction. This constructive proof is about who lives in the space and who does not.
 
-The P resident is constructed on the $L=2$ side; the mature resident on the $L=3$ side is constructed directly along the Cook reduction chain.
+The P resident is constructed on the $L=2$ side; on the $L=3$ side, the NP-hard object is bound by the Cook reduction chain.
 
 For the 2-SAT case take $L=2$: $D=\{0,1\}^2=\{00,01,10,11\}$, 4 states. Plug in the $L=2$ values: $A_2$ has $4$ states plus $3$ operators, $7$ values in all; the space $X_2=A_2^D$ has $7^4$ points. The resident uses only the $4$ state values — write $B:=\{0,1\}^2\subset A_2$, $0:=(0,0)$, $1:=(1,1)$, with $\wedge$ acting bitwise on $B$; the whole orbit lies in $B^D\subset X_2$, $4^4=256$ points. Hamming distance is an integer lying between $0$ and $4$.
 
@@ -555,7 +555,7 @@ $$
 \delta_n\le|D|\,Q^{n-1}
 $$
 
-This inequality is the ideal-time ledger. $Q$ is the decay constant, $|D|$ the size of the space; both are written in the space. One transformation computes it.
+This inequality is the ideal-time ledger. $Q$ is the decay constant, $|D|$ the size of the space; one comes from the iteration condition, the other from the space. One transformation computes it.
 
 ### 6.2 How much remains, how much time
 
@@ -577,7 +577,7 @@ $$
 n>1+\log_{1/Q}\frac{|D|}{\varepsilon}
 $$
 
-The right side uses only three numbers: the size of the space $|D|$, the tolerance $\varepsilon$, and the decay constant $Q$. All three are written in the space; none is foreign. This is the oracle-time upper bound corresponding to the remaining distance $\varepsilon$. When $\varepsilon\ge|D|$, no further walking is needed; when $Q=0$, it freezes in one step.
+The right side uses only three numbers: the size of the space $|D|$, the tolerance $\varepsilon$, and the decay constant $Q$. The size is written in the space, the tolerance is a requirement, the decay constant is written in the iteration condition; none is foreign. This is the oracle-time upper bound corresponding to the remaining distance $\varepsilon$. When $\varepsilon\ge|D|$, no further walking is needed; when $Q=0$, it freezes in one step.
 
 This upper bound is a certificate. The certificate need not carry the starting gap $\delta_0$; one $Q$ is enough. $Q$ is the decay constant of this sequence; $\delta_0$ is only where one particular run started.
 
@@ -613,7 +613,7 @@ This connects with §3. The inequality in log space has content only while $\del
 
 ### 6.4 Two kinds of oracle time
 
-On the P resident's side, the certificate can be issued on the spot. After the first step $\delta_1=0$; take the decay constant $Q=0$: the distance is already squeezed to zero, and further steps only repeat. Ideal time $1$, down in a single step. The multiplier is the closed-form $h$, which reads only the first bit; the candidate table $X_2$ has $7^4$ points, and it touches only two, $a_0$ and $h$. Oracle time is counted linearly in the number of rows, polynomial.
+On the P resident's side, the certificate can be issued on the spot. After the first step $\delta_1=0$; take the decay constant $Q=0$: the distance is already squeezed to zero, and further steps only repeat. Ideal time $1$, down in a single step. The multiplier is the closed-form $h$, which reads only the first bit; the candidate table $X_2$ has $7^4$ points, and it touches only two, $a_0$ and $h$. Oracle time is $1$; however large the candidate table, it takes only one step.
 
 The NP side cannot issue the certificate. A certificate needs a stopping point inside the space for $Q$ to have somewhere to be written; $-\infty$ is not in the space, and the pen cannot land. If one insists on recording an oracle time for it, only enumeration remains: spread out the whole stack of candidate tables; for $L=3$, $X_3$ has $11^8\approx2.1\times10^8$ points. Each increase of $L$ by $1$ grows $A_L$ from $7$ values to $11$ and then to $19$, and $X_L$ from $7^4$ to $11^8$ and then to $19^{16}$ — base and exponent grow together, exponents stacked on exponents. The upper bound of this ledger is an explosive exponential geometry.
 
