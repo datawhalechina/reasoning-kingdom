@@ -613,11 +613,11 @@ This connects with §3. The inequality in log space has content only while $\del
 
 ### 6.4 Two kinds of oracle time
 
-The P resident counted the rungs: $\delta_0=2$, $\delta_1=0$, ideal time $1$, down in a single step. The multiplier is the closed-form $h$, which reads only the first bit; the candidate table $X_2$ has $7^4$ points, and it touches only two, $a_0$ and $h$. Oracle time is counted linearly in the number of rows, polynomial.
+On the P resident's side, the certificate can be issued on the spot. After the first step $\delta_1=0$; take the decay constant $Q=0$: the distance is already squeezed to zero, and further steps only repeat. Ideal time $1$, down in a single step. The multiplier is the closed-form $h$, which reads only the first bit; the candidate table $X_2$ has $7^4$ points, and it touches only two, $a_0$ and $h$. Oracle time is counted linearly in the number of rows, polynomial.
 
-The NP side cannot be pointed out — the counterexample object $-\infty$ is not in the space. If one insists on recording an oracle time for it, only enumeration remains: spread out the whole stack of candidate tables; for $L=3$, $X_3$ has $11^8\approx2.1\times10^8$ points. Each increase of $L$ by $1$ grows $A_L$ from $7$ values to $11$ and then to $19$, and $X_L$ from $7^4$ to $11^8$ and then to $19^{16}$ — base and exponent grow together, exponents stacked on exponents. The upper bound of this ledger is an explosive exponential geometry.
+The NP side cannot issue the certificate. A certificate needs a stopping point inside the space for $Q$ to have somewhere to be written; $-\infty$ is not in the space, and the pen cannot land. If one insists on recording an oracle time for it, only enumeration remains: spread out the whole stack of candidate tables; for $L=3$, $X_3$ has $11^8\approx2.1\times10^8$ points. Each increase of $L$ by $1$ grows $A_L$ from $7$ values to $11$ and then to $19$, and $X_L$ from $7^4$ to $11^8$ and then to $19^{16}$ — base and exponent grow together, exponents stacked on exponents. The upper bound of this ledger is an explosive exponential geometry.
 
-The two lines are different. The P resident's oracle time is polynomial-linear; the upper bound on the NP resident's oracle time is an explosive exponential geometry. Put $\mathrm P\ne\mathrm{NP}$ on the time axis, and it says these two lines never touch.
+The two lines are different. The P resident's certificate carries a $Q$ (here $0$), and the ideal time is $1$, polynomial-linear; the NP resident cannot even issue a certificate, and only the size of the whole stack of candidate tables remains, an explosive exponential geometry. Put $\mathrm P\ne\mathrm{NP}$ on the time axis, and it says these two lines never touch.
 
 ---
 
