@@ -103,7 +103,7 @@ The next two chapters (Chapters 17–18) need basic probability (conditional pro
 
 ## How Volume 2 Is Organized, and What Each Chapter Says
 
-The ten chapters of Volume 2 follow one logical line, but each can also be read fairly independently.
+The eleven chapters of Volume 2 follow one logical line, but each can also be read fairly independently.
 
 ```
 ch14 Formal systems                  ← the foundation: inference rules made precise
@@ -117,6 +117,7 @@ ch20 Heuristic contracts             ← promises under cost: the exact meaning 
 ch21 Learning theory                 ← inverse inference: inferring laws from observations
 ch22 Self-reference and emergence    ← what happens when a system reasons about itself
 ch23 The Yonglin Corollary           ← from the Hessian spectrum to the ordinary equation of intelligence and emergence
+ch24 An Inquiry into the NP Problem: The LIT Theorem  ← a discrete space has no −∞; P has a resident, NP does not
 ```
 
 If you can read only three chapters: read Chapters 14, 15, 19. Together they form the most central line of Volume 2: reasoning gets formalized, then hits a boundary it cannot cross, and then that boundary is measured precisely.

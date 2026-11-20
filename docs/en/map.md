@@ -118,7 +118,7 @@ The Reasoning Kingdom is now a complete trilogy:
 | **Ch20** The Heuristic Contract | Giving precise definitions to "good enough" | Admissibility, consistency, PAC learning | Approximation algorithms, theoretical guarantees |
 | **Ch21** Learning Theory | Understanding the nature of generalization | Learning as inverse inference | VC dimension, PAC learning |
 
-### Self-Reference and Emergence (Chapters 22-23)
+### Self-Reference, Emergence, and LIT (Chapters 22-24)
 
 **Core question**: What happens when a reasoning system begins to reason about itself?
 
@@ -126,6 +126,7 @@ The Reasoning Kingdom is now a complete trilogy:
 |---------|------|----------|---------|
 | **Ch22** Self-Reference and Emergence | Exploring the meta-layer of reasoning | When reasoning systems reason about themselves | Curry-Howard correspondence, fixed-point theorems |
 | **Ch23** The Yonglin Corollary | Turning the convergence rate into computable log curves and reproducing the straight-line format of scaling laws | Information-theoretic energy surface + Banach completeness | Tangent Hessian, spectral analysis, finite-sample counting |
+| **Ch24** An Inquiry into the NP Problem | Writing out the P/NP separation completely inside a finite discrete space | A discrete space has no $-\infty$; P has an explicit resident, NP has only $-\infty$ | Weighted Hamming distance, contraction iteration, change of base into log space, discreteness lemma |
 
 ---
 
@@ -186,13 +187,13 @@ This book's narrative is built around 6 original research contributions:
 ### By Reader Type
 - **Beginners / Young readers**: Start from the prequel -> Volume I -> Volume II (step by step)
 - **Engineers / Practitioners**: Prioritize Volume I (Ch1-13), focus on "do it yourself" sections
-- **Researchers / Theorists**: Prioritize Volume II (Ch14-23), focus on original research
+- **Researchers / Theorists**: Prioritize Volume II (Ch14-24), focus on original research
 - **Students / Self-learners**: Read sequentially: prequel -> Volume I -> Volume II
 
 ### By Interest
 - **To understand the current state of AI reasoning**: Prequel Ch10-15 -> Volume I Ch9 -> Volume I Ch12
 - **To understand the theoretical foundations**: Volume II Ch14 -> Volume II Ch15 -> Volume II Ch19
-- **To explore open questions**: Volume II Ch22-23 -> each chapter's "Unresolved" sections
+- **To explore open questions**: Volume II Ch22-24 -> each chapter's "Unresolved" sections
 - **To build algorithmic thinking**: Prequel Ch1-7 -> Volume I Ch7-8
 
 ### By Time Available
