@@ -404,6 +404,10 @@ $L_{\mathrm{SAT}}$: every clause has exactly $L$ literals.
 - $L=2$: 2-SAT, $\in\mathrm P$;
 - $L=3$: 3-SAT, $\in\mathrm{NP}$ (Cook–Levin).
 
+The chain has to be made clear. 3-SAT is NP-hard, and that is not something we constructed. To be precise, it is NP-complete: it lies in NP and is NP-hard. This conclusion is older than this book: Cook (and Levin) proved that every problem in NP has a polynomial-time reduction to SAT; from SAT to 3-SAT only two mechanical things happen — long clauses are split into clauses of three literals (adding auxiliary variables where needed), and short clauses are padded with repeated literals. Join the two stretches, and every problem in NP reduces to 3-SAT. Someone else welded the chain; 3-SAT is tied at its end, and NP-hardness is a property the chain gives it, not a property our step gives it.
+
+What we construct here is the space and the residents, not NP-hardness. Constructing is not the problem: to prove existence, giving a construction is a proof. The point is to say which stretch is borrowed. The reduction chain is borrowed from Cook–Levin; the space, the iteration sequence, and the P resident are ours. Seeing “construct 3-SAT” should not suggest that the act of construction automatically produces NP-hardness — the hardness comes with the old chain, not with the new construction. This constructive proof is about who lives in the space and who does not.
+
 The P resident is constructed on the $L=2$ side; the mature resident on the $L=3$ side is constructed directly along the Cook reduction chain.
 
 For the 2-SAT case take $L=2$: $D=\{0,1\}^2=\{00,01,10,11\}$, 4 states. Plug in the $L=2$ values: $A_2$ has $4$ states plus $3$ operators, $7$ values in all; the space $X_2=A_2^D$ has $7^4$ points. The resident uses only the $4$ state values — write $B:=\{0,1\}^2\subset A_2$, $0:=(0,0)$, $1:=(1,1)$, with $\wedge$ acting bitwise on $B$; the whole orbit lies in $B^D\subset X_2$, $4^4=256$ points. Hamming distance is an integer lying between $0$ and $4$.
