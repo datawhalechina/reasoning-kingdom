@@ -50,7 +50,7 @@
 镜子语句游戏的残酷之处在于：镜子不是外敌。它是系统表达能力的一部分。你想让系统足够强，强到能谈论算术；它就顺手学会谈论自己。然后，裂缝出现。不是有人攻击了城堡，是城堡长出了自己的倒影。
 :::
 
-### 15.0.5 小型哥德尔编号：编码如何给系统一面镜子
+### 15.0.1 小型哥德尔编号：编码如何给系统一面镜子
 
 哥德尔编号不是抽象的"把符号映射到数字"，而是可以手动演示的机械编码。下面给一个极小的系统做一遍。
 
@@ -72,20 +72,20 @@ $$\text{编号} = 2^3 \cdot 3^1 \cdot 5^2 \cdot 7^3 \cdot 11^3 \cdot 13^1$$
 哥德尔编号不是"编码技巧"——它展示了"自指"如何作为表达能力的必然副产品出现。任何能够谈论加法和乘法的系统，自动地能够谈论关于自身的某些事实。不是因为"设计"了自指，而是因为系统的表达能力超过了某个阈值，自指就成了不可避免的数学事实。
 :::
 
-### 15.0.6 用代码玩镜子语句游戏
+### 15.0.2 用代码玩镜子语句游戏
 
-15.0.5 节手工编号了一个公式。下面的程序把整个游戏跑起来：它复现那套编号（并与书中的确切数字核对），在一个小型形式系统里执行真正的证明搜索，然后构造出镜子语句 G——"G 不可证"——并用真实计算出的值跑一遍 15.0 节的那个分叉。
+15.0.1 节手工编号了一个公式。下面的程序把整个游戏跑起来：它复现那套编号（并与书中的确切数字核对），在一个小型形式系统里执行真正的证明搜索，然后构造出镜子语句 G——"G 不可证"——并用真实计算出的值跑一遍 15.0 节的那个分叉。
 
 ```python
 #!/usr/bin/env python3
 """
 mirror_sentence_game.py -- a runnable simulation of the Mirror-Sentence
-Game (Volume 2, Chapter 15, Sec. 15.0 and 15.0.5).
+Game (Volume 2, Chapter 15, Sec. 15.0 and 15.0.1).
 
 The game has three steps, and this module runs all three:
 
   1. NUMBERING   -- encode symbol strings as natural numbers (Goedel
-                    numbering), exactly the scheme of Sec. 15.0.5:
+                    numbering), exactly the scheme of Sec. 15.0.1:
                     P->1, ->->2, not->3 (the machine adds Q->4 so the
                     toy system has two atoms).
   2. REFERENCING -- build a real toy formal system (Lukasiewicz's three
@@ -490,7 +490,7 @@ def demo() -> None:
     banner = "=" * 70
     print(banner)
     print(" THE MIRROR-SENTENCE GAME -- a runnable simulation")
-    print(" The Reasoning Kingdom, Volume 2, Chapter 15 (Sec. 15.0, 15.0.5)")
+    print(" The Reasoning Kingdom, Volume 2, Chapter 15 (Sec. 15.0, 15.0.1)")
     print(banner)
 
     # Part 1
@@ -500,7 +500,7 @@ def demo() -> None:
     expected = 2 ** 3 * 3 ** 1 * 5 ** 2 * 7 ** 3 * 11 ** 3 * 13 ** 1
     assert book_number == expected, "book example mismatch"
     print(f"  encode(\"¬P→¬¬P\") = {book_number}")
-    print("    = 2^3 * 3^1 * 5^2 * 7^3 * 11^3 * 13^1   (matches Sec. 15.0.5)")
+    print("    = 2^3 * 3^1 * 5^2 * 7^3 * 11^3 * 13^1   (matches Sec. 15.0.1)")
     print(f'  decode({book_number}) = "{decode_number(book_number)}"')
     print(f'  decode(32) = "{decode_number(32)}" -- not a formula: some')
     print("    numbers name no formula at all (as the book promises)")

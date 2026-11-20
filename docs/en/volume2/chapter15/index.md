@@ -50,7 +50,7 @@ A formal system fails not because it is weak, but because it is strong enough to
 The cruelty of the mirror-sentence game lies in this: the mirror is not an external enemy. It is part of the system's expressive power. You want the system to be strong enough to talk about arithmetic; it conveniently learns to talk about itself. Then, the crack appears. It is not that someone attacked the castle; the castle grew its own reflection.
 :::
 
-### 15.0.5 A Small Gödel Numbering: How Encoding Gives the System a Mirror
+### 15.0.1 A Small Gödel Numbering: How Encoding Gives the System a Mirror
 
 Gödel numbering is not the abstract "map symbols to numbers" — it is a mechanical encoding that can be demonstrated by hand. Let us perform it on a tiny system.
 
@@ -72,20 +72,20 @@ Now the system can internally express $\mathsf{Prov}(n)$ — "there exists a pro
 Gödel numbering is not an "encoding trick" — it demonstrates how self-reference arises as an inevitable byproduct of expressive power. Any system capable of talking about addition and multiplication automatically becomes capable of talking about certain facts about itself. Not because self-reference was "designed," but because the system's expressive power exceeds a certain threshold, and self-reference becomes an unavoidable mathematical fact.
 :::
 
-### 15.0.6 The Mirror-Sentence Game in Code
+### 15.0.2 The Mirror-Sentence Game in Code
 
-Section 15.0.5 numbered one formula by hand. The program below runs the whole game: it reproduces that numbering (and checks it against the exact number in the book), runs a real proof search in a small formal system, and then builds the mirror sentence G – "G is not provable" – and runs the fork on real computed values.
+Section 15.0.1 numbered one formula by hand. The program below runs the whole game: it reproduces that numbering (and checks it against the exact number in the book), runs a real proof search in a small formal system, and then builds the mirror sentence G – "G is not provable" – and runs the fork on real computed values.
 
 ```python
 #!/usr/bin/env python3
 """
 mirror_sentence_game.py -- a runnable simulation of the Mirror-Sentence
-Game (Volume 2, Chapter 15, Sec. 15.0 and 15.0.5).
+Game (Volume 2, Chapter 15, Sec. 15.0 and 15.0.1).
 
 The game has three steps, and this module runs all three:
 
   1. NUMBERING   -- encode symbol strings as natural numbers (Goedel
-                    numbering), exactly the scheme of Sec. 15.0.5:
+                    numbering), exactly the scheme of Sec. 15.0.1:
                     P->1, ->->2, not->3 (the machine adds Q->4 so the
                     toy system has two atoms).
   2. REFERENCING -- build a real toy formal system (Lukasiewicz's three
@@ -490,7 +490,7 @@ def demo() -> None:
     banner = "=" * 70
     print(banner)
     print(" THE MIRROR-SENTENCE GAME -- a runnable simulation")
-    print(" The Reasoning Kingdom, Volume 2, Chapter 15 (Sec. 15.0, 15.0.5)")
+    print(" The Reasoning Kingdom, Volume 2, Chapter 15 (Sec. 15.0, 15.0.1)")
     print(banner)
 
     # Part 1
@@ -500,7 +500,7 @@ def demo() -> None:
     expected = 2 ** 3 * 3 ** 1 * 5 ** 2 * 7 ** 3 * 11 ** 3 * 13 ** 1
     assert book_number == expected, "book example mismatch"
     print(f"  encode(\"¬P→¬¬P\") = {book_number}")
-    print("    = 2^3 * 3^1 * 5^2 * 7^3 * 11^3 * 13^1   (matches Sec. 15.0.5)")
+    print("    = 2^3 * 3^1 * 5^2 * 7^3 * 11^3 * 13^1   (matches Sec. 15.0.1)")
     print(f'  decode({book_number}) = "{decode_number(book_number)}"')
     print(f'  decode(32) = "{decode_number(32)}" -- not a formula: some')
     print("    numbers name no formula at all (as the book promises)")
