@@ -531,34 +531,55 @@ $$
 
 People speak of NP-hard problems under ideal time as if ideal time were something extra, out of reach. The ideal time in this book is not extra. It is the oracle time of §1.3.3, and also the time $n$ of the iteration sequence in §2. Where the sequence stops is where ideal time stops.
 
-It has already been proved. Multiply the iteration condition of §2.1, $\delta_{n+1}\le q^n\delta_n$, from $0$ to $n-1$:
+It has already been proved. The $q^n$ in the iteration condition stops growing after the first step: for $n\ge1$, $q^n\le q$. Write this uniform decay constant as
 
 $$
-\delta_n\le\delta_0\,q^{n(n-1)/2}
+Q:=q
 $$
 
-This inequality is the ideal-time ledger. One transformation computes it.
+Then every further step multiplies the distance between adjacent terms by at most $Q$:
+
+$$
+\delta_{n+1}\le Q\,\delta_n\qquad(n\ge1)
+$$
+
+Multiply through to step $n$:
+
+$$
+\delta_n\le\delta_1\,Q^{n-1}\qquad(n\ge1)
+$$
+
+$\delta_1$ is the adjacent distance after the first step, no larger than the number of coordinates $|D|$. Hence
+
+$$
+\delta_n\le|D|\,Q^{n-1}
+$$
+
+This inequality is the ideal-time ledger. $Q$ is the decay constant, $|D|$ the size of the space; both are written in the space. One transformation computes it.
 
 ### 6.2 How much remains, how much time
 
-Suppose a distance $\varepsilon$ remains, that is, we require $\delta_n<\varepsilon$. From the inequality above,
+Suppose a distance $\varepsilon$ remains, that is, we require $\delta_n<\varepsilon$. From the inequality above, it suffices that
 
 $$
-\delta_0\,q^{n(n-1)/2}<\varepsilon
-\iff
-\frac{n(n-1)}{2}\ln q<\ln\frac{\varepsilon}{\delta_0}
-\iff
-\frac{n(n-1)}{2}>\frac{\ln(\delta_0/\varepsilon)}{\ln(1/q)}
+|D|\,Q^{n-1}<\varepsilon
 $$
 
-The last step flips the sign: $0<q<1$, $\ln q<0$. Solve the quadratic inequality:
+Take logarithms to base $1/Q$ on both sides ($1/Q>1$, so the direction does not change):
 
 $$
-n>
-\frac{1+\sqrt{1+8\,\dfrac{\ln(\delta_0/\varepsilon)}{\ln(1/q)}}}{2}
+n-1>\log_{1/Q}\frac{|D|}{\varepsilon}
 $$
 
-The right side uses only three numbers: the starting gap $\delta_0$, the tolerance $\varepsilon$, and the compression ratio $q$. All three are written in the space; none is foreign. This is the oracle-time upper bound corresponding to the remaining distance $\varepsilon$. When $\varepsilon\ge\delta_0$, no walking is needed; when $q=0$, it freezes in one step.
+that is,
+
+$$
+n>1+\log_{1/Q}\frac{|D|}{\varepsilon}
+$$
+
+The right side uses only three numbers: the size of the space $|D|$, the tolerance $\varepsilon$, and the decay constant $Q$. All three are written in the space; none is foreign. This is the oracle-time upper bound corresponding to the remaining distance $\varepsilon$. When $\varepsilon\ge|D|$, no further walking is needed; when $Q=0$, it freezes in one step.
+
+This upper bound is a certificate. The certificate need not carry the starting gap $\delta_0$; one $Q$ is enough. $Q$ is the decay constant of this sequence; $\delta_0$ is only where one particular run started.
 
 ### 6.3 The time upper bound for the ideal state
 
@@ -568,21 +589,25 @@ $$
 n^*_{\text{ideal}}
 \le
 \left\lceil
-\frac{1+\sqrt{1+8\,\dfrac{\ln(\delta_0/\delta_{\min})}{\ln(1/q)}}}{2}
+1+\log_{1/Q}\frac{|D|}{\delta_{\min}}
 \right\rceil
 $$
 
-Plug in the numbers for $L=3$: $\delta_0\le8$, $\delta_{\min}=1$, hence
+Plug in the numbers for $L=3$: $|D|=8$, $\delta_{\min}=1$, hence
 
 $$
 n^*_{\text{ideal}}
 \le
 \left\lceil
-\frac{1+\sqrt{1+8\,\dfrac{\ln 8}{\ln(1/q)}}}{2}
+1+\log_{1/Q}8
+\right\rceil
+=
+\left\lceil
+1+\frac{\ln 8}{\ln(1/Q)}
 \right\rceil
 $$
 
-$q$ is the compression ratio, fixed; the right side is therefore a constant. Ideal time is finite, and can be counted out.
+$Q$ is the decay constant, fixed; the right side is therefore a constant. Ideal time is finite, and can be counted out.
 
 This connects with §3. The inequality in log space has content only while $\delta_n>0$ and the sequence is still moving (§2.2); once the sequence stops, it has reached its end. Ideal time is the length of this stretch of inequality. To call ideal time out of reach is to treat it as a limit; here it is a string of rungs that can be counted to the end.
 

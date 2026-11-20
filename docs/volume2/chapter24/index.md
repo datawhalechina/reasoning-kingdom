@@ -531,34 +531,55 @@ $$
 
 人们说理想时间下的 NP 难问题，好像理想时间是一样额外的、够不着的东西。这本书里的理想时间不是额外的。它就是 §1.3.3 的神谕时间，也是 §2 那条迭代列的时间 $n$。序列在哪里停，理想时间就到哪里。
 
-它已经被证出来了。把 §2.1 的迭代条件 $\delta_{n+1}\le q^n\delta_n$ 从 $0$ 乘到 $n-1$：
+它已经被证出来了。迭代条件里的 $q^n$，从第一步以后不再变大：$n\ge1$ 时 $q^n\le q$。把这个统一的衰减常数记作
 
 $$
-\delta_n\le\delta_0\,q^{n(n-1)/2}
+Q:=q
 $$
 
-这条不等式就是理想时间账。变个形就能算。
+于是每往后推一步，相邻两项的距离至多乘上 $Q$：
+
+$$
+\delta_{n+1}\le Q\,\delta_n\qquad(n\ge1)
+$$
+
+连乘到第 $n$ 步：
+
+$$
+\delta_n\le\delta_1\,Q^{n-1}\qquad(n\ge1)
+$$
+
+$\delta_1$ 是第一步之后的相邻距离，不超过坐标总数 $|D|$。所以
+
+$$
+\delta_n\le|D|\,Q^{n-1}
+$$
+
+这条不等式就是理想时间账。$Q$ 是衰减常数，$|D|$ 是空间的大小，两个都写在空间里。变个形就能算。
 
 ### 6.2 剩余多少，时间多少
 
-设还剩 $\varepsilon$ 没有走完，即要求 $\delta_n<\varepsilon$。由上式，
+设还剩 $\varepsilon$ 没有走完，即要求 $\delta_n<\varepsilon$。由上式，只要
 
 $$
-\delta_0\,q^{n(n-1)/2}<\varepsilon
-\iff
-\frac{n(n-1)}{2}\ln q<\ln\frac{\varepsilon}{\delta_0}
-\iff
-\frac{n(n-1)}{2}>\frac{\ln(\delta_0/\varepsilon)}{\ln(1/q)}
+|D|\,Q^{n-1}<\varepsilon
 $$
 
-最后一步把负号翻掉：$0<q<1$，$\ln q<0$。解二次不等式：
+两边取以 $1/Q$ 为底的对数（$1/Q>1$，不等号方向不变）：
 
 $$
-n>
-\frac{1+\sqrt{1+8\,\dfrac{\ln(\delta_0/\varepsilon)}{\ln(1/q)}}}{2}
+n-1>\log_{1/Q}\frac{|D|}{\varepsilon}
 $$
 
-右边只用到三个数：起点差 $\delta_0$、容差 $\varepsilon$、压缩比 $q$。三个都在空间里写着，没有一个是外来的。这就是剩余距离 $\varepsilon$ 所对应的神谕时间上界。$\varepsilon\ge\delta_0$ 时不用走；$q=0$ 时一步就冻结。
+即
+
+$$
+n>1+\log_{1/Q}\frac{|D|}{\varepsilon}
+$$
+
+右边只用到三个数：空间大小 $|D|$、容差 $\varepsilon$、衰减常数 $Q$。三个都在空间里写着，没有一个是外来的。这就是剩余距离 $\varepsilon$ 所对应的神谕时间上界。$\varepsilon\ge|D|$ 时不用再走；$Q=0$ 时一步冻结。
+
+这条上界就是证书：不用写起点差 $\delta_0$，写一个 $Q$ 就够了。$Q$ 是这条列的衰减常数，$\delta_0$ 只是这一趟从哪里出发。
 
 ### 6.3 理想状态的时间上界
 
@@ -568,21 +589,25 @@ $$
 n^*_{\text{ideal}}
 \le
 \left\lceil
-\frac{1+\sqrt{1+8\,\dfrac{\ln(\delta_0/\delta_{\min})}{\ln(1/q)}}}{2}
+1+\log_{1/Q}\frac{|D|}{\delta_{\min}}
 \right\rceil
 $$
 
-把 $L=3$ 的数带进去：$\delta_0\le8$，$\delta_{\min}=1$，于是
+把 $L=3$ 的数带进去：$|D|=8$，$\delta_{\min}=1$，于是
 
 $$
 n^*_{\text{ideal}}
 \le
 \left\lceil
-\frac{1+\sqrt{1+8\,\dfrac{\ln 8}{\ln(1/q)}}}{2}
+1+\log_{1/Q}8
+\right\rceil
+=
+\left\lceil
+1+\frac{\ln 8}{\ln(1/Q)}
 \right\rceil
 $$
 
-$q$ 是压缩比，固定不动；右边因此是一个常数。理想时间是有限的，也数得出来。
+$Q$ 是衰减常数，固定不动；右边因此是一个常数。理想时间是有限的，也数得出来。
 
 这和 §3 接得上。对数空间里的那条不等式，只在 $\delta_n>0$、序列还在动的时候有内容（§2.2）；序列一停，它就到头了。理想时间就是这段不等式的长度。把理想时间说成够不着的东西，是把它当成了极限；在这里它是一串数得完的台阶。
 
