@@ -8,7 +8,7 @@ $X_L=A_L^D$; $A_L=\{0,1\}^L\cup\{!\}$
 
 $(X_L,d_w)$ $\Rightarrow$ space
 
-Route: the triviality equation of algorithmic convergence — discrete, bounded, sequentially iterated $\to$ the value set keeps only $A_L=\{0,1\}^L$ and the negation $!$ $\to$ weighted Hamming space $X_L=A_L^D$ $\to$ construct the iteration sequence $\to$ division, change of base, proper fraction $\to$ well-ordering gives the stopping time, no limit taken $\to$ the formula map $T$ freezes in one step $\to$ a lit stopping point is SAT, a dark one UNSAT $\to$ both ideal times are $1$, the difference is in the stopping point $\to$ the solution space collapses; P and NP are just two samples.
+Route: the triviality equation of algorithmic convergence — discrete, bounded, sequentially iterated $\to$ the value set keeps only $A_L=\{0,1\}^L$ and the negation $!$ $\to$ weighted Hamming space $X_L=A_L^D$ $\to$ construct the iteration sequence $\to$ division, change of base, proper fraction $\to$ well-ordering gives the stopping time, no limit taken $\to$ the formula map $T$ freezes in one step $\to$ a lit stopping point is SAT, a dark one UNSAT $\to$ both ideal times are at most $1$, the difference is in the stopping point $\to$ the solution space collapses; P and NP are just two samples.
 
 ## Preface: Enumerate First, Then Talk About Convergence
 
@@ -456,67 +456,55 @@ From the very first algorithm course, the first lesson is these three things: di
 
 Why can two small problems reach across the whole algorithm world? Because they are the most ordinary. 3-SAT has three lamps to a row, 2-SAT two lamps to a row; the narrowest clause holds a whole side's discrete, bounded, sequential trajectories. Not because they are special, but because they are so ordinary that any algorithm fits inside them. This chapter only walks both sides into the same table.
 
-No construction is needed. §5 lays $D$ on the table and substitutes the formula cell by cell: $a_1=F$, $a_2=F$; the least stopping time is $1$ for both 2-SAT and 3-SAT.
+No construction is needed. §5 substitutes the constant-one table: 2-SAT stops at the long-one table, least stopping time $N=0$; 3-SAT stops at the long-zero table, least stopping time $N=1$. Both lie inside the bound in §3: $0\le5$, $1\le9$.
 
 ## 4. Collapse
 
-The formula's truth table can be substituted cell by cell. Put each assignment $x\in D$ into the formula: a satisfying cell carries $1_L$, a falsifying one carries $0$. There are $L$ variables and $2^L$ cells; when all are substituted, one table $F$ is left. Negation in the formula is written $!$ and sits in front of a literal; whether it is inserted, and in front of which variables, decides whether each cell gets $0$ or $1_L$.
+Start from the constant-one table $a_0=1_X$ and substitute the formula: a cell where the formula is true carries $1_L$, one where it is false carries $0$. When every cell is substituted, $a_1$ is left. Substitute the formula again: the true and false cells do not change, so $a_2=a_1$.
 
-Call the map that substitutes the formula into a table $T$: whatever table it starts from, $T$ returns $F$.
-
-$$
-T(a)=F.
-$$
-
-Start from the constant-one table $a_0=1_X$:
+Distances:
 
 $$
-a_1=T(a_0)=F,\qquad a_2=T(a_1)=F.
+\delta_0=d(a_0,a_1)\le|D|,\qquad \delta_1=d(a_1,a_2)=0.
 $$
 
-First substitution: the table becomes $F$. Second: the formula is still that table, so $a_2$ is still $F$. Hence
+The bound in §3 says $N\le\delta_0+1$. For $L=3$, $|D|=8$, so $N\le9$; for $L=2$, $|D|=4$, so $N\le5$. The bound first guarantees the sequence reaches bottom. The actual substitution gives $\delta_1=0$: if $a_1=a_0$, it stops at the start, $N=0$; if $a_1\ne a_0$, it stops after one step, $N=1$. Both lie inside the bound.
+
+The stop table carries only two values: $0$ and $1_L$. If a $1_L$ remains, it is a resident, SAT; if the whole table is $0$, there is no resident, UNSAT. The iteration does not search and does not try and error; it substitutes the formula once, and the table stops.
+
+## 5. 2-SAT and 3-SAT: Long One and Long Zero
+
+2-SAT and 3-SAT are not two exercises; they are two stopping points: one stops all lit, one all dark. Substitute the constant-one table and use the bound in §3 to see where it stops.
+
+### 5.1 2-SAT: the long-one stop table
+
+$L=2$, and $D$ has 4 cells. The stop table on the 2-SAT side is the long-one table: every cell is $1_2$. From the constant-one table $a_0=1_X$, the table is already it; the first step does not move, and the second does not either.
 
 $$
-\delta_0=d(1_X,F),\qquad \delta_1=d(F,F)=0.
+\delta_0=0,\qquad \delta_1=0.
 $$
 
-The well-ordering in §3 gives the least stopping time $N=1$. The stop table is $F$: satisfying cells carry $1_L$, falsifying cells carry $0$. If any $1_L$ remains, it is a resident, SAT; if the whole table is $0$, there is no resident, UNSAT. The iteration does not search and does not try and error; it substitutes the formula once, and the table stops at $F$.
+The least stopping time is $N=0$. The bound in §3: $|D|=4$, $N\le5$; $0\le5$. The table is all lit, every cell is a resident, SAT.
 
-## 5. 2-SAT and 3-SAT: Two General Forms
+### 5.2 3-SAT: the long-zero stop table
 
-2-SAT and 3-SAT are not two exercises; they are two general forms. The number of variables and the number of clauses stay open; only the clause width is fixed. Substitute the formula cell by cell, and both walk one step.
-
-### 5.1 The general 2-SAT form
-
-With $n$ variables, $D=\{0,1\}^n$. A 2-SAT formula is a conjunction of width-2 clauses. A clause has two literals; each takes $!$ or not, $2^2=4$ placements. Each placement pins the two variables, and the other $n-2$ are free, so the clause writes $0$ in $2^{n-2}$ cells. The formula is a conjunction: any cell where some clause writes $0$ is also written $0$. When all clauses are substituted, $F$ is left.
-
-From the constant-one table:
+$L=3$, and $D$ has 8 cells. The stop table on the 3-SAT side is the long-zero table: every cell is $0_3$. From the constant-one table, the first step turns it all zero, and the second step leaves it all zero.
 
 $$
-a_1=F,\qquad a_2=F.
+\delta_0=8,\qquad \delta_1=0.
 $$
 
-$\delta_1=d(F,F)=0$, so $N=1$. If $F$ contains a $1_n$, take that cell: its coordinates are a satisfying assignment, a resident. If $F$ is all zero, there is no resident, UNSAT.
+The least stopping time is $N=1$. The bound in §3: $|D|=8$, $N\le9$; $1\le9$. The table is all dark, no resident, UNSAT.
 
-### 5.2 The general 3-SAT form
-
-Same $D$, same substitution; only the clauses become width 3. A clause has three literals; $!$ has $2^3=8$ placements. Three variables are pinned and the other $n-3$ are free, so the clause writes $0$ in $2^{n-3}$ cells. When all are substituted, $F$ is left.
-
-$$
-a_1=F,\qquad a_2=F.
-$$
-
-$N=1$. When 3-SAT is unsatisfiable, the whole table is zero; put the all-zero vector $0$ in, and the stopping point is constant zero, with no resident, UNSAT. When a $1_n$ remains, the resident is in that cell.
-
-In this iteration, the difference between 2-SAT and 3-SAT is only how many cells each clause writes $0$: $2^{n-2}$ and $2^{n-3}$. Both take $1$ step; time does not tell them apart, the fixed point does. Let the number of variables go from 2 to 3 to three hundred million: the substitution does not change, and one formula still freezes in one step. How big the table is only changes how long $F$ takes to write down, not the number of steps to the fixed point.
+The 2-SAT stop is long one, the 3-SAT stop is long zero; one stops at the start, one stops after a step. $0\le5$, $1\le9$, both inside the bound. Time does not tell them apart; the stopping point does.
 
 ### 5.3 Not a distance
 
 This iteration does not do two things: it does not search, and it does not compute a distance between P and NP. It does one thing: press the formula table onto its fixed point and see whether the fixed point is lit.
 
-The difficult part is not the iteration. The iteration is one step. The difficult part is writing $F$ — knowing, before the formula is unpacked, which cell is to be written $0$ and which is still lit. Given an assignment, substitute it into the formula and the light or dark shows in one step; the hard part is finding that assignment. Checking is one step; finding is not.
+The difficult part is not the iteration. It takes at most one step. The difficult part is deciding whether the stop table goes all dark: given an assignment, substitute it into the formula and the light or dark shows in one step; the hard part is finding that assignment. Checking is one step; finding is not.
 
-So "both times are 1" is not a sentence of defeat. It moves the question: there is no boundary on the time axis; the boundary is at the fixed point. A lit fixed point is SAT; an all-dark one is UNSAT. What is wanted is not a faster iteration; it is the fixed point that is still lit.
+So "the stopping time is only 0 or 1" is not a sentence of defeat. It moves the question: there is no boundary on the time axis; the boundary is at the fixed point. A lit fixed point is SAT; an all-dark one is UNSAT. What is wanted is not a faster iteration; it is the fixed point that is still lit.
 
 ## 6. Not P, Not NP — a Convergence Problem
 
@@ -534,7 +522,7 @@ Someone starts from properties of two-state Turing machines and proves that a ce
 
 ### 6.2 Conclusion
 
-This chapter teaches one triviality equation of algorithmic convergence: discrete, bounded, sequentially iterated. With these three, any algorithm is collected in the same equation. Substitute again and the table is the same: $T\circ T=T$; both ideal times are $1$, and the difference is in the cell where they stop — a lit lamp is SAT, a dark one UNSAT.
+This chapter teaches one triviality equation of algorithmic convergence: discrete, bounded, sequentially iterated. With these three, any algorithm is collected in the same equation. Substitute again and the table is the same: $T\circ T=T$; the stopping time is $0$ or $1$, and the difference is in the cell where they stop — a lit lamp is SAT, a dark one UNSAT.
 
 Only two samples are laid out here: one P, one NP. They are picked out not to split them apart, but so you can see that both sides share one structure. Every P problem and every NP problem sends its solution space toward a fixed point under the same equation; P and NP are just the readings this equation gives on two samples.
 
@@ -548,7 +536,7 @@ $$
 \end{aligned}
 $$
 
-The formula map is its cleanest instance: $T\circ T=T$, $N=1$. Every algorithm can be written as $a_{n+1}=T(a_n)$; once its distance ledger satisfies this contraction inequality, it reaches a stopping point in finitely many steps. Triviality is not an adjective; it is proved — by the collapse of the solution space. That is the one new thing in this chapter, and this single move unifies the Reasoning Kingdom.
+The formula map is its cleanest instance: $T\circ T=T$, $N=0$ or $1$. Every algorithm can be written as $a_{n+1}=T(a_n)$; once its distance ledger satisfies this contraction inequality, it reaches a stopping point in finitely many steps. Triviality is not an adjective; it is proved — by the collapse of the solution space. That is the one new thing in this chapter, and this single move unifies the Reasoning Kingdom.
 
 This is not a question of whether the machine is fast enough; it is a question of whether that resident is in the space. Look further along the time axis and you will find nothing new.
 
