@@ -456,7 +456,7 @@ From the very first algorithm course, the first lesson is these three things: di
 
 Why can two small problems reach across the whole algorithm world? Because they are the most ordinary. 3-SAT has three lamps to a row, 2-SAT two lamps to a row; the narrowest clause holds a whole side's discrete, bounded, sequential trajectories. Not because they are special, but because they are so ordinary that any algorithm fits inside them. This chapter only walks both sides into the same table.
 
-No construction is needed. §5 substitutes the constant-one table: the 2-SAT sequence converges in $0$ steps at the long-one table; the 3-SAT sequence converges in $1$ step at the long-zero table. The one-cell-at-a-time enumeration takes at most $5$ and $9$ steps; that is the road the bound in §3 describes.
+No construction is needed. §5 counts the clauses: for $L=2$ the road ends at 5, for $L=3$ at 9; both are constant zero, both UNSAT. The one-cell-at-a-time enumeration takes at most $5$ and $9$ steps; that is the road the bound in §3 describes.
 
 ## 4. Collapse
 
@@ -472,38 +472,31 @@ The bound in §3 says $N\le\delta_0+1$. For $L=3$, $|D|=8$, so $N\le9$; for $L=2
 
 The stop table carries only two values: $0$ and $1_L$. If a $1_L$ remains, it is a resident, SAT; if the whole table is $0$, there is no resident, UNSAT. The iteration does not search and does not try and error; it substitutes the formula once, and the table stops.
 
-## 5. 2-SAT and 3-SAT: Long One and Long Zero
+## 5. 5 Clauses and 9 Clauses: Both Collapse to UNSAT
 
-2-SAT and 3-SAT are not two exercises; they are two stopping points: one stops at the all-lit long-one table, one at the all-dark long-zero table. The long-one and long-zero sequences are not answers; they are structural probes: feed the long-one matrix in and watch when the solution space converges to a fixed point.
+2-SAT and 3-SAT are not two exercises; they are two tables of different size. The $L=2$ table has 4 cells, the $L=3$ table has 8. Both walk to the end at constant zero; the only difference is how many clauses it takes to get there.
 
-### 5.1 Structural probe: 0 steps and 1 step, both misleading
-
-- 2-SAT: long one in, long one out. The table does not move; all green. $\delta_0=0$, $N=0$.
-- 3-SAT: long one in, immediately all zero; the second step is still all zero. $\delta_0=8$, $\delta_1=0$, $N=1$.
-
-A zero-step collapse looks the prettiest, and it is the most deceptive. The long-one table is already a fixed point: with no clause hitting it, of course it does not move one step. Zero steps does not mean "the solution space is locked at SAT"; it means this round never started collapsing. Put a batch of clauses in, and 2-SAT walks to zero just the same; the more clauses, the more both sides tip toward UNSAT.
-
-The probe reads behavior, not correctness, and not whether anything was found: long one goes in, the problem collapses, the table lands on a state and stops, and iterating again gives the same thing. Zero and one step are just two landings from different starting points, not proof that 2-SAT is born all lit. This is not guessing; it is watching when $a_n$ falls to a fixed point under the map.
-
-### 5.2 5 and 9: the information bound on clauses
+### 5.1 Where 5 and 9 come from: $2^L+1$
 
 Count the clauses. For $L=2$ there are 4 cells, and one width-2 clause knocks out only one cell; 4 clauses cover all 4, and the 5th has nothing new to say. For $L=3$ there are 8 cells, and one width-3 clause knocks out only one cell; 8 clauses cover all 8, and the 9th has nothing new to say. That is where 5 and 9 come from: $2^L+1$, the optimal number of rows in the clause table.
 
-The information is only so much. Within 5 or 9 clauses the lit and dark cells can still be spelled out one by one; past that number, adding constraints or literals yields no new hint, only punches the space straight to one side. Within 9 clauses there is still a good chance of finding SAT; past 9, the tilt is more toward UNSAT. The same for 2-SAT: 5 clauses are all the information this space holds; add more and it does not lock at SAT, it tips toward zero.
+The information is only so much. Within 5 or 9 clauses the lit and dark cells can still be spelled out one by one; past that number, adding constraints or literals yields no new hint, only punches the space straight to one side.
 
-The bound says nothing about time. Time is not guaranteed: how long finding SAT takes, how long confirming UNSAT takes — nobody promises either. Nobody says SAT is certain within 5 or 9, and nobody says it is impossible; 5 and 9 mark where the information ends, not where the clock ends.
+### 5.2 Both roads collapse to UNSAT
 
-0 and 1 are the probe readings; 5 and 9 are the bound on the clause count. Do not mistake the probe reading for the bound, and do not mistake the bound for guessing: guessing has no map and no $\delta_n$. The probe and the enumeration are the same $a_{n+1}=T(a_n)$; one feeds long one in, the other searches honestly.
+After 5 width-2 clauses the 4 cells are covered and the table is all zero; after 9 width-3 clauses the 8 cells are covered and the table is all zero. 2-SAT does not stop at SAT, and 3-SAT has nowhere else to go: both are UNSAT. The difference between 5 and 9 is not the difference between SAT and UNSAT; it is the size of the table: 4 cells need 5, 8 cells need 9.
 
-The long-one stop is not the general case for 2-SAT; it is the probe's starting point. 2-SAT and 3-SAT behave alike: add clauses and the lit cells fall away one by one. Four width-2 clauses, one per cell, make 2-SAT all dark; eight width-3 clauses do the same for 3-SAT. The more clauses, the more both tip to UNSAT; what tips toward SAT is wider clauses, looser constraints, or starting with no clauses at all.
+The more clauses, the more it tips that way. Within 9 clauses there is still a good chance of finding SAT; past 9, the tilt is more toward UNSAT. The same for 2-SAT: 5 clauses are all the information this space holds; add more and it does not lock at SAT, it tips toward zero. What tips toward SAT is wider clauses, looser constraints, or starting with no clauses at all.
+
+The bound says nothing about time. Time is not guaranteed: how long finding SAT takes, how long confirming UNSAT takes — nobody promises. Nobody says SAT is certain within 5 or 9, and nobody says it is impossible; 5 and 9 mark where the information ends, not where the clock ends.
 
 ### 5.3 Not a distance
 
-The convergence side does not do two things: it does not search, and it does not compute a distance between P and NP. It does one thing: press the formula table onto its fixed point and see whether the fixed point is lit.
+This iteration does not do two things: it does not search, and it does not compute a distance between P and NP. It does one thing: press the formula table onto its fixed point and see whether the fixed point is lit.
 
-The difficult part is not the convergence step. It takes 0 or 1 step; the hard part is writing the stop table and deciding whether it goes all dark: given an assignment, substitute it into the formula and the light or dark shows in one step; the hard part is finding that assignment. Checking is one step; finding is not.
+The difficult part is not the iteration. The iteration is one step. The difficult part is writing the fixed table — knowing whether it will go all dark. Given an assignment, substitute it into the formula and the light or dark shows in one step; the hard part is finding that assignment. Checking is one step; finding is not.
 
-So "the convergence stopping time is only 0 or 1" is not a sentence of defeat. It moves the question: there is no boundary on the time axis; the boundary is at the fixed point. A lit fixed point is SAT; an all-dark one is UNSAT. What is wanted is not a faster iteration; it is the fixed point that is still lit.
+So "the stopping time is only 0 or 1" is not a sentence of defeat. It moves the question: there is no boundary on the time axis; the boundary is at the fixed point. A lit fixed point is SAT; an all-dark one is UNSAT. What is wanted is not a faster iteration; it is the fixed point that is still lit.
 
 ## 6. Not P, Not NP — a Convergence Problem
 
@@ -513,7 +506,7 @@ Someone keeps asking: why don't you construct a Turing machine? Why not start fr
 
 No need. The Turing-machine layer is too shallow to reach the question. Add states, add tape, add parallelism — what is added is how much the machine can spit out at once; the question here is whether the resident is in the solution space. If the resident is absent, no machine, however godlike, can search it out; if it is present, a stupid machine walking slowly will get there. Solvability is not set by the searching machine; it is set by the space itself.
 
-Drive the machine to its most godlike: process several hundred million clauses at once, lock onto the optimal one, follow the solution space. However godlike the machine, it can only use the information already in the clauses. The long-one matrix is its structural probe: feed it in, 2-SAT collapses at once, 3-SAT after one step — the collapse is not a correct answer, it is the space stopping, and one more iteration is the same thing again. The information bound is 5 or 9 clauses: past that, adding constraints yields no hint, only pushes the space to one side. Fast or slow, with more clauses both solution spaces land at constant zero. Long one can stop only in one case: no clause hits it from the start. That is the probe's starting point, not where the solution space ends.
+Drive the machine to its most godlike: process several hundred million clauses at once, lock onto the optimal one, follow the solution space. However godlike the machine, it can only use the information already in the clauses. The information bound is 5 or 9 clauses: past that, adding constraints yields no hint, only pushes the space to one side. Fast or slow, with more clauses both solution spaces land at constant zero.
 
 This is also the fee the algorithm charges: you can design an optimal algorithm and make every step hug the solution space; but the clauses hold only so much information, and when it runs out it is gone — the fee cannot be avoided. The 5 and 9 are an information bound, not a stopwatch: one more clause, one more literal, adds no information; more constraints only make it easier to push the space down to the UNSAT side — 2-SAT and 3-SAT alike.
 
@@ -525,7 +518,7 @@ Someone starts from properties of two-state Turing machines and proves that a ce
 
 ### 6.2 Conclusion
 
-This chapter teaches one triviality equation of algorithmic convergence: discrete, bounded, sequentially iterated. With these three, any algorithm is collected in the same equation. Substitute again and the table is the same: $T\circ T=T$; the convergence stopping time is $0$ or $1$, and the difference is in the cell where they stop — a lit lamp is SAT, a dark one UNSAT. The 5 and 9 are the information bound on the clause count: 2-SAT 5, 3-SAT 9; the long-one probe reads 0 and 1. Zero steps does not mean SAT; it only means nothing hit the table at the start; add clauses and both sides tip to zero.
+This chapter teaches one triviality equation of algorithmic convergence: discrete, bounded, sequentially iterated. With these three, any algorithm is collected in the same equation. Substitute again and the table is the same: $T\circ T=T$; the convergence stopping time is $0$ or $1$, and the difference is in the cell where they stop — a lit lamp is SAT, a dark one UNSAT. The 5 and 9 are the information bound on the clause count: 2-SAT 5, 3-SAT 9; both count to here and collapse to constant zero.
 
 Only two samples are laid out here: one P, one NP. They are picked out not to split them apart, but so you can see that both sides share one structure. Every P problem and every NP problem sends its solution space toward a fixed point under the same equation; P and NP are just the readings this equation gives on two samples.
 
