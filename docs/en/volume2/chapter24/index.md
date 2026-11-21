@@ -454,9 +454,9 @@ The ledger is closed. Looking back, the whole path uses three things:
 
 From the very first algorithm course, the first lesson is these three things: discrete, bounded, sequentially iterated. The definition of an algorithm has already said it clearly. These three are not a shell put around algorithms; they are the definition itself, one-to-one. Put any algorithm against these three, and its convergence is already inside. A strictly decreasing sequence in a finite set reaches the bottom in a few steps; well-ordering picks out the stopping time; no limit, no $-\infty$.
 
-Why can two small problems reach across the whole algorithm world? Because they are the most ordinary. 3-SAT has three lamps to a row, 2-SAT two lamps to a row; the narrowest clause holds a whole side's discrete, bounded, sequential trajectories. Not because they are special, but because they are so ordinary that any algorithm fits inside them. This chapter only walks both sides into the same table.
+Why can $L$-SAT reach across the whole algorithm world? Because it is the most ordinary. $L=2$ has two lamps to a row, $L=3$ three lamps to a row; the narrowest clause holds a whole side's discrete, bounded, sequential trajectories. Not because it is special, but because it is so ordinary that any algorithm fits inside it. This chapter only walks $L$-SAT into the same table.
 
-No construction is needed. §5 counts the clauses: for $L=2$ the road ends at 5, for $L=3$ at 9; both are constant zero, both UNSAT. The one-cell-at-a-time enumeration takes at most $5$ and $9$ steps; that is the road the bound in §3 describes.
+No construction is needed. §5 counts the clauses: $2^L$ cover the table, $2^L+1$ close it; $L=2$ gives 5, $L=3$ gives 9. Both end at constant zero, both UNSAT. The one-cell-at-a-time enumeration is the road the bound in §3 describes.
 
 ## 4. Collapse
 
@@ -472,23 +472,31 @@ The bound in §3 says $N\le\delta_0+1$. For $L=3$, $|D|=8$, so $N\le9$; for $L=2
 
 The stop table carries only two values: $0$ and $1_L$. If a $1_L$ remains, it is a resident, SAT; if the whole table is $0$, there is no resident, UNSAT. The iteration does not search and does not try and error; it substitutes the formula once, and the table stops.
 
-## 5. 5 Clauses and 9 Clauses: Both Collapse to UNSAT
+## 5. $L$-SAT: $2^L+1$ Clauses
 
-2-SAT and 3-SAT are not two exercises; they are two tables of different size. The $L=2$ table has 4 cells, the $L=3$ table has 8. Both walk to the end at constant zero; the only difference is how many clauses it takes to get there.
+$L$-SAT is a table of $2^L$ cells: $L$ variables, one assignment per cell, clauses of width $L$. A width-$L$ clause is false at exactly one assignment, so one clause knocks out one cell. $L=2$ is 2-SAT, $L=3$ is 3-SAT; the count below holds for every $L$.
 
-### 5.1 Where 5 and 9 come from: $2^L+1$
+### 5.1 Counting clauses: $2^L+1$
 
-Count the clauses. For $L=2$ there are 4 cells, and one width-2 clause knocks out only one cell; 4 clauses cover all 4, and the 5th has nothing new to say. For $L=3$ there are 8 cells, and one width-3 clause knocks out only one cell; 8 clauses cover all 8, and the 9th has nothing new to say. That is where 5 and 9 come from: $2^L+1$, the optimal number of rows in the clause table.
+Take one clause for each of the $2^L$ sign patterns. Each knocks out one cell; $2^L$ clauses cover all $2^L$ cells, and the next clause can only repeat one already taken — it has no new cell to hit. 5 and 9 are not two examples; they are this formula read at $L=2$ and $L=3$:
 
-The information is only so much. Within 5 or 9 clauses the lit and dark cells can still be spelled out one by one; past that number, adding constraints or literals yields no new hint, only punches the space straight to one side.
+$$
+m^*(L)=2^L+1.
+$$
 
-### 5.2 Both roads collapse to UNSAT
+$L=2$: $4+1=5$; $L=3$: $8+1=9$; $L=4$: $16+1=17$; $L=10$: $1024+1=1025$. A clause carries $L$ literals; $2^L$ clauses use $L\cdot2^L$ literals: 8 at $L=2$, 24 at $L=3$, 10240 at $L=10$. The size of the table sets the count. In reverse, $L=\log_2(m^*-1)=\ln(m^*-1)/\ln 2$: give the count and recover the width; give the width and count the clauses.
 
-After 5 width-2 clauses the 4 cells are covered and the table is all zero; after 9 width-3 clauses the 8 cells are covered and the table is all zero. 2-SAT does not stop at SAT, and 3-SAT has nowhere else to go: both are UNSAT. The difference between 5 and 9 is not the difference between SAT and UNSAT; it is the size of the table: 4 cells need 5, 8 cells need 9.
+The information is only so much. Within the $2^L$ patterns, the lit and dark cells can still be spelled out one by one; take them all and the table is covered, all zero; past that, no clause adds a new hint, it only punches the space straight to one side.
 
-The more clauses, the more it tips that way. Within 9 clauses there is still a good chance of finding SAT; past 9, the tilt is more toward UNSAT. The same for 2-SAT: 5 clauses are all the information this space holds; add more and it does not lock at SAT, it tips toward zero. What tips toward SAT is wider clauses, looser constraints, or starting with no clauses at all.
+### 5.2 Covered, Hence UNSAT
 
-The bound says nothing about time. Time is not guaranteed: how long finding SAT takes, how long confirming UNSAT takes — nobody promises. Nobody says SAT is certain within 5 or 9, and nobody says it is impossible; 5 and 9 mark where the information ends, not where the clock ends.
+$L=2$: 4 distinct width-2 clauses cover the 4 cells, and the 5th is a repeat; $L=3$: 8 distinct width-3 clauses cover the 8 cells, and the 9th is a repeat. Both are all zero, both UNSAT. The difference between 5 and 9 is not SAT versus UNSAT; it is the size of the table: 4 cells need 5, 8 cells need 9.
+
+The count follows the clause width $L$, not how many other variables there are: take all $2^L$ patterns on one $L$-tuple, and no number of other variables can save it.
+
+There is no probability here. Take fewer than $2^L$ patterns and some cell is left uncovered; that cell is SAT. Take all $2^L$ and the table is covered; covered is UNSAT. It is not that more clauses tip it one way; the count reaches $2^L$ and the cover is complete, reaches $2^L+1$ and there is no new cell.
+
+The bound says nothing about time. Time is not guaranteed: how long finding SAT takes, how long confirming UNSAT takes — nobody promises. Nobody says SAT is certain within $2^L$, and nobody says it is impossible; $2^L+1$ marks where the information ends, not where the clock ends.
 
 ### 5.3 Not a distance
 
@@ -506,11 +514,11 @@ Someone keeps asking: why don't you construct a Turing machine? Why not start fr
 
 No need. The Turing-machine layer is too shallow to reach the question. Add states, add tape, add parallelism — what is added is how much the machine can spit out at once; the question here is whether the resident is in the solution space. If the resident is absent, no machine, however godlike, can search it out; if it is present, a stupid machine walking slowly will get there. Solvability is not set by the searching machine; it is set by the space itself.
 
-Drive the machine to its most godlike: process several hundred million clauses at once, lock onto the optimal one, follow the solution space. However godlike the machine, it can only use the information already in the clauses. The information bound is 5 or 9 clauses: past that, adding constraints yields no hint, only pushes the space to one side. Fast or slow, with more clauses both solution spaces land at constant zero.
+Drive the machine to its most godlike: process several hundred million clauses at once, lock onto the optimal one, follow the solution space. However godlike the machine, it can only use the information already in the clauses. The information bound is $2^L+1$ clauses: 5 at $L=2$, 9 at $L=3$. Past that, adding constraints yields no hint, only pushes the space to one side. Fast or slow, with more clauses the solution space lands at constant zero.
 
-This is also the fee the algorithm charges: you can design an optimal algorithm and make every step hug the solution space; but the clauses hold only so much information, and when it runs out it is gone — the fee cannot be avoided. The 5 and 9 are an information bound, not a stopwatch: one more clause, one more literal, adds no information; more constraints only make it easier to push the space down to the UNSAT side — 2-SAT and 3-SAT alike.
+This is also the fee the algorithm charges: you can design an optimal algorithm and make every step hug the solution space; but the clauses hold only so much information, and when it runs out it is gone — the fee cannot be avoided. The $2^L+1$ is an information bound, not a stopwatch: one more clause, one more literal, adds no information; more constraints only push the space down to the UNSAT side — every $L$-SAT alike.
 
-If the resident is there, 5 or 9 clauses are enough to say the space through; if it is not, no machine can conjure it. Time is not guaranteed: how long finding SAT takes, how long confirming UNSAT takes — nobody promises. The direction is fixed: once the information is used up, the space tilts one way only. It did not lose on computing power; it reached the end of the clauses' information.
+If the resident is there, $2^L+1$ clauses are enough to say the space through; if it is not, no machine can conjure it. Time is not guaranteed: how long finding SAT takes, how long confirming UNSAT takes — nobody promises. The direction is fixed: once the information is used up, the space tilts one way only. It did not lose on computing power; it reached the end of the clauses' information.
 
 So there is no need to construct the Turing machine of a hundred years from now, nor to push up from a two-state one. A carefully designed parallel or backtracking algorithm, any other machine — all walk on the same table. If the resident is absent, the table contracts to constant zero, and the SAT lamp cannot light. This is not a question of computing power; it is a question of the solution space: whether that satisfying assignment is there, whether that resident is there, is a mathematical question, not a computer question.
 
@@ -518,19 +526,23 @@ Someone starts from properties of two-state Turing machines and proves that a ce
 
 ### 6.2 Conclusion
 
-This chapter teaches one triviality equation of algorithmic convergence: discrete, bounded, sequentially iterated. With these three, any algorithm is collected in the same equation. Substitute again and the table is the same: $T\circ T=T$; the convergence stopping time is $0$ or $1$, and the difference is in the cell where they stop — a lit lamp is SAT, a dark one UNSAT. The 5 and 9 are the information bound on the clause count: 2-SAT 5, 3-SAT 9; both count to here and collapse to constant zero.
+This chapter teaches one triviality equation of algorithmic convergence: discrete, bounded, sequentially iterated. With these three, any algorithm is collected in the same equation. Substitute again and the table is the same: $T\circ T=T$; the convergence stopping time is $0$ or $1$, and the difference is in the cell where they stop — a lit lamp is SAT, a dark one UNSAT. The $2^L+1$ is the information bound on the clause count: 5 at $L=2$, 9 at $L=3$; count to here and both collapse to constant zero.
 
 Only two samples are laid out here: one P, one NP. They are picked out not to split them apart, but so you can see that both sides share one structure. Every P problem and every NP problem sends its solution space toward a fixed point under the same equation; P and NP are just the readings this equation gives on two samples.
 
-The general form of the trivial equation. Let $\delta_0=d(a_0,a_1)$:
+The general form of the trivial equation. Let $X$ be finite, $T:X\to X$, $a_0\in X$, $a_{n+1}=T(a_n)$, $\delta_n=d(a_n,a_{n+1})$, and take $0\le q<1$. If
 
 $$
-\begin{aligned}
-&\forall\,(X,d,q,T,a_0),\quad X\ \text{finite},\quad 0\le q<1,\\
-&\qquad a_{n+1}=T(a_n),\quad d(Ta_n,Ta_{n+1})\le q^n d(a_n,a_{n+1})\quad(\forall n\ge1)\\
-&\Longrightarrow\quad \exists N\le\delta_0+1:\quad a_N=T(a_N)=a_{N+1}=\cdots
-\end{aligned}
+\delta_{n+1}\le q^n\delta_n\quad(n\ge0),
 $$
+
+then
+
+$$
+\exists N\le\delta_0+1:\quad \delta_N=0.
+$$
+
+$\delta_N=0$ means $a_N=a_{N+1}$; it does not move again.
 
 The formula map is its cleanest instance: $T\circ T=T$, $N=0$ or $1$. Every algorithm can be written as $a_{n+1}=T(a_n)$; once its distance ledger satisfies this contraction inequality, it reaches a stopping point in finitely many steps. Triviality is not an adjective; it is proved — by the collapse of the solution space. That is the one new thing in this chapter, and this single move unifies the Reasoning Kingdom.
 
