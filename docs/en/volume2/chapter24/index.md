@@ -460,11 +460,13 @@ From the very first algorithm course, the first lesson is these three things: di
 
 Why can two small problems reach across the whole algorithm world? Because they are the most ordinary. 3-SAT has three lamps to a row, 2-SAT two lamps to a row; the narrowest clause holds a whole side's discrete, bounded, sequential trajectories. Not because they are special, but because they are so ordinary that any algorithm fits inside them. This chapter only walks both sides into the same table.
 
-No construction is needed. §5 lays $D$ on the table, takes the union of the sign patterns killed by the clauses as $S$, substitutes into $T_S$, and expands: $a_1=F_S$, $a_2=F_S$; the least stopping time is $1$ for both 2-SAT and 3-SAT.
+No construction is needed. §5 lays $D$ on the table, takes the union of the assignments that make a clause false as $S$, substitutes into $T_S$, and expands: $a_1=F_S$, $a_2=F_S$; the least stopping time is $1$ for both 2-SAT and 3-SAT.
 
 ## 4. Collapse
 
-Now put the formula into this iteration. The sign-pattern set of the formula is $S\subseteq D$; define
+A formula is a conjunction of clauses. Negation sits in front of a literal: a clause has $w$ literals; each takes $!$ or not, $2^w$ placements in all. Each placement fixes one set of values that makes the $w$ literals false together. The other $L-w$ variables do not appear in the clause and are free, so $2^{L-w}$ assignments make the clause false.
+
+Take the union of the assignments that make each clause false, and call it $S\subseteq D$. $S$ is the formula's sign-pattern set. Cells in $S$ are written $0$; all other cells stay as they are. As a map:
 
 $$
 T_S(f)(x)=
@@ -474,26 +476,15 @@ f(x), & x\notin S,\\
 \end{cases}
 $$
 
-Cells killed by the formula are zeroed; the rest stay. There is no $\&$ and no $|$ here; only the sign pattern $S$, the zeroing, and the existing values.
-
-Start from the constant-one table $a_0=1_{X_L}$. Compute two steps:
+Start from the constant-one table $a_0=1_X$ and put $S$ in:
 
 $$
-a_1=T_S(a_0)=F_S,
+a_1=T_S(a_0)=F_S,\qquad a_2=T_S(a_1)=F_S.
 $$
 
-$$
-a_2=T_S(a_1)=F_S.
-$$
+First pass: cells in $S$ go from $1_L$ to $0$. Second pass: $0$ stays $0$, $1_L$ stays $1_L$. $T_S\circ T_S=T_S$, one step to the bottom: $Q=0$, $N=1$.
 
-$T_S$ is idempotent and stops at the second step. Take $Q=0$, $N=1$. $T_S\circ T_S=T_S$ is what the trivial equation looks like on one formula: it does not care what $S$ looks like, what $L$ is, or how wide the clauses are; substitute and it holds, and the moment it holds it stops.
-
-That is the collapse: the whole candidate table is pressed onto the formula's truth table in one step. Cells in $S$ go dark; cells outside $S$ stay lit. Whether the fixed point $F_S$ is a resident depends on one thing:
-
-- $F_S=0$ $\Leftrightarrow$ every assignment is killed $\Leftrightarrow$ unsatisfiable;
-- $F_S\ne0$ $\Leftrightarrow$ some assignment is not killed $\Leftrightarrow$ satisfiable.
-
-Constant zero is not a resident. If the table stops in the dark, there is no SAT; if it is still lit, SAT sits in one of those cells. The iteration does not search and does not try and error; it projects the formula onto the table, all at once.
+The stop table has only two values: $0$ and $1_L$. If any $1_L$ remains, SAT; if all are $0$, UNSAT. The iteration does not search and does not try and error; it stamps the formula's placements onto the whole table at once.
 
 ## 5. 2-SAT and 3-SAT: Two General Forms
 
@@ -507,7 +498,7 @@ $$
 F=\bigwedge_{j=1}^{m}(l_{j1}\vee l_{j2}).
 $$
 
-A width-2 clause is false when both literals are false: two coordinates are pinned, the other $n-2$ are free, and the clause kills $2^{n-2}$ assignments. Take the union of the clauses' zero sets:
+A width-2 clause has two literals: two coordinates are pinned, the other $n-2$ are free, so $2^{n-2}$ assignments make it false. Take the union of the assignments that make some clause false:
 
 $$
 S=\bigcup_{j=1}^{m}\{x\in D:(l_{j1}\vee l_{j2})(x)=0\}.
@@ -519,7 +510,7 @@ $$
 a_1=T_S(1_X)=F_S,\qquad a_2=T_S(a_1)=F_S.
 $$
 
-$T_S$ only zeroes. A zeroed cell zeroed again is still zero; an unzeroed cell was never touched, so $T_S\circ T_S=T_S$. One step to the bottom: $Q=0$, $N=1$.
+$T_S$ only writes $0$. A cell written $0$ and written again is still $0$; a cell not written was never touched, so $T_S\circ T_S=T_S$. One step to the bottom: $Q=0$, $N=1$.
 
 The stop table is general as well: a cell in $S$ carries $0$, a cell outside $S$ carries $1_n$. The whole table is $F_S$; $n$ and $m$ only change how long the table is and how many zeros it holds. Whether it is lit depends only on $D\setminus S$: nonempty, the table is lit, SAT; empty, the whole table is dark, UNSAT.
 
@@ -531,7 +522,7 @@ $$
 F=\bigwedge_{j=1}^{m}(l_{j1}\vee l_{j2}\vee l_{j3}).
 $$
 
-A width-3 clause is false when all three literals are false: three coordinates are pinned, the other $n-3$ are free, and the clause kills $2^{n-3}$ assignments. $S$ is again the union of these zero sets. Substitute:
+A width-3 clause has three literals: three coordinates are pinned, the other $n-3$ are free, so $2^{n-3}$ assignments make it false. $S$ is again the union of these assignments. Substitute:
 
 $$
 a_1=T_S(1_X)=F_S,\qquad a_2=T_S(a_1)=F_S.
@@ -539,13 +530,13 @@ $$
 
 $T_S$ is still idempotent, still one step: $Q=0$, $N=1$.
 
-In this iteration, the difference between 2-SAT and 3-SAT is only how many cells each clause kills: $2^{n-2}$ and $2^{n-3}$. What differs is the size of $S$, not the number of steps. Both general forms have ideal time $1$; time does not tell them apart, the fixed point does. Both stop tables are $F_S$: lit cells carry the long one $1_n$, dark cells carry $0$. Let the number of variables go from 2 to 3 to three hundred million: $T_S$ is still idempotent, and one formula still freezes in one step. How big the table is only changes how long $F_S$ takes to write down, not the number of steps to the fixed point.
+In this iteration, the difference between 2-SAT and 3-SAT is only how many assignments each clause makes false: $2^{n-2}$ and $2^{n-3}$. What differs is the size of $S$, not the number of steps. Both general forms have ideal time $1$; time does not tell them apart, the fixed point does. Both stop tables are $F_S$: lit cells carry the long one $1_n$, dark cells carry $0$. Let the number of variables go from 2 to 3 to three hundred million: $T_S$ is still idempotent, and one formula still freezes in one step. How big the table is only changes how long $F_S$ takes to write down, not the number of steps to the fixed point.
 
 ### 5.3 Not a distance
 
 This iteration does not do two things: it does not search, and it does not compute a distance between P and NP. It does one thing: press the formula table onto its fixed point and see whether the fixed point is lit.
 
-The difficult part is not the iteration. The iteration is one step. The difficult part is writing $F_S$ — knowing, before the formula is unpacked, which cell is killed and which is still lit. Given an assignment, substitute it into the formula and the light or dark shows in one step; the hard part is finding that assignment. Checking is one step; finding is not.
+The difficult part is not the iteration. The iteration is one step. The difficult part is writing $F_S$ — knowing, before the formula is unpacked, which cell is to be written $0$ and which is still lit. Given an assignment, substitute it into the formula and the light or dark shows in one step; the hard part is finding that assignment. Checking is one step; finding is not.
 
 So "both times are 1" is not a sentence of defeat. It moves the question: there is no boundary on the time axis; the boundary is at the fixed point. A lit fixed point is SAT; an all-dark one is UNSAT. What is wanted is not a faster iteration; it is the fixed point that is still lit.
 
