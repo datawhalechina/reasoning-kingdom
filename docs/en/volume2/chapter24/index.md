@@ -22,6 +22,58 @@ After this step, convergence becomes a computable question. $a_n$ lies in the sp
 
 The method is not mysterious; it is even stupid: not understanding the structure of the clause, so try every assignment. But to speak of a naive fixed point, one has to use this stupid method. A slightly cleverer method assumes structure from the start, and then naivety has nowhere to stand. The stupid method fills the whole space; only once it is full can one discuss which cell the fixed point lands in.
 
+### How to Play: Fill the Table, Light the Lamps
+
+Laid out, this thing is a table-filling game — or a light-bulb game, if you like.
+
+The board is a table. $L=2$ has four cells, headed $00,01,10,11$; $L=3$ has eight, headed by all three-bit values. Each cell holds a row of $L$ lamps: two lamps per cell on the four-cell board, three on the eight-cell board. A lamp is either on or off.
+
+At the start, every cell is filled with $1_L$ — all lamps on. The whole table is the constant-one value function $1_{X_L}$, the trivial resident.
+
+A round fills a new table: every cell takes one step under the same rule, lamp by lamp. The explicit construction uses bitwise conjunction; an off lamp is absorbing — whatever it touches goes off.
+
+Then count the lamps: how many cells in the new table are fully lit. A cell counts when its value is exactly $1_L$. The total is $\operatorname{satStates}$.
+
+The new table must reach the threshold for the step to land. For $L=3$ the threshold is $3$; for $L=2$ it is $2$. Exactly that many fully lit cells and the step passes the gate and enters ideal time; one more or one fewer, and the clock stops, the step does not count. The two gates count separately.
+
+Keep filling until the table stops changing: that is the fixed point. If the table at rest still has at least one lit cell, it is a resident; if the whole table is dark, it is the constant zero, not a resident.
+
+Fill a few tables and look at the light and dark. Green is lit; white is dark.
+
+$L=2$, the opening move: every cell filled with $1_2$:
+
+| $00$ | $01$ | $10$ | $11$ |
+|:---:|:---:|:---:|:---:|
+| 🟩 | 🟩 | 🟩 | 🟩 |
+
+All four cells lit, $\operatorname{satStates}=4$.
+
+A table with only two lit cells:
+
+| $00$ | $01$ | $10$ | $11$ |
+|:---:|:---:|:---:|:---:|
+| ⬜ | ⬜ | 🟩 | 🟩 |
+
+Two lit, $\operatorname{satStates}=2$. The 2-time gate opens, the 3-time gate stays shut. The P resident $h$ later is exactly this table; one more round returns it unchanged, the table stops, the clock stops. Still two cells lit: a resident.
+
+One $L=3$ table with exactly three lit cells (any three will do):
+
+| $000$ | $001$ | $010$ | $011$ | $100$ | $101$ | $110$ | $111$ |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| 🟩 | ⬜ | ⬜ | 🟩 | ⬜ | ⬜ | ⬜ | 🟩 |
+
+Three lit, $\operatorname{satStates}=3$, the 3-time gate opens.
+
+The constant-zero table, all eight cells dark:
+
+| $000$ | $001$ | $010$ | $011$ | $100$ | $101$ | $110$ | $111$ |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+
+$\operatorname{satStates}=0$, both gates shut. The table stops in the dark, not a resident.
+
+The game has one question left: when the clock stops, is the table still lit?
+
 ## 1. The Space
 
 ### 1.1 The value set $A_L$ (the trivial foundation)
@@ -94,9 +146,9 @@ $A_2$, $A_3$ do not mean “the input has only 2 or 3 bits”. They are pointwis
 
 - $D=\{0,1\}^3$ enumerates 8 candidate input states; $X_3=A_3^D$ is the entire candidate solution space.
 - The iterated object $a_n\in X_3$ is not a single 3-bit assignment but the whole candidate table: the values at the 8 states are packed into $a_n$ at once and evolve together along the time mark $n$.
-- The time gate counts only “exactly 3 satisfied states”: when $\operatorname{satStates}(a_n)=3$, the whole space is allowed to advance to $a_{n+1}$; otherwise time stops and cannot push outward.
+- The time gate counts the newly filled table: when $\operatorname{satStates}(a_{n+1})=L$ (3 for $L=3$, 2 for $L=2$), the step is allowed to land; otherwise time stops and cannot push outward.
 
-So “3” is the exactly-3 satisfied states on the current time slice, not the input length; “2” likewise: there are at most 2 satisfied states, a third cannot be conjured, and the 3-time gate is forever closed.
+So “3” is the exactly-3 satisfied states on the new table, not the input length. “2” is the same: the 2-time gate of $L=2$ counts exactly 2 satisfied states, not 2 input bits. The two gates count separately.
 
 ### 1.3.2 Optimal time: only successful advances count
 
@@ -528,7 +580,7 @@ $$
 
 The P resident is constructed: frozen after one step, with limit the explicit point $h$ in the space. $h$ is not the constant zero: it takes $11=1_2$ at $10$ and $11$, so the value table has two footholds on the $1_L$ side; by §1.2 it is a resident.
 
-This resident is special in two places. Its limit is the point $h$ in $X_2$ — not the constant zero, and not a collapsed multiplier: $h\wedge h=h$, the multiplier catches itself; the distance goes to zero because the two points coincide, not because the multiplier becomes $0$. And it satisfies exactly $2$ states — $h(x)=11$ holds only on $10$ and $11$; the other two inputs give $00$. The 3-time gate opens only after counting the third satisfied state; among all behaviors of $L=2$ a third cannot be produced, so the gate is forever closed. The P resident lives inside this closed gate.
+This resident is special in two places. Its limit is the point $h$ in $X_2$ — not the constant zero, and not a collapsed multiplier: $h\wedge h=h$, the multiplier catches itself; the distance goes to zero because the two points coincide, not because the multiplier becomes $0$. And it satisfies exactly $2$ states — $h(x)=11$ holds only on $10$ and $11$; the other two inputs give $00$. The new table $h$ counts 2 cells, so the 2-time gate opens and the step is admitted; the 3-time gate wants 3 cells, but $h$ has only two — the third cannot be produced, so it stays shut. The P resident walks the 2-gate and lives on the side where the 3-gate is closed.
 
 ### 5.3 The NP counterexample
 
