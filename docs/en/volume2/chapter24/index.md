@@ -8,7 +8,7 @@ $X_L=A_L^D$; $A_L=\{0,1\}^L\cup\{!\}$
 
 $(X_L,d_w)$ $\Rightarrow$ space
 
-Route: the triviality equation of algorithmic convergence — discrete, bounded, sequentially iterated $\to$ the value set keeps only $A_L=\{0,1\}^L$ and the negation $!$ $\to$ weighted Hamming space $X_L=A_L^D$ $\to$ construct the iteration sequence $\to$ division, change of base, proper fraction $\to$ well-ordering gives the stopping time, no limit taken $\to$ the formula map $T$ freezes in one step $\to$ a lit stopping point is SAT, a dark one UNSAT $\to$ both ideal times are at most $1$, the difference is in the stopping point $\to$ the solution space collapses; P and NP are just two samples.
+Route: the triviality equation of algorithmic convergence — discrete, bounded, sequentially iterated $\to$ the value set keeps only $A_L=\{0,1\}^L$ and the negation $!$ $\to$ weighted Hamming space $X_L=A_L^D$ $\to$ construct the iteration sequence $\to$ division, change of base, proper fraction $\to$ well-ordering gives the stopping time, no limit taken $\to$ the formula map $T$ freezes in one step $\to$ a lit stopping point is SAT, a dark one UNSAT $\to$ both optimal transitions are at most $1$, the difference is in the stopping point $\to$ the solution space collapses; P and NP are just two samples.
 
 ## Preface: Enumerate First, Then Talk About Convergence
 
@@ -16,7 +16,7 @@ A clause, three variables. However the literals are arranged, whatever values ar
 
 So we do not guess its structure; we list its behavior. The three variables each take $0$ or $1$: eight assignments. One assignment, one answer; eight answers make a complete table. Enumerate this table from beginning to end, missing nothing.
 
-The eight answers do not run separately. Stack them together, collect them into one variable $a_n$, and push forward along ideal time $n=0,1,2,\dots$. Each step updates the whole stack of answers at once. Ideal time does not backtrack, does not correct mistakes; it walks only the successful path, and the stack is laid down layer by layer.
+The eight answers do not run separately. Stack them together, collect them into one variable $a_n$, and push forward along $n=0,1,2,\dots$. Each transition updates the whole stack of answers at once. The optimal transition does not backtrack, does not correct mistakes; it walks only the successful path, and the stack is laid down layer by layer.
 
 After this step, convergence becomes a computable question. $a_n$ lies in the space $X_L$, and the distance between two points is Hamming distance — count how many values differ. How much distance $T$ squeezes out per step is computed directly (§2).
 
@@ -72,7 +72,7 @@ Conversely, a fully dark table is the constant zero:
 
 $\operatorname{satStates}=0$, no assignment makes the formula true, unsatisfiable. The table stops in the dark, not a resident.
 
-The book's iteration starts from the constant-one table $1_{X_L}$ and updates the whole table under the rule; each step produces a new table. Time moves only along a table that still has a lit cell; when the new table goes fully dark, the clock stops. Ideal time counts successful steps, not lit cells.
+The book's iteration starts from the constant-one table $1_{X_L}$ and updates the whole table under the rule; each step produces a new table. Time moves only along a table that still has a lit cell; when the new table goes fully dark, the clock stops. The optimal transition counts successful steps, not lit cells.
 
 Keep filling until the table stops changing: that is the fixed point. If the table at rest still has at least one lit cell, it is a resident; if the whole table is dark, it is the constant zero, not a resident.
 
