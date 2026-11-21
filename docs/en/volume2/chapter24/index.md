@@ -146,7 +146,7 @@ F_S(x)=\bigwedge_{s\in S}f_s(x)=
 \end{cases}
 $$
 
-Satisfiable $\Leftrightarrow$ $F_S$ is not constant zero $\Leftrightarrow$ $S\ne D$. A resident is a nonzero table; the constant-zero table is not a resident.
+Satisfiable $\Leftrightarrow$ $F_S$ is not constant zero. A resident is a nonzero table; the constant-zero table is not a resident.
 
 $X_3=A_3^D$ is a complete space: see 1.4 for the distance, 1.5 for completeness.
 
@@ -490,84 +490,56 @@ $T_S$ is idempotent and stops at the second step. Take $Q=0$, $N=1$. $T_S\circ T
 
 That is the collapse: the whole candidate table is pressed onto the formula's truth table in one step. Cells in $S$ go dark; cells outside $S$ stay lit. Whether the fixed point $F_S$ is a resident depends on one thing:
 
-- $F_S=0$ $\Leftrightarrow$ $S=D$ $\Leftrightarrow$ every assignment is killed $\Leftrightarrow$ unsatisfiable;
+- $F_S=0$ $\Leftrightarrow$ every assignment is killed $\Leftrightarrow$ unsatisfiable;
 - $F_S\ne0$ $\Leftrightarrow$ some assignment is not killed $\Leftrightarrow$ satisfiable.
 
 Constant zero is not a resident. If the table stops in the dark, there is no SAT; if it is still lit, SAT sits in one of those cells. The iteration does not search and does not try and error; it projects the formula onto the table, all at once.
 
-## 5. 2-SAT and 3-SAT: Substitute and Compute
+## 5. 2-SAT and 3-SAT: Two General Forms
 
-Now substitute 2-SAT and 3-SAT directly. No need to invent problems: $D$ is the assignment table, $S$ is the union of the cells killed by the clauses, and $T_S$ only zeroes them. Substitute, expand, count the steps.
+2-SAT and 3-SAT are not two exercises; they are two general forms. The number of variables and the number of clauses stay open; only the clause width is fixed. Put $D$, $S$, and $T_S$ in, and both walk one step.
 
-### 5.1 2-SAT: $D=\{0,1\}^2$
+### 5.1 The general 2-SAT form
 
-Take the 2-SAT formula
-
-$$
-F=(x_1\vee x_2)\wedge(x_1\vee\neg x_2),
-$$
-
-whose truth table is
+With $n$ variables, $D=\{0,1\}^n$. A 2-SAT formula is a conjunction of width-2 clauses:
 
 $$
-h(x)=(x_1,x_1).
+F=\bigwedge_{j=1}^{m}(l_{j1}\vee l_{j2}).
 $$
 
-Both clauses are false only when $x_1=0$, so $S=\{00,01\}$. Let $D=\{00,01,10,11\}$. From $a_0=1_X$,
+A width-2 clause is false when both literals are false: two coordinates are pinned, the other $n-2$ are free, and the clause kills $2^{n-2}$ assignments. Take the union of the clauses' zero sets:
 
 $$
-a_1=T_S(a_0)=F_S=h,
+S=\bigcup_{j=1}^{m}\{x\in D:(l_{j1}\vee l_{j2})(x)=0\}.
 $$
 
-$$
-a_2=T_S(a_1)=h.
-$$
-
-Distances:
+$x\in S$ exactly when some clause is false at $x$, exactly when $F(x)=0$; $S$ is the formula's sign-pattern set. Apply $T_S$ to the constant-one table:
 
 $$
-\delta_0=d(1_X,h)=|\{00,01\}|=2,
+a_1=T_S(1_X)=F_S,\qquad a_2=T_S(a_1)=F_S.
 $$
 
-$$
-\delta_1=d(h,h)=0.
-$$
+$T_S$ only zeroes. A zeroed cell zeroed again is still zero; an unzeroed cell was never touched, so $T_S\circ T_S=T_S$. One step to the bottom: $Q=0$, $N=1$.
 
-One step to the bottom, $Q=0$, $N=1$. $h$ is lit on $10$ and $11$, so it is a resident; those two assignments satisfy the formula. The $2$ in $L=2$ is the number of variables; the $2$ in standard 2-SAT is the clause width. Same numeral, different meaning.
+The stop table is general as well: a cell in $S$ carries $0$, a cell outside $S$ carries $1_n$. The whole table is $F_S$; $n$ and $m$ only change how long the table is and how many zeros it holds. Whether it is lit depends only on $D\setminus S$: nonempty, the table is lit, SAT; empty, the whole table is dark, UNSAT.
 
-Written as one row, ordered $00,01,10,11$:
+### 5.2 The general 3-SAT form
 
-$$
-(h(00),h(01),h(10),h(11))=(00,00,11,11).
-$$
-
-The lit cells carry the long one $1_2=11$; the dark cells carry $0=00$. The table is still lit, so it is a resident.
-
-In general, 2-SAT is the same two substitutions. For $n$ variables, $D=\{0,1\}^n$; a width-2 clause kills $2^{n-2}$ assignments, and $S$ is the union of those cells. $T_S$ zeroes and only zeroes, hence is idempotent; $a_1=F_S$, $a_2=F_S$, $N=1$.
-
-### 5.2 3-SAT: $D=\{0,1\}^3$
-
-Take
+Same $D$, same $T_S$; only the clauses become width 3:
 
 $$
-F=(x\vee y\vee z)\wedge(\neg x\vee\neg y\vee\neg z).
+F=\bigwedge_{j=1}^{m}(l_{j1}\vee l_{j2}\vee l_{j3}).
 $$
 
-Its sign-pattern set is $S=\{000,111\}$: $F$ is false only at these two cells and true on the other six. $F_S$ arrives in one step and is a resident; $Q=0$, $N=1$.
-
-Now take $S=D$, killing all eight cells. $F_S=0$, again one step; the fixed point is constant zero, not a resident, UNSAT. $N$ is still $1$.
-
-Written as one row, ordered $000,001,\ldots,111$, the stop table for $S=D$ is
+A width-3 clause is false when all three literals are false: three coordinates are pinned, the other $n-3$ are free, and the clause kills $2^{n-3}$ assignments. $S$ is again the union of these zero sets. Substitute:
 
 $$
-(000,000,000,000,000,000,000,000).
+a_1=T_S(1_X)=F_S,\qquad a_2=T_S(a_1)=F_S.
 $$
 
-Every cell is the long zero $0$, the whole table dark.
+$T_S$ is still idempotent, still one step: $Q=0$, $N=1$.
 
-In general, 3-SAT is the same. For $n$ variables, $D=\{0,1\}^n$; a width-3 clause kills $2^{n-3}$ assignments, and after taking the union into $S$, the same $T_S$ gives $a_1=F_S$, $a_2=F_S$, $N=1$.
-
-The clause width goes from 2 to 3; it changes how many cells each clause kills, not the number of steps. The least stopping time for $L=2$ and $L=3$ is $1$; time does not tell them apart, the fixed point does. The 2-SAT table stops lit; the 3-SAT table at $S=D$ stops all dark. All-bright and all-dark: the difference sits in the stop table. Let the number of variables go from 2 to 3 to three hundred million: $T_S$ is still idempotent, and one formula still freezes in one step. How big the table is only changes how long $F_S$ takes to write down, not the number of steps to the fixed point.
+In this iteration, the difference between 2-SAT and 3-SAT is only how many cells each clause kills: $2^{n-2}$ and $2^{n-3}$. What differs is the size of $S$, not the number of steps. Both general forms have ideal time $1$; time does not tell them apart, the fixed point does. Both stop tables are $F_S$: lit cells carry the long one $1_n$, dark cells carry $0$. Let the number of variables go from 2 to 3 to three hundred million: $T_S$ is still idempotent, and one formula still freezes in one step. How big the table is only changes how long $F_S$ takes to write down, not the number of steps to the fixed point.
 
 ### 5.3 Not a distance
 
