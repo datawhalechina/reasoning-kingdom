@@ -198,7 +198,7 @@ $\operatorname{IsOptimalTime}\ f_0\ \text{goal}\ n$ takes the number of steps on
 
 Time takes the discrete ticks $n=0,1,2,\dots$. The state space is not a single trajectory; the whole $X_L$ is packed into $a_n$ and evolves together.
 
-Oracle time is a name: it refers to the most ideal time, with no correction at all, evolving entirely along the successful path of the state space. It is not a new physical machine, nor extra computational power; it is just the name given to this most ideal time. Imagine an oracle as this ideal evolver: every step follows exactly the successful path in the state space, and failed, backtracking, correcting branches never enter the time ledger at all. Its time is defined as
+Oracle time is a name: it refers to the most ideal time, with no correction at all, evolving entirely along the successful path of the state space. It is not a new physical machine, nor extra computational power; it is just the name given to this most ideal time. Time is not counted in seconds but in state transitions; the worst-case ledger also counts transitions, not seconds. One transition can process arbitrarily many assignments and arbitrarily many clauses; the ledger records only how many transitions occurred. Imagine an oracle as this ideal evolver: every step follows exactly the successful path in the state space, and failed, backtracking, correcting branches never enter the time ledger at all. Its time is defined as
 
 $$
 \begin{aligned}
@@ -474,35 +474,28 @@ The stop table carries only two values: $0$ and $1_L$. If a $1_L$ remains, it is
 
 ## 5. 2-SAT and 3-SAT: Long One and Long Zero
 
-2-SAT and 3-SAT are not two exercises; they are two stopping points: one stops at the all-lit long-one table, one at the all-dark long-zero table. Two roads have to be kept apart: the enumeration that clears one cell at a time, and the optimal blind shot.
+2-SAT and 3-SAT are not two exercises; they are two stopping points: one stops at the all-lit long-one table, one at the all-dark long-zero table. The long-one and long-zero sequences are not answers; they are structural probes: feed the long-one matrix in and watch when the solution space converges to a fixed point.
 
-### 5.1 Enumeration: 5 and 9 steps
+### 5.1 Structural probe: 2-SAT collapses at once, 3-SAT after one step
 
-For $L=2$, $D$ has 4 cells. The dumbest enumeration clears one cell at a time: 4 cells change 4 times, then one stop, so 5 state transitions. For $L=3$, 8 cells: 8 changes plus one stop, 9 transitions. The 5 and 9 are the enumeration's ledger, not a count of "how many cells were edited": each step changes one cell.
+- 2-SAT: long one in, long one out. The table does not move; all green. $\delta_0=0$, $N=0$ — the solution space collapses to long one at once.
+- 3-SAT: long one in, immediately all zero; the second step is still all zero. $\delta_0=8$, $\delta_1=0$, $N=1$ — the solution space evolves one step and collapses to long zero.
 
-Even a god doing the enumeration has to go one cell at a time: 3-SAT still takes 9 steps, 2-SAT still 5. A dumber algorithm that goes back and forth, clearing the same cell again, can take more than 5/9; 5/9 are not a guarantee for every dumb algorithm, but the ideal ledger of this clean enumeration.
+The probe reads in two sentences: 2-SAT can collapse at once, 3-SAT needs one step. This is not guessing; it is watching when $a_n$ falls to a fixed point under the map.
 
-### 5.2 Convergence: long one in, long one/zero out
+### 5.2 Honest enumeration: 5 and 9 steps
 
-The question here is when the SAT sequence fully converges, not when a guess lands. The optimal road is not enumeration; it is the convergence behavior after the long-one table is brought in:
+Without the probe, if you search honestly, the ledger is: for $L=2$ there are 4 cells; the worst case needs 4 collapse layers plus one stop, 5; for $L=3$ there are 8 cells, 8 layers plus one stop, 9. A layer can turn arbitrarily many cells at once; it is not one cell per layer. The worst case still takes 5 layers or 9 layers. This count is not in seconds, and not in how many values you assign at once. One state transition can process arbitrarily many assignments and arbitrarily many clauses; whether you assign 1,000 values or 100 million, the ledger still says 5 or 9. The 5 and 9 are the collapse rate of the solution space, a ruler for every enumerator.
 
-- 2-SAT: bring in the long-one table, and it returns the long-one table. The table does not move at all; all green. In the distance ledger $\delta_0=0$, stopping time $N=0$ — it is already on the fixed point, not even one step is needed; converged.
-- 3-SAT: bring in the long-one table, and it immediately becomes all zero. $\delta_0=8$, $\delta_1=0$, stopping time $N=1$ — one turn down to long zero, the second step does not move; converged.
+Even a god doing the enumeration has to follow the space: 3-SAT still 9 steps, 2-SAT still 5. The stupidest smart algorithm that follows the space can still solve within 5 or 9 steps; only a truly dumb algorithm going back and forth exceeds 5 and 9. Some monster machines can grab the resident before the collapse finishes, faster than 9 steps — that is because they beat the collapse rate, not because they changed the ruler. When they cannot grab it, the space still collapses to long zero.
 
-Both roads end at the same stopping point, long one or long zero; the difference is the number of steps:
+5 and 9 are the marks on this ruler; 0 and 1 are the probe readings. Do not mistake the probe reading for the enumeration ledger, and do not mistake the ledger for guessing: guessing has no map and no $\delta_n$. The probe and the enumeration are the same $a_{n+1}=T(a_n)$; one feeds long one in, the other searches honestly.
 
-| | Enumeration (clear one cell at a time) | Convergence (long one in) |
-|---|---|---|
-| 2-SAT | at most 5 transitions | 0 steps, long one in, long one out |
-| 3-SAT | at most 9 transitions | 1 step, long one in, long zero out |
-
-5 and 9 are the ledger of this clean enumeration; the dumbest enumeration goes back and forth, clearing the same cell again, and certainly exceeds 5 and 9. 0 and 1 are the convergence stopping times. Do not mix them into "just guess any assignment": guessing is not convergence; guessing right is luck. Convergence is $a_n$ falling to a fixed point under the map, with the steps recorded by $\delta_n$.
-
-Here the long-one stopping point is the 2-SAT side, not a claim that every 2-SAT formula is all lit. 2-SAT can also go all dark: four width-2 clauses, one per cell, make it UNSAT; that is where the worst enumeration ends. The book takes the satisfiable side. Likewise, the long-zero stop is the 3-SAT UNSAT side; a satisfiable 3-SAT stops on a table with lit cells.
+Here the long-one stopping point is the 2-SAT side, not a claim that every 2-SAT formula is all lit. 2-SAT can also go all dark: four width-2 clauses, one per cell, make it UNSAT; that is where the enumeration ends. The book takes the satisfiable side. Likewise, the long-zero stop is the 3-SAT UNSAT side; a satisfiable 3-SAT stops on a table with lit cells.
 
 ### 5.3 Not a distance
 
-This iteration does not do two things: it does not search, and it does not compute a distance between P and NP. It does one thing: press the formula table onto its fixed point and see whether the fixed point is lit.
+The convergence side does not do two things: it does not search, and it does not compute a distance between P and NP. It does one thing: press the formula table onto its fixed point and see whether the fixed point is lit.
 
 The difficult part is not the convergence step. It takes 0 or 1 step; the hard part is writing the stop table and deciding whether it goes all dark: given an assignment, substitute it into the formula and the light or dark shows in one step; the hard part is finding that assignment. Checking is one step; finding is not.
 
@@ -516,15 +509,19 @@ Someone keeps asking: why don't you construct a Turing machine? Why not start fr
 
 No need. The Turing-machine layer is too shallow to reach the question. Add states, add tape, add parallelism — what is added is how much the machine can spit out at once; the question here is whether the resident is in the solution space. If the resident is absent, no machine, however godlike, can search it out; if it is present, a stupid machine walking slowly will get there. Solvability is not set by the searching machine; it is set by the space itself.
 
-Drive the machine to its most godlike: spit out several hundred million states at once, lock onto the optimal one, follow it; every step follows the width of a three-literal clause, every step ideal. This is a monster machine. At the end the monster machine still does not find the resident. It did not lose on computing power; it arrived at constant zero, the table stopped in the dark, and the SAT lamp never lit. The evolution of the solution space lands on a fixed point; the monster machine at most accelerates its own death.
+Drive the machine to its most godlike: spit out several hundred million states at once, lock onto the optimal one, follow the evolution of the solution space. This is a monster machine. The long-one matrix is its structural probe: feed it in, 2-SAT collapses at once, 3-SAT after one step. Following this collapse, the monster machine takes at most 2-SAT 5 steps, 3-SAT 9 steps; some monster machines are faster than 9 because their search range is finer than the collapse rate. Fast or slow, the solution space lands on the same fixed point: with a resident it goes to long one, without a resident to long zero.
 
-So there is no need to construct the Turing machine of a hundred years from now, nor to push up from a two-state one. A carefully designed parallel or backtracking algorithm, any other machine — all walk on the same table. The table contracts, contracts to constant zero, and the SAT lamp cannot light. This is not a question of computing power; it is a question of the solution space: whether that satisfying assignment is there, whether that resident is there, is a mathematical question, not a computer question.
+This is also the fee the algorithm charges: you can design an optimal algorithm, an optimal monster machine, and make every step hug the solution space; but the solution space will converge to a fixed point, and this fee cannot be avoided. 5 and 9 are a ruler for every enumerator, not a stopwatch — ideal time counts the worst-case state transitions, not seconds. Whether you assign 1,000 values or 100 million, the marks on the ruler do not change.
+
+If the resident is there, the monster machine following the space can grab it within 5 or 9 steps; some machines are faster than 5 or 9. If the resident is not there, the monster machine will not find it no matter how far it goes; the table collapses to constant zero and the SAT lamp does not light. It did not lose on computing power; it reached the end of the solution space.
+
+So there is no need to construct the Turing machine of a hundred years from now, nor to push up from a two-state one. A carefully designed parallel or backtracking algorithm, any other machine — all walk on the same table. If the resident is absent, the table contracts to constant zero, and the SAT lamp cannot light. This is not a question of computing power; it is a question of the solution space: whether that satisfying assignment is there, whether that resident is there, is a mathematical question, not a computer question.
 
 Someone starts from properties of two-state Turing machines and proves that a certain class of machines cannot search. That is another road: it proves something about the machine, not the space. Machines can be swapped; the space does not swap. Bring a stronger machine, and the shape of the space is the same. What is to be proved is that the resident is not in the space, not that some machine is not fast enough.
 
 ### 6.2 Conclusion
 
-This chapter teaches one triviality equation of algorithmic convergence: discrete, bounded, sequentially iterated. With these three, any algorithm is collected in the same equation. Substitute again and the table is the same: $T\circ T=T$; the convergence stopping time is $0$ or $1$, and the difference is in the cell where they stop — a lit lamp is SAT, a dark one UNSAT.
+This chapter teaches one triviality equation of algorithmic convergence: discrete, bounded, sequentially iterated. With these three, any algorithm is collected in the same equation. Substitute again and the table is the same: $T\circ T=T$; the convergence stopping time is $0$ or $1$, and the difference is in the cell where they stop — a lit lamp is SAT, a dark one UNSAT. The ruler of ideal time is marked in worst-case state transitions: 2-SAT 5, 3-SAT 9; the long-one probe reads 0 and 1.
 
 Only two samples are laid out here: one P, one NP. They are picked out not to split them apart, but so you can see that both sides share one structure. Every P problem and every NP problem sends its solution space toward a fixed point under the same equation; P and NP are just the readings this equation gives on two samples.
 
