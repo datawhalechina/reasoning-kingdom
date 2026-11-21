@@ -752,6 +752,8 @@ So there is no need to construct the Turing machine of a hundred years from now,
 
 Some start from the properties of a two-state Turing machine and prove that a certain class of machines cannot find it. That is another road: it proves something about a machine, not about the space. Machines can be swapped; the space does not change. Swap in a stronger machine, and the shape of the space is the same. What must be proved is that the space has no such resident, not that some machine is not fast enough.
 
+> One last gripe: this is no divine problem. It is a classic trap: it looks harmless, but at bottom it is a dead end; the further you walk along the time axis, the more of a dead end it becomes. The resident object simply has no such thing in it. You can write it by hand: know the rules, fill the table row by row. A Turing machine only abstracts this into a tape and two states; the abstraction is not the point. The point is that the solution space contracts. Solving it will not make anyone quantum-ascend; it was never that kind of problem.
+
 ---
 
 The book ends here.
