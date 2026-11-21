@@ -8,7 +8,7 @@ $X_L=(A_L,\&,|,!)$ semiring
 
 $(X_L,d)$ $\Rightarrow$ space
 
-Route: define the space and the distance $\to$ construct the iteration sequence $\to$ division $\to$ change of base into log space $\to$ take $n\to\infty$ $\to$ use “a discrete space contains no $-\infty$” to derive a contradiction $\to$ prove the discreteness lemma $\to$ construct the P resident explicitly $\to$ prove by contradiction that no NP resident exists $\to$ return to ideal time and give the upper bound.
+Route: define the space and the distance $\to$ construct the iteration sequence $\to$ division $\to$ change of base into log space $\to$ take $n\to\infty$; the limit reads $-\infty$ $\to$ carry it back through the change of base; the ratio vanishes $\to$ $q=0$, the multiplier collapses $\to$ the fixed point is the constant zero, not the resident $1_L$ $\to$ derive a contradiction $\to$ prove the discreteness lemma $\to$ construct the P resident explicitly $\to$ prove by contradiction that no NP resident exists $\to$ return to ideal time and give the upper bound.
 
 ## Preface: Enumerate First, Then Talk About Convergence
 
@@ -350,7 +350,7 @@ $$
 \ln 0=-\infty
 $$
 
-So the full set of possible values on the left is a finite set plus the single point $-\infty$. No number in the finite set can stay below $n\ln q$ all the way; only $-\infty$ can follow it to the end. The limit therefore records the fixed point at the far end of the coordinate: log space has no lower slot.
+So the full set of possible values on the left is a finite set plus the single point $-\infty$. No number in the finite set can stay below $n\ln q$ all the way; only $-\infty$ can follow it to the end. The limit therefore records the fixed point at the far end of the coordinate: $-\infty$. The next section carries it back through the change of base.
 
 ### 3.3 Taking the limit
 
@@ -365,13 +365,49 @@ The upper bound runs off to $-\infty$, so:
 - the limit is at $-\infty$
 - the fixed point is also at $-\infty$
 
+### 3.4 Pressing Back into the Proper-Fraction Space
+
+Carry the $-\infty$ of §3.3 back through the change of base in §3.1. What was sent into the logarithm there is the ratio $\Delta_n/\delta_n$; the logarithm sends it to $-\infty$, and taking it back gives the ratio $0$:
+
+$$
+\lim_{n\to\infty}\frac{\Delta_n}{\delta_n}=0
+$$
+
+On the proper-fraction side, the fixed point is $0$. Do not leave it on the number line; put it back into the $q^n$ form of §2.1:
+
+$$
+\frac{\Delta_n}{\delta_n}=0=q^n
+$$
+
+$n$ is the step that reaches the fixed point, $q<1$, and $q^n$ lands on $0$ only if $q=0$. $q=0$ means the multiplier has collapsed: every bit of the value multiplied in at each step is $0$, $v\wedge0=0$, the next value is entirely $0$, and so is every step after.
+
+The fixed point reads back not as some nonzero function, but as the constant-zero function.
+
 ## 4. Contradiction
 
-But this space is a discrete space, and **it has no $-\infty$ entry**.
+Now look at this fixed point. The constant-zero function: every coordinate takes $0$.
 
-On one side the fixed point is at $-\infty$; on the other, the space has no $-\infty$:
+$1_L$ is the multiplicative identity of the value set, and the top of the Boolean lattice:
 
-$\Rightarrow$ a contradiction, directly falsified.
+$$
+1_L\wedge v=v,\qquad 1_L\vee v=1_L,\qquad !\,1_L=0
+$$
+
+No value changes as it passes under $1_L$. $0$ is the other end, the absorbing element:
+
+$$
+0\wedge v=0
+$$
+
+it wipes out whatever it touches.
+
+The resident criterion sits between these two ends. §1.2: satisfiable $\Leftrightarrow$ not the constant-zero function. The value table must have a foothold on the $1_L$ side — at least one coordinate is not $0$; $1_L$ is the top of that side. The constant zero wipes every coordinate to $0$, leaving not a single foothold.
+
+The fixed point reads back as the constant zero. It is not one step short of $1_L$; it is the bottom of the lattice.
+
+An NP resident needs a fixed point. The fixed point is the constant zero; it is not a resident.
+
+$\Rightarrow$ the assumed NP resident does not exist.
 
 ## 5. The P Resident and the NP Counterexample
 
@@ -410,7 +446,7 @@ What we construct here is the space and the residents, not NP-hardness. Construc
 
 The P resident is constructed on the $L=2$ side; on the $L=3$ side, the NP-hard object is bound by the Cook reduction chain.
 
-For the 2-SAT case take $L=2$: $D=\{0,1\}^2=\{00,01,10,11\}$, 4 states. Plug in the $L=2$ values: $A_2$ has $4$ states plus $3$ operators, $7$ values in all; the space $X_2=A_2^D$ has $7^4$ points. The resident uses only the $4$ state values — write $B:=\{0,1\}^2\subset A_2$, $0:=(0,0)$, $1:=(1,1)$, with $\wedge$ acting bitwise on $B$; the whole orbit lies in $B^D\subset X_2$, $4^4=256$ points. Hamming distance is an integer lying between $0$ and $4$.
+For the 2-SAT case take $L=2$: $D=\{0,1\}^2=\{00,01,10,11\}$, 4 states. Plug in the $L=2$ values: $A_2$ has $4$ states plus $3$ operators, $7$ values in all; the space $X_2=A_2^D$ has $7^4$ points. The resident uses only the $4$ state values — write $B:=\{0,1\}^2\subset A_2$, $0:=(0,0)$, $1_2:=(1,1)=11$, with $\wedge$ acting bitwise on $B$; the whole orbit lies in $B^D\subset X_2$, $4^4=256$ points. Hamming distance is an integer lying between $0$ and $4$.
 
 Derive from scratch. First fix the multiplier:
 
@@ -490,34 +526,34 @@ $$
 a^*_P:=h\in X_2
 $$
 
-The P resident is constructed: frozen after one step, with limit the explicit point $h$ in the space.
+The P resident is constructed: frozen after one step, with limit the explicit point $h$ in the space. $h$ is not the constant zero: it takes $11=1_2$ at $10$ and $11$, so the value table has two footholds on the $1_L$ side; by §1.2 it is a resident.
 
-This resident is special in two places. Its limit is the point $h$ in $X_2$, not $-\infty$: after one step every bit is fixed, and further steps only repeat. And it satisfies exactly $2$ states — $h(x)=11$ holds only on $10$ and $11$; the other two inputs give $00$. The 3-time gate opens only after counting the third satisfied state; among all behaviors of $L=2$ a third cannot be produced, so the gate is forever closed. The P resident lives inside this closed gate.
+This resident is special in two places. Its limit is the point $h$ in $X_2$ — not the constant zero, and not a collapsed multiplier: $h\wedge h=h$, the multiplier catches itself; the distance goes to zero because the two points coincide, not because the multiplier becomes $0$. And it satisfies exactly $2$ states — $h(x)=11$ holds only on $10$ and $11$; the other two inputs give $00$. The 3-time gate opens only after counting the third satisfied state; among all behaviors of $L=2$ a third cannot be produced, so the gate is forever closed. The P resident lives inside this closed gate.
 
 ### 5.3 The NP counterexample
 
-Suppose for contradiction that an NP resident $a^*_{NP}$ exists, with fixed point $-\infty$. By §3.3 and §4:
+Suppose for contradiction that an NP resident $a^*_{NP}$ exists, with fixed point $-\infty$. By §3.4, carrying $-\infty$ back through the change of base reads the fixed point as $0$; the ratio vanishes, so $q=0$:
 
 $$
-a^*_{NP}=-\infty\notin X
+a^*_{NP}=-\infty
+\;\xrightarrow{\ \text{change of base}\ }\;
+0
+\;\Longrightarrow\;
+\frac{\Delta_n}{\delta_n}=0
+\;\Longrightarrow\;
+q=0
 $$
 
-The iteration sequence $\{a_n\}$ on the NP side satisfies the condition of §2.1 and freezes within $N\le9$ steps:
+$q=0$ means the multiplier has collapsed. The iteration starts from $1_L$; $1_L\wedge0=0$, the next value is the constant-zero function, and every step after is the same. On the §1.2 criterion this fixed point is unsatisfiable; on the lattice it is the bottom $0$, not the top $1_L$.
 
-$$
-a_N=a_{N+1}=\dots=a^*\in X
-$$
-
-Hence $\lim a_n=a^*\in X$, which contradicts $\lim a_n=a^*_{NP}=-\infty\notin X$.
-
-So no NP resident exists; the counterexample object is $-\infty$ itself, which is not in the space.
+So no NP resident exists; the counterexample object is that $-\infty$, which reads back as $0$, not as a resident of this space.
 
 ### 5.4 Conclusion
 
 $$
 \begin{aligned}
-\text{P-resident}:&\quad a^*_P=h\in X_2&&\text{(}L=2\text{, constructed explicitly in 5.2)}\\
-\text{NP-resident}:&\quad a^*_{NP}=-\infty\notin X&&\text{(}L=3\text{, proved nonexistent in 5.3)}
+\text{P-resident}:&\quad a^*_P=h\in X_2&&\text{(}L=2\text{, constructed explicitly in 5.2; }h\text{ takes }1_2\text{ at }10\text{ and }11\text{)}\\
+\text{NP-resident}:&\quad a^*_{NP}\ \text{does not exist}&&\text{(}L=3\text{, 5.3 by contradiction; the fixed point is the constant zero, }0\ne1_L\text{)}
 \end{aligned}
 $$
 
@@ -615,7 +651,7 @@ This connects with §3. The inequality in log space has content only while $\del
 
 On the P resident's side, the certificate can be issued on the spot. After the first step $\delta_1=0$; take the decay constant $Q=0$: the distance is already squeezed to zero, and further steps only repeat. Ideal time $1$, down in a single step. The multiplier is the closed-form $h$, which reads only the first bit; the candidate table $X_2$ has $7^4$ points, and it touches only two, $a_0$ and $h$. Oracle time is $1$; however large the candidate table, it takes only one step.
 
-The NP side cannot issue the certificate. A certificate needs a stopping point inside the space for $Q$ to have somewhere to be written; $-\infty$ is not in the space, and the pen cannot land. If one insists on recording an oracle time for it, only enumeration remains: spread out the whole stack of candidate tables; for $L=3$, $X_3$ has $11^8\approx2.1\times10^8$ points. Each increase of $L$ by $1$ grows $A_L$ from $7$ values to $11$ and then to $19$, and $X_L$ from $7^4$ to $11^8$ and then to $19^{16}$ — base and exponent grow together, exponents stacked on exponents. The upper bound of this ledger is an explosive exponential geometry.
+The NP side cannot issue the certificate. A certificate needs a stopping point inside the space for $Q$ to have somewhere to be written; the NP fixed point reads back as $0$, not as a resident. Without a resident, the pen cannot land. If one insists on recording an oracle time for it, only enumeration remains: spread out the whole stack of candidate tables; for $L=3$, $X_3$ has $11^8\approx2.1\times10^8$ points. Each increase of $L$ by $1$ grows $A_L$ from $7$ values to $11$ and then to $19$, and $X_L$ from $7^4$ to $11^8$ and then to $19^{16}$ — base and exponent grow together, exponents stacked on exponents. The upper bound of this ledger is an explosive exponential geometry.
 
 The two lines are different. The P resident's certificate carries a $Q$ (here $0$), and the ideal time is $1$, polynomial-linear; the NP resident cannot even issue a certificate, and only the size of the whole stack of candidate tables remains, an explosive exponential geometry. Put $\mathrm P\ne\mathrm{NP}$ on the time axis, and it says these two lines never touch.
 
