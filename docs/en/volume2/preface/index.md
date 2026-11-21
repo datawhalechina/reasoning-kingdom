@@ -117,7 +117,7 @@ ch20 Heuristic contracts             ← promises under cost: the exact meaning 
 ch21 Learning theory                 ← inverse inference: inferring laws from observations
 ch22 Self-reference and emergence    ← what happens when a system reasons about itself
 ch23 The Yonglin Corollary           ← from the Hessian spectrum to the ordinary equation of intelligence and emergence
-ch24 Algorithmic Convergence: The LIT Theorem         ← P and NP share one equation of solution-space convergence; a lit stopping point is SAT, a dark one UNSAT
+ch24 Algorithmic Convergence: The LIT Theorem         ← three criteria — discrete, bounded, sequentially iterated — put the convergence of reasoning algorithms into one equation; the Kingdom is unified along this axis
 ```
 
 If you can read only three chapters: read Chapters 14, 15, 19. Together they form the most central line of Volume 2: reasoning gets formalized, then hits a boundary it cannot cross, and then that boundary is measured precisely.

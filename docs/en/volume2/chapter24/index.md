@@ -8,7 +8,7 @@ $X_L=A_L^D$; $A_L=\{0,1\}^L\cup\{!\}$
 
 $(X_L,d_w)$ $\Rightarrow$ space
 
-Route: the triviality equation of algorithmic convergence — discrete, bounded, sequentially iterated $\to$ the value set keeps only $A_L=\{0,1\}^L$ and the negation $!$ $\to$ weighted Hamming space $X_L=A_L^D$ $\to$ construct the iteration sequence $\to$ well-ordering gives the stopping time, no limit taken $\to$ weighted Hamming gives $2^L+1$ $\to$ clauses cover, hence collapse to UNSAT $\to$ the solution space collapses; P and NP are just two samples.
+Route: the triviality equation of algorithmic convergence — discrete, bounded, sequentially iterated $\to$ the value set keeps only $A_L=\{0,1\}^L$ and the negation $!$ $\to$ weighted Hamming space $X_L=A_L^D$ $\to$ construct the iteration sequence $\to$ well-ordering gives the stopping time, no limit taken $\to$ weighted Hamming gives $2^L+1$ $\to$ clauses cover, hence collapse to UNSAT $\to$ the solution space collapses $\to$ the convergence of the whole Kingdom is put into one equation; P and NP are just two samples.
 
 ## Preface: Enumerate First, Then Talk About Convergence
 
@@ -492,7 +492,7 @@ The three commandments are the algorithm's limits and open questions: inside the
 
 The Reasoning Kingdom ends here.
 
-It is an open book. What is proved is laid here, and what is not proved is laid here too. The conclusion of Chapter 24 stops at the collapse of the solution space: the table reaches a fixed point, and the lamp is either lit or out.
+It is an open book. What is proved is laid here, and what is not proved is laid here too. Chapter 24 puts the convergence of the whole Reasoning Kingdom into one equation: the table reaches a fixed point, and the lamp is either lit or out.
 
 Walking toward tomorrow does not require first becoming a person who can be written down, complete, normal, brave, without fear or shame. No one has that obligation.
 
