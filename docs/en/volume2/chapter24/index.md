@@ -535,6 +535,14 @@ $$
 
 One step to the bottom, $Q=0$, $N=1$. $h$ is lit on $10$ and $11$, so it is a resident; those two assignments satisfy the formula. The $2$ in $L=2$ is the number of variables; the $2$ in standard 2-SAT is the clause width. Same numeral, different meaning.
 
+Written as one row, ordered $00,01,10,11$:
+
+$$
+(h(00),h(01),h(10),h(11))=(00,00,11,11).
+$$
+
+The lit cells carry the long one $1_2=11$; the dark cells carry $0=00$. The table is still lit, so it is a resident.
+
 In general, 2-SAT is the same two substitutions. For $n$ variables, $D=\{0,1\}^n$; a width-2 clause kills $2^{n-2}$ assignments, and $S$ is the union of those cells. $T_S$ zeroes and only zeroes, hence is idempotent; $a_1=F_S$, $a_2=F_S$, $N=1$.
 
 ### 5.2 3-SAT: $D=\{0,1\}^3$
@@ -549,9 +557,17 @@ Its sign-pattern set is $S=\{000,111\}$: $F$ is false only at these two cells an
 
 Now take $S=D$, killing all eight cells. $F_S=0$, again one step; the fixed point is constant zero, not a resident, UNSAT. $N$ is still $1$.
 
+Written as one row, ordered $000,001,\ldots,111$, the stop table for $S=D$ is
+
+$$
+(000,000,000,000,000,000,000,000).
+$$
+
+Every cell is the long zero $0$, the whole table dark.
+
 In general, 3-SAT is the same. For $n$ variables, $D=\{0,1\}^n$; a width-3 clause kills $2^{n-3}$ assignments, and after taking the union into $S$, the same $T_S$ gives $a_1=F_S$, $a_2=F_S$, $N=1$.
 
-The clause width goes from 2 to 3; it changes how many cells each clause kills, not the number of steps. The least stopping time for $L=2$ and $L=3$ is $1$; time does not tell them apart, the fixed point does. Let the number of variables go from 2 to 3 to three hundred million: $T_S$ is still idempotent, and one formula still freezes in one step. How big the table is only changes how long $F_S$ takes to write down, not the number of steps to the fixed point.
+The clause width goes from 2 to 3; it changes how many cells each clause kills, not the number of steps. The least stopping time for $L=2$ and $L=3$ is $1$; time does not tell them apart, the fixed point does. The 2-SAT table stops lit; the 3-SAT table at $S=D$ stops all dark. All-bright and all-dark: the difference sits in the stop table. Let the number of variables go from 2 to 3 to three hundred million: $T_S$ is still idempotent, and one formula still freezes in one step. How big the table is only changes how long $F_S$ takes to write down, not the number of steps to the fixed point.
 
 ### 5.3 Not a distance
 
