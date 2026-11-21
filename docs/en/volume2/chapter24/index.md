@@ -456,11 +456,11 @@ The ledger is closed. Looking back, the whole path uses three things:
 - Boundedness: $\delta_n\le\delta_0\le|D|$; at most $|D|$ steps to the floor.
 - Iteration: $a_{n+1}=T(a_n)$, one step after another, in order.
 
-From the very first algorithm course, the first lesson is these three things: discrete, bounded, sequentially iterated. The definition of an algorithm has already said it clearly. These three are not a shell put around algorithms; they are the definition itself, one-to-one. Reduce any algorithm to these three, and its convergence is already inside. A strictly decreasing sequence in a finite set reaches the bottom in a few steps; well-ordering picks out the stopping time; no limit, no $-\infty$.
+From the very first algorithm course, the first lesson is these three things: discrete, bounded, sequentially iterated. The definition of an algorithm has already said it clearly. These three are not a shell put around algorithms; they are the definition itself, one-to-one. Put any algorithm against these three, and its convergence is already inside. A strictly decreasing sequence in a finite set reaches the bottom in a few steps; well-ordering picks out the stopping time; no limit, no $-\infty$.
 
-The reductions on the P side and on the NP side are constructive reductions. Cook's is constructive; so is the P-side one: given a run of an algorithm, build a 3-SAT or 2-SAT table on the spot, and write “which cell it reached” as clauses. The reduction is itself part of the proof; it is what sets the resident on the table.
+Why can two small problems reach across the whole algorithm world? Because they are the most ordinary. 3-SAT has three lamps to a row, 2-SAT two lamps to a row; the narrowest clause holds a whole side's discrete, bounded, sequential trajectories. Not because they are special, but because they are so ordinary that any algorithm fits inside them. This chapter only walks both sides into the same table.
 
-Why can two small problems reach across the whole algorithm world? Because they are the most ordinary. 3-SAT has three lamps to a row, 2-SAT two lamps to a row; the narrowest construction holds a whole side's discrete, bounded, sequential trajectories. Not because they are special, but because they are so ordinary that any algorithm fits inside them. This chapter only walks both sides into the same table.
+No construction is needed. §5 lays $D$ on the table, takes the union of the sign patterns killed by the clauses as $S$, substitutes into $T_S$, and expands: $a_1=F_S$, $a_2=F_S$; the least stopping time is $1$ for both 2-SAT and 3-SAT.
 
 ## 4. Collapse
 
@@ -495,17 +495,25 @@ That is the collapse: the whole candidate table is pressed onto the formula's tr
 
 Constant zero is not a resident. If the table stops in the dark, there is no SAT; if it is still lit, SAT sits in one of those cells. The iteration does not search and does not try and error; it projects the formula onto the table, all at once.
 
-## 5. Two Examples
+## 5. 2-SAT and 3-SAT: Substitute and Compute
 
-### 5.1 $L=2$: a resident
+Now substitute 2-SAT and 3-SAT directly. No need to invent problems: $D$ is the assignment table, $S$ is the union of the cells killed by the clauses, and $T_S$ only zeroes them. Substitute, expand, count the steps.
 
-Take $L=2$, $D=\{00,01,10,11\}$. The sign-pattern set is $S=\{00,01\}$,
+### 5.1 2-SAT: $D=\{0,1\}^2$
+
+Take the 2-SAT formula
+
+$$
+F=(x_1\vee x_2)\wedge(x_1\vee\neg x_2),
+$$
+
+whose truth table is
 
 $$
 h(x)=(x_1,x_1).
 $$
 
-Look at the four inputs one by one: $h(00)=h(01)=00$, $h(10)=h(11)=11$. From $a_0=1_X$,
+Both clauses are false only when $x_1=0$, so $S=\{00,01\}$. Let $D=\{00,01,10,11\}$. From $a_0=1_X$,
 
 $$
 a_1=T_S(a_0)=F_S=h,
@@ -525,9 +533,11 @@ $$
 \delta_1=d(h,h)=0.
 $$
 
-One step to the bottom; ideal time $1$. $h$ is lit on $10$ and $11$, so it is a resident; those two assignments satisfy the formula. The $2$ in $L=2$ is the number of variables; the $2$ in standard 2-SAT is the clause width. Same numeral, different meaning.
+One step to the bottom, $Q=0$, $N=1$. $h$ is lit on $10$ and $11$, so it is a resident; those two assignments satisfy the formula. The $2$ in $L=2$ is the number of variables; the $2$ in standard 2-SAT is the clause width. Same numeral, different meaning.
 
-### 5.2 $L=3$: the same step, another fixed point
+In general, 2-SAT is the same two substitutions. For $n$ variables, $D=\{0,1\}^n$; a width-2 clause kills $2^{n-2}$ assignments, and $S$ is the union of those cells. $T_S$ zeroes and only zeroes, hence is idempotent; $a_1=F_S$, $a_2=F_S$, $N=1$.
+
+### 5.2 3-SAT: $D=\{0,1\}^3$
 
 Take
 
@@ -535,11 +545,13 @@ $$
 F=(x\vee y\vee z)\wedge(\neg x\vee\neg y\vee\neg z).
 $$
 
-Its sign-pattern set is $S=\{000,111\}$: $F$ is false only at these two cells and true on the other six. $F_S$ arrives in one step and is a resident; ideal time $1$.
+Its sign-pattern set is $S=\{000,111\}$: $F$ is false only at these two cells and true on the other six. $F_S$ arrives in one step and is a resident; $Q=0$, $N=1$.
 
-Now take $S=D$, killing all eight cells. $F_S=0$, again one step; the fixed point is constant zero, not a resident, UNSAT. The ideal time is still $1$.
+Now take $S=D$, killing all eight cells. $F_S=0$, again one step; the fixed point is constant zero, not a resident, UNSAT. $N$ is still $1$.
 
-For $L=2$ and $L=3$ the ideal time is $1$. Time does not tell them apart; the fixed point does. Let the number of variables go from 2 to 3 to three hundred million: $T_S$ is still idempotent, and one formula still freezes in one step. How big the table is only changes how long $F_S$ takes to write down, not the number of steps to the fixed point.
+In general, 3-SAT is the same. For $n$ variables, $D=\{0,1\}^n$; a width-3 clause kills $2^{n-3}$ assignments, and after taking the union into $S$, the same $T_S$ gives $a_1=F_S$, $a_2=F_S$, $N=1$.
+
+The clause width goes from 2 to 3; it changes how many cells each clause kills, not the number of steps. The least stopping time for $L=2$ and $L=3$ is $1$; time does not tell them apart, the fixed point does. Let the number of variables go from 2 to 3 to three hundred million: $T_S$ is still idempotent, and one formula still freezes in one step. How big the table is only changes how long $F_S$ takes to write down, not the number of steps to the fixed point.
 
 ### 5.3 Not a distance
 
@@ -583,7 +595,7 @@ Someone starts from properties of two-state Turing machines and proves that a ce
 
 This chapter teaches one triviality equation of algorithmic convergence: discrete, bounded, sequentially iterated. With these three, any algorithm is collected in the same equation. $T_S\circ T_S=T_S$; both ideal times are $1$, and the difference is in the cell where they stop — a lit lamp is SAT, a dark one UNSAT.
 
-Only two samples are laid out here: one P, one NP. The reduction chain pulled them out not to split them apart, but so you can see that both sides share one structure. Every P problem and every NP problem sends its solution space toward a fixed point under the same equation; P and NP are just the readings this equation gives on two samples.
+Only two samples are laid out here: one P, one NP. They are picked out not to split them apart, but so you can see that both sides share one structure. Every P problem and every NP problem sends its solution space toward a fixed point under the same equation; P and NP are just the readings this equation gives on two samples.
 
 The general form of the trivial equation. Let $\delta_0=d(a_0,a_1)$:
 
