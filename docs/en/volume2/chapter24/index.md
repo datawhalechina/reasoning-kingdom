@@ -591,7 +591,7 @@ This is not a question of whether the machine is fast enough; it is a question o
 
 There really are problems in life with no answer. Not every problem hides a solution waiting for a smarter machine to dig it out. Some problems narrow as you go deeper, until there is nothing left. This is ordinary. Some problems simply have no answer.
 
-In the end, this chapter is not refuting the algorithm; it is defending the algorithm itself. The classical definition of an algorithm has only three conditions: discrete, bounded, sequentially iterated. An algorithm's limits and open questions inherit directly from these three — it is not that some machine is not fast enough; it is the boundary these three commandments draw. Neural networks, AlphaGo's Monte Carlo tree, every kind of heuristic: their convergence is collected in these three. An algorithm is convergent by its own nature; the three commandments are where that convergence is written. Nothing here derives an algorithm; the derivation has always been of these three rules themselves.
+In the end, this chapter is not refuting the algorithm; it is defending the algorithm itself. The classical definition of an algorithm has only three conditions: discrete, bounded, sequentially iterated. An algorithm's limits and open questions inherit directly from these three — it is not that some machine is not fast enough; it is the boundary these three commandments draw. Neural networks, Monte Carlo trees, every kind of heuristic: their convergence is collected in these three. An algorithm is convergent by its own nature; the three commandments are where that convergence is written. Nothing here derives an algorithm; the derivation has always been of these three rules themselves.
 
 ---
 
