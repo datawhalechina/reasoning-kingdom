@@ -567,8 +567,6 @@ So there is no need to construct the Turing machine of a hundred years from now,
 
 Someone starts from properties of two-state Turing machines and proves that a certain class of machines cannot search. That is another road: it proves something about the machine, not the space. Machines can be swapped; the space does not swap. Bring a stronger machine, and the shape of the space is the same. What is to be proved is that the resident is not in the space, not that some machine is not fast enough.
 
-> One last gripe: a con artist tells you that smart people can always find the solution, then has you try it clause by clause. One or two clauses, sure, you can find an answer; the further you try, the more the solution space collapses, until it collapses to a fixed point, to the constant zero. This is no god-making problem — not the kind of problem where one day humanity suddenly grasps an intellectual weapon and can try out everything. It is the oldest con there is: a carefully designed trap that looks harmless, a dead end at bottom, with no such thing in the resident object at all. This kind of problem gets harder the further you go: the table gets larger and harder to see. The difficulty is not in the number of steps; it is in the table itself. You can write it by hand: know the rules, fill the table row by row. A Turing machine only abstracts this into a tape and two states; the abstraction is not the point. The point is that the solution space contracts. So what must be proved in the end is not whether the machine is fast enough, but: when the problem is long enough and the ideal state abundant enough, can you find it? Is that solution still there, or has it already collapsed?
-
 ### 6.4 Conclusion
 
 This chapter teaches one triviality equation of algorithmic convergence: discrete, bounded, sequentially iterated. With these three, any algorithm is collected in the same equation. $T_S\circ T_S=T_S$; both ideal times are $1$, and the difference is in the cell where they stop — a lit lamp is SAT, a dark one UNSAT.
@@ -591,7 +589,9 @@ This is not a question of whether the machine is fast enough; it is a question o
 
 There really are problems in life with no answer. Not every problem hides a solution waiting for a smarter machine to dig it out. Some problems narrow as you go deeper, until there is nothing left. This is ordinary. Some problems simply have no answer.
 
-In the end, this chapter is not refuting the algorithm; it is defending the algorithm itself. The classical definition of an algorithm has only three conditions: discrete, bounded, sequentially iterated. An algorithm's limits and open questions inherit directly from these three — it is not that some machine is not fast enough; it is the boundary these three commandments draw. Neural networks, Monte Carlo trees, every kind of heuristic: their convergence is collected in these three. An algorithm is convergent by its own nature; the three commandments are where that convergence is written. Nothing here derives an algorithm; the derivation has always been of these three rules themselves.
+In the end, this chapter is not refuting the algorithm; it is defending the algorithm itself. The classical definition of an algorithm has only three conditions: discrete, bounded, sequentially iterated. It is not that some machine is not fast enough; it is the boundary these three commandments draw. Neural networks, Monte Carlo trees, every kind of heuristic: their convergence is collected in these three. An algorithm is convergent by its own nature; the three commandments are where that convergence is written. Nothing here derives an algorithm; the derivation has always been of these three rules themselves.
+
+The three commandments are the algorithm's limits and open questions: inside the triangle they enclose, convergence is necessary; outside it, neither convergence nor determinism can even be spoken of.
 
 ---
 
