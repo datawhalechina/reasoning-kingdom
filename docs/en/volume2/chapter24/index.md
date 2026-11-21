@@ -456,7 +456,7 @@ From the very first algorithm course, the first lesson is these three things: di
 
 Why can two small problems reach across the whole algorithm world? Because they are the most ordinary. 3-SAT has three lamps to a row, 2-SAT two lamps to a row; the narrowest clause holds a whole side's discrete, bounded, sequential trajectories. Not because they are special, but because they are so ordinary that any algorithm fits inside them. This chapter only walks both sides into the same table.
 
-No construction is needed. §5 substitutes the constant-one table: 2-SAT stops at the long-one table, least stopping time $N=0$; 3-SAT stops at the long-zero table, least stopping time $N=1$. Both lie inside the bound in §3: $0\le5$, $1\le9$.
+No construction is needed. §5 substitutes the constant-one table: the optimal 2-SAT path stops at the long-one table in $0$ steps; the optimal 3-SAT path stops at the long-zero table in $1$ step. The one-cell-at-a-time enumeration takes at most $5$ and $9$ steps; that is the road the bound in §3 describes.
 
 ## 4. Collapse
 
@@ -468,43 +468,45 @@ $$
 \delta_0=d(a_0,a_1)\le|D|,\qquad \delta_1=d(a_1,a_2)=0.
 $$
 
-The bound in §3 says $N\le\delta_0+1$. For $L=3$, $|D|=8$, so $N\le9$; for $L=2$, $|D|=4$, so $N\le5$. The bound first guarantees the sequence reaches bottom. The actual substitution gives $\delta_1=0$: if $a_1=a_0$, it stops at the start, $N=0$; if $a_1\ne a_0$, it stops after one step, $N=1$. Both lie inside the bound.
+The bound in §3 says $N\le\delta_0+1$. For $L=3$, $|D|=8$, so $N\le9$; for $L=2$, $|D|=4$, so $N\le5$. This bound is the enumeration ledger of "clear one cell at a time": in the worst case every cell changes once, then one stop. The formula map is not that enumeration road; it substitutes all cells at once, so its actual stopping time is only $0$ or $1$ — $0\le5$, $1\le9$, and the bound still holds.
 
 The stop table carries only two values: $0$ and $1_L$. If a $1_L$ remains, it is a resident, SAT; if the whole table is $0$, there is no resident, UNSAT. The iteration does not search and does not try and error; it substitutes the formula once, and the table stops.
 
 ## 5. 2-SAT and 3-SAT: Long One and Long Zero
 
-2-SAT and 3-SAT are not two exercises; they are two stopping points: one stops all lit, one all dark. Substitute the constant-one table and use the bound in §3 to see where it stops.
+2-SAT and 3-SAT are not two exercises; they are two stopping points: one stops at the all-lit long-one table, one at the all-dark long-zero table. Two roads have to be kept apart: the enumeration that clears one cell at a time, and the optimal blind shot.
 
-### 5.1 2-SAT: the long-one stop table
+### 5.1 Enumeration: 5 and 9 steps
 
-$L=2$, and $D$ has 4 cells. The stop table on the 2-SAT side is the long-one table: every cell is $1_2$. From the constant-one table $a_0=1_X$, the table is already it; the first step does not move, and the second does not either.
+For $L=2$, $D$ has 4 cells. The dumbest enumeration clears one cell at a time: 4 cells change 4 times, then one stop, so 5 state transitions. For $L=3$, 8 cells: 8 changes plus one stop, 9 transitions. The 5 and 9 are the enumeration's ledger, not a count of "how many cells were edited": each step changes one cell.
 
-$$
-\delta_0=0,\qquad \delta_1=0.
-$$
+Even a god doing the enumeration has to go one cell at a time: 3-SAT still takes 9 steps, 2-SAT still 5. A dumber algorithm that goes back and forth, clearing the same cell again, can take more than 5/9; 5/9 are not a guarantee for every dumb algorithm, but the ideal ledger of this clean enumeration.
 
-The least stopping time is $N=0$. The bound in §3: $|D|=4$, $N\le5$; $0\le5$. The table is all lit, every cell is a resident, SAT.
+### 5.2 Optimal: long one in, long one/zero out
 
-### 5.2 3-SAT: the long-zero stop table
+The optimal road is not enumeration; it is to bring one table in and hit the target in one shot:
 
-$L=3$, and $D$ has 8 cells. The stop table on the 3-SAT side is the long-zero table: every cell is $0_3$. From the constant-one table, the first step turns it all zero, and the second step leaves it all zero.
+- 2-SAT: bring in the long-one table, and it returns the long-one table. The table does not move at all; all green. In the distance ledger $\delta_0=0$, stopping time $N=0$. It is already on the long-one fixed point; no evolution is needed.
+- 3-SAT: bring in the long-one table, and it immediately becomes all zero. $\delta_0=8$, $\delta_1=0$, stopping time $N=1$. It does not clear cell by cell; it falls from long one to long zero in one step.
 
-$$
-\delta_0=8,\qquad \delta_1=0.
-$$
+Both roads end at the same stopping point, long one or long zero; the difference is the number of steps:
 
-The least stopping time is $N=1$. The bound in §3: $|D|=8$, $N\le9$; $1\le9$. The table is all dark, no resident, UNSAT.
+| | Enumeration (clear one cell at a time) | Optimal (one shot) |
+|---|---|---|
+| 2-SAT | at most 5 transitions | 0 steps, long one in, long one out |
+| 3-SAT | at most 9 transitions | 1 step, long one in, long zero out |
 
-The 2-SAT stop is long one, the 3-SAT stop is long zero; one stops at the start, one stops after a step. $0\le5$, $1\le9$, both inside the bound. Time does not tell them apart; the stopping point does.
+5 and 9 are the enumeration's upper bounds; 0 and 1 are the optimal stopping times. Do not mix them into "just guess any assignment": guessing is enumeration, and guessing right is luck; the optimal road knows which table to bring in and arrives in one shot.
+
+Here the long-one stopping point is the 2-SAT side, not a claim that every 2-SAT formula is all lit. 2-SAT can also go all dark: four width-2 clauses, one per cell, make it UNSAT; that is where the worst enumeration ends. The book takes the satisfiable side. Likewise, the long-zero stop is the 3-SAT UNSAT side; a satisfiable 3-SAT stops on a table with lit cells.
 
 ### 5.3 Not a distance
 
 This iteration does not do two things: it does not search, and it does not compute a distance between P and NP. It does one thing: press the formula table onto its fixed point and see whether the fixed point is lit.
 
-The difficult part is not the iteration. It takes at most one step. The difficult part is deciding whether the stop table goes all dark: given an assignment, substitute it into the formula and the light or dark shows in one step; the hard part is finding that assignment. Checking is one step; finding is not.
+The difficult part is not the optimal step. It takes 0 or 1 step; the hard part is knowing which table to bring in, and deciding whether the stop table goes all dark: given an assignment, substitute it into the formula and the light or dark shows in one step; the hard part is finding that assignment. Checking is one step; finding is not.
 
-So "the stopping time is only 0 or 1" is not a sentence of defeat. It moves the question: there is no boundary on the time axis; the boundary is at the fixed point. A lit fixed point is SAT; an all-dark one is UNSAT. What is wanted is not a faster iteration; it is the fixed point that is still lit.
+So "the optimal stopping time is only 0 or 1" is not a sentence of defeat. It moves the question: there is no boundary on the time axis; the boundary is at the fixed point. A lit fixed point is SAT; an all-dark one is UNSAT. What is wanted is not a faster iteration; it is the fixed point that is still lit.
 
 ## 6. Not P, Not NP — a Convergence Problem
 
@@ -522,7 +524,7 @@ Someone starts from properties of two-state Turing machines and proves that a ce
 
 ### 6.2 Conclusion
 
-This chapter teaches one triviality equation of algorithmic convergence: discrete, bounded, sequentially iterated. With these three, any algorithm is collected in the same equation. Substitute again and the table is the same: $T\circ T=T$; the stopping time is $0$ or $1$, and the difference is in the cell where they stop — a lit lamp is SAT, a dark one UNSAT.
+This chapter teaches one triviality equation of algorithmic convergence: discrete, bounded, sequentially iterated. With these three, any algorithm is collected in the same equation. Substitute again and the table is the same: $T\circ T=T$; the optimal stopping time is $0$ or $1$, and the difference is in the cell where they stop — a lit lamp is SAT, a dark one UNSAT.
 
 Only two samples are laid out here: one P, one NP. They are picked out not to split them apart, but so you can see that both sides share one structure. Every P problem and every NP problem sends its solution space toward a fixed point under the same equation; P and NP are just the readings this equation gives on two samples.
 
