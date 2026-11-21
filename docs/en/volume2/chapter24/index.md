@@ -487,7 +487,7 @@ The probe reads in two sentences: 2-SAT can collapse at once, 3-SAT needs one st
 
 Count the clauses. For $L=2$ there are 4 cells, and one width-2 clause knocks out only one cell; 4 clauses cover all 4, and the 5th has nothing new to say. For $L=3$ there are 8 cells, and one width-3 clause knocks out only one cell; 8 clauses cover all 8, and the 9th has nothing new to say. That is where 5 and 9 come from: $2^L+1$, the optimal number of rows in the clause table.
 
-The information is only so much. Within 5 or 9 clauses the lit and dark cells can still be spelled out one by one; past that number, adding constraints or literals yields no new hint, only pushes the space to one side. Within 9 clauses there is still a good chance of finding SAT; past 9, the tilt is more toward UNSAT. On the 2-SAT side the book takes, the bound is 5, and when it is said the table locks at long one; the 3-SAT side stops at 9 and tips to UNSAT.
+The information is only so much. Within 5 or 9 clauses the lit and dark cells can still be spelled out one by one; past that number, adding constraints or literals yields no new hint, only punches the space straight to one side. Within 9 clauses there is still a good chance of finding SAT; past 9, the tilt is more toward UNSAT. On the 2-SAT side the book takes, the bound is 5, and when it is said the table locks at long one; the 3-SAT side stops at 9 and tips to UNSAT.
 
 The bound says nothing about time. Time is not guaranteed: how long finding SAT takes, how long confirming UNSAT takes — nobody promises either. Nobody says SAT is certain within 5 or 9, and nobody says it is impossible; 5 and 9 mark where the information ends, not where the clock ends.
 
