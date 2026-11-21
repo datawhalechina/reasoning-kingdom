@@ -627,6 +627,8 @@ $$
 
 People speak of NP-hard problems under ideal time as if ideal time were something extra, out of reach. The ideal time in this book is not extra. It is the oracle time of §1.3.3, and also the time $n$ of the iteration sequence in §2. Where the sequence stops is where ideal time stops.
 
+Where it stops matters more than how long it walked. Stop at a resident, and the time is SAT's time; stop at the constant zero, and the time still exists, but it lands on UNSAT. The two ledgers must be kept apart.
+
 It has already been proved. The $q^n$ in the iteration condition stops growing after the first step: for $n\ge1$, $q^n\le q$. Write this uniform decay constant as
 
 $$
@@ -684,12 +686,15 @@ The ideal state is $\delta=0$. Distances in the space take finitely many values;
 $$
 n^*_{\text{ideal}}
 \le
-\left\lceil
-1+\log_{1/Q}\frac{|D|}{\delta_{\min}}
-\right\rceil
+\begin{cases}
+\left\lceil 1+\log_{1/Q}\dfrac{|D|}{\delta_{\min}}\right\rceil, & Q>0,\\[6pt]
+1, & Q=0.
+\end{cases}
 $$
 
-Plug in the numbers for $L=3$: $|D|=8$, $\delta_{\min}=1$, hence
+When $Q=0$ there is no logarithm to take, and the time is shortest: frozen in one step. This upper bound answers only how long it takes to reach the stopping point, not whether the stopping point is a resident. If the stopping point is $0$, the time is still $1$, and SAT is still absent.
+
+Plug in the numbers for $L=3$: $|D|=8$, $\delta_{\min}=1$, and for $Q>0$
 
 $$
 n^*_{\text{ideal}}
@@ -705,15 +710,35 @@ $$
 
 $Q$ is the decay constant, fixed; the right side is therefore a constant. Ideal time is finite, and can be counted out.
 
+Scale $L$ from 3 to 300 million: 300 million variables, 100 million clauses. The clause count does not enter $|D|$; the table's size depends only on the variable count. With $|D|=2^{3\times10^8}$, for $Q>0$ the bound becomes
+
+$$
+n^*_{\text{ideal}}
+\le
+\left\lceil
+1+3\times10^8\log_{1/Q}2
+\right\rceil.
+$$
+
+The variable count rises from 3 to 300 million, and the bound grows only linearly with it. Ideal time is not the exponential end; the exponential thing is the size of the candidate table $X_L$. Do not mix the two ledgers.
+
+The explicit construction of P and the assumed NP orbit both fall on the $Q=0$ end, and both have time $1$; the logarithmic bound above is for a general sequence with $Q>0$.
+
 This connects with §3. The inequality in log space has content only while $\delta_n>0$ and the sequence is still moving (§2.2); once the sequence stops, it has reached its end. Ideal time is the length of this stretch of inequality. To call ideal time out of reach is to treat it as a limit; here it is a string of rungs that can be counted to the end.
 
 ### 6.4 Two kinds of oracle time
 
-On the P resident's side, the certificate can be issued on the spot. After the first step $\delta_1=0$; take the decay constant $Q=0$: the distance is already squeezed to zero, and further steps only repeat. Ideal time $1$, down in a single step. The multiplier is the closed-form $h$, which reads only the first bit; the candidate table $X_2$ has $7^4$ points, and it touches only two, $a_0$ and $h$. Oracle time is $1$; however large the candidate table, it takes only one step.
+Look at the time itself first. On the P resident's side, after the first step $\delta_1=0$; take the decay constant $Q=0$: the distance is already squeezed to zero, and further steps only repeat. Ideal time $1$, down in a single step. The stopping point is $h$, which takes $1_2$ at $10$ and $11$ and is a resident; this step lands on SAT.
 
-The NP side cannot issue the certificate. A certificate needs a stopping point inside the space for $Q$ to have somewhere to be written; the NP fixed point reads back as $0$, not as a resident. Without a resident, the pen cannot land. If one insists on recording an oracle time for it, only enumeration remains: spread out the whole stack of candidate tables; for $L=3$, $X_3$ has $11^8\approx2.1\times10^8$ points. Each increase of $L$ by $1$ grows $A_L$ from $7$ values to $11$ and then to $19$, and $X_L$ from $7^4$ to $11^8$ and then to $19^{16}$ — base and exponent grow together, exponents stacked on exponents. The upper bound of this ledger is an explosive exponential geometry. Given an assignment, substitute it into the formula and its light or dark is known in one step; the hard part is finding the assignment. Verifying is one step; finding is not.
+On the NP side, the time also runs to the end. The assumed resident carries the fixed point to $0$, $q=0$; the iteration starts from $1_L$, $1_L\wedge0=0$, the next value is the constant zero, and every step after is the same. Ideal time is also $1$, down in a single step. The $-\infty$ in log space reads back as $0$; in value space, this one step reaches it. What is found is $0$, not SAT. The difference is not in the time: P's one step stops at $h$, NP's one step stops at $0$. $h$ is a resident, $0$ is not; $h$ has two lit cells, $0$ is fully dark. If ideal time cannot find it, no other time will.
 
-The two lines are different. The P resident's certificate carries a $Q$ (here $0$), and the ideal time is $1$, polynomial-linear; the NP resident cannot even issue a certificate, and only the size of the whole stack of candidate tables remains, an explosive exponential geometry. Put $\mathrm P\ne\mathrm{NP}$ on the time axis, and it says these two lines never touch.
+So do not treat ideal time as a certificate for SAT. The time certificate can be written on both sides: on the P side $Q=0$ and $n^*_{\text{ideal}}=1$; the assumed NP orbit also has $Q=0$ and $n^*_{\text{ideal}}=1$. The SAT certificate can be issued only on the P side: the stopping point $h$ is a resident. NP can write the time certificate but not the SAT certificate; its stopping point is $0$. Time being $1$ does not mean SAT is $1$.
+
+What about a 3-SAT instance? 100 million clauses and 300 million variables — not 300 million SAT instances, but one 3-SAT instance. An oracle machine can spit out all 300 million variables at once, and writing the table takes one step; but the state transition is not the writing. Oracle time counts state transitions, not how many variables were written. Filling one table or filling 300 million variables can both be one step; the transition's conclusion does not change. The transition must carry the whole table to the next cell, and NP's next cell is the constant zero, falling into UNSAT. Parallel variable-filling saves the time of writing variables, not the conclusion of the state transition. The problem has already been reduced to 3-SAT, with clause width three; no matter how well the oracle machine fills variables in parallel, it still cannot find it. The larger the table and the faster it is filled, the stopping point is still $0$.
+
+If one insists on recording a “find the certificate” ledger for NP, that is another matter: spread out the whole stack of candidate tables; for $L=3$, $X_3$ has $11^8\approx2.1\times10^8$ points. Each increase of $L$ by $1$ grows $A_L$ from $7$ values to $11$ and then to $19$, and $X_L$ from $7^4$ to $11^8$ and then to $19^{16}$ — base and exponent grow together, exponents stacked on exponents. This ledger is the size of the candidate table stack, not the ideal iteration time. Given an assignment, substitute it into the formula and its light or dark is known in one step; the hard part is finding the assignment. Verifying is one step; finding is not.
+
+The two lines are different. The P certificate carries a $Q$ (here $0$), ideal time is $1$, and the stopping point is $h$; NP's stopping point reads back as $0$, with no resident. Put $\mathrm P\ne\mathrm{NP}$ on the time axis, and it does not say “one takes 1 step, the other exponential time”; both can take 1 step. The difference is the cell where each stops: one is lit, one is fully dark.
 
 ---
 
