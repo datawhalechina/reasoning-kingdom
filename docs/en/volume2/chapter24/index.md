@@ -8,7 +8,7 @@ $X_L=A_L^D$; $A_L=\{0,1\}^L\cup\{!\}$
 
 $(X_L,d_w)$ $\Rightarrow$ space
 
-Route: the triviality equation of algorithmic convergence — discrete, bounded, sequentially iterated $\to$ the value set keeps only $A_L=\{0,1\}^L$ and the negation $!$ $\to$ weighted Hamming space $X_L=A_L^D$ $\to$ construct the iteration sequence $\to$ division, change of base, proper fraction $\to$ well-ordering gives the stopping time, no limit taken $\to$ the formula map $T$ freezes in one step $\to$ a lit stopping point is SAT, a dark one UNSAT $\to$ both optimal transitions are at most $1$, the difference is in the stopping point $\to$ the solution space collapses; P and NP are just two samples.
+Route: the triviality equation of algorithmic convergence — discrete, bounded, sequentially iterated $\to$ the value set keeps only $A_L=\{0,1\}^L$ and the negation $!$ $\to$ weighted Hamming space $X_L=A_L^D$ $\to$ construct the iteration sequence $\to$ well-ordering gives the stopping time, no limit taken $\to$ the formula map $T$ freezes in one step $\to$ a lit stopping point is SAT, a dark one UNSAT $\to$ both optimal transitions are at most $1$, the difference is in the stopping point $\to$ the solution space collapses; P and NP are just two samples.
 
 ## Preface: Enumerate First, Then Talk About Convergence
 
@@ -280,183 +280,111 @@ The iterated object is not a single value, nor a single variable $X_1,X_2,\dots$
 
 Pack them all into $a_n$ and let it iterate forward along time $n$; each step takes every state in the set, an iteration enumerative by nature. “Single variable” means exactly this one set variable that contains all states.
 
-Construct the iteration sequence on the complete space $(X,d)$:
+**Step one: build the sequence.** Fix the starting table $a_0$ and push it forward one step at a time:
 
 $$
-a_{n+1}=T(a_n)
+a_1=T(a_0),\quad a_2=T(a_1),\quad\dots,\quad a_{n+1}=T(a_n).
 $$
 
-Iteration condition:
+A sequence now exists. Nothing so far says it converges. Completeness (§1.5) does not help yet: it says Cauchy sequences have limits, and this one has not been shown to be Cauchy. Banach's fixed-point theorem cannot be borrowed either — a contraction in Banach's sense is uniform over the whole space, holding for any two points (Chapter 12 draws that line); the iteration condition in hand speaks only along the orbit:
 
 $$
-d(T(a_n),T(a_{n+1}))\le q^n\cdot d(a_n,a_{n+1})
+d_w(T(a_n),T(a_{n+1}))\le q^n\cdot d_w(a_n,a_{n+1}),\qquad 0\le q<1.
 $$
 
-Prove that it really is a Cauchy sequence. The proof uses one fact only: distances are integers, and take only finitely many possible values.
+It controls two adjacent points on the path, not any other pair. Cauchy-ness has to be computed.
 
-Let $\delta_n:=d(a_n,a_{n+1})$. The iteration condition is
+**Step two: every later pair is no farther than the first.** Write the adjacent distances as a ledger:
 
 $$
-\delta_{n+1}=d(a_{n+1},a_{n+2})\le q^n\,d(a_n,a_{n+1})=q^n\delta_n
+\delta_n:=d_w(a_n,a_{n+1})=\sum_{x\in D} w_x\cdot\mathbf 1[a_n(x)\ne a_{n+1}(x)].
+$$
+
+Each term is the price of one coordinate: if the cell changes, pay $w_x$; if not, pay nothing. $\delta_n$ is the total of the bill at step $n$.
+
+Now substitute the iteration condition. Its left side is exactly $\delta_{n+1}$:
+
+$$
+\delta_{n+1}=d_w(a_{n+1},a_{n+2})=d_w(T(a_n),T(a_{n+1}))\le q^n\delta_n.
 $$
 
 Since $0\le q<1$, we have $q^n\le1$, hence
 
 $$
-\delta_{n+1}\le\delta_n
+\delta_{n+1}\le\delta_n.
 $$
 
-The distance between adjacent terms never increases.
-
-First look at the first rung. $\delta_0=d(a_0,a_1)$ is Hamming distance: it counts how many coordinates of $a_0$ and $a_1$ differ. The space has $|D|$ coordinates in all, so
+Adjacent distances never increase. Iterate the inequality term by term:
 
 $$
-d(a_n,a_{n+1})=\delta_n\le\delta_0\le|D|
+\delta_k\le\delta_{k-1}\le\cdots\le\delta_0,
 $$
 
-$L=3$: $|D|=8$, $\delta_0$ is an integer from $0$ to $8$. $L=2$: $|D|=4$, $\delta_0$ is an integer from $0$ to $4$.
-
-Tighten one notch. For $n\ge1$, $q^n<1$, so as long as $\delta_n>0$, we have $\delta_{n+1}<\delta_n$ — at least one notch drops each time, no ties. Integers only decrease, and after $\delta_0$ notches they hit the floor:
+that is,
 
 $$
-\delta_n\le\delta_0-(n-1)\qquad(1\le n\le\delta_0+1)
+d_w(a_k,a_{k+1})\le d_w(a_0,a_1),\qquad k=0,1,2,\dots
 $$
 
-Take $N=\delta_0+1$: for $L=3$, $N\le9$; for $L=2$, $N\le5$. Hence $\delta_N=0$, and from this term on
+However far the first step went, no later step goes farther. This is the footing for Cauchy-ness; without it, the iteration condition is just a string of local inequalities hanging along the path.
+
+This step used only $q^n\le1$. The sharpness of $q^n<1$ is still in hand.
+
+**Step three: discreteness plus well-ordering drive it straight to the floor.** $X_L$ is finite, so there are finitely many pairs of points; whatever nonnegative weights are chosen, $d_w(f,g)$ takes only finitely many values. And for $n\ge1$, $q^n<1$; as long as $\delta_n>0$, the iteration condition gives
 
 $$
-a_N=a_{N+1}=a_{N+2}=\dots
+\delta_{n+1}\le q^n\delta_n<\delta_n.
 $$
 
-The sequence no longer moves; it is constant. A constant sequence is Cauchy, and it sits at this point; for all $m,n\ge N$, $d(a_m,a_n)=0$.
+While it moves, it strictly decreases; each strict drop switches to another denomination, and there are only finitely many. So it cannot move forever: some $\delta_n$ must be $0$.
 
-Check with 9: $A_3$ has $8+1=9$ values, $X_3$ has $9^8$ points, yet this path is finished within ten steps.
-
-Weighted Hamming is the same ledger, only each notch has a different price: $d_w(a_n,a_{n+1})\le d_w(a_0,a_1)$, the distance falls in finitely many values, drops notch by notch, and reaches the bottom in finitely many steps.
-
-### 2.2 The division form of the iteration condition
-
-Let
-
-$$
-\Delta_n:=d(T(a_n),T(a_{n+1}))
-$$
-
-$$
-\delta_n:=d(a_n,a_{n+1})
-$$
-
-Divide the multiplier on the right side of the iteration condition over to the left:
-
-$$
-\frac{\Delta_n}{\delta_n}\le q^n
-$$
-
-- left side: image distance $\Delta_n$ divided by preimage distance $\delta_n$
-- right side: exponential function form
-- $0\le q<1$
-
-Why divide the multiplier over to the left? $\Delta_n$ and $\delta_n$ are both distances, of the same dimension; their quotient is a pure number, measuring how many times $T$ squeezed the distance at this step. $q^n$ is also a pure number. Comparing two pure numbers does not depend on what unit distances are measured in. Written as the product $\Delta_n\le q^n\delta_n$ it means the same thing, but the multiplication hides what the multiple means; division puts it in plain sight.
-
-Division also writes the hypothesis into the denominator: only when $\delta_n>0$ and the sequence is still moving forward is $\Delta_n/\delta_n$ a number. Once the sequence freezes, $a_n=a_{n+1}$, the numerator $\Delta_n=d(a_{n+1},a_{n+2})\le q^n\cdot0=0$ is also $0$, and the ratio degenerates to $0/0$ — not large, not small, but undefined. So the division form covers only the stretch where the sequence is still moving. This will reappear unchanged in log space.
-
-## 3. Log Space
-
-### 3.1 A proper fraction
-
-Start from the division form of §2.2:
-
-$$
-\frac{\Delta_n}{\delta_n}\le q^n,\qquad 0\le q<1.
-$$
-
-The base on the right is below $1$, so a larger exponent gives a smaller value. For $n\ge1$, $q^n\le q<1$, hence
-
-$$
-\frac{\Delta_n}{\delta_n}<1,\qquad \Delta_n<\delta_n.
-$$
-
-The numerator is smaller than the denominator: a proper fraction. It says one thing only — while the sequence is still moving, this step's image distance is strictly shorter than the previous one. No logarithms, no change of base; write that down first.
-
-For $q=0$ it is even more direct: the right side is $0$, the proper fraction forces $\Delta_n=0$, and the sequence stops in one step. Below, assume $0<q<1$.
-
-### 3.2 Change of base
-
-The proper fraction says it shrinks, not how fast. Take a logarithm and the speed shows.
-
-Change of base:
-
-$$
-\log_b x=\frac{\log_c x}{\log_c b}
-$$
-
-With $c=e$,
-
-$$
-\log_b x=\frac{\ln x}{\ln b}.
-$$
-
-The base changes, the value does not; when the base is below $1$, the logarithm reverses order.
-
-Take $b=q$ and take the logarithm of the proper fraction. While the sequence moves the numerator is positive; $\Delta_n=0$ means the next step stops, so there is no need to look at a logarithm. Hence
-
-$$
-\log_q\frac{\Delta_n}{\delta_n}
-=\frac{\ln(\Delta_n/\delta_n)}{\ln q}
-\ge n.
-$$
-
-The inequality flips because $\ln q<0$. The change of base does one thing: it pulls $q^n$ down to $n$. The exponent comes off the shoulder and becomes one step on the ground.
-
-The natural-log form says the same:
-
-$$
-\ln\Delta_n-\ln\delta_n\le n\cdot\ln q.
-$$
-
-The right side is linear in $n$, with slope $\ln q<0$. Each step translates the log coordinate down by $|\ln q|$; $n$ steps, down by $n|\ln q|$. Products become sums through $\ln(xy)=\ln x+\ln y$ alone. The exponential curve was bent; in log coordinates the bend is gone, and only this line is left.
-
-### 3.2.1 The floor
-
-The line keeps going down, but there is no need to let it run to infinity.
-
-Distance takes only finitely many values: unweighted, $\delta_n$ is an integer from $0$ to $|D|$; weighted, one of finitely many nonnegative values. While the sequence moves, $\delta_{n+1}<\delta_n$. A strictly decreasing sequence in a finite set has only a few steps to take. At most $|D|$ steps, and it lands on $0$.
-
-Now use well-ordering. The set
+The set
 
 $$
 \{n\in\mathbb N\mid\delta_n=0\}
 $$
 
-is nonempty; $\mathbb N$ is well ordered, so it has a least element, call it $N$. $N$ is the step at which it lands on the floor, a natural number.
-
-What it drops to can also be written down: not an invisible limit, but $\delta_N=0$, and $a_N=a_{N+1}=\cdots$. The floor is the stopping point $a_N$ itself.
-
-### 3.3 The least stopping time
+is nonempty; $\mathbb N$ is well ordered, so take its least element and call it $N$. $\delta_N=0$, and from $\delta_{N+1}\le q^N\delta_N=0$ onward by induction, $\delta_n=0$ for $n\ge N$; that is,
 
 $$
-N\le\delta_0+1.
+a_N=a_{N+1}=a_{N+2}=\cdots
 $$
 
-For $L=3$, $N\le9$; for $L=2$, $N\le5$. At $N$, $a_N=a_{N+1}=\dots$, and the sequence freezes.
+The sequence freezes in finitely many steps. For $m,n\ge N$, $d_w(a_m,a_n)=0$. It is not merely Cauchy; it stops in place, and no $\varepsilon$ has to be chosen.
 
-### 3.4 The stopping point
+With Cauchy-ness proved, completeness connects. What we have is stronger: the limit is $a_N$ itself, and no limit is ever taken.
 
-$N$ is the step at which the sequence stops. $\delta_N=0$, and the division form $\Delta_N/\delta_N$ becomes $0/0$, undefined; the ledger ends here. The stopping point $a_N$ is a point of the space. Whether it is a resident is not a matter of time; it is a matter of this point.
+**Closing the books: how many steps.** With unit weights, $\delta_0=d_w(a_0,a_1)$ is an integer from $0$ to $|D|$. For $n\ge1$, $q^n<1$, so as long as $\delta_n>0$ we have $\delta_{n+1}<\delta_n$; between integers that means a drop of at least $1$. After $\delta_0$ drops it hits the floor:
 
-### 3.5 The Trivial Equation: Discrete, Bounded, Iterated
+$$
+\delta_n\le\delta_0-(n-1)\qquad(1\le n\le\delta_0+1).
+$$
+
+Take $N=\delta_0+1$: for $L=3$, $|D|=8$ and $N\le9$; for $L=2$, $|D|=4$ and $N\le5$. $X_3$ has $9^8$ points, yet this path is finished within ten steps.
+
+The $q^n$ in the iteration condition is the compression factor at step $n$; the bound contains no particular value of it. $q$ only forces the moving step to be strictly shorter; in this integer ledger, how fast it squeezes does not change how many steps it takes.
+
+With general nonnegative weights, “a drop of at least one” is no longer a count of integers, and the concrete bound $N\le\delta_0+1$ is no longer guaranteed. Finiteness survives: there are finitely many denominations, hence only finitely many strict drops, and the sequence still freezes in finitely many steps. The 9 and 5 computed later are unit-weight books.
+
+## 3. Stopping Point and the Trivial Equation
+
+### 3.1 The stopping point
+
+$N$ is the step at which the sequence stops. $\delta_N=0$, and the ledger ends here. The stopping point $a_N$ is a point of the space. Whether it is a resident is not a matter of time; it is a matter of this point.
+
+### 3.2 The Trivial Equation: Discrete, Bounded, Iterated
 
 The ledger is closed. Looking back, the whole path uses three things:
 
 - Discreteness: $A_L$ is finite, and distance takes only finitely many values.
-- Boundedness: $\delta_n\le\delta_0\le|D|$; at most $|D|$ steps to the floor.
+- Boundedness: with unit weights, $\delta_n\le\delta_0\le|D|$; at most $|D|$ steps to the floor.
 - Iteration: $a_{n+1}=T(a_n)$, one step after another, in order.
 
 From the very first algorithm course, the first lesson is these three things: discrete, bounded, sequentially iterated. The definition of an algorithm has already said it clearly. These three are not a shell put around algorithms; they are the definition itself, one-to-one. Put any algorithm against these three, and its convergence is already inside. A strictly decreasing sequence in a finite set reaches the bottom in a few steps; well-ordering picks out the stopping time; no limit, no $-\infty$.
 
 Why can $L$-SAT reach across the whole algorithm world? Because it is the most ordinary. $L=2$ has two lamps to a row, $L=3$ three lamps to a row; the narrowest clause holds a whole side's discrete, bounded, sequential trajectories. Not because it is special, but because it is so ordinary that any algorithm fits inside it. This chapter only walks $L$-SAT into the same table.
 
-No construction is needed. §5 counts the clauses: $2^L$ cover the table, $2^L+1$ close it; $L=2$ gives 5, $L=3$ gives 9. Both end at constant zero, both UNSAT. The one-cell-at-a-time enumeration is the road the bound in §3 describes.
+No construction is needed. §5 counts the clauses: $2^L$ cover the table, $2^L+1$ close it; $L=2$ gives 5, $L=3$ gives 9. Both end at constant zero, both UNSAT. The one-cell-at-a-time enumeration is the road the bound in §2.1 describes.
 
 ## 4. Collapse
 
@@ -468,7 +396,7 @@ $$
 \delta_0=d(a_0,a_1)\le|D|,\qquad \delta_1=d(a_1,a_2)=0.
 $$
 
-The bound in §3 says $N\le\delta_0+1$. For $L=3$, $|D|=8$, so $N\le9$; for $L=2$, $|D|=4$, so $N\le5$. This bound is the enumeration ledger of "clear one cell at a time": in the worst case every cell changes once, then one stop. The formula map is not that enumeration road; it substitutes all cells at once, so its actual convergence stopping time is only $0$ or $1$ — $0\le5$, $1\le9$, and the bound still holds.
+The bound in §2.1 says $N\le\delta_0+1$. For $L=3$, $|D|=8$, so $N\le9$; for $L=2$, $|D|=4$, so $N\le5$. This bound is the enumeration ledger of "clear one cell at a time": in the worst case every cell changes once, then one stop. The formula map is not that enumeration road; it substitutes all cells at once, so its actual convergence stopping time is only $0$ or $1$ — $0\le5$, $1\le9$, and the bound still holds.
 
 The stop table carries only two values: $0$ and $1_L$. If a $1_L$ remains, it is a resident, SAT; if the whole table is $0$, there is no resident, UNSAT. The iteration does not search and does not try and error; it substitutes the formula once, and the table stops.
 
@@ -530,7 +458,7 @@ This chapter teaches one triviality equation of algorithmic convergence: discret
 
 Only two samples are laid out here: one P, one NP. They are picked out not to split them apart, but so you can see that both sides share one structure. Every P problem and every NP problem sends its solution space toward a fixed point under the same equation; P and NP are just the readings this equation gives on two samples.
 
-The general form of the trivial equation. Let $X$ be finite, $T:X\to X$, $a_0\in X$, $a_{n+1}=T(a_n)$, $\delta_n=d(a_n,a_{n+1})$, and take $0\le q<1$. If
+The general form of the trivial equation. Let $X$ be finite, $T:X\to X$, $a_0\in X$, $a_{n+1}=T(a_n)$, with $\delta_n=d(a_n,a_{n+1})$ integer-valued, and take $0\le q<1$. If
 
 $$
 \delta_{n+1}\le q^n\delta_n\quad(n\ge0),
