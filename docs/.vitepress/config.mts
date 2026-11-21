@@ -151,7 +151,7 @@ export default defineConfig({
                 { text: '第21章：学习作为逆推断——泛化是压缩的另一种说法', link: '/volume2/chapter21/' },
                 { text: '第22章：自指与涌现——当推理系统开始推理关于自身', link: '/volume2/chapter22/' },
                 { text: '第23章：永霖推论——智能涌现与平凡方程', link: '/volume2/chapter23/' },
-                { text: '第24章：NP 问题的探讨——LIT 定理', link: '/volume2/chapter24/' },
+                { text: '第24章：算法收敛性——LIT 定理', link: '/volume2/chapter24/' },
                 { text: '兔狲教授小词典', link: '/dictionary' },
               ]
             }
@@ -289,7 +289,7 @@ export default defineConfig({
                 { text: 'Ch21: Learning as Inverse Inference — Generalization Is Another Word for Compression', link: '/en/volume2/chapter21/' },
                 { text: 'Ch22: Self-Reference and Emergence — When a Reasoning System Starts Reasoning About Itself', link: '/en/volume2/chapter22/' },
                 { text: 'Ch23: The Yonglin Corollary — Intelligence, Emergence, and the Ordinary Equation', link: '/en/volume2/chapter23/' },
-                { text: 'Ch24: An Inquiry into the NP Problem — The LIT Theorem', link: '/en/volume2/chapter24/' },
+                { text: 'Ch24: Algorithmic Convergence — The LIT Theorem', link: '/en/volume2/chapter24/' },
                 { text: 'Dictionary', link: '/dictionary' },
               ]
             }

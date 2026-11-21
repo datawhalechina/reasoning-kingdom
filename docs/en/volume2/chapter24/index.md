@@ -1,14 +1,14 @@
-# Chapter 24: An Inquiry into the NP Problem — The LIT Theorem
+# Chapter 24: Algorithmic Convergence — The LIT Theorem
 
 ---
 
 $A_L$ set; $A_L$ resident: $1_L$
 
-$X_L=(A_L,\&,|,!)$ semiring
+$X_L=A_L^D$; $A_L=\{0,1\}^L\cup\{!\}$
 
-$(X_L,d)$ $\Rightarrow$ space
+$(X_L,d_w)$ $\Rightarrow$ space
 
-Route: define the space and the distance $\to$ construct the iteration sequence $\to$ division $\to$ change of base into log space $\to$ take $n\to\infty$; the limit reads $-\infty$ $\to$ carry it back through the change of base; the ratio vanishes $\to$ $q=0$, the multiplier collapses $\to$ the fixed point is the constant zero, not the resident $1_L$ $\to$ derive a contradiction $\to$ prove the discreteness lemma $\to$ construct the P resident explicitly $\to$ prove by contradiction that no NP resident exists $\to$ return to ideal time and give the upper bound $\to$ show that this is not a Turing-machine problem but a solution-space problem.
+Route: the triviality equation of algorithmic convergence — discrete, bounded, sequentially iterated $\to$ the value set keeps only $A_L=\{0,1\}^L$ and the negation $!$ $\to$ weighted Hamming space $X_L=A_L^D$ $\to$ construct the iteration sequence $\to$ division, change of base, proper fraction $\to$ well-ordering gives the stopping time, no limit taken $\to$ the formula map $T_S$ freezes in one step $\to$ a lit stopping point is SAT, a dark one UNSAT $\to$ both ideal times are $1$, the difference is in the stopping point $\to$ the solution space collapses; P and NP are just two samples.
 
 ## Preface: Enumerate First, Then Talk About Convergence
 
@@ -21,6 +21,8 @@ The eight answers do not run separately. Stack them together, collect them into 
 After this step, convergence becomes a computable question. $a_n$ lies in the space $X_L$, and the distance between two points is Hamming distance — count how many values differ. How much distance $T$ squeezes out per step is computed directly (§2).
 
 The method is not mysterious; it is even stupid: not understanding the structure of the clause, so try every assignment. But to speak of a naive fixed point, one has to use this stupid method. A slightly cleverer method assumes structure from the start, and then naivety has nowhere to stand. The stupid method fills the whole space; only once it is full can one discuss which cell the fixed point lands in.
+
+This chapter does not teach P, and it does not teach NP. It teaches the triviality equation of algorithmic convergence: discreteness, boundedness, sequential iteration. P and NP are just two samples of this equation.
 
 ### How to Play: Fill the Table, Light the Lamps
 
@@ -83,10 +85,10 @@ The game has one question left: when the clock stops, is the table still lit? Li
 For each $L$, define the trivial value set
 
 $$
-A_L:=\{0,1\}^L\cup\{\&,|,!\}
+A_L:=\{0,1\}^L\cup\{!\}
 $$
 
-$|A_L|=2^L+3$. $A_L$ does only two things: it holds $L$-bit states, and it holds three pointwise operators. The trivial resident takes the constant-one state
+$|A_L|=2^L+1$. $A_L$ holds $L$-bit states, and it holds one operator, a single negation $!$. There is no $\&$ and no $|$: a disjunction or a conjunction is layout, a way of writing the clause down, not a value taken. The trivial resident takes the constant-one state
 
 $$
 1_L:=(1,\dots,1)\in\{0,1\}^L\subseteq A_L
@@ -96,7 +98,7 @@ which on the space is the constant-one value function $1_{X_L}$.
 
 ### 1.2 Constructing $A_3$ and the complete space
 
-Take $L=3$: $A_3:=A_L|_{L=3}$, made of 8 states and 3 operators, 11 in all:
+Take $L=3$: $A_3:=A_L|_{L=3}$, made of 8 states and the negation, 9 in all:
 
 | Number | State |
 |-----:|:-----|
@@ -108,25 +110,49 @@ Take $L=3$: $A_3:=A_L|_{L=3}$, made of 8 states and 3 operators, 11 in all:
 | 5 | $(1,0,1)$ |
 | 6 | $(1,1,0)$ |
 | 7 | $(1,1,1)$ |
-| 8 | $\&$ |
-| 9 | $\vert$ |
-| 10 | $!$ |
-
-$X_3$ is the value-function space: an element $f:D\to A_3$ is a value function, and $\&$, $\vert$, $!$ act on it pointwise.
-
-For the 3-SAT case take $D=\{0,1\}^n$. A value function is just the evaluation map:
+| 8 | $!$ |
 
 $$
-\Phi:\{0,1\}^n\to A_3
+X_3:=A_3^D,\qquad |X_3|=9^8.
 $$
 
-When $n=3$, $D$ has 8 states; $|A_3|=11$, so $X_3=A_3^D$ has $11^8$ value functions. Satisfiable $\Leftrightarrow$ $\Phi$ is not the constant-zero function — in the space this is the subset “nonzero functions”, shaped like a cone / hyperplane, with no clause syntax inside.
+A width-$3$ clause is determined by a sign pattern $s\in D$:
+
+$$
+C_s(x)=\bigvee_{i=1}^3
+\begin{cases}
+x_i, & s_i=0,\\
+\neg x_i, & s_i=1.
+\end{cases}
+$$
+
+$C_s$ is false only at the cell $x=s$, true everywhere else. Its truth table is
+
+$$
+f_s(x)=
+\begin{cases}
+1_L, & x\ne s,\\
+0_L, & x=s.
+\end{cases}
+$$
+
+A formula is a conjunction of clauses; its sign-pattern set is $S\subseteq D$. Its truth table is
+
+$$
+F_S(x)=\bigwedge_{s\in S}f_s(x)=
+\begin{cases}
+1_L, & x\notin S,\\
+0_L, & x\in S.
+\end{cases}
+$$
+
+Satisfiable $\Leftrightarrow$ $F_S$ is not constant zero $\Leftrightarrow$ $S\ne D$. A resident is a nonzero table; the constant-zero table is not a resident.
 
 $X_3=A_3^D$ is a complete space: see 1.4 for the distance, 1.5 for completeness.
 
 ### 1.3 Constructing $A_2$ and the complete space
 
-Take $L=2$: $A_2:=A_L|_{L=2}$, made of 4 states and 3 operators, 7 in all:
+Take $L=2$: $A_2:=A_L|_{L=2}$, made of 4 states and the negation, 5 in all:
 
 | Number | State |
 |-----:|:-----|
@@ -134,13 +160,17 @@ Take $L=2$: $A_2:=A_L|_{L=2}$, made of 4 states and 3 operators, 7 in all:
 | 1 | $(0,1)$ |
 | 2 | $(1,0)$ |
 | 3 | $(1,1)$ |
-| 4 | $\&$ |
-| 5 | $\vert$ |
-| 6 | $!$ |
+| 4 | $!$ |
 
-For the 2-SAT case take $D=\{0,1\}^2$; $X_2:=A_2^D$ is the complete space: see 1.4 for the distance, 1.5 for completeness.
+For the 2-SAT case take $D=\{0,1\}^2$,
 
-$L=2$: 2-SAT, $\in\mathrm P$; $L=3$: 3-SAT, $\mathrm{NP}$-complete (Cook–Levin).
+$$
+X_2:=A_2^D,\qquad |X_2|=5^4.
+$$
+
+$X_2$ is the complete space: see 1.4 for the distance, 1.5 for completeness.
+
+In name, $L=2$ is 2-SAT and $L=3$ is 3-SAT; this chapter does not look at the class boundary, it looks at how these two spaces move.
 
 ### 1.3.1 Not filling in a 3-bit/2-bit table, but iterating the whole solution space along the time axis
 
@@ -203,7 +233,7 @@ It is the oracle's time, not the actual time of any physical machine; a physical
 
 ### 1.4 Weighted Hamming distance
 
-The space is discrete: $A_L$ is a finite set of $2^L+3$ elements, $D=\{0,1\}^L$ is a finite set of $2^L$ states, and $X_L=A_L^D$ is a finite product. The space has no direction, no line segments, no inner product; Euclidean distance is not its own metric. The metric given by the coordinate structure must be of Hamming type — compare coordinate by coordinate, count the different coordinates:
+The space is discrete: $A_L$ is a finite set of $2^L+1$ elements, $D=\{0,1\}^L$ is a finite set of $2^L$ states, and $X_L=A_L^D$ is a finite product. The space has no direction, no line segments, no inner product; Euclidean distance is not its own metric. The metric given by the coordinate structure must be of Hamming type — compare coordinate by coordinate, count the different coordinates:
 
 $$
 d(f,g)=|\{x\in D:\ f(x)\ne g(x)\}|
@@ -221,9 +251,9 @@ $$
 d_w(f,g)=\sum_{x\in D} w_x\cdot\mathbf 1[f(x)\ne g(x)]
 $$
 
-- the Hamming type of the metric is determined by discreteness; weights do not change the type
+- the Hamming type of the metric is determined by discreteness; weights change the price, not the type
 - $w_x\equiv1$ $\Rightarrow$ ordinary Hamming distance
-- general value sets: $d_w(f,g)=\sum_{x\in D} w_x\cdot\delta(f(x),g(x))$, with $\delta$ the discrete metric on $A_3$
+- it takes finitely many nonnegative values
 
 3-SAT case ($D=\{0,1\}^n$):
 
@@ -233,22 +263,12 @@ $$
 
 When $n=3$ the sum runs over 8 states; when $n=2$ it runs over 4 states.
 
-Norm form ($A_3=\{0,1\}$):
-
-$$
-\|f\|_w=\sum_{x\in D} w_x\cdot f(x)
-$$
-
-$$
-d_w(f,g)=\|f\oplus g\|_w
-$$
-
 ### 1.5 Completeness
 
-- $A_L$ is a value set, $X_L$ is a value-function space, and $\&$, $\vert$, $!$ act pointwise.
-- Pointwise structure $\Rightarrow$ completeness is inherited coordinate by coordinate: $X_L$ is a product of one copy of $A_L$ over each input coordinate. $X_L$ is a semiring / lattice / complemented $\Leftrightarrow$ $A_L$ is; $X_L$ complete $\Leftrightarrow$ $A_L$ complete.
+- $A_L$ is a value set, $X_L$ is a value-function space, and $!$ acts pointwise.
+- Pointwise structure $\Rightarrow$ completeness is inherited coordinate by coordinate: $X_L$ is a product of one copy of $A_L$ over each input coordinate. $X_L$ complete $\Leftrightarrow$ $A_L$ complete.
 - Metric side: weighted Hamming aggregates coordinate by coordinate. A finite input set $\Rightarrow$ $X_L$ finite $\Rightarrow$ Cauchy completeness holds automatically; in the infinite case, the completeness of $X_L$ is decided by the distance completeness of $A_L$.
-- Expression side: $\{\&,\vert,!\}$ pointwise generate the function algebra on $A_L$; that they generate all value functions rests on $A_L$ itself being a Boolean value set.
+- Expression side: $!$ acts pointwise and creates no new coordinate; it only flips each cell.
 
 In one sentence: the completeness of this value-function space is **inherited** — it is complete when $A_L$ is, and it lacks whatever $A_L$ lacks.
 
@@ -312,9 +332,9 @@ $$
 a_N=a_{N+1}=a_{N+2}=\dots
 $$
 
-The sequence no longer moves; it is constant. A constant sequence is Cauchy, and its limit is this point; for all $m,n\ge N$, $d(a_m,a_n)=0$.
+The sequence no longer moves; it is constant. A constant sequence is Cauchy, and it sits at this point; for all $m,n\ge N$, $d(a_m,a_n)=0$.
 
-Check with 11: $A_3$ has $8+3=11$ values, $X_3$ has $11^8$ points, yet this path is finished within ten steps.
+Check with 9: $A_3$ has $8+1=9$ values, $X_3$ has $9^8$ points, yet this path is finished within ten steps.
 
 Weighted Hamming is the same ledger, only each notch has a different price: $d_w(a_n,a_{n+1})\le d_w(a_0,a_1)$, the distance falls in finitely many values, drops notch by notch, and reaches the bottom in finitely many steps.
 
@@ -392,375 +412,192 @@ $$
 
 that is, $\Delta_n<\delta_n$: the ratio is a proper fraction.
 
-### 3.2.1 Why this term goes to $-\infty$
+### 3.2.1 The floor
 
-On the right, $n\ln q$ is $n$ times a constant, with $\ln q<0$, so each step drops by a fixed amount $|\ln q|$. The steps have no end, the spacing never changes, and it passes through every real number on its way down, with no floor; no finite upper bound can stop it, so it can only be written as $-\infty$.
+The $n\ln q$ on the right moves down as $n$ grows. But there is no need to let it go to infinity. Distance takes only finitely many values: unweighted, $\delta_n$ is an integer from $0$ to $|D|$; weighted, it is one of finitely many nonnegative numbers. While the sequence still moves, $\delta_{n+1}<\delta_n$; a strictly decreasing sequence in a finite set has only a few steps it can take. At most $|D|$ steps and it lands on $0$.
 
-The left side is tied below the right side by $\le$. The right side has no bottom, so the left side's upper bound has no bottom either; it falls along with it.
-
-The left side had other places it could go. $\ln\Delta_n-\ln\delta_n$ is the difference of the logs of two distances, and distances take only finitely many values: integers $0,1,\dots,|D|$ in the unweighted case, finitely many nonnegative numbers in the weighted case. When nonzero, its log is some finite number; the log sends exactly one distance to $-\infty$, namely $0$:
+The well-ordering of the natural numbers picks out the stopping time: the set
 
 $$
-\ln 0=-\infty
+\{n\in\mathbb N\mid\delta_n=0\}
 $$
 
-So the full set of possible values on the left is a finite set plus the single point $-\infty$. No number in the finite set can stay below $n\ln q$ all the way; only $-\infty$ can follow it to the end. The limit therefore records the fixed point at the far end of the coordinate: $-\infty$. The next section carries it back through the change of base.
+is nonempty; take its least $N$. No limit, no $-\infty$; the stopping time is a number.
 
-### 3.3 Taking the limit
-
-Let $n\to\infty$:
+### 3.3 The least stopping time
 
 $$
-\lim_{n\to\infty}(\ln\Delta_n-\ln\delta_n)\le\lim_{n\to\infty}n\cdot\ln q=-\infty
+N\le\delta_0+1.
 $$
 
-The upper bound runs off to $-\infty$, so:
+For $L=3$, $N\le9$; for $L=2$, $N\le5$. At $N$, $a_N=a_{N+1}=\dots$, and the sequence freezes.
 
-- the limit is at $-\infty$
-- the fixed point is also at $-\infty$
+### 3.4 The stopping point
 
-### 3.4 Pressing Back into the Proper-Fraction Space
+$N$ is the step at which the sequence stops. $\delta_N=0$, and the division form $\Delta_N/\delta_N$ becomes $0/0$, undefined; the ledger ends here. The stopping point $a_N$ is a point of the space. Whether it is a resident is not a matter of time; it is a matter of this point.
 
-Carry the $-\infty$ of §3.3 back through the change of base in §3.1. What was sent into the logarithm there is the ratio $\Delta_n/\delta_n$; the logarithm sends it to $-\infty$, and taking it back gives the ratio $0$:
+### 3.5 The Trivial Equation: Discrete, Bounded, Iterated
 
-$$
-\lim_{n\to\infty}\frac{\Delta_n}{\delta_n}=0
-$$
+The ledger is closed. Looking back, the whole path uses three things:
 
-On the proper-fraction side, the fixed point is $0$. Do not leave it on the number line; put it back into the $q^n$ form of §2.1:
+- Discreteness: $A_L$ is finite, and distance takes only finitely many values.
+- Boundedness: $\delta_n\le\delta_0\le|D|$; at most $|D|$ steps to the floor.
+- Iteration: $a_{n+1}=T(a_n)$, one step after another, in order.
 
-$$
-\frac{\Delta_n}{\delta_n}=0=q^n
-$$
+From the very first algorithm course, the first lesson is these three things: discrete, bounded, sequentially iterated. The definition of an algorithm has already said it clearly. These three are not a shell put around algorithms; they are the definition itself, one-to-one. Reduce any algorithm to these three, and its convergence is already inside. A strictly decreasing sequence in a finite set reaches the bottom in a few steps; well-ordering picks out the stopping time; no limit, no $-\infty$.
 
-$n$ is the step that reaches the fixed point, $q<1$, and $q^n$ lands on $0$ only if $q=0$. $q=0$ means the multiplier has collapsed: every bit of the value multiplied in at each step is $0$, $v\wedge0=0$, the next value is entirely $0$, and so is every step after.
+The reductions on the P side and on the NP side are constructive reductions. Cook's is constructive; so is the P-side one: given a run of an algorithm, build a 3-SAT or 2-SAT table on the spot, and write “which cell it reached” as clauses. The reduction is itself part of the proof; it is what sets the resident on the table.
 
-The fixed point reads back not as some nonzero function, but as the constant-zero function.
+Why can two small problems reach across the whole algorithm world? Because they are the most ordinary. 3-SAT has three lamps to a row, 2-SAT two lamps to a row; the narrowest construction holds a whole side's discrete, bounded, sequential trajectories. Not because they are special, but because they are so ordinary that any algorithm fits inside them. This chapter only walks both sides into the same table.
 
-## 4. Contradiction
+## 4. Collapse
 
-Now look at this fixed point. The constant-zero function: every coordinate takes $0$.
-
-$1_L$ is the multiplicative identity of the value set, and the top of the Boolean lattice:
+Now put the formula into this iteration. The sign-pattern set of the formula is $S\subseteq D$; define
 
 $$
-1_L\wedge v=v,\qquad 1_L\vee v=1_L,\qquad !\,1_L=0
-$$
-
-No value changes as it passes under $1_L$. $0$ is the other end, the absorbing element:
-
-$$
-0\wedge v=0
-$$
-
-it wipes out whatever it touches.
-
-The resident criterion sits between these two ends. §1.2: satisfiable $\Leftrightarrow$ not the constant-zero function. The value table must have a foothold on the $1_L$ side — at least one coordinate is not $0$; $1_L$ is the top of that side. The constant zero wipes every coordinate to $0$, leaving not a single foothold.
-
-The fixed point reads back as the constant zero. It is not one step short of $1_L$; it is the bottom of the lattice.
-
-An NP resident needs a fixed point. The fixed point is the constant zero; it is not a resident.
-
-$\Rightarrow$ the assumed NP resident does not exist.
-
-## 5. The P Resident and the NP Counterexample
-
-The conclusions below all live inside the discrete space $(X,d)$ of §1.
-
-### 5.1 Discreteness lemma
-
-$X=A_3^D$, $|D|=8$, $|A_3|=11$, so $|X|=11^8$ is finite. Weighted Hamming distance takes only finitely many values; let
-
-$$
-\delta_{\min}:=\min\{d(f,g):\ f,g\in X,\ d(f,g)>0\}>0
-$$
-
-Let $\{a_n\}$ be a Cauchy sequence. Take $N$ such that $d(a_m,a_n)<\delta_{\min}$ for $m,n\ge N$. Then
-
-$$
-d(a_m,a_n)=0\qquad(m,n\ge N)
-$$
-
-$$
-a_N=a_{N+1}=a_{N+2}=\dots
-$$
-
-That is, the limit of the Cauchy sequence is a concrete point $a^*$ in $X$.
-
-### 5.2 $L_{\mathrm{SAT}}$ and the P resident
-
-$L_{\mathrm{SAT}}$: every clause has exactly $L$ literals.
-
-- $L=2$: 2-SAT, $\in\mathrm P$;
-- $L=3$: 3-SAT, $\mathrm{NP}$-complete (Cook–Levin).
-
-2-SAT is more than the sentence “it lies in P.” It has an algorithm you can run on the spot: replace each clause $(a\vee b)$ with two directed edges $\neg a\to b$ and $\neg b\to a$; the whole formula becomes an implication graph. Compute its strongly connected components — groups of points that can reach each other. If some variable $x$ and $\neg x$ land in the same component, the formula is unsatisfiable; if not, a satisfying assignment can be assembled in the topological order of the components. Computing strongly connected components is linear, so the whole thing finishes in polynomial time; the number of steps is finite and the lamp can be found.
-
-3-SAT has no such ready road. A three-literal clause is no longer held by two edges; the implication-graph criterion fails here. The extra lamp is the dividing line.
-
-The chain has to be made clear. 3-SAT is NP-hard, and that is not something we constructed. To be precise, it is NP-complete: it lies in NP and is NP-hard. This conclusion is older than this book: Cook (and Levin) proved that every problem in NP has a polynomial-time reduction to SAT; from SAT to 3-SAT only two mechanical things happen — long clauses are split into clauses of three literals (adding auxiliary variables where needed), and short clauses are padded with repeated literals. Join the two stretches, and every problem in NP reduces to 3-SAT. Someone else welded the chain; 3-SAT is tied at its end, and NP-hardness is a property the chain gives it, not a property our step gives it.
-
-What we construct here is the space and the residents, not NP-hardness. Constructing is not the problem: to prove existence, giving a construction is a proof. The point is to say which stretch is borrowed. The reduction chain is borrowed from Cook–Levin; the space, the iteration sequence, and the P resident are ours. Seeing “construct 3-SAT” should not suggest that the act of construction automatically produces NP-hardness — the hardness comes with the old chain, not with the new construction. This constructive proof is about who lives in the space and who does not.
-
-The P resident is constructed on the $L=2$ side; on the $L=3$ side, the NP-hard object is bound by the Cook reduction chain.
-
-For the 2-SAT case take $L=2$: $D=\{0,1\}^2=\{00,01,10,11\}$, 4 states. Plug in the $L=2$ values: $A_2$ has $4$ states plus $3$ operators, $7$ values in all; the space $X_2=A_2^D$ has $7^4$ points. The resident uses only the $4$ state values — write $B:=\{0,1\}^2\subset A_2$, $0:=(0,0)$, $1_2:=(1,1)=11$, with $\wedge$ acting bitwise on $B$; the whole orbit lies in $B^D\subset X_2$, $4^4=256$ points. Hamming distance is an integer lying between $0$ and $4$.
-
-Derive from scratch. First fix the multiplier:
-
-$$
-h:D\to B,\qquad h(x_1,x_2):=(x_1,x_1)
-$$
-
-It reads only the first bit and writes it into both slots. The values at the four inputs, listed one by one:
-
-| $x$ | $00$ | $01$ | $10$ | $11$ |
-|:--|:--:|:--:|:--:|:--:|
-| $h(x)$ | $00$ | $00$ | $11$ | $11$ |
-
-Read one bit, write two; cost $O(1)$, on the P side; and $h\in B^D\subset X_2$.
-
-Next define the operator as pointwise conjunction:
-
-$$
-T_h(f)(x):=f(x)\wedge h(x)\qquad(x\in D)
-$$
-
-Take the constant-one function as the starting point:
-
-$$
-a_0:=1_X,\qquad a_0(x)=11\quad(x\in D)
-$$
-
-First step, computed pointwise: one two-bit conjunction for each of the four inputs:
-
-$$
-\begin{aligned}
-a_1(00)&=11\wedge h(00)=11\wedge00=00\\
-a_1(01)&=11\wedge h(01)=11\wedge00=00\\
-a_1(10)&=11\wedge h(10)=11\wedge11=11\\
-a_1(11)&=11\wedge h(11)=11\wedge11=11
-\end{aligned}
-$$
-
-Going through the four values one by one: both bits of $11\wedge v$ are $1$, so the conjunction lets each bit through unchanged ($1\wedge0=0$, $1\wedge1=1$); the result is the value of $h$ at that point. Hence
-
-$$
-a_1=h
-$$
-
-Second step, again pointwise:
-
-$$
-\begin{aligned}
-a_2(00)&=a_1(00)\wedge h(00)=00\wedge00=00\\
-a_2(01)&=a_1(01)\wedge h(01)=00\wedge00=00\\
-a_2(10)&=a_1(10)\wedge h(10)=11\wedge11=11\\
-a_2(11)&=a_1(11)\wedge h(11)=11\wedge11=11
-\end{aligned}
-$$
-
-The two slots of $h$ are equal, so at each input the conjunction is between two identical two-bit values; bitwise $0\wedge0=0$, $1\wedge1=1$, and the result is itself again: $h\wedge h=h$. Hence $a_2=a_1$, and every step after is the same:
-
-$$
-a_n=h\qquad(n\ge1)
-$$
-
-The distance ledger is settled coordinate by coordinate:
-
-$$
-d(a_0,a_1)=|\{x\in D:\ 11\ne h(x)\}|=|\{00,01\}|=2
-$$
-
-$$
-d(a_1,a_2)=|\{x\in D:\ h(x)\ne h(x)\}|=0
-$$
-
-That is, $\delta_0=2$, $\delta_1=0$. $\delta_n$ is an integer between $0$ and $4$; starting from $\delta_0=2$ it never increases ($0\le q<1\Rightarrow q^n\delta_n\le\delta_n$), reaches $0$ at step $1$, and stays $0$ thereafter. Iteration condition $\Delta_n\le q^n\delta_n$: for $n=0$, $0\le2$; for $n\ge1$, $0\le0$; it holds everywhere.
-
-Therefore
-
-$$
-a^*_P:=h\in X_2
-$$
-
-The P resident is constructed: frozen after one step, with limit the explicit point $h$ in the space. $h$ is not the constant zero: it takes $11=1_2$ at $10$ and $11$, so the value table has two footholds on the $1_L$ side; by §1.2 it is a resident.
-
-This resident is special in two places. Its limit is the point $h$ in $X_2$ — not the constant zero, and not a collapsed multiplier: $h\wedge h=h$, the multiplier catches itself; the distance goes to zero because the two points coincide, not because the multiplier becomes $0$. And it satisfies exactly $2$ states — $h(x)=11$ holds only on $10$ and $11$; the other two inputs give $00$. The 2 in the book’s $L=2$ is the number of variables; the 2 in standard 2-SAT is two literals per clause. Same value, different meanings. Two lit cells are already enough for satisfiability. The table stops here; the clock stops, the resident remains.
-
-### 5.3 The NP counterexample
-
-Suppose for contradiction that an NP resident $a^*_{NP}$ exists, with fixed point $-\infty$. By §3.4, carrying $-\infty$ back through the change of base reads the fixed point as $0$; the ratio vanishes, so $q=0$:
-
-$$
-a^*_{NP}=-\infty
-\;\xrightarrow{\ \text{change of base}\ }\;
-0
-\;\Longrightarrow\;
-\frac{\Delta_n}{\delta_n}=0
-\;\Longrightarrow\;
-q=0
-$$
-
-$q=0$ means the multiplier has collapsed. The iteration starts from $1_L$; $1_L\wedge0=0$, the next value is the constant-zero function, and every step after is the same. On the §1.2 criterion this fixed point is unsatisfiable; on the lattice it is the bottom $0$, not the top $1_L$.
-
-Stopping here is not the proof breaking off halfway. $0$ is fully dark, and it has already answered the SAT question: no assignment makes the formula true, so there is no SAT to find. The assumed NP resident, read out at the end, says “not found”; the contradiction is not in the next cell, it is in this one. The longer the time sequence stacks, the more complex the candidate table spreads, the harder it is for a lamp to stay on the table; the constant zero is absorbing, so every step after is the same — the table will not suddenly light up again one cell later. If you are looking for SAT, this is where it is not.
-
-So no NP resident exists; the counterexample object is that $-\infty$, which reads back as $0$, not as a resident of this space.
-
-### 5.4 Conclusion
-
-$$
-\begin{aligned}
-\text{P-resident}:&\quad a^*_P=h\in X_2&&\text{(}L=2\text{, constructed explicitly in 5.2; }h\text{ takes }1_2\text{ at }10\text{ and }11\text{)}\\
-\text{NP-resident}:&\quad a^*_{NP}\ \text{does not exist}&&\text{(}L=3\text{, 5.3 by contradiction; the fixed point is the constant zero, }0\ne1_L\text{)}
-\end{aligned}
-$$
-
-$$
-\Rightarrow\ \mathrm P\ne\mathrm{NP}
-$$
-
-## 6. Back to Ideal Time
-
-### 6.1 Oracle time is already in hand
-
-People speak of NP-hard problems under ideal time as if ideal time were something extra, out of reach. The ideal time in this book is not extra. It is the oracle time of §1.3.3, and also the time $n$ of the iteration sequence in §2. Where the sequence stops is where ideal time stops.
-
-Where it stops matters more than how long it walked. Stop at a resident, and the time is SAT's time; stop at the constant zero, and the time still exists, but it lands on UNSAT. The two ledgers must be kept apart.
-
-It has already been proved. The $q^n$ in the iteration condition stops growing after the first step: for $n\ge1$, $q^n\le q$. Write this uniform decay constant as
-
-$$
-Q:=q
-$$
-
-Then every further step multiplies the distance between adjacent terms by at most $Q$:
-
-$$
-\delta_{n+1}\le Q\,\delta_n\qquad(n\ge1)
-$$
-
-Multiply through to step $n$:
-
-$$
-\delta_n\le\delta_1\,Q^{n-1}\qquad(n\ge1)
-$$
-
-$\delta_1$ is the adjacent distance after the first step, no larger than the number of coordinates $|D|$. Hence
-
-$$
-\delta_n\le|D|\,Q^{n-1}
-$$
-
-This inequality is the ideal-time ledger. $Q$ is the decay constant, $|D|$ the size of the space; one comes from the iteration condition, the other from the space. One transformation computes it.
-
-### 6.2 How much remains, how much time
-
-Suppose a distance $\varepsilon$ remains, that is, we require $\delta_n<\varepsilon$. From the inequality above, it suffices that
-
-$$
-|D|\,Q^{n-1}<\varepsilon
-$$
-
-Take logarithms to base $1/Q$ on both sides ($1/Q>1$, so the direction does not change):
-
-$$
-n-1>\log_{1/Q}\frac{|D|}{\varepsilon}
-$$
-
-that is,
-
-$$
-n>1+\log_{1/Q}\frac{|D|}{\varepsilon}
-$$
-
-The right side uses only three numbers: the size of the space $|D|$, the tolerance $\varepsilon$, and the decay constant $Q$. The size is written in the space, the tolerance is a requirement, the decay constant is written in the iteration condition; none is foreign. This is the oracle-time upper bound corresponding to the remaining distance $\varepsilon$. When $\varepsilon\ge|D|$, no further walking is needed; when $Q=0$, it freezes in one step.
-
-This upper bound is a certificate. The certificate need not carry the starting gap $\delta_0$; one $Q$ is enough. $Q$ is the decay constant of this sequence; $\delta_0$ is only where one particular run started.
-
-### 6.3 The time upper bound for the ideal state
-
-The ideal state is $\delta=0$. Distances in the space take finitely many values; let $\delta_{\min}$ be the smallest positive distance among them (§5.1): $\delta_n<\delta_{\min}$ can only imply $\delta_n=0$. Substitute $\varepsilon=\delta_{\min}$:
-
-$$
-n^*_{\text{ideal}}
-\le
+T_S(f)(x)=
 \begin{cases}
-\left\lceil 1+\log_{1/Q}\dfrac{|D|}{\delta_{\min}}\right\rceil, & Q>0,\\[6pt]
-1, & Q=0.
+f(x), & x\notin S,\\
+0, & x\in S.
 \end{cases}
 $$
 
-When $Q=0$ there is no logarithm to take, and the time is shortest: frozen in one step. This upper bound answers only how long it takes to reach the stopping point, not whether the stopping point is a resident. If the stopping point is $0$, the time is still $1$, and SAT is still absent.
+Cells killed by the formula are zeroed; the rest stay. There is no $\&$ and no $|$ here; only the sign pattern $S$, the zeroing, and the existing values.
 
-Plug in the numbers for $L=3$: $|D|=8$, $\delta_{\min}=1$, and for $Q>0$
-
-$$
-n^*_{\text{ideal}}
-\le
-\left\lceil
-1+\log_{1/Q}8
-\right\rceil
-=
-\left\lceil
-1+\frac{\ln 8}{\ln(1/Q)}
-\right\rceil
-$$
-
-$Q$ is the decay constant, fixed; the right side is therefore a constant. Ideal time is finite, and can be counted out.
-
-Scale $L$ from 3 to 300 million: 300 million variables, 100 million clauses. The clause count does not enter $|D|$; the table's size depends only on the variable count. With $|D|=2^{3\times10^8}$, for $Q>0$ the bound becomes
+Start from the constant-one table $a_0=1_{X_L}$. Compute two steps:
 
 $$
-n^*_{\text{ideal}}
-\le
-\left\lceil
-1+3\times10^8\log_{1/Q}2
-\right\rceil.
+a_1=T_S(a_0)=F_S,
 $$
 
-The variable count rises from 3 to 300 million, and the bound grows only linearly with it. Ideal time is not the exponential end; the exponential thing is the size of the candidate table $X_L$. Do not mix the two ledgers.
+$$
+a_2=T_S(a_1)=F_S.
+$$
 
-The explicit construction of P and the assumed NP orbit both fall on the $Q=0$ end, and both have time $1$; the logarithmic bound above is for a general sequence with $Q>0$.
+$T_S$ is idempotent and stops at the second step. Take $Q=0$, $N=1$. $T_S\circ T_S=T_S$ is what the trivial equation looks like on one formula: it does not care what $S$ looks like, what $L$ is, or how wide the clauses are; substitute and it holds, and the moment it holds it stops.
 
-This connects with §3. The inequality in log space has content only while $\delta_n>0$ and the sequence is still moving (§2.2); once the sequence stops, it has reached its end. Ideal time is the length of this stretch of inequality. To call ideal time out of reach is to treat it as a limit; here it is a string of rungs that can be counted to the end.
+That is the collapse: the whole candidate table is pressed onto the formula's truth table in one step. Cells in $S$ go dark; cells outside $S$ stay lit. Whether the fixed point $F_S$ is a resident depends on one thing:
 
-### 6.4 Two kinds of oracle time
+- $F_S=0$ $\Leftrightarrow$ $S=D$ $\Leftrightarrow$ every assignment is killed $\Leftrightarrow$ unsatisfiable;
+- $F_S\ne0$ $\Leftrightarrow$ some assignment is not killed $\Leftrightarrow$ satisfiable.
 
-Look at the time itself first. On the P resident's side, after the first step $\delta_1=0$; take the decay constant $Q=0$: the distance is already squeezed to zero, and further steps only repeat. Ideal time $1$, down in a single step. The stopping point is $h$, which takes $1_2$ at $10$ and $11$ and is a resident; this step lands on SAT.
+Constant zero is not a resident. If the table stops in the dark, there is no SAT; if it is still lit, SAT sits in one of those cells. The iteration does not search and does not try and error; it projects the formula onto the table, all at once.
 
-On the NP side, the time also runs to the end. The assumed resident carries the fixed point to $0$, $q=0$; the iteration starts from $1_L$, $1_L\wedge0=0$, the next value is the constant zero, and every step after is the same. Ideal time is also $1$, down in a single step. The $-\infty$ in log space reads back as $0$; in value space, this one step reaches it. What is found is $0$, not SAT. The difference is not in the time: P's one step stops at $h$, NP's one step stops at $0$. $h$ is a resident, $0$ is not; $h$ has two lit cells, $0$ is fully dark. If ideal time cannot find it, no other time will.
+## 5. Two Examples
 
-So do not treat ideal time as a certificate for SAT. The time certificate can be written on both sides: on the P side $Q=0$ and $n^*_{\text{ideal}}=1$; the assumed NP orbit also has $Q=0$ and $n^*_{\text{ideal}}=1$. The SAT certificate can be issued only on the P side: the stopping point $h$ is a resident. NP can write the time certificate but not the SAT certificate; its stopping point is $0$. Time being $1$ does not mean SAT is $1$.
+### 5.1 $L=2$: a resident
 
-What about a 3-SAT instance? 100 million clauses and 300 million variables — not 300 million SAT instances, but one 3-SAT instance. An oracle machine can spit out all 300 million variables at once, and writing the table takes one step; but the state transition is not the writing. Oracle time counts state transitions, not how many variables were written. Filling one table or filling 300 million variables can both be one step; the transition's conclusion does not change. The transition must carry the whole table to the next cell, and NP's next cell is the constant zero, falling into UNSAT. Parallel variable-filling saves the time of writing variables, not the conclusion of the state transition. The problem has already been reduced to 3-SAT, with clause width three; no matter how well the oracle machine fills variables in parallel, it still cannot find it. The larger the table and the faster it is filled, the stopping point is still $0$.
+Take $L=2$, $D=\{00,01,10,11\}$. The sign-pattern set is $S=\{00,01\}$,
 
-If one insists on recording a “find the certificate” ledger for NP, that is another matter: spread out the whole stack of candidate tables; for $L=3$, $X_3$ has $11^8\approx2.1\times10^8$ points. Each increase of $L$ by $1$ grows $A_L$ from $7$ values to $11$ and then to $19$, and $X_L$ from $7^4$ to $11^8$ and then to $19^{16}$ — base and exponent grow together, exponents stacked on exponents. This ledger is the size of the candidate table stack, not the ideal iteration time. Given an assignment, substitute it into the formula and its light or dark is known in one step; the hard part is finding the assignment. Verifying is one step; finding is not.
+$$
+h(x)=(x_1,x_1).
+$$
 
-The two lines are different. The P certificate carries a $Q$ (here $0$), ideal time is $1$, and the stopping point is $h$; NP's stopping point reads back as $0$, with no resident. Put $\mathrm P\ne\mathrm{NP}$ on the time axis, and it does not say “one takes 1 step, the other exponential time”; both can take 1 step. The difference is the cell where each stops: one is lit, one is fully dark.
+Look at the four inputs one by one: $h(00)=h(01)=00$, $h(10)=h(11)=11$. From $a_0=1_X$,
 
-### 6.5 Not a Turing-Machine Problem, a Solution-Space Problem
+$$
+a_1=T_S(a_0)=F_S=h,
+$$
 
-Someone keeps asking: why don't you construct a Turing machine? Why not start from a two-state Turing machine and work upward, state by state?
+$$
+a_2=T_S(a_1)=h.
+$$
 
-No need. The Turing-machine layer is too shallow to reach this question. Adding states, tape, parallelism adds only to how much a machine can spit out at once; the question here is whether the solution space contains that resident. If the resident is not there, no machine, however divine, can search it out; if it is there, even a slow machine will eventually walk to it. Solvability is not set by the searching machine; it is set by the solution space itself.
+Distances:
 
-Run the machine as divine as you like: it spits out hundreds of millions of states at once, locks onto the optimal one among them, and walks along it; every step hugs the width of a three-literal clause, every step is ideal. This is a monster machine. When the monster machine reaches the end, it still cannot find that resident. It did not lose on compute power; it walked to the constant zero, the table stopped in the dark, and the SAT lamp did not light. The evolution of the solution space settles at a fixed point; the monster machine at best accelerates its own death.
+$$
+\delta_0=d(1_X,h)=|\{00,01\}|=2,
+$$
 
-So there is no need to construct the Turing machine of a hundred years from now, and no need to climb up from a two-state Turing machine. AlphaGo, a quantum computer, a carefully designed parallel or backtracking algorithm — they all walk on the same table. On the assumed NP side, the table contracts, contracts to the constant zero, and the SAT lamp cannot light. This is not a compute-power problem; it is a solution-space problem: whether that satisfying assignment is there, whether that resident is there, is a mathematical question, not a computer question.
+$$
+\delta_1=d(h,h)=0.
+$$
 
-Some start from the properties of a two-state Turing machine and prove that a certain class of machines cannot find it. That is another road: it proves something about a machine, not about the space. Machines can be swapped; the space does not change. Swap in a stronger machine, and the shape of the space is the same. What must be proved is that the space has no such resident, not that some machine is not fast enough.
+One step to the bottom; ideal time $1$. $h$ is lit on $10$ and $11$, so it is a resident; those two assignments satisfy the formula. The $2$ in $L=2$ is the number of variables; the $2$ in standard 2-SAT is the clause width. Same numeral, different meaning.
 
-> One last gripe: a con artist tells you that smart people can always find the solution, then has you try it clause by clause. One or two clauses, sure, you can find an answer; the further you try, the more the solution space collapses, until it collapses to a fixed point, to the constant zero. This is no god-making problem — not the kind of problem where one day humanity suddenly grasps an intellectual weapon and can try out everything. It is the oldest con there is: a carefully designed trap that looks harmless, a dead end at bottom, with no such thing in the resident object at all. This kind of problem gets harder the further you go, exponentially hard, and then harder still. You can write it by hand: know the rules, fill the table row by row. A Turing machine only abstracts this into a tape and two states; the abstraction is not the point. The point is that the solution space contracts. So what must be proved in the end is not whether the machine is fast enough, but: when the problem is long enough and the ideal state abundant enough, can you find it? Is that solution still there, or has it already collapsed?
+### 5.2 $L=3$: the same step, another fixed point
+
+Take
+
+$$
+F=(x\vee y\vee z)\wedge(\neg x\vee\neg y\vee\neg z).
+$$
+
+Its sign-pattern set is $S=\{000,111\}$: $F$ is false only at these two cells and true on the other six. $F_S$ arrives in one step and is a resident; ideal time $1$.
+
+Now take $S=D$, killing all eight cells. $F_S=0$, again one step; the fixed point is constant zero, not a resident, UNSAT. The ideal time is still $1$.
+
+For $L=2$ and $L=3$ the ideal time is $1$. Time does not tell them apart; the fixed point does. Let the number of variables go from 2 to 3 to three hundred million: $T_S$ is still idempotent, and one formula still freezes in one step. How big the table is only changes how long $F_S$ takes to write down, not the number of steps to the fixed point.
+
+### 5.3 Not a distance
+
+This iteration does not do two things: it does not search, and it does not compute a distance between P and NP. It does one thing: press the formula table onto its fixed point and see whether the fixed point is lit.
+
+The difficult part is not the iteration. The iteration is one step. The difficult part is writing $F_S$ — knowing, before the formula is unpacked, which cell is killed and which is still lit. Given an assignment, substitute it into the formula and the light or dark shows in one step; the hard part is finding that assignment. Checking is one step; finding is not.
+
+So "both times are 1" is not a sentence of defeat. It moves the question: there is no boundary on the time axis; the boundary is at the fixed point. A lit fixed point is SAT; an all-dark one is UNSAT. What is wanted is not a faster iteration; it is the fixed point that is still lit.
+
+## 6. Not P, Not NP — a Convergence Problem
+
+### 6.1 Both oracle times are 1
+
+Oracle time is not an extra machine; it is the time of §1.3.3: every step follows the successful path, and backtracking or correction never enters the ledger.
+
+On the P side, the resident $h$: $\delta_0=2$, $\delta_1=0$, $Q=0$, ideal time $1$. On the dark side: $S=D$, $1_L$ drops to constant zero in one step, $Q=0$, ideal time also $1$. Both sides have one step; oracle time counts transitions of the state, and both are countable.
+
+This is no coincidence. $T_S\circ T_S=T_S$, and that identity has nothing to do with what $S$ looks like, what $L$ is, or how wide the clauses are; substitute and it holds, and the moment it holds it stops. It is a trivial equation, and both P and NP are collected inside it. Exponential, polynomial — fed into this equation, both take one step. The two sides both take time $1$, not because P and NP are the same, but because this equation only has one step in it.
+
+A time certificate can be written on both sides. But a SAT certificate can be opened only on the lit side: $h$ is a resident, $0$ is not. Time being $1$ does not mean SAT is $1$.
+
+### 6.2 Two lines, the same number of steps
+
+The P certificate carries a $Q$ (here $0$), ideal time $1$, fixed point $h$; on the dark side the fixed point reads back as $0$, no resident. To call this a separation of P and NP is to leave the question on the time axis; both take 1 step, and the difference is in the cell where they stop: one lit, one all dark.
+
+This is where the textbook trap sits: put attention on the number of steps, look for a faster or slower line. Here both sides have 1 step, not because they happen to run equally fast, but because this one trivial equation charges both sides a single step. Look further and you only find yourself.
+
+### 6.3 The solution space moves on its own
+
+Someone keeps asking: why don't you construct a Turing machine? Why not start from a two-state Turing machine and push up step by step?
+
+No need. The Turing-machine layer is too shallow to reach the question. Add states, add tape, add parallelism — what is added is how much the machine can spit out at once; the question here is whether the resident is in the solution space. If the resident is absent, no machine, however godlike, can search it out; if it is present, a stupid machine walking slowly will get there. Solvability is not set by the searching machine; it is set by the space itself.
+
+Drive the machine to its most godlike: spit out several hundred million states at once, lock onto the optimal one, follow it; every step follows the width of a three-literal clause, every step ideal. This is a monster machine. At the end the monster machine still does not find the resident. It did not lose on computing power; it arrived at constant zero, the table stopped in the dark, and the SAT lamp never lit. The evolution of the solution space lands on a fixed point; the monster machine at most accelerates its own death.
+
+So there is no need to construct the Turing machine of a hundred years from now, nor to push up from a two-state one. A carefully designed parallel or backtracking algorithm, any other machine — all walk on the same table. The table contracts, contracts to constant zero, and the SAT lamp cannot light. This is not a question of computing power; it is a question of the solution space: whether that satisfying assignment is there, whether that resident is there, is a mathematical question, not a computer question.
+
+Someone starts from properties of two-state Turing machines and proves that a certain class of machines cannot search. That is another road: it proves something about the machine, not the space. Machines can be swapped; the space does not swap. Bring a stronger machine, and the shape of the space is the same. What is to be proved is that the resident is not in the space, not that some machine is not fast enough.
+
+> One last gripe: a con artist tells you that smart people can always find the solution, then has you try it clause by clause. One or two clauses, sure, you can find an answer; the further you try, the more the solution space collapses, until it collapses to a fixed point, to the constant zero. This is no god-making problem — not the kind of problem where one day humanity suddenly grasps an intellectual weapon and can try out everything. It is the oldest con there is: a carefully designed trap that looks harmless, a dead end at bottom, with no such thing in the resident object at all. This kind of problem gets harder the further you go: the table gets larger and harder to see. The difficulty is not in the number of steps; it is in the table itself. You can write it by hand: know the rules, fill the table row by row. A Turing machine only abstracts this into a tape and two states; the abstraction is not the point. The point is that the solution space contracts. So what must be proved in the end is not whether the machine is fast enough, but: when the problem is long enough and the ideal state abundant enough, can you find it? Is that solution still there, or has it already collapsed?
+
+### 6.4 Conclusion
+
+This chapter teaches one triviality equation of algorithmic convergence: discrete, bounded, sequentially iterated. With these three, any algorithm is collected in the same equation. $T_S\circ T_S=T_S$; both ideal times are $1$, and the difference is in the cell where they stop — a lit lamp is SAT, a dark one UNSAT.
+
+Only two samples are laid out here: one P, one NP. The reduction chain pulled them out not to split them apart, but so you can see that both sides share one structure. Every P problem and every NP problem sends its solution space toward a fixed point under the same equation; P and NP are just the readings this equation gives on two samples.
+
+The general form of the trivial equation. Let $\delta_0=d(a_0,a_1)$:
+
+$$
+\begin{aligned}
+&\forall\,(X,d,q,T,a_0),\quad X\ \text{finite},\quad 0\le q<1,\\
+&\qquad a_{n+1}=T(a_n),\quad d(Ta_n,Ta_{n+1})\le q^n d(a_n,a_{n+1})\quad(\forall n\ge1)\\
+&\Longrightarrow\quad \exists N\le\delta_0+1:\quad a_N=T(a_N)=a_{N+1}=\cdots
+\end{aligned}
+$$
+
+The formula map is its cleanest instance: $T_S\circ T_S=T_S$, $N=1$. Every algorithm can be written as $a_{n+1}=T(a_n)$; once its distance ledger satisfies this contraction inequality, it reaches a stopping point in finitely many steps. Triviality is not an adjective; it is proved — by the collapse of the solution space. That is the one new thing in this chapter, and this single move unifies the Reasoning Kingdom.
+
+This is not a question of whether the machine is fast enough; it is a question of whether that resident is in the space. Look further along the time axis and you will find nothing new.
 
 There really are problems in life with no answer. Not every problem hides a solution waiting for a smarter machine to dig it out. Some problems narrow as you go deeper, until there is nothing left. This is ordinary. Some problems simply have no answer.
 
+In the end, this chapter is not refuting the algorithm; it is defending the algorithm itself. The classical definition of an algorithm has only three conditions: discrete, bounded, sequentially iterated. An algorithm's limits and open questions inherit directly from these three — it is not that some machine is not fast enough; it is the boundary these three commandments draw. Neural networks, AlphaGo's Monte Carlo tree, every kind of heuristic: their convergence is collected in these three. An algorithm is convergent by its own nature; the three commandments are where that convergence is written. Nothing here derives an algorithm; the derivation has always been of these three rules themselves.
+
 ---
 
-The book ends here.
+The Reasoning Kingdom ends here.
 
-It is an open book. What is proved is laid here, and what is not proved is laid here too. The conclusion of Chapter 24 stops at $\mathrm P\ne\mathrm{NP}$; there is no next page.
+It is an open book. What is proved is laid here, and what is not proved is laid here too. The conclusion of Chapter 24 stops at the collapse of the solution space: the table reaches a fixed point, and the lamp is either lit or out.
 
 Walking toward tomorrow does not require first becoming a person who can be written down, complete, normal, brave, without fear or shame. No one has that obligation.
 

@@ -172,7 +172,7 @@ export default defineConfig({
             { text: 'Ch21: Learning as Inverse Inference — Generalization Is Another Word for Compression', link: '/volume2/chapter21/' },
             { text: 'Ch22: Self-Reference and Emergence — When a Reasoning System Starts Reasoning About Itself', link: '/volume2/chapter22/' },
             { text: 'Ch23: The Yonglin Corollary — Intelligence, Emergence, and the Ordinary Equation', link: '/volume2/chapter23/' },
-            { text: 'Ch24: An Inquiry into the NP Problem — The LIT Theorem', link: '/volume2/chapter24/' },
+            { text: 'Ch24: Algorithmic Convergence — The LIT Theorem', link: '/volume2/chapter24/' },
             { text: 'Dictionary', link: '/dictionary' },
           ]
         }

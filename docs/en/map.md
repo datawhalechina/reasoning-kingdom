@@ -126,7 +126,7 @@ The Reasoning Kingdom is now a complete trilogy:
 |---------|------|----------|---------|
 | **Ch22** Self-Reference and Emergence | Exploring the meta-layer of reasoning | When reasoning systems reason about themselves | Curry-Howard correspondence, fixed-point theorems |
 | **Ch23** The Yonglin Corollary | Turning the convergence rate into computable log curves and reproducing the straight-line format of scaling laws | Information-theoretic energy surface + Banach completeness | Tangent Hessian, spectral analysis, finite-sample counting |
-| **Ch24** An Inquiry into the NP Problem | Writing out the P/NP separation completely inside a finite discrete space | Log space's $-\infty$ carries back through the change of base to $0$; $0$ is the constant zero, not the resident $1_L$ | Weighted Hamming distance, contraction iteration, change of base into log space, discreteness lemma |
+| **Ch24** Algorithmic Convergence | Writing out the structure of solution-space convergence to a fixed point inside a finite discrete space, demonstrated on a pair of P/NP samples | $T_S\circ T_S=T_S$ is the shared trivial equation; the solution space collapses to a fixed point, lit means SAT, dark means UNSAT | Weighted Hamming distance, contraction iteration, well-ordered stopping time, solution-space collapse |
 
 ---
 
