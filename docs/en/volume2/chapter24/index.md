@@ -8,7 +8,7 @@ $X_L=A_L^D$; $A_L=\{0,1\}^L\cup\{!\}$
 
 $(X_L,d_w)$ $\Rightarrow$ space
 
-Route: the triviality equation of algorithmic convergence — discrete, bounded, sequentially iterated $\to$ the value set keeps only $A_L=\{0,1\}^L$ and the negation $!$ $\to$ weighted Hamming space $X_L=A_L^D$ $\to$ construct the iteration sequence $\to$ well-ordering gives the stopping time, no limit taken $\to$ the formula map $T$ freezes in one step $\to$ a lit stopping point is SAT, a dark one UNSAT $\to$ both optimal transitions are at most $1$, the difference is in the stopping point $\to$ the solution space collapses; P and NP are just two samples.
+Route: the triviality equation of algorithmic convergence — discrete, bounded, sequentially iterated $\to$ the value set keeps only $A_L=\{0,1\}^L$ and the negation $!$ $\to$ weighted Hamming space $X_L=A_L^D$ $\to$ construct the iteration sequence $\to$ well-ordering gives the stopping time, no limit taken $\to$ weighted Hamming gives $2^L+1$ $\to$ clauses cover, hence collapse to UNSAT $\to$ the solution space collapses; P and NP are just two samples.
 
 ## Preface: Enumerate First, Then Talk About Convergence
 
@@ -350,15 +350,27 @@ $$
 
 The sequence stops moving after finitely many steps. For any $m,n\ge N$, $d_w(a_m,a_n)=0$, so it is a Cauchy sequence, converging to $a_N$. Only now does completeness enter: a Cauchy sequence in this space has a limit. Here we get more: the limit is $a_N$ itself.
 
-**At most how many steps.** With unit weights, $\delta_0=d_w(a_0,a_1)$ is an integer from $0$ to $|D|$. Whenever $\delta_n>0$, $\delta_{n+1}<\delta_n$; two distinct integers differ by at least $1$, so each moving step lowers the distance by at least $1$:
+**At most how many steps.** With unit weights, go back to the sum from step two:
+
+$$
+\delta_0=\sum_{x\in D}w_x\cdot\mathbf 1[a_0(x)\ne a_1(x)].
+$$
+
+Each term is either $1$ or $0$, and there are $|D|$ terms, so $\delta_0$ is an integer from $0$ to $|D|$. Whenever $\delta_n>0$, $\delta_{n+1}<\delta_n$; two distinct integers differ by at least $1$, so each moving step lowers the distance by at least $1$:
 
 $$
 \delta_n\le\delta_0-(n-1)\qquad(1\le n\le\delta_0+1).
 $$
 
-Take $N=\delta_0+1$: for $L=3$, $|D|=8$ and $N\le9$; for $L=2$, $|D|=4$ and $N\le5$. $X_3$ has $9^8$ points, yet this sequence stops within nine steps.
+Take $N=\delta_0+1$. $D$ is the set of all $L$-bit strings, so $|D|=2^L$: eight cells for $L=3$, four for $L=2$, hence
 
-The size of $q$ does not affect the step count: as long as $q<1$, each step either does not move or lowers the distance by at least one, so it stops within $|D|$ steps. $q$ decides how fast the distance shrinks, not when it stops.
+$$
+N\le|D|+1=2^L+1,
+$$
+
+which is $9$ for $L=3$ and $5$ for $L=2$. $X_3$ has $9^8$ points, yet this sequence stops within nine steps.
+
+The size of $q$ does not affect the step count: as long as $q<1$, each step either does not move or lowers the distance by at least one, so it stops within $|D|+1$ steps. $q$ decides how fast the distance shrinks, not when it stops.
 
 With general nonnegative weights, the distance need not decrease by whole numbers, so the concrete bound $N\le\delta_0+1$ need not hold. But there are still only finitely many values, and strict decrease can still happen only finitely many times, so the sequence still stops after finitely many steps. The 9 and 5 computed later use unit weights.
 
@@ -373,66 +385,64 @@ $N$ is the step at which the sequence stops. $\delta_N=0$, and the sequence stop
 Looking back, the whole proof uses three things:
 
 - Discreteness: $A_L$ is finite, and distance takes only finitely many values.
-- Boundedness: with unit weights, $\delta_n\le\delta_0\le|D|$; at most $|D|$ steps before it stops.
+- Boundedness: with unit weights, $\delta_n\le\delta_0\le|D|$, so $N\le|D|+1$.
 - Iteration: $a_{n+1}=T(a_n)$, one step after another, in order.
 
 From the very first algorithm course, the first lesson is these three things: discrete, bounded, sequentially iterated. The definition of an algorithm has already said it clearly. These three are not a shell put around algorithms; they are the definition itself, one-to-one. Put any algorithm against these three, and its convergence is already inside. A strictly decreasing sequence in a finite set reaches the bottom in a few steps; well-ordering picks out the stopping time; no limit, no $-\infty$.
 
 Why can $L$-SAT reach across the whole algorithm world? Because it is the most ordinary. $L=2$ has two lamps to a row, $L=3$ three lamps to a row; the narrowest clause holds a whole side's discrete, bounded, sequential trajectories. Not because it is special, but because it is so ordinary that any algorithm fits inside it. This chapter only walks $L$-SAT into the same table.
 
-No construction is needed. §5 counts the clauses: $2^L$ cover the table, $2^L+1$ close it; $L=2$ gives 5, $L=3$ gives 9. Both end at constant zero, both UNSAT. The one-cell-at-a-time enumeration is the road the bound in §2.1 describes.
+No construction is needed. §4 counts the clauses: $2^L$ cover the table, $2^L+1$ close it; $L=2$ gives 5, $L=3$ gives 9. Both end at constant zero, both UNSAT. The one-cell-at-a-time enumeration is the road the bound in §2.1 describes.
 
 ## 4. Collapse
 
-Start from the constant-one table $a_0=1_X$ and substitute the formula: a cell where the formula is true carries $1_L$, one where it is false carries $0$. When every cell is substituted, $a_1$ is left. Substitute the formula again: the true and false cells do not change, so $a_2=a_1$.
+$L$-SAT is a table of $2^L$ cells: $L$ variables, one assignment per cell. These $2^L$ cells are $D=\{0,1\}^L$ from §1 — the index set the weighted Hamming distance adds over cell by cell, $|D|=2^L$. A width-$L$ clause has value $0$ at exactly one cell, $x=s$, and $1$ everywhere else; so one clause touches one cell. $L=2$ is 2-SAT, $L=3$ is 3-SAT; the derivation below holds for every $L$.
 
-Distances:
+### 4.1 Where $2^L+1$ comes from
 
-$$
-\delta_0=d(a_0,a_1)\le|D|,\qquad \delta_1=d(a_1,a_2)=0.
-$$
-
-The bound in §2.1 says $N\le\delta_0+1$. For $L=3$, $|D|=8$, so $N\le9$; for $L=2$, $|D|=4$, so $N\le5$. This bound is the count for the enumeration of "clear one cell at a time": in the worst case every cell changes once, then one stop. The formula map is not that enumeration road; it substitutes all cells at once, so its actual convergence stopping time is only $0$ or $1$ — $0\le5$, $1\le9$, and the bound still holds.
-
-The stop table carries only two values: $0$ and $1_L$. If a $1_L$ remains, it is a resident, SAT; if the whole table is $0$, there is no resident, UNSAT. The iteration does not search and does not try and error; it substitutes the formula once, and the table stops.
-
-## 5. $L$-SAT: $2^L+1$ Clauses
-
-$L$-SAT is a table of $2^L$ cells: $L$ variables, one assignment per cell, clauses of width $L$. A width-$L$ clause is false at exactly one assignment, so one clause knocks out one cell. $L=2$ is 2-SAT, $L=3$ is 3-SAT; the count below holds for every $L$.
-
-### 5.1 Counting clauses: $2^L+1$
-
-Take one clause for each of the $2^L$ sign patterns. Each knocks out one cell; $2^L$ clauses cover all $2^L$ cells, and the next clause can only repeat one already taken — it has no new cell to hit. 5 and 9 are not two examples; they are this formula read at $L=2$ and $L=3$:
+Set the clauses aside for a moment and look only at the distance. The weighted Hamming distance is
 
 $$
-m^*(L)=2^L+1.
+d_w(f,g)=\sum_{x\in D}w_x\cdot\mathbf 1[f(x)\ne g(x)].
 $$
 
-$L=2$: $4+1=5$; $L=3$: $8+1=9$; $L=4$: $16+1=17$; $L=10$: $1024+1=1025$. A clause carries $L$ literals; $2^L$ clauses use $L\cdot2^L$ literals: 8 at $L=2$, 24 at $L=3$, 10240 at $L=10$. The size of the table sets the count. In reverse, $L=\log_2(m^*-1)=\ln(m^*-1)/\ln 2$: give the count and recover the width; give the width and count the clauses.
+Compare the two tables cell by cell: where they differ, record that cell's weight $w_x$; where they agree, record nothing. $D=\{0,1\}^L$ has $|D|=2^L$ cells, so the sum has $2^L$ terms.
 
-The information is only so much. Within the $2^L$ patterns, the lit and dark cells can still be spelled out one by one; take them all and the table is covered, all zero; past that, no clause adds a new hint, it only punches the space straight to one side.
+At each moving step the iteration either does not move, or makes at least one cell differ. With unit weights the initial distance is $\delta_0\le|D|$, each moving step drops at least one, so at most $|D|$ steps to run through; plus the step at which it stays put,
 
-### 5.2 Covered, Hence UNSAT
+$$
+N\le|D|+1=2^L+1.
+$$
 
-$L=2$: 4 distinct width-2 clauses cover the 4 cells, and the 5th is a repeat; $L=3$: 8 distinct width-3 clauses cover the 8 cells, and the 9th is a repeat. Both are all zero, both UNSAT. The difference between 5 and 9 is not SAT versus UNSAT; it is the size of the table: 4 cells need 5, 8 cells need 9.
+$L=2$ gives 5, $L=3$ gives 9. The number is settled on the weighted Hamming side: as many cells as the table has, plus one.
 
-The count follows the clause width $L$, not how many other variables there are: take all $2^L$ patterns on one $L$-tuple, and no number of other variables can save it.
+The clause is read off this table, not a second number started alongside. One $L$-SAT clause corresponds to one cell; the clause count runs to the same $|D|+1$.
+
+$L=2$: $4+1=5$; $L=3$: $8+1=9$; $L=4$: $16+1=17$; $L=10$: $1024+1=1025$. A clause carries $L$ literals; $2^L$ clauses use $L\cdot2^L$ literals: 8 at $L=2$, 24 at $L=3$, 10240 at $L=10$. The table has $|D|$ cells; the count is one more. In reverse, $L=\log_2(m^*-1)=\ln(m^*-1)/\ln 2$: give the count and recover the width; give the width and count the clauses.
+
+The information is only so much. The table has $|D|=2^L$ cells, and one clause covers one; within the $2^L$ patterns, the lit and dark cells can still be spelled out one by one; take them all and the table is covered, all zero; past that, no clause adds a new hint, it only punches the space straight to one side.
+
+### 4.2 Covered, Hence UNSAT
+
+One sentence: one clause knocks out one cell. At the start the whole table is $1$, every cell SAT; each clause added knocks at most one cell from SAT to UNSAT. The $2^L$ clauses knock out at most $2^L$ cells; once all $2^L$ patterns have been taken, any further clause only repeats, hitting no new cell. So from all-SAT to all-UNSAT, at most $2^L+1$ clauses complete the transition. $L=2$: 5; $L=3$: 9.
+
+The difference between 5 and 9 is not SAT versus UNSAT; it is the size of the table: 4 cells need 5, 8 cells need 9. This number is not a patent of $L$-SAT. The weighted Hamming distance has $|D|$ cells, and the stopping bound is $|D|+1$; the clauses merely knock out the same $|D|$ cells one by one. Clause and assignment alike take the certificate the weighted Hamming distance issues — $2^L+1$. For any algorithm whose table has $|D|$ cells and whose distance moves at least one cell per step, the stopping bound is still $|D|+1$.
 
 There is no probability here. Take fewer than $2^L$ patterns and some cell is left uncovered; that cell is SAT. Take all $2^L$ and the table is covered; covered is UNSAT. It is not that more clauses tip it one way; the count reaches $2^L$ and the cover is complete, reaches $2^L+1$ and there is no new cell.
 
 The bound says nothing about time. Time is not guaranteed: how long finding SAT takes, how long confirming UNSAT takes — nobody promises. Nobody says SAT is certain within $2^L$, and nobody says it is impossible; $2^L+1$ marks where the information ends, not where the clock ends.
 
-### 5.3 Not a distance
+### 4.3 Not a distance
 
 This iteration does not do two things: it does not search, and it does not compute a distance between P and NP. It does one thing: press the formula table onto its fixed point and see whether the fixed point is lit.
 
-The difficult part is not the iteration. The iteration is one step. The difficult part is writing the fixed table — knowing whether it will go all dark. Given an assignment, substitute it into the formula and the light or dark shows in one step; the hard part is finding that assignment. Checking is one step; finding is not.
+The difficult part is not the iteration; it is writing the table that stops — knowing whether it will go all dark. Given an assignment, substitute it into the formula and the light or dark shows in one step; the hard part is finding that assignment. Checking is one step; finding is not.
 
-So "the stopping time is only 0 or 1" is not a sentence of defeat. It moves the question: there is no boundary on the time axis; the boundary is at the fixed point. A lit fixed point is SAT; an all-dark one is UNSAT. What is wanted is not a faster iteration; it is the fixed point that is still lit.
+So "convergence is not the difficulty" is not a sentence of defeat. It moves the question: there is no boundary on the time axis; the boundary is at the fixed point. A lit fixed point is SAT; an all-dark one is UNSAT. What is wanted is not a faster iteration; it is the fixed point that is still lit.
 
-## 6. Not P, Not NP — a Convergence Problem
+## 5. Not P, Not NP — a Convergence Problem
 
-### 6.1 The solution space moves on its own
+### 5.1 The solution space moves on its own
 
 Someone keeps asking: why don't you construct a Turing machine? Why not start from a two-state Turing machine and push up step by step?
 
@@ -448,9 +458,9 @@ So there is no need to construct the Turing machine of a hundred years from now,
 
 Someone starts from properties of two-state Turing machines and proves that a certain class of machines cannot search. That is another road: it proves something about the machine, not the space. Machines can be swapped; the space does not swap. Bring a stronger machine, and the shape of the space is the same. What is to be proved is that the resident is not in the space, not that some machine is not fast enough.
 
-### 6.2 Conclusion
+### 5.2 Conclusion
 
-This chapter teaches one triviality equation of algorithmic convergence: discrete, bounded, sequentially iterated. With these three, any algorithm is collected in the same equation. Substitute again and the table is the same: $T\circ T=T$; the convergence stopping time is $0$ or $1$, and the difference is in the cell where they stop — a lit lamp is SAT, a dark one UNSAT. The $2^L+1$ is the information bound on the clause count: 5 at $L=2$, 9 at $L=3$; count to here and both collapse to constant zero.
+This chapter teaches one triviality equation of algorithmic convergence: discrete, bounded, sequentially iterated. With these three, any algorithm is collected in the same equation. The difference is at the stopping point — a lit lamp is SAT, a dark one UNSAT. The $2^L+1$ is the information bound on the clause count: 5 at $L=2$, 9 at $L=3$; count to here and both collapse to constant zero.
 
 Only two samples are laid out here: one P, one NP. They are picked out not to split them apart, but so you can see that both sides share one structure. Every P problem and every NP problem sends its solution space toward a fixed point under the same equation; P and NP are just the readings this equation gives on two samples.
 
@@ -468,7 +478,7 @@ $$
 
 $\delta_N=0$ means $a_N=a_{N+1}$; it does not move again.
 
-The formula map is its cleanest instance: $T\circ T=T$, $N=0$ or $1$. Every algorithm can be written as $a_{n+1}=T(a_n)$; once its distances satisfy this contraction inequality, it reaches a stopping point in finitely many steps. Triviality is not an adjective; it is proved — by the collapse of the solution space. That is the one new thing in this chapter, and this single move unifies the Reasoning Kingdom.
+Every algorithm can be written as $a_{n+1}=T(a_n)$; once its distances satisfy this contraction inequality, it reaches a stopping point in finitely many steps. Triviality is not an adjective; it is proved — by the collapse of the solution space. That is the one new thing in this chapter, and this single move unifies the Reasoning Kingdom.
 
 This is not a question of whether the machine is fast enough; it is a question of whether that resident is in the space. Look further along the time axis and you will find nothing new.
 
