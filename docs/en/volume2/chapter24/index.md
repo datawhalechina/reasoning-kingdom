@@ -24,55 +24,57 @@ The method is not mysterious; it is even stupid: not understanding the structure
 
 ### How to Play: Fill the Table, Light the Lamps
 
-Laid out, this thing is a table-filling game — or a light-bulb game, if you like.
+Laid out, this is the L-SAT game itself, only drawn differently: fill the table, light the lamps.
 
-The board is a table. $L=2$ has four cells, headed $00,01,10,11$; $L=3$ has eight, headed by all three-bit values. Each cell holds a row of $L$ lamps: two lamps per cell on the four-cell board, three on the eight-cell board. A lamp is either on or off.
+A clause is a row of lamps. In 3-SAT a clause has three lamps, one per literal. A literal is a variable or its negation; once the assignment is fixed, a true literal lights its lamp, a false one leaves it dark.
 
-At the start, every cell is filled with $1_L$ — all lamps on. The whole table is the constant-one value function $1_{X_L}$, the trivial resident.
+For example, $(x\vee\neg y\vee z)$ has three lamps watching $x$, $\neg y$, and $z$. Under an assignment, the clause is satisfied if at least one of the three lamps is lit; if all three are dark, the clause is false.
 
-A round fills a new table: every cell takes one step under the same rule, lamp by lamp. The explicit construction uses bitwise conjunction; an off lamp is absorbing — whatever it touches goes off.
+A table has many rows, one clause per row. The whole formula is the conjunction of these clauses: every row must have at least one lit lamp, or the formula is not satisfied; one all-dark row and it fails.
 
-Then count the lamps: how many cells in the new table are fully lit. A cell counts when its value is exactly $1_L$. The total is $\operatorname{satStates}$.
+The 3 in 3-SAT sits right here: three lamps per clause. 2-SAT has two lamps per clause. Insert all the Boolean operators you like — a clause is still these literals, and the lamps are still three; stack the operators as high as you want, when you count lamps you count literals.
 
-The new table must reach the threshold for the step to land. For $L=3$ the threshold is $3$; for $L=2$ it is $2$. Exactly that many fully lit cells and the step passes the gate and enters ideal time; one more or one fewer, and the clock stops, the step does not count. The two gates count separately.
+Take three clauses and the assignment $x=1,y=0,z=1$:
 
-Keep filling until the table stops changing: that is the fixed point. If the table at rest still has at least one lit cell, it is a resident; if the whole table is dark, it is the constant zero, not a resident.
+| Clause | Lamp 1 | Lamp 2 | Lamp 3 | This row |
+|:---|:---:|:---:|:---:|:---|
+| $x\vee y\vee z$ | 🟩 $x$ | ⬜ $y$ | 🟩 $z$ | lit, satisfied |
+| $\neg x\vee y\vee\neg z$ | ⬜ $\neg x$ | ⬜ $y$ | ⬜ $\neg z$ | all dark, unsatisfied |
+| $x\vee\neg y\vee z$ | 🟩 $x$ | 🟩 $\neg y$ | 🟩 $z$ | lit, satisfied |
 
-Fill a few tables and look at the light and dark. Green is lit; white is dark.
+The second row is all dark, so this assignment fails. Try $x=0,y=1,z=1$:
 
-$L=2$, the opening move: every cell filled with $1_2$:
+| Clause | Lamp 1 | Lamp 2 | Lamp 3 | This row |
+|:---|:---:|:---:|:---:|:---|
+| $x\vee y\vee z$ | ⬜ $x$ | 🟩 $y$ | 🟩 $z$ | lit, satisfied |
+| $\neg x\vee y\vee\neg z$ | 🟩 $\neg x$ | 🟩 $y$ | ⬜ $\neg z$ | lit, satisfied |
+| $x\vee\neg y\vee z$ | ⬜ $x$ | ⬜ $\neg y$ | 🟩 $z$ | lit, satisfied |
 
-| $00$ | $01$ | $10$ | $11$ |
-|:---:|:---:|:---:|:---:|
-| 🟩 | 🟩 | 🟩 | 🟩 |
+Every row has at least one lit lamp, so this assignment satisfies the whole formula. The game is to find such an assignment. SAT asks exactly this: is there an assignment that lights at least one lamp in every row?
 
-All four cells lit, $\operatorname{satStates}=4$.
+The book does not try assignments one at a time. It lays all eight assignments into one table, one cell per assignment, with the formula's truth value in the cell; all the answers are packed into one value function $a_n$, iterated along the time axis. Satisfiability is the old rule: at least one lit cell; only an all-dark table is the constant zero, and only that is unsatisfiable.
 
-A table with only two lit cells:
-
-| $00$ | $01$ | $10$ | $11$ |
-|:---:|:---:|:---:|:---:|
-| ⬜ | ⬜ | 🟩 | 🟩 |
-
-Two lit, $\operatorname{satStates}=2$. The 2-time gate opens, the 3-time gate stays shut. The P resident $h$ later is exactly this table; one more round returns it unchanged, the table stops, the clock stops. Still two cells lit: a resident.
-
-One $L=3$ table with exactly three lit cells (any three will do):
+For the three clauses above, the eight-assignment truth table is:
 
 | $000$ | $001$ | $010$ | $011$ | $100$ | $101$ | $110$ | $111$ |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| 🟩 | ⬜ | ⬜ | 🟩 | ⬜ | ⬜ | ⬜ | 🟩 |
+| ⬜ | 🟩 | ⬜ | 🟩 | 🟩 | ⬜ | 🟩 | 🟩 |
 
-Three lit, $\operatorname{satStates}=3$, the 3-time gate opens.
+Five cells lit, three dark; the number of lit cells is $\operatorname{satStates}$. With a lit cell, the formula is satisfiable. A cell holds only two values, all off $0$ or all on $1_L$; a lit cell is an assignment that makes the formula true.
 
-The constant-zero table, all eight cells dark:
+Conversely, a fully dark table is the constant zero:
 
 | $000$ | $001$ | $010$ | $011$ | $100$ | $101$ | $110$ | $111$ |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
-$\operatorname{satStates}=0$, both gates shut. The table stops in the dark, not a resident.
+$\operatorname{satStates}=0$, no assignment makes the formula true, unsatisfiable. The table stops in the dark, not a resident.
 
-The game has one question left: when the clock stops, is the table still lit?
+The book's iteration starts from the constant-one table $1_{X_L}$ and updates the whole table under the rule; each step produces a new table. Time moves only along a table that still has a lit cell; when the new table goes fully dark, the clock stops. Ideal time counts successful steps, not lit cells.
+
+Keep filling until the table stops changing: that is the fixed point. If the table at rest still has at least one lit cell, it is a resident; if the whole table is dark, it is the constant zero, not a resident.
+
+The game has one question left: when the clock stops, is the table still lit? Lit, and there is SAT; fully dark, and there is none.
 
 ## 1. The Space
 
@@ -146,13 +148,13 @@ $A_2$, $A_3$ do not mean “the input has only 2 or 3 bits”. They are pointwis
 
 - $D=\{0,1\}^3$ enumerates 8 candidate input states; $X_3=A_3^D$ is the entire candidate solution space.
 - The iterated object $a_n\in X_3$ is not a single 3-bit assignment but the whole candidate table: the values at the 8 states are packed into $a_n$ at once and evolve together along the time mark $n$.
-- The time gate counts the newly filled table: when $\operatorname{satStates}(a_{n+1})=L$ (3 for $L=3$, 2 for $L=2$), the step is allowed to land; otherwise time stops and cannot push outward.
+- The time gate looks at the newly filled table: as long as one cell is still lit ($\operatorname{satStates}(a_{n+1})\ge1$), the step is allowed to land; when the whole table is dark, time stops and cannot push outward.
 
-So “3” is the exactly-3 satisfied states on the new table, not the input length. “2” is the same: the 2-time gate of $L=2$ counts exactly 2 satisfied states, not 2 input bits. The two gates count separately.
+So the “3” in 3-SAT is the clause width — three lamps per clause; the book’s $L=3$ round is three variables and an eight-cell table. The two 3s have the same value and different meanings.
 
 ### 1.3.2 Optimal time: only successful advances count
 
-Backtracking, correction, and hesitant branches do not enter the time ledger. Only steps that truly pass the gate and move forward successfully are recorded:
+Backtracking, correction, and hesitant branches do not enter the time ledger. Only steps that truly move forward successfully are recorded:
 
 $$
 \operatorname{ReachesIn}\ f_0\ 0\ f_0
@@ -492,6 +494,10 @@ $L_{\mathrm{SAT}}$: every clause has exactly $L$ literals.
 - $L=2$: 2-SAT, $\in\mathrm P$;
 - $L=3$: 3-SAT, $\mathrm{NP}$-complete (Cook–Levin).
 
+2-SAT is more than the sentence “it lies in P.” It has an algorithm you can run on the spot: replace each clause $(a\vee b)$ with two directed edges $\neg a\to b$ and $\neg b\to a$; the whole formula becomes an implication graph. Compute its strongly connected components — groups of points that can reach each other. If some variable $x$ and $\neg x$ land in the same component, the formula is unsatisfiable; if not, a satisfying assignment can be assembled in the topological order of the components. Computing strongly connected components is linear, so the whole thing finishes in polynomial time; the number of steps is finite and the lamp can be found.
+
+3-SAT has no such ready road. A three-literal clause is no longer held by two edges; the implication-graph criterion fails here. The extra lamp is the dividing line.
+
 The chain has to be made clear. 3-SAT is NP-hard, and that is not something we constructed. To be precise, it is NP-complete: it lies in NP and is NP-hard. This conclusion is older than this book: Cook (and Levin) proved that every problem in NP has a polynomial-time reduction to SAT; from SAT to 3-SAT only two mechanical things happen — long clauses are split into clauses of three literals (adding auxiliary variables where needed), and short clauses are padded with repeated literals. Join the two stretches, and every problem in NP reduces to 3-SAT. Someone else welded the chain; 3-SAT is tied at its end, and NP-hardness is a property the chain gives it, not a property our step gives it.
 
 What we construct here is the space and the residents, not NP-hardness. Constructing is not the problem: to prove existence, giving a construction is a proof. The point is to say which stretch is borrowed. The reduction chain is borrowed from Cook–Levin; the space, the iteration sequence, and the P resident are ours. Seeing “construct 3-SAT” should not suggest that the act of construction automatically produces NP-hardness — the hardness comes with the old chain, not with the new construction. This constructive proof is about who lives in the space and who does not.
@@ -580,7 +586,7 @@ $$
 
 The P resident is constructed: frozen after one step, with limit the explicit point $h$ in the space. $h$ is not the constant zero: it takes $11=1_2$ at $10$ and $11$, so the value table has two footholds on the $1_L$ side; by §1.2 it is a resident.
 
-This resident is special in two places. Its limit is the point $h$ in $X_2$ — not the constant zero, and not a collapsed multiplier: $h\wedge h=h$, the multiplier catches itself; the distance goes to zero because the two points coincide, not because the multiplier becomes $0$. And it satisfies exactly $2$ states — $h(x)=11$ holds only on $10$ and $11$; the other two inputs give $00$. The new table $h$ counts 2 cells, so the 2-time gate opens and the step is admitted; the 3-time gate wants 3 cells, but $h$ has only two — the third cannot be produced, so it stays shut. The P resident walks the 2-gate and lives on the side where the 3-gate is closed.
+This resident is special in two places. Its limit is the point $h$ in $X_2$ — not the constant zero, and not a collapsed multiplier: $h\wedge h=h$, the multiplier catches itself; the distance goes to zero because the two points coincide, not because the multiplier becomes $0$. And it satisfies exactly $2$ states — $h(x)=11$ holds only on $10$ and $11$; the other two inputs give $00$. The 2 in the book’s $L=2$ is the number of variables; the 2 in standard 2-SAT is two literals per clause. Same value, different meanings. Two lit cells are already enough for satisfiability. The table stops here; the clock stops, the resident remains.
 
 ### 5.3 The NP counterexample
 
@@ -597,6 +603,8 @@ q=0
 $$
 
 $q=0$ means the multiplier has collapsed. The iteration starts from $1_L$; $1_L\wedge0=0$, the next value is the constant-zero function, and every step after is the same. On the §1.2 criterion this fixed point is unsatisfiable; on the lattice it is the bottom $0$, not the top $1_L$.
+
+Stopping here is not the proof breaking off halfway. $0$ is fully dark, and it has already answered the SAT question: no assignment makes the formula true, so there is no SAT to find. The assumed NP resident, read out at the end, says “not found”; the contradiction is not in the next cell, it is in this one. The longer the time sequence stacks, the more complex the candidate table spreads, the harder it is for a lamp to stay on the table; the constant zero is absorbing, so every step after is the same — the table will not suddenly light up again one cell later. If you are looking for SAT, this is where it is not.
 
 So no NP resident exists; the counterexample object is that $-\infty$, which reads back as $0$, not as a resident of this space.
 
@@ -703,7 +711,7 @@ This connects with §3. The inequality in log space has content only while $\del
 
 On the P resident's side, the certificate can be issued on the spot. After the first step $\delta_1=0$; take the decay constant $Q=0$: the distance is already squeezed to zero, and further steps only repeat. Ideal time $1$, down in a single step. The multiplier is the closed-form $h$, which reads only the first bit; the candidate table $X_2$ has $7^4$ points, and it touches only two, $a_0$ and $h$. Oracle time is $1$; however large the candidate table, it takes only one step.
 
-The NP side cannot issue the certificate. A certificate needs a stopping point inside the space for $Q$ to have somewhere to be written; the NP fixed point reads back as $0$, not as a resident. Without a resident, the pen cannot land. If one insists on recording an oracle time for it, only enumeration remains: spread out the whole stack of candidate tables; for $L=3$, $X_3$ has $11^8\approx2.1\times10^8$ points. Each increase of $L$ by $1$ grows $A_L$ from $7$ values to $11$ and then to $19$, and $X_L$ from $7^4$ to $11^8$ and then to $19^{16}$ — base and exponent grow together, exponents stacked on exponents. The upper bound of this ledger is an explosive exponential geometry.
+The NP side cannot issue the certificate. A certificate needs a stopping point inside the space for $Q$ to have somewhere to be written; the NP fixed point reads back as $0$, not as a resident. Without a resident, the pen cannot land. If one insists on recording an oracle time for it, only enumeration remains: spread out the whole stack of candidate tables; for $L=3$, $X_3$ has $11^8\approx2.1\times10^8$ points. Each increase of $L$ by $1$ grows $A_L$ from $7$ values to $11$ and then to $19$, and $X_L$ from $7^4$ to $11^8$ and then to $19^{16}$ — base and exponent grow together, exponents stacked on exponents. The upper bound of this ledger is an explosive exponential geometry. Given an assignment, substitute it into the formula and its light or dark is known in one step; the hard part is finding the assignment. Verifying is one step; finding is not.
 
 The two lines are different. The P resident's certificate carries a $Q$ (here $0$), and the ideal time is $1$, polynomial-linear; the NP resident cannot even issue a certificate, and only the size of the whole stack of candidate tables remains, an explosive exponential geometry. Put $\mathrm P\ne\mathrm{NP}$ on the time axis, and it says these two lines never touch.
 
