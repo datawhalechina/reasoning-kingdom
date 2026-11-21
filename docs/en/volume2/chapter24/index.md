@@ -178,9 +178,9 @@ $A_2$, $A_3$ do not mean “the input has only 2 or 3 bits”. They are pointwis
 
 So the “3” in 3-SAT is the clause width — three lamps per clause; the book’s $L=3$ round is three variables and an eight-cell table. The two 3s have the same value and different meanings.
 
-### 1.3.2 Optimal time: only successful advances count
+### 1.3.2 Optimal transition: only successful advances count
 
-Backtracking, correction, and hesitant branches do not enter the time ledger. Only steps that truly move forward successfully are recorded:
+Backtracking, correction, and hesitant branches do not enter the transition ledger. Only steps that truly move forward successfully are recorded:
 
 $$
 \operatorname{ReachesIn}\ f_0\ 0\ f_0
@@ -192,13 +192,13 @@ $$
 \text{if}\ \operatorname{ReachesIn}\ f_0\ n\ f\ \text{and}\ \operatorname{stepSpace}\ f=\operatorname{some}\ g
 $$
 
-$\operatorname{IsOptimalTime}\ f_0\ \text{goal}\ n$ takes the number of steps on the shortest successful path; failed branches and correction time are reduced away and not counted in $n$.
+$\operatorname{IsOptimalTime}\ f_0\ \text{goal}\ n$ takes the number of transitions on the shortest successful path; failed branches and correction branches are reduced away and not counted in $n$.
 
-### 1.3.3 Discrete time and the god-level machine (absolute optimal time)
+### 1.3.3 Discrete transitions and the god-level machine (absolute optimal transition)
 
-Time takes the discrete ticks $n=0,1,2,\dots$. The state space is not a single trajectory; the whole $X_L$ is packed into $a_n$ and evolves together.
+State transitions take the discrete ticks $n=0,1,2,\dots$. The state space is not a single trajectory; the whole $X_L$ is packed into $a_n$ and evolves together.
 
-Oracle time is a name: it refers to the most ideal time, with no correction at all, evolving entirely along the successful path of the state space. It is not a new physical machine, nor extra computational power; it is just the name given to this most ideal time. Time is not counted in seconds but in state transitions; the worst-case ledger also counts transitions, not seconds. One transition can process arbitrarily many assignments and arbitrarily many clauses; the ledger records only how many transitions occurred. Imagine an oracle as this ideal evolver: every step follows exactly the successful path in the state space, and failed, backtracking, correcting branches never enter the time ledger at all. Its time is defined as
+The oracle is an optimal state-transition agent: every step follows exactly the successful path in the state space forward, never turning back and never correcting. It is not a new physical machine, nor extra computational power; it is just the name given to this optimal transition. The ledger is not counted in seconds but in transitions; the worst-case ledger counts transitions, not seconds. One transition can process arbitrarily many assignments and arbitrarily many clauses; the ledger records only how many transitions occurred. Failed, backtracking, correcting branches never enter the ledger at all. Its transition is defined as
 
 $$
 \begin{aligned}
@@ -219,13 +219,13 @@ $$
 \forall m,\ \operatorname{ReachesIn}\ f_0\ m\ \text{goal}\to n\le m
 $$
 
-This $n$ is the absolute optimal time:
+This $n$ is the absolute optimal transition:
 
-- Upper bound: an $n$-step successful path really exists (the oracle has arrived);
-- Lower bound: no successful path is shorter than $n$;
-- Time spent backtracking, correcting, or hesitating is all reduced away and not counted in $n$.
+- Upper bound: an $n$-step successful transition chain really exists (the oracle has arrived);
+- Lower bound: no successful transition chain is shorter than $n$;
+- Branches spent backtracking, correcting, or hesitating are all reduced away and not counted in $n$.
 
-It is the oracle's time, not the actual time of any physical machine; a physical machine can only be slower.
+It is the oracle's transition count, not the actual time of any physical machine; a physical machine can only be slower.
 
 ### 1.4 Weighted Hamming distance
 
