@@ -286,21 +286,21 @@ $$
 a_1=T(a_0),\quad a_2=T(a_1),\quad\dots,\quad a_{n+1}=T(a_n).
 $$
 
-A sequence now exists. Nothing so far says it converges. Completeness (§1.5) does not help yet: it says Cauchy sequences have limits, and this one has not been shown to be Cauchy. Banach's fixed-point theorem cannot be borrowed either — a contraction in Banach's sense is uniform over the whole space, holding for any two points (Chapter 12 draws that line); the iteration condition in hand speaks only along the orbit:
+So far we only know a sequence exists; we do not know whether it stops. About $T$ we have only one condition:
 
 $$
 d_w(T(a_n),T(a_{n+1}))\le q^n\cdot d_w(a_n,a_{n+1}),\qquad 0\le q<1.
 $$
 
-It controls two adjacent points on the path, not any other pair. Cauchy-ness has to be computed.
+It says the distance between two consecutive steps is shrinking. It does not say the distance between any two steps can be made arbitrarily small, so we cannot conclude that the sequence converges. Completeness (§1.5) says a Cauchy sequence has a limit, but we do not yet know this sequence is Cauchy, so it is no help. Banach's fixed-point theorem does not apply directly either: that theorem requires a contraction holding for any two points in the space (Chapter 12 draws that line), while this condition holds only for consecutive steps. Convergence has to be proved separately.
 
-**Step two: every later pair is no farther than the first.** Write the adjacent distances as a ledger:
+**Step two: every later step is no farther than the first.** Write down the distance between consecutive steps:
 
 $$
 \delta_n:=d_w(a_n,a_{n+1})=\sum_{x\in D} w_x\cdot\mathbf 1[a_n(x)\ne a_{n+1}(x)].
 $$
 
-Each term is the price of one coordinate: if the cell changes, pay $w_x$; if not, pay nothing. $\delta_n$ is the total of the bill at step $n$.
+Coordinate by coordinate: if a cell changes from step $n$ to step $n+1$, add that cell's weight $w_x$; if not, add nothing. $\delta_n$ is the distance of that step.
 
 Now substitute the iteration condition. Its left side is exactly $\delta_{n+1}$:
 
@@ -326,58 +326,54 @@ $$
 d_w(a_k,a_{k+1})\le d_w(a_0,a_1),\qquad k=0,1,2,\dots
 $$
 
-However far the first step went, no later step goes farther. This is the footing for Cauchy-ness; without it, the iteration condition is just a string of local inequalities hanging along the path.
+However far the first step went, no later step goes farther. The convergence proof below uses exactly this.
 
-This step used only $q^n\le1$. The sharpness of $q^n<1$ is still in hand.
-
-**Step three: discreteness plus well-ordering drive it straight to the floor.** $X_L$ is finite, so there are finitely many pairs of points; whatever nonnegative weights are chosen, $d_w(f,g)$ takes only finitely many values. And for $n\ge1$, $q^n<1$; as long as $\delta_n>0$, the iteration condition gives
+**Step three: distance takes only finitely many values, so it must stop.** $X_L$ is finite, so there are finitely many pairs of points; whatever nonnegative weights are chosen, $d_w(f,g)$ takes only finitely many values. For $n\ge1$, $q^n<1$; as long as $\delta_n>0$, the iteration condition gives
 
 $$
 \delta_{n+1}\le q^n\delta_n<\delta_n.
 $$
 
-While it moves, it strictly decreases; each strict drop switches to another denomination, and there are only finitely many. So it cannot move forever: some $\delta_n$ must be $0$.
+While the sequence moves, the distance strictly decreases. Each strict decrease switches to another value, and there are only finitely many values, so it cannot keep decreasing forever. Hence some $\delta_n$ is $0$.
 
-The set
+Consider the set
 
 $$
 \{n\in\mathbb N\mid\delta_n=0\}
 $$
 
-is nonempty; $\mathbb N$ is well ordered, so take its least element and call it $N$. $\delta_N=0$, and from $\delta_{N+1}\le q^N\delta_N=0$ onward by induction, $\delta_n=0$ for $n\ge N$; that is,
+This set is nonempty. The natural numbers are well ordered, so take the least element and call it $N$. $\delta_N=0$, and from $\delta_{N+1}\le q^N\delta_N=0$ onward by induction, $\delta_n=0$ for $n\ge N$; that is,
 
 $$
 a_N=a_{N+1}=a_{N+2}=\cdots
 $$
 
-The sequence freezes in finitely many steps. For $m,n\ge N$, $d_w(a_m,a_n)=0$. It is not merely Cauchy; it stops in place, and no $\varepsilon$ has to be chosen.
+The sequence stops moving after finitely many steps. For any $m,n\ge N$, $d_w(a_m,a_n)=0$, so it is a Cauchy sequence, converging to $a_N$. Only now does completeness enter: a Cauchy sequence in this space has a limit. Here we get more: the limit is $a_N$ itself.
 
-With Cauchy-ness proved, completeness connects. What we have is stronger: the limit is $a_N$ itself, and no limit is ever taken.
-
-**Closing the books: how many steps.** With unit weights, $\delta_0=d_w(a_0,a_1)$ is an integer from $0$ to $|D|$. For $n\ge1$, $q^n<1$, so as long as $\delta_n>0$ we have $\delta_{n+1}<\delta_n$; between integers that means a drop of at least $1$. After $\delta_0$ drops it hits the floor:
+**At most how many steps.** With unit weights, $\delta_0=d_w(a_0,a_1)$ is an integer from $0$ to $|D|$. Whenever $\delta_n>0$, $\delta_{n+1}<\delta_n$; two distinct integers differ by at least $1$, so each moving step lowers the distance by at least $1$:
 
 $$
 \delta_n\le\delta_0-(n-1)\qquad(1\le n\le\delta_0+1).
 $$
 
-Take $N=\delta_0+1$: for $L=3$, $|D|=8$ and $N\le9$; for $L=2$, $|D|=4$ and $N\le5$. $X_3$ has $9^8$ points, yet this path is finished within ten steps.
+Take $N=\delta_0+1$: for $L=3$, $|D|=8$ and $N\le9$; for $L=2$, $|D|=4$ and $N\le5$. $X_3$ has $9^8$ points, yet this sequence stops within nine steps.
 
-The $q^n$ in the iteration condition is the compression factor at step $n$; the bound contains no particular value of it. $q$ only forces the moving step to be strictly shorter; in this integer ledger, how fast it squeezes does not change how many steps it takes.
+The size of $q$ does not affect the step count: as long as $q<1$, each step either does not move or lowers the distance by at least one, so it stops within $|D|$ steps. $q$ decides how fast the distance shrinks, not when it stops.
 
-With general nonnegative weights, “a drop of at least one” is no longer a count of integers, and the concrete bound $N\le\delta_0+1$ is no longer guaranteed. Finiteness survives: there are finitely many denominations, hence only finitely many strict drops, and the sequence still freezes in finitely many steps. The 9 and 5 computed later are unit-weight books.
+With general nonnegative weights, the distance need not decrease by whole numbers, so the concrete bound $N\le\delta_0+1$ need not hold. But there are still only finitely many values, and strict decrease can still happen only finitely many times, so the sequence still stops after finitely many steps. The 9 and 5 computed later use unit weights.
 
 ## 3. Stopping Point and the Trivial Equation
 
 ### 3.1 The stopping point
 
-$N$ is the step at which the sequence stops. $\delta_N=0$, and the ledger ends here. The stopping point $a_N$ is a point of the space. Whether it is a resident is not a matter of time; it is a matter of this point.
+$N$ is the step at which the sequence stops. $\delta_N=0$, and the sequence stops here. The stopping point $a_N$ is a point of the space. Whether it is a resident is not a matter of time; it is a matter of this point.
 
 ### 3.2 The Trivial Equation: Discrete, Bounded, Iterated
 
-The ledger is closed. Looking back, the whole path uses three things:
+Looking back, the whole proof uses three things:
 
 - Discreteness: $A_L$ is finite, and distance takes only finitely many values.
-- Boundedness: with unit weights, $\delta_n\le\delta_0\le|D|$; at most $|D|$ steps to the floor.
+- Boundedness: with unit weights, $\delta_n\le\delta_0\le|D|$; at most $|D|$ steps before it stops.
 - Iteration: $a_{n+1}=T(a_n)$, one step after another, in order.
 
 From the very first algorithm course, the first lesson is these three things: discrete, bounded, sequentially iterated. The definition of an algorithm has already said it clearly. These three are not a shell put around algorithms; they are the definition itself, one-to-one. Put any algorithm against these three, and its convergence is already inside. A strictly decreasing sequence in a finite set reaches the bottom in a few steps; well-ordering picks out the stopping time; no limit, no $-\infty$.
@@ -396,7 +392,7 @@ $$
 \delta_0=d(a_0,a_1)\le|D|,\qquad \delta_1=d(a_1,a_2)=0.
 $$
 
-The bound in §2.1 says $N\le\delta_0+1$. For $L=3$, $|D|=8$, so $N\le9$; for $L=2$, $|D|=4$, so $N\le5$. This bound is the enumeration ledger of "clear one cell at a time": in the worst case every cell changes once, then one stop. The formula map is not that enumeration road; it substitutes all cells at once, so its actual convergence stopping time is only $0$ or $1$ — $0\le5$, $1\le9$, and the bound still holds.
+The bound in §2.1 says $N\le\delta_0+1$. For $L=3$, $|D|=8$, so $N\le9$; for $L=2$, $|D|=4$, so $N\le5$. This bound is the count for the enumeration of "clear one cell at a time": in the worst case every cell changes once, then one stop. The formula map is not that enumeration road; it substitutes all cells at once, so its actual convergence stopping time is only $0$ or $1$ — $0\le5$, $1\le9$, and the bound still holds.
 
 The stop table carries only two values: $0$ and $1_L$. If a $1_L$ remains, it is a resident, SAT; if the whole table is $0$, there is no resident, UNSAT. The iteration does not search and does not try and error; it substitutes the formula once, and the table stops.
 
@@ -472,7 +468,7 @@ $$
 
 $\delta_N=0$ means $a_N=a_{N+1}$; it does not move again.
 
-The formula map is its cleanest instance: $T\circ T=T$, $N=0$ or $1$. Every algorithm can be written as $a_{n+1}=T(a_n)$; once its distance ledger satisfies this contraction inequality, it reaches a stopping point in finitely many steps. Triviality is not an adjective; it is proved — by the collapse of the solution space. That is the one new thing in this chapter, and this single move unifies the Reasoning Kingdom.
+The formula map is its cleanest instance: $T\circ T=T$, $N=0$ or $1$. Every algorithm can be written as $a_{n+1}=T(a_n)$; once its distances satisfy this contraction inequality, it reaches a stopping point in finitely many steps. Triviality is not an adjective; it is proved — by the collapse of the solution space. That is the one new thing in this chapter, and this single move unifies the Reasoning Kingdom.
 
 This is not a question of whether the machine is fast enough; it is a question of whether that resident is in the space. Look further along the time axis and you will find nothing new.
 
