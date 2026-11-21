@@ -366,7 +366,27 @@ Division also writes the hypothesis into the denominator: only when $\delta_n>0$
 
 ## 3. Log Space
 
-### 3.1 The change-of-base formula
+### 3.1 A proper fraction
+
+Start from the division form of §2.2:
+
+$$
+\frac{\Delta_n}{\delta_n}\le q^n,\qquad 0\le q<1.
+$$
+
+The base on the right is below $1$, so a larger exponent gives a smaller value. For $n\ge1$, $q^n\le q<1$, hence
+
+$$
+\frac{\Delta_n}{\delta_n}<1,\qquad \Delta_n<\delta_n.
+$$
+
+The numerator is smaller than the denominator: a proper fraction. It says one thing only — while the sequence is still moving, this step's image distance is strictly shorter than the previous one. No logarithms, no change of base; write that down first.
+
+For $q=0$ it is even more direct: the right side is $0$, the proper fraction forces $\Delta_n=0$, and the sequence stops in one step. Below, assume $0<q<1$.
+
+### 3.2 Change of base
+
+The proper fraction says it shrinks, not how fast. Take a logarithm and the speed shows.
 
 Change of base:
 
@@ -374,55 +394,47 @@ $$
 \log_b x=\frac{\log_c x}{\log_c b}
 $$
 
-Replace the argument with the numerator $\Delta_n$ and the base with the denominator $\delta_n$:
+With $c=e$,
 
 $$
-\log_{\delta_n}\Delta_n=\frac{\log_c\Delta_n}{\log_c\delta_n}
+\log_b x=\frac{\ln x}{\ln b}.
 $$
 
-Move the division inequality into log space:
+The base changes, the value does not; when the base is below $1$, the logarithm reverses order.
+
+Take $b=q$ and take the logarithm of the proper fraction. While the sequence moves the numerator is positive; $\Delta_n=0$ means the next step stops, so there is no need to look at a logarithm. Hence
 
 $$
-\begin{aligned}
-&\ln\left(\frac{\Delta_n}{\delta_n}\right)\le n\cdot\ln q\\
-\iff\ &\ln\Delta_n-\ln\delta_n\le n\cdot\ln q
-\end{aligned}
+\log_q\frac{\Delta_n}{\delta_n}
+=\frac{\ln(\Delta_n/\delta_n)}{\ln q}
+\ge n.
 $$
 
-- the exponential form $q^n$ becomes the linear term $n\cdot\ln q$ in log space
-- the division expression is isomorphic to the change-of-base formula: numerator $\Delta_n$ $\leftrightarrow$ argument, denominator $\delta_n$ $\leftrightarrow$ base
+The inequality flips because $\ln q<0$. The change of base does one thing: it pulls $q^n$ down to $n$. The exponent comes off the shoulder and becomes one step on the ground.
 
-The change-of-base formula is itself a division. The numerator is the argument, the denominator the base; the ratio in §2.2 and the quotient on the log scale are the same thing, and written as a subtraction it is $\ln\Delta_n-\ln\delta_n$.
-
-Turning a product into a sum relies on one property only: $\ln(xy)=\ln x+\ln y$. So $q^n$ in log coordinates is not “looks like” a straight line; it is a straight line: each step translates the coordinate down by $|\ln q|$; after $n$ steps, down by $n|\ln q|$. In the log coordinate $y$, the map at this step is
+The natural-log form says the same:
 
 $$
-y\mapsto y+n\cdot\ln q
+\ln\Delta_n-\ln\delta_n\le n\cdot\ln q.
 $$
 
-Scaling has become translation. And $n\ln q$, as a function of $n$, is linear: it passes through the origin, its slope $\ln q$ is constant, and it travels as far as $n$ travels. In log space the exponential has no curvature left; only this linear term and its slope remain.
-
-### 3.2 A proper fraction
-
-$0\le q<1$ $\Rightarrow$ $\ln q<0$. Hence
-
-$$
-\ln\Delta_n-\ln\delta_n\le n\cdot\ln q<0
-$$
-
-that is, $\Delta_n<\delta_n$: the ratio is a proper fraction.
+The right side is linear in $n$, with slope $\ln q<0$. Each step translates the log coordinate down by $|\ln q|$; $n$ steps, down by $n|\ln q|$. Products become sums through $\ln(xy)=\ln x+\ln y$ alone. The exponential curve was bent; in log coordinates the bend is gone, and only this line is left.
 
 ### 3.2.1 The floor
 
-The $n\ln q$ on the right moves down as $n$ grows. But there is no need to let it go to infinity. Distance takes only finitely many values: unweighted, $\delta_n$ is an integer from $0$ to $|D|$; weighted, it is one of finitely many nonnegative numbers. While the sequence still moves, $\delta_{n+1}<\delta_n$; a strictly decreasing sequence in a finite set has only a few steps it can take. At most $|D|$ steps and it lands on $0$.
+The line keeps going down, but there is no need to let it run to infinity.
 
-The well-ordering of the natural numbers picks out the stopping time: the set
+Distance takes only finitely many values: unweighted, $\delta_n$ is an integer from $0$ to $|D|$; weighted, one of finitely many nonnegative values. While the sequence moves, $\delta_{n+1}<\delta_n$. A strictly decreasing sequence in a finite set has only a few steps to take. At most $|D|$ steps, and it lands on $0$.
+
+Now use well-ordering. The set
 
 $$
 \{n\in\mathbb N\mid\delta_n=0\}
 $$
 
-is nonempty; take its least $N$. No limit, no $-\infty$; the stopping time is a number.
+is nonempty; $\mathbb N$ is well ordered, so it has a least element, call it $N$. $N$ is the step at which it lands on the floor, a natural number.
+
+What it drops to can also be written down: not an invisible limit, but $\delta_N=0$, and $a_N=a_{N+1}=\cdots$. The floor is the stopping point $a_N$ itself.
 
 ### 3.3 The least stopping time
 
