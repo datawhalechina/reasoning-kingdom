@@ -25,7 +25,7 @@ features:
   - title: Volume I (Ch1–13)
     details: Historical narratives of reasoning — symbols, statistics, Transformer, search, and causality
   - title: Volume II (Ch14–24)
-    details: Formal deduction — consistency, linear logic, probability, causality, complexity, self-reference, Yonglin convergence, and the Yonglin Corollary, closing in Chapter 24 with three criteria — discrete, bounded, sequentially iterated — that put the convergence of reasoning algorithms into one equation and unify the whole Reasoning Kingdom along the axis of convergence (P and NP are just two samples)
+    details: Formal deduction — consistency, linear logic, probability, causality, complexity, self-reference, Yonglin convergence, and the Yonglin Corollary, closing in Chapter 24 with three criteria — discrete, bounded, sequentially iterated — that put the convergence of reasoning algorithms into one equation and unify the whole Reasoning Kingdom along the axis of convergence
   - title: Open Source
     details: All content is open source, hosted on GitHub. Contributions welcome.
 ---

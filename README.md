@@ -155,7 +155,7 @@
 | [第21章：学习作为逆推断](https://datawhalechina.github.io/reasoning-kingdom/volume2/chapter21/) | 模型"学到了东西"的形式含义：它找到了更短的描述 | ✅ |
 | [第22章：自指与涌现](https://datawhalechina.github.io/reasoning-kingdom/volume2/chapter22/) | Curry-Howard 对应告诉我们：证明即程序。那么，程序在证明什么？ | ✅ |
 | [第23章：永霖推论](https://datawhalechina.github.io/reasoning-kingdom/volume2/chapter23/) | 从 Hessian 谱到智能涌现：一条平凡方程如何必然地长出 scaling law 的直线 | ✅ |
-| [第24章：算法收敛性——LIT 定理](https://datawhalechina.github.io/reasoning-kingdom/volume2/chapter24/) | 三条判据把整个推理王国的收敛统一起来：离散、有界、顺序迭代；逻辑、概率、神经网络等推理算法的收敛收进同一条方程，P 和 NP 只是两个样本 | ✅ |
+| [第24章：算法收敛性——LIT 定理](https://datawhalechina.github.io/reasoning-kingdom/volume2/chapter24/) | 三条判据把整个推理王国的收敛统一起来：离散、有界、顺序迭代；逻辑、概率、神经网络等推理算法的收敛收进同一条方程 | ✅ |
 
 ### 兔狲教授小词典
 

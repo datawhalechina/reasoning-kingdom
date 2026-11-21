@@ -8,23 +8,17 @@ $X_L=A_L^D$; $A_L=\{0,1\}^L\cup\{!\}$
 
 $(X_L,d_w)$ $\Rightarrow$ space
 
-Route: the triviality equation of algorithmic convergence — discrete, bounded, sequentially iterated $\to$ the value set keeps only $A_L=\{0,1\}^L$ and the negation $!$ $\to$ weighted Hamming space $X_L=A_L^D$ $\to$ construct the iteration sequence $\to$ well-ordering gives the stopping time, no limit taken $\to$ weighted Hamming gives $2^L+1$ $\to$ clauses cover, hence collapse to UNSAT $\to$ the solution space collapses $\to$ the convergence of the whole Kingdom is put into one equation; P and NP are just two samples.
+Route: the triviality equation of algorithmic convergence — discrete, bounded, sequentially iterated $\to$ the value set keeps only $A_L=\{0,1\}^L$ and the negation $!$ $\to$ weighted Hamming space $X_L=A_L^D$ $\to$ construct the iteration sequence $\to$ well-ordering gives the stopping time, no limit taken $\to$ weighted Hamming gives $2^L+1$ $\to$ clauses cover, hence collapse to UNSAT $\to$ the solution space collapses $\to$ the convergence of the whole Kingdom is put into one equation.
 
 ## Preface: Two Kingdoms, One Equation
 
-This book has traveled a long way. It has built the city of logic, the city of probability, the city of causality, the city of complexity, the city of neural networks. Each city speaks its own language: logic speaks of truth and falsity, probability of belief, causality of intervention, complexity of resources, neural networks of weights. The cities do not visit each other much. To walk from one to another, you change your vocabulary, and sometimes your eyes.
+This book builds no more cities. The algorithm kingdom has one old law: states are discrete, steps are bounded, and you walk one step after another in order. Logic, probability, causality, neural networks — every reasoning process that can run lives under this law. This chapter joins the two kingdoms: not by building another city, but by giving reasoning one set of spaces, distances, and iteration rules. The space is discrete, so distance takes only finitely many values; steps are bounded, so each step drops at least one cell; the rule iterates, one step after another. With all three, well-ordering picks out the step where it stops — no limit taken.
 
-The algorithm kingdom looks like another country. Its law is old and short: states are discrete, steps are bounded, and you walk one step after another in order. It sounds like a school rule, not a deep theorem. But every algorithm that can run lives inside it. Write it as a program, and the program has states; arrange the states into a space, and its points can be counted one by one; let the program run, and it takes one step, then the next.
+There are too many forms of reasoning to try one by one. The algorithm kingdom long ago reduced the question of time: P on one side, NP-complete on the other. Cook and Karp reduced every problem in NP to SAT; 3-SAT is the flower that blooms on the hard side, 2-SAT the flower on the P side. We did not hand-build two toys to compare. We stand on the reductions already made and cut both flowers open.
 
-The reasoning kingdom looks much larger, and much messier. Logic, probability, causality, learning — each has its own objects and its own proofs. But write any one of them as a process that runs, and it falls into the algorithm kingdom's law at once. Not because it wants to; because it has no other way to move. Reasoning written down is an algorithm; an algorithm is discrete, bounded, and sequentially iterated.
+Why are these two enough? The reduction is not ours; Cook already did it: every problem in NP reduces to 3-SAT. At the 3-SAT layer, the space, the distance, and the iteration are one and the same. Once convergence is computed here, the problems at the other end of the reduction share the same skeleton. On the P side we do not reduce every problem to 2-SAT; 2-SAT places the same space, distance, and iteration on the easy side — it stops differently and obeys the same equation. Two flowers, one hard, one easy; cut open, they show the same thing: how distance in a discrete space drops cell by cell to zero.
 
-This chapter joins the two kingdoms.
-
-The join is not forcing reasoning into algorithms, nor calling algorithms reasoning. That kind of unification sounds grand and ends as a slogan on paper. Here we do one small thing: give the reasoning process a space, a distance, and an iteration rule. The space is discrete, the distance takes only finitely many values, the rule goes one step after another. Then see whether this iteration sequence stops. See where it stops. The point it stops at is a resident, or an empty city.
-
-The three criteria are not slogans nailed to the door; they are kneaded into the proof. Discreteness lets distance take only finitely many values; boundedness makes each step drop at least one cell, and at zero it stops; iteration makes each step follow the last, no skipping, no turning back. With all three, well-ordering picks out the step where it stops — no limit, no waiting for infinity. The forms of the reasoning kingdom, arriving here, share one equation.
-
-So this chapter does not build another city. It tries to connect the cities already built.
+This is not a patent on 3-SAT or 2-SAT. $2^L+1$ is a property given by weighted Hamming distance; clauses covering the space are only a certificate of that property. P and NP are not isolated examples either. Both sides land on one equation, and this chapter writes that equation down.
 
 Below, set the big words aside and look at a table. When the table is full, talk about convergence.
 
@@ -40,7 +34,7 @@ After this step, convergence becomes a computable question. $a_n$ lies in the sp
 
 The method is not mysterious; it is even stupid: not understanding the structure of the clause, so try every assignment. But to speak of a naive fixed point, one has to use this stupid method. A slightly cleverer method assumes structure from the start, and then naivety has nowhere to stand. The stupid method fills the whole space; only once it is full can one discuss which cell the fixed point lands in.
 
-This chapter does not teach P, and it does not teach NP. It teaches the triviality equation of algorithmic convergence: discreteness, boundedness, sequential iteration. P and NP are just two samples of this equation.
+This chapter does not teach P, and it does not teach NP. It teaches the triviality equation of algorithmic convergence: discreteness, boundedness, sequential iteration.
 
 ### How to Play: Fill the Table, Light the Lamps
 
@@ -480,7 +474,7 @@ Someone starts from properties of two-state Turing machines and proves that a ce
 
 This chapter teaches one triviality equation of algorithmic convergence: discrete, bounded, sequentially iterated. With these three, any algorithm is collected in the same equation. The difference is at the stopping point — a lit lamp is SAT, a dark one UNSAT. The $2^L+1$ is the information bound on the clause count: 5 at $L=2$, 9 at $L=3$; count to here and both collapse to constant zero.
 
-Only two samples are laid out here: one P, one NP. They are picked out not to split them apart, but so you can see that both sides share one structure. Every P problem and every NP problem sends its solution space toward a fixed point under the same equation; P and NP are just the readings this equation gives on two samples.
+Only two sides are laid out here: one P, one NP. They are picked out not to split them apart, but so you can see that both sides share one structure. Every P problem and every NP problem sends its solution space toward a fixed point under the same equation; the same equation governs both sides.
 
 The general form of the trivial equation. Let $X$ be finite, $T:X\to X$, $a_0\in X$, $a_{n+1}=T(a_n)$, with $\delta_n=d(a_n,a_{n+1})$ integer-valued, and take $0\le q<1$. If
 

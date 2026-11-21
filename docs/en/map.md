@@ -126,7 +126,7 @@ The Reasoning Kingdom is now a complete trilogy:
 |---------|------|----------|---------|
 | **Ch22** Self-Reference and Emergence | Exploring the meta-layer of reasoning | When reasoning systems reason about themselves | Curry-Howard correspondence, fixed-point theorems |
 | **Ch23** The Yonglin Corollary | Turning the convergence rate into computable log curves and reproducing the straight-line format of scaling laws | Information-theoretic energy surface + Banach completeness | Tangent Hessian, spectral analysis, finite-sample counting |
-| **Ch24** Algorithmic Convergence | Putting the convergence of the whole Reasoning Kingdom into one equation inside a finite discrete space | Three criteria — discrete, bounded, sequentially iterated — put the convergence of logic, probability, neural networks, and other reasoning algorithms into one equation; P and NP are just two samples | Weighted Hamming distance, contraction iteration, well-ordered stopping time, solution-space collapse |
+| **Ch24** Algorithmic Convergence | Putting the convergence of the whole Reasoning Kingdom into one equation inside a finite discrete space | Three criteria — discrete, bounded, sequentially iterated — put the convergence of logic, probability, neural networks, and other reasoning algorithms into one equation | Weighted Hamming distance, contraction iteration, well-ordered stopping time, solution-space collapse |
 
 ---
 
