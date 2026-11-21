@@ -8,7 +8,7 @@ $X_L=(A_L,\&,|,!)$ semiring
 
 $(X_L,d)$ $\Rightarrow$ space
 
-Route: define the space and the distance $\to$ construct the iteration sequence $\to$ division $\to$ change of base into log space $\to$ take $n\to\infty$; the limit reads $-\infty$ $\to$ carry it back through the change of base; the ratio vanishes $\to$ $q=0$, the multiplier collapses $\to$ the fixed point is the constant zero, not the resident $1_L$ $\to$ derive a contradiction $\to$ prove the discreteness lemma $\to$ construct the P resident explicitly $\to$ prove by contradiction that no NP resident exists $\to$ return to ideal time and give the upper bound.
+Route: define the space and the distance $\to$ construct the iteration sequence $\to$ division $\to$ change of base into log space $\to$ take $n\to\infty$; the limit reads $-\infty$ $\to$ carry it back through the change of base; the ratio vanishes $\to$ $q=0$, the multiplier collapses $\to$ the fixed point is the constant zero, not the resident $1_L$ $\to$ derive a contradiction $\to$ prove the discreteness lemma $\to$ construct the P resident explicitly $\to$ prove by contradiction that no NP resident exists $\to$ return to ideal time and give the upper bound $\to$ show that this is not a Turing-machine problem but a solution-space problem.
 
 ## Preface: Enumerate First, Then Talk About Convergence
 
@@ -739,6 +739,18 @@ What about a 3-SAT instance? 100 million clauses and 300 million variables — n
 If one insists on recording a “find the certificate” ledger for NP, that is another matter: spread out the whole stack of candidate tables; for $L=3$, $X_3$ has $11^8\approx2.1\times10^8$ points. Each increase of $L$ by $1$ grows $A_L$ from $7$ values to $11$ and then to $19$, and $X_L$ from $7^4$ to $11^8$ and then to $19^{16}$ — base and exponent grow together, exponents stacked on exponents. This ledger is the size of the candidate table stack, not the ideal iteration time. Given an assignment, substitute it into the formula and its light or dark is known in one step; the hard part is finding the assignment. Verifying is one step; finding is not.
 
 The two lines are different. The P certificate carries a $Q$ (here $0$), ideal time is $1$, and the stopping point is $h$; NP's stopping point reads back as $0$, with no resident. Put $\mathrm P\ne\mathrm{NP}$ on the time axis, and it does not say “one takes 1 step, the other exponential time”; both can take 1 step. The difference is the cell where each stops: one is lit, one is fully dark.
+
+### 6.5 Not a Turing-Machine Problem, a Solution-Space Problem
+
+Someone keeps asking: why don't you construct a Turing machine? Why not start from a two-state Turing machine and work upward, state by state?
+
+No need. The Turing-machine layer is too shallow to reach this question. Adding states, tape, parallelism adds only to how much a machine can spit out at once; the question here is whether the solution space contains that resident. If the resident is not there, no machine, however divine, can search it out; if it is there, even a slow machine will eventually walk to it. Solvability is not set by the searching machine; it is set by the solution space itself.
+
+Run the machine as divine as you like: it spits out hundreds of millions of states at once, locks onto the optimal one among them, and walks along it; every step hugs the width of a three-literal clause, every step is ideal. This is a monster machine. When the monster machine reaches the end, it still cannot find that resident. It did not lose on compute power; it walked to the constant zero, the table stopped in the dark, and the SAT lamp did not light. The evolution of the solution space settles at a fixed point; the monster machine at best accelerates its own death.
+
+So there is no need to construct the Turing machine of a hundred years from now, and no need to climb up from a two-state Turing machine. AlphaGo, a quantum computer, a carefully designed parallel or backtracking algorithm — they all walk on the same table. On the assumed NP side, the table contracts, contracts to the constant zero, and the SAT lamp cannot light. This is not a compute-power problem; it is a solution-space problem: whether that satisfying assignment is there, whether that resident is there, is a mathematical question, not a computer question.
+
+Some start from the properties of a two-state Turing machine and prove that a certain class of machines cannot find it. That is another road: it proves something about a machine, not about the space. Machines can be swapped; the space does not change. Swap in a stronger machine, and the shape of the space is the same. What must be proved is that the space has no such resident, not that some machine is not fast enough.
 
 ---
 
