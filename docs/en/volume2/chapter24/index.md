@@ -10,7 +10,25 @@ $(X_L,d_w)$ $\Rightarrow$ space
 
 Route: the triviality equation of algorithmic convergence — discrete, bounded, sequentially iterated $\to$ the value set keeps only $A_L=\{0,1\}^L$ and the negation $!$ $\to$ weighted Hamming space $X_L=A_L^D$ $\to$ construct the iteration sequence $\to$ well-ordering gives the stopping time, no limit taken $\to$ weighted Hamming gives $2^L+1$ $\to$ clauses cover, hence collapse to UNSAT $\to$ the solution space collapses $\to$ the convergence of the whole Kingdom is put into one equation; P and NP are just two samples.
 
-## Preface: Enumerate First, Then Talk About Convergence
+## Preface: Two Kingdoms, One Equation
+
+This book has traveled a long way. It has built the city of logic, the city of probability, the city of causality, the city of complexity, the city of neural networks. Each city speaks its own language: logic speaks of truth and falsity, probability of belief, causality of intervention, complexity of resources, neural networks of weights. The cities do not visit each other much. To walk from one to another, you change your vocabulary, and sometimes your eyes.
+
+The algorithm kingdom looks like another country. Its law is old and short: states are discrete, steps are bounded, and you walk one step after another in order. It sounds like a school rule, not a deep theorem. But every algorithm that can run lives inside it. Write it as a program, and the program has states; arrange the states into a space, and its points can be counted one by one; let the program run, and it takes one step, then the next.
+
+The reasoning kingdom looks much larger, and much messier. Logic, probability, causality, learning — each has its own objects and its own proofs. But write any one of them as a process that runs, and it falls into the algorithm kingdom's law at once. Not because it wants to; because it has no other way to move. Reasoning written down is an algorithm; an algorithm is discrete, bounded, and sequentially iterated.
+
+This chapter joins the two kingdoms.
+
+The join is not forcing reasoning into algorithms, nor calling algorithms reasoning. That kind of unification sounds grand and ends as a slogan on paper. Here we do one small thing: give the reasoning process a space, a distance, and an iteration rule. The space is discrete, the distance takes only finitely many values, the rule goes one step after another. Then see whether this iteration sequence stops. See where it stops. The point it stops at is a resident, or an empty city.
+
+The three criteria are not slogans nailed to the door; they are kneaded into the proof. Discreteness lets distance take only finitely many values; boundedness makes each step drop at least one cell, and at zero it stops; iteration makes each step follow the last, no skipping, no turning back. With all three, well-ordering picks out the step where it stops — no limit, no waiting for infinity. The forms of the reasoning kingdom, arriving here, share one equation.
+
+So this chapter does not build another city. It tries to connect the cities already built.
+
+Below, set the big words aside and look at a table. When the table is full, talk about convergence.
+
+### Enumerate First, Then Talk About Convergence
 
 A clause, three variables. However the literals are arranged, whatever values are plugged in, whatever operators are inserted, whatever conditions are added, in the end it all reads as the same thing: under this assignment, is the clause satisfied? Beyond that, it has no other behavior.
 
