@@ -563,23 +563,7 @@ So "both times are 1" is not a sentence of defeat. It moves the question: there 
 
 ## 6. Not P, Not NP — a Convergence Problem
 
-### 6.1 Both oracle times are 1
-
-Oracle time is not an extra machine; it is the time of §1.3.3: every step follows the successful path, and backtracking or correction never enters the ledger.
-
-On the P side, the resident $h$: $\delta_0=2$, $\delta_1=0$, $Q=0$, ideal time $1$. On the dark side: $S=D$, $1_L$ drops to constant zero in one step, $Q=0$, ideal time also $1$. Both sides have one step; oracle time counts transitions of the state, and both are countable.
-
-This is no coincidence. $T_S\circ T_S=T_S$, and that identity has nothing to do with what $S$ looks like, what $L$ is, or how wide the clauses are; substitute and it holds, and the moment it holds it stops. It is a trivial equation, and both P and NP are collected inside it. Exponential, polynomial — fed into this equation, both take one step. The two sides both take time $1$, not because P and NP are the same, but because this equation only has one step in it.
-
-A time certificate can be written on both sides. But a SAT certificate can be opened only on the lit side: $h$ is a resident, $0$ is not. Time being $1$ does not mean SAT is $1$.
-
-### 6.2 Two lines, the same number of steps
-
-The P certificate carries a $Q$ (here $0$), ideal time $1$, fixed point $h$; on the dark side the fixed point reads back as $0$, no resident. To call this a separation of P and NP is to leave the question on the time axis; both take 1 step, and the difference is in the cell where they stop: one lit, one all dark.
-
-This is where the textbook trap sits: put attention on the number of steps, look for a faster or slower line. Here both sides have 1 step, not because they happen to run equally fast, but because this one trivial equation charges both sides a single step. Look further and you only find yourself.
-
-### 6.3 The solution space moves on its own
+### 6.1 The solution space moves on its own
 
 Someone keeps asking: why don't you construct a Turing machine? Why not start from a two-state Turing machine and push up step by step?
 
@@ -591,7 +575,7 @@ So there is no need to construct the Turing machine of a hundred years from now,
 
 Someone starts from properties of two-state Turing machines and proves that a certain class of machines cannot search. That is another road: it proves something about the machine, not the space. Machines can be swapped; the space does not swap. Bring a stronger machine, and the shape of the space is the same. What is to be proved is that the resident is not in the space, not that some machine is not fast enough.
 
-### 6.4 Conclusion
+### 6.2 Conclusion
 
 This chapter teaches one triviality equation of algorithmic convergence: discrete, bounded, sequentially iterated. With these three, any algorithm is collected in the same equation. $T_S\circ T_S=T_S$; both ideal times are $1$, and the difference is in the cell where they stop — a lit lamp is SAT, a dark one UNSAT.
 
