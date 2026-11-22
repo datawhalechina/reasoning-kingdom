@@ -14,4 +14,3 @@ package-lock.json
 backup/
 /*.pdf
 publicUS
-vitepress-pdf-zhengzhuan.config.ts

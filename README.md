@@ -6,8 +6,7 @@
 
 <div align="center">
 
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/datawhalechina/reasoning-kingdom)
-[![GitHub stars](https://img.shields.io/github/stars/datawhalechina/reasoning-kingdom?style=flat-square)](https://github.com/datawhalechina/reasoning-kingdom/stargazers)
+
 [![GitHub issues](https://img.shields.io/github/issues/datawhalechina/reasoning-kingdom?style=flat-square)](https://github.com/datawhalechina/reasoning-kingdom/issues)
 [![GitHub license](https://img.shields.io/github/license/datawhalechina/reasoning-kingdom?style=flat-square)](https://github.com/datawhalechina/reasoning-kingdom/blob/main/LICENSE)
 [![GitHub Actions](https://img.shields.io/github/actions/workflow/status/datawhalechina/reasoning-kingdom/deploy.yml?style=flat-square)](https://github.com/datawhalechina/reasoning-kingdom/actions/workflows/deploy.yml)

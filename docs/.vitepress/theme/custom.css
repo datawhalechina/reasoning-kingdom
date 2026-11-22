@@ -614,9 +614,9 @@ div[class*='language-'] pre {
     display: none !important;
   }
 
-  /* --- 页面边距：左右留约1英寸（25mm），上下留20mm --- */
+  /* --- 页面边距：A4，上下15mm、左右16mm（只作用于打印/PDF） --- */
   @page {
-    margin: 20mm 25mm;
+    margin: 15mm 16mm;
   }
 
   /* --- 内容区域全宽，但保留内部舒适边距 --- */

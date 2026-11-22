@@ -11,6 +11,7 @@
     "docs:build": "NODE_OPTIONS=--max-old-space-size=4096 vitepress build docs",
     "docs:preview": "vitepress preview docs",
     "export-pdf": "press-export-pdf export docs",
+    "export-pdf-zhengzhuan": "press-export-pdf export docs -c vitepress-pdf-zhengzhuan.config.ts && gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.7 -dPDFSETTINGS=/printer -dPreserveAnnots=false -dSubsetFonts=true -dEmbedAllFonts=true -dDetectDuplicateImages=true -sOutputFile=.pdf-compress-tmp.pdf '推理王国·正传（上下卷）.pdf' && mv .pdf-compress-tmp.pdf '推理王国·正传（上下卷）.pdf'",
     "export-pdf-en": "press-export-pdf export docs_en --config vitepress-pdf-en.config.ts",
     "export-pdf-dear-reasoner": "press-export-pdf export docs_en --config vitepress-pdf-dear-reasoner.config.ts",
     "export-pdf-vol1": "press-export-pdf export docs_en --config vitepress-pdf-vol1.config.ts",
