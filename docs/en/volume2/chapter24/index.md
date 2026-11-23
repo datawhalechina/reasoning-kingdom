@@ -20,6 +20,28 @@ Why are these two enough? The reduction is not ours; Cook already did it: every 
 
 This is not a patent on 3-SAT or 2-SAT. $2^L+1$ is a property given by weighted Hamming distance; clauses covering the space are only a certificate of that property. P and NP are not isolated examples either. Both sides land on one equation, and this chapter writes that equation down.
 
+### The Unified Statement: The LIT Theorem
+
+The LIT the book carried before is a special case of what follows.
+
+$$
+S=(X,F)
+$$
+
+$$
+X=V_{L=32},\quad F=f_{L=32}
+$$
+
+$$
+T=(S,d)
+$$
+
+$L$ is the finite symbolic description length — the length of a state's name. The recommended value is $L=32$, but it can be set freely as needed; it is not a fixed constant.
+
+$S=(X,F)$ binds the state space $X$ to the legal maps $F$ on it; $T=(S,d)$ adds the distance $d$. The $X_L=A_L^D$ of §1 and the iteration map of §2 both fit into this notation: those sections pin $L$ to the clause width and compute only the special cases $L=2$ and $L=3$. The unified statement does not pin $L$; $L=32$ is the length of a name, not the number of states.
+
+The argument in §1–§5 does not need to be redone. It proves the unified object; the special cases are computed, and the general form is in §5.2.
+
 Below, set the big words aside and look at a table. When the table is full, talk about convergence.
 
 ### Enumerate First, Then Talk About Convergence
@@ -491,6 +513,58 @@ $$
 $\delta_N=0$ means $a_N=a_{N+1}$; it does not move again.
 
 Every algorithm can be written as $a_{n+1}=T(a_n)$; once its distances satisfy this contraction inequality, it reaches a stopping point in finitely many steps. Triviality is not an adjective; it is proved — by the collapse of the solution space. That is the one new thing in this chapter, and this single move unifies the Reasoning Kingdom.
+
+#### The Unified Statement: States and Maps Before Graphs
+
+Write the unified object once more:
+
+$$
+S=(X,F)
+$$
+
+$$
+X=V_{L=32},\quad F=f_{L=32}
+$$
+
+$$
+T=(S,d)
+$$
+
+$S$ is the state space with its legal maps; $T$ is the whole thing with a distance. The map that pushes the table forward in §2 is this $F$; $d$ is still weighted Hamming.
+
+Number the states and write
+
+$$
+V_t=(v_1,v_2,\dots,v_n),
+$$
+
+where each $v_i$ is a scalar potential on one state. The legal maps connect state by state: each state is a grain, and each legal map is a link.
+
+The new potential of every state can be influenced by any other state. State one can act directly on state thirty-two, and state thirty-two can act directly on state two; they do not need a preset local path to propagate along.
+
+Each grain keeps its own incoming and outgoing links; there is no need to lay every state pair out as a dense $N\times N$ matrix. In engineering, one array for the sources and one for the destinations is enough. Allowing a link does not mean every link fires at once; $F_t$ decides which do.
+
+In components,
+
+$$
+v_j^{(t+1)}=\sum_{i=1}^{n}v_i^{(t)}f_{ij}^{(t)},
+$$
+
+with $f_{ij}=0$ where no link exists. Under linear weighting this is one explicit realization; under general symbolic maps, $V_tF_t$ must be read by that map's own action rule.
+
+What matters is the order of construction:
+
+$$
+\text{legal states}\longrightarrow\text{legal maps}\longrightarrow\text{connections}\longrightarrow\text{time evolution}
+$$
+
+A traditional graph model first gives an adjacency relation and then studies propagation between nodes. Here it is the other way round: the state universe and the map universe come first, and the links are what the maps look like when expanded. A graph is a representation of map relations, not a structure the state space must carry in advance.
+
+An aside: this equation can also be built into a virtual machine that runs an instruction set; I have built one. The virtual machine is an upper-layer use. The most typical use is still this convergence criterion for algorithms.
+
+One more thing not to mix up: $L=32$ is the length of a name, not the number of states, and not the number of links. The state space can be far larger than thirty-two states; the grain count $n$ follows the state count, not $L$. So the system can be a large finite state space with direct, non-local action across states.
+
+On the 3-SAT and 2-SAT sides the reductions were finished long ago: problems in NP reduce along Cook's chain to 3-SAT, and 2-SAT sits on the P side; both flowers are cut open, and the space, distance, and iteration are the same. The hardest reduction is not in this chapter. What is left is to tell the story of this equation: states before graphs, maps before links, time walking the map step by step to the fixed point, to see whether the lamp is lit.
 
 This is not a question of whether the machine is fast enough; it is a question of whether that resident is in the space. Look further along the time axis and you will find nothing new.
 
